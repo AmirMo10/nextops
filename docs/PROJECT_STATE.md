@@ -1,16 +1,18 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-20 — dedicated Zabbix profile published as a documentation change. This is not a deployment report.
+Updated: 2026-09-20 — Phase 0 architecture/gap/threat report drafted for owner acceptance. This is not a deployment report.
 
 ## English
 
 ### Requirements and preserved history
 
-The repository is `AmirMo10/nextops`; its public visibility is unchanged. The owner requested English and native-Persian documentation, a single English active prompt, local CPU-only AI, continued operation after Internet loss, a first useful Zabbix status answer, phased VM allocations, storage limits and now publication of the dedicated Zabbix server recommendation. All eleven integrations and the 51 original specification sections remain in scope.
+The directly verified Git remote is `Omid-NextAI/nextops`, branch `main`. Earlier records name `AmirMo10/nextops`; current README/install clone commands now use the verified remote, while historical statements remain preserved and the active prompt header still needs a separately versioned repository-identity correction. The owner requested English and native-Persian documentation, a single English active prompt, local CPU-only AI, continued operation after Internet loss, a first useful Zabbix status answer, phased VM allocations, storage limits and a dedicated Zabbix server recommendation. All eleven integrations and the 51 original specification sections remain in scope.
 
 The active [master prompt v3.0](requirements/NEXTOPS_MASTER_PROMPT.md) and [v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) remain unchanged in this update. The new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md) explicitly supersedes only the old small-lab recommendation and combined budgets; non-conflicting security, acceptance and feature requirements remain mandatory. The archive still contains the original Persian specification.
 
 The first deliverable is a new Persian/English question about authorized Zabbix status, answered by local CPU generation from actual evidence, with source times, scope and audit while Internet is blocked. Linux enrichment follows in Phase 2. Documentation publication does not complete a software phase or establish deployment approval.
+
+The paired [Phase 0 report](en/PHASE_0_REPORT.md) and [Persian report](fa/PHASE_0_REPORT.md) now record repository evidence, the four-VM proposal, trust boundaries, module and data contracts, CPU benchmark plan, resource gate, connector roadmap, test plan, blockers and the smallest Stage 1A change. The repository-grounded [threat model](requirements/nextops-threat-model.md) records TM-001–TM-010. The owner confirmed one organization initially, small initial scale with future growth, and the dedicated Zabbix path. Architecture acceptance and every infrastructure authorization remain pending.
 
 ### Supplied hardware and storage evidence
 
@@ -41,7 +43,7 @@ The [new English guide](en/ZABBIX_SERVER.md) and [Persian guide](fa/ZABBIX_SERVE
 
 | Stage | Required result | Evidence status for this update |
 |---|---|---|
-| 0 | Remaining preflight and appropriate approvals | Planning documented; no direct new host/access/capacity validation |
+| 0 | Architecture/gap/threat report and appropriate approvals | Report drafted and documentation checked; owner acceptance and private infrastructure preflight remain pending |
 | 1A | Local identity, policy, database, durable work and audit | Implementation and tests not verified here |
 | 1B | New local CPU answers and offline model cold load | No model run or benchmark performed here |
 | Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | No VM, installation, account or API call performed here |
@@ -53,21 +55,23 @@ The user may perform provisioning independently; verify their actual state befor
 
 ### Scope of this publication and next action
 
-This change adds paired Zabbix guides, a deployment amendment and allocation JSON, and updates START_HERE, both indexes, NEXT_TASK and this state record. Existing source requirements, archived prompt, diagrams and application files are preserved. Official references were checked for the named Zabbix software details; this is not a new host vulnerability audit or compatibility lock.
+This change adds the paired Phase 0 report and repository-grounded threat model, aligns the stale offline Phase-1 wording and traceability, and updates the documentation indexes, NEXT_TASK and this state record. Existing source requirements, archived prompt, diagrams and proposed Zabbix profile are preserved. This is not a host vulnerability audit, compatibility lock, or provisioning record.
 
-Local arithmetic checks confirmed the LVM nominal sum, combined VM totals and datastore projections. Direct GitHub cloning failed because hostname resolution was unavailable in the editing container; reads and publication use the connected GitHub API. Do not report a full clone-based documentation checker, browser renderer or runtime test as passing. Inspect the published commit and records separately from operating readiness. No VM, disk, network, ESXi patch, model, database or monitoring service was modified.
+The local checkout was inspected at commit `41508444ff0b9408154fbe1b458f7e89a5428bf9`. With UTF-8 output enabled, `python scripts/check_docs.py` passed for 73 Markdown files and 23 language pairs, and `git diff --check` passed at the reviewed baseline. No browser renderer or runtime test passed. No VM, disk, network, ESXi patch, model, database or monitoring service was modified.
 
-Follow [NEXT_TASK](NEXT_TASK.md), [START_HERE](en/START_HERE.md) and the Zabbix guide. Close only actionable missing preflight facts; obtain provisioning/access authorization; prepare the monitoring dependency before 1C; retain deterministic policy, scoped token handling, no external AI, local assets/login/keys/certificates, independent backups and host-outage limits. Repo protection/CI/private vulnerability reporting and a software license are not asserted to be configured. No asynchronous work is promised.
+The next checkpoint is owner review of the Phase 0 architecture and the denial-first Stage 1A slice in [NEXT_TASK](NEXT_TASK.md). Approval of the report does not grant provisioning/access authorization. Close only actionable private preflight facts; prepare the monitoring dependency before 1C; retain deterministic policy, scoped token handling, no external AI, local assets/login/keys/certificates, independent backups and host-outage limits. Repo protection/CI/private vulnerability reporting and a software license are not asserted to be configured. No asynchronous work is promised.
 
 ## فارسی
 
 ### نیازها و سابقهٔ محفوظ
 
-مخزن `AmirMo10/nextops` است و وضعیت عمومی آن تغییر نکرده است. مالک مستندات فارسی طبیعی و انگلیسی، یک پرامپت فعال انگلیسی، AI محلی روی CPU، ادامهٔ کار پس از قطع اینترنت، پاسخ وضعیت Zabbix در اولین تحویل، برنامهٔ ماشین‌ها و محدودیت ذخیره‌سازی و اکنون انتشار پیشنهاد سرور مستقل Zabbix را خواسته است. یازده اتصال و ۵۱ بخش مشخصات اولیه در دامنه باقی‌اند.
+remote بررسی‌شدهٔ مستقیم Git برابر `Omid-NextAI/nextops` و شاخه `main` است. فرمان‌های clone جاری در README و راهنمای نصب اکنون remote درست را دارند؛ رکوردهای تاریخی `AmirMo10/nextops` حفظ می‌شوند و عنوان پرامپت فعال هنوز به اصلاح جداگانه و نسخه‌دار نیاز دارد. مالک مستندات فارسی طبیعی و انگلیسی، یک پرامپت فعال انگلیسی، AI محلی روی CPU، ادامهٔ کار پس از قطع اینترنت، پاسخ وضعیت Zabbix در اولین تحویل، برنامهٔ ماشین‌ها و محدودیت ذخیره‌سازی و سرور مستقل Zabbix را خواسته است. یازده اتصال و ۵۱ بخش مشخصات اولیه در دامنه باقی‌اند.
 
 [پرامپت فعال ۳.۰](requirements/NEXTOPS_MASTER_PROMPT.md) و [بایگانی نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) در این تغییر دست‌نخورده‌اند. [اصلاحیهٔ استقرار](requirements/DEPLOYMENT_UPDATE.md) فقط پیشنهاد آزمایشگاه کوچک و مجموع منابع وابسته را صریح جایگزین می‌کند؛ سایر نیازهای امنیت، پذیرش و قابلیت‌ها پابرجا هستند. مشخصات فارسی اولیه همچنان در بایگانی محفوظ است.
 
 اولین خروجی، پاسخ تازهٔ فارسی یا انگلیسی دربارهٔ وضعیت مجاز Zabbix، تولیدشده روی CPU محلی و مستند به دادهٔ واقعی، همراه منبع و زمان و دامنه و ممیزی با اینترنت قطع است. بررسی مستقیم Linux در مرحلهٔ دو می‌آید. انتشار مستندات، پایان مرحلهٔ نرم‌افزاری یا اثبات مجوز استقرار نیست.
+
+[گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md) و [مدل تهدید](requirements/nextops-threat-model.md) اکنون یافتهٔ مخزن، چیدمان چهارماشینی، مرز اعتماد، قرارداد ماژول و داده، برنامهٔ سنجش CPU، بودجه، نقشهٔ اتصال، آزمون، مانع و کوچک‌ترین برش 1A را ثبت می‌کنند. مالک تک‌سازمانی بودن فعلی، مقیاس کوچک اولیه با رشد آینده و Zabbix مستقل را تأیید کرد. پذیرش معماری و همهٔ مجوزهای زیرساخت هنوز لازم‌اند.
 
 ### شواهد ارسالی سخت‌افزار و دیسک
 
@@ -89,14 +93,14 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است.
 
 ### گام‌ها و وضعیت شواهد
 
-مرحلهٔ صفر طرح دارد، اما بررسی مستقیم تازهٔ میزبان و دسترسی و ظرفیت در این تغییر انجام نشده است. پیاده‌سازی و آزمون 1A در این جلسه تأیید نشده؛ مدل و سنجش 1B اجرا نشده؛ VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E در این تغییر آزموده نشده‌اند.
+گزارش معماری، فاصله و تهدید مرحلهٔ صفر آماده و بررسی ساختار مستندات قبول شده است، اما پذیرش مالک و بررسی خصوصی تازهٔ میزبان و دسترسی و ظرفیت هنوز لازم‌اند. پیاده‌سازی و آزمون 1A انجام نشده؛ مدل و سنجش 1B اجرا نشده؛ VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E آزموده نشده‌اند.
 
 ممکن است مالک مستقل ماشین ساخته باشد؛ پیش از ادعای وجود یا نبود آن، وضعیت واقعی بررسی شود. تصویر تنظیمات VM به معنای قبولی مسیر برنامه نیست. ادامه از نخستین گام ناتمامِ دارای شاهد و مجوز باشد، نه پاک کردن پیشرفت.
 
 ### دامنهٔ انتشار و کار بعدی
 
-راهنماهای دوزبانهٔ Zabbix، اصلاحیه و JSON تخصیص اضافه و راهنمای شروع، هر دو فهرست، کار بعدی و این سند به‌روز شدند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و فایل‌های برنامه حفظ شده‌اند. منابع رسمی برای جزئیات نرم‌افزاری بررسی شده‌اند؛ ممیزی امنیت میزبان یا تثبیت سازگاری انجام نشده است.
+گزارش دوزبانهٔ مرحلهٔ صفر و مدل تهدید اضافه، متن قدیمی مرحلهٔ آفلاین و ردیابی هماهنگ و هر دو فهرست، کار بعدی و این سند به‌روز شدند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و طرح Zabbix حفظ شده‌اند. ممیزی امنیت میزبان یا تثبیت سازگاری انجام نشده است.
 
-محاسبهٔ محلی، جمع اسمی LVM، منابع مجموع و برآورد فضای datastore را تأیید کرد. clone مستقیم به‌دلیل نبود نام‌یابی GitHub در محیط ویرایش شکست خورد؛ خواندن و انتشار با اتصال API انجام می‌شود. قبولی ابزار کامل مستندات مبتنی بر clone، نمایش مرورگر یا آزمون اجرایی ادعا نشود. commit و رکورد منتشرشده جدا از آمادگی عملیاتی بررسی شوند. هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه یا سرویس پایش تغییر نکرده است.
+checkout محلی در commit `41508444ff0b9408154fbe1b458f7e89a5428bf9` بررسی شد. با خروجی UTF-8، `python scripts/check_docs.py` برای ۷۳ فایل Markdown و ۲۳ جفت زبان قبول شد و `git diff --check` در مبنای پاک قبول شد. نمایش مرورگر یا آزمون اجرایی قبول‌شده وجود ندارد. هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه یا سرویس پایش تغییر نکرده است.
 
-[کار بعدی](NEXT_TASK.md)، [شروع کار](fa/START_HERE.md) و راهنمای Zabbix مبنا باشند. فقط پیش‌نیاز مؤثر باقی‌مانده روشن، مجوز ساخت و دسترسی دریافت و پایش پیش از 1C آماده شود. سیاست قطعی، توکن محدود، منع AI خارجی، رابط و ورود و کلید و گواهی محلی، پشتیبان مستقل و محدودیت خرابی میزبان حفظ شوند. حفاظت مخزن، CI، گزارش خصوصی آسیب‌پذیری و مجوز نرم‌افزاری تنظیم‌شده فرض نشده‌اند. ادامهٔ کار پس‌زمینه وعده داده نمی‌شود.
+نقطهٔ بعد، بازبینی مالک روی معماری مرحلهٔ صفر و برش رد-پیش‌فرض 1A در [کار بعدی](NEXT_TASK.md) است. پذیرش گزارش، مجوز ساخت یا دسترسی نیست. فقط پیش‌نیاز مؤثر روشن و پایش پیش از 1C آماده شود. سیاست قطعی، توکن محدود، منع AI خارجی، رابط و ورود و کلید و گواهی محلی، پشتیبان مستقل و محدودیت خرابی میزبان حفظ شوند. حفاظت مخزن، CI، گزارش خصوصی آسیب‌پذیری و مجوز نرم‌افزاری تنظیم‌شده فرض نشده‌اند.

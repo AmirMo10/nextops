@@ -73,7 +73,7 @@ See the [integration contracts and status](docs/en/INTEGRATIONS.md). Vendor vers
 ## Start here
 
 ```bash
-git clone https://github.com/AmirMo10/nextops.git
+git clone https://github.com/Omid-NextAI/nextops.git
 cd nextops
 ```
 

@@ -1,12 +1,25 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-20 — dedicated Zabbix server, LVM and four-VM starting profile.
+Updated: 2026-09-20 — Phase 0 report drafted; owner architecture acceptance is the current checkpoint.
 
-## English — finish preflight, then the next authorized Stage 1A–1E
+## English — review Phase 0, then authorize the smallest Stage 1A slice
 
 Read the [active master prompt](requirements/NEXTOPS_MASTER_PROMPT.md) with the new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md), [Zabbix guide](en/ZABBIX_SERVER.md), [allocation record](requirements/ZABBIX_SERVER_PLAN.json), [START_HERE](en/START_HERE.md), [PROJECT_STATE](PROJECT_STATE.md), [ROADMAP](en/ROADMAP.md), [SERVER_PLAN](en/SERVER_PLAN.md), [STORAGE_PLAN](STORAGE_PLAN.md), [OFFLINE_RUNTIME](en/OFFLINE_RUNTIME.md), [ESXI_BASELINE](en/ESXI_BASELINE.md) and [hardware evidence](requirements/HARDWARE_BASELINE.json). Original detail remains in the [unchanged v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md); all 51 sections and eleven integrations remain in scope.
 
 The new amendment supersedes the old small `zabbix-lab` fallback and combined totals in active-prompt v3.0 section 18 and older guide examples. It does not change the three initial NextOps core VMs or authorize provisioning. Inspect actual Git state, work already done and approval/test evidence before resuming; do not overwrite work or restart completed discovery indefinitely.
+
+### Current checkpoint: owner review
+
+Review the paired [Phase 0 report](en/PHASE_0_REPORT.md) and [Persian report](fa/PHASE_0_REPORT.md), plus the repository-grounded [threat model](requirements/nextops-threat-model.md). The owner has confirmed one organization initially, small initial scale with future growth, and the dedicated `zabbix-server` path.
+
+The one next decision is to accept or revise the proposed four-VM architecture, trust boundaries, Stage 1A–1E sequence, and the denial-first typed contract slice in report section 18. Acceptance closes the architecture checkpoint only; it does not authorize VM creation, installation, network changes, model downloads, credentials, or production access.
+
+Acceptance evidence for Phase 0:
+
+- the owner explicitly accepts or revises the architecture/roadmap and proposed first code slice;
+- unavailable host/Zabbix/scale/recovery facts remain recorded as private preflight blockers rather than invented observations;
+- ADRs 0001–0006 remain proposed until that acceptance is recorded;
+- implementation starts only from the accepted Stage 1A checkpoint, with provisioning separately authorized.
 
 ### Already supplied
 
@@ -14,13 +27,13 @@ ESXi 8.0.3 build 24414501; four packages, 112 physical cores, 224 threads, four 
 
 Keep real datastore names, UUIDs, addresses and credentials private. DS-C is the capacity-based initial placement; DS-A/DS-B and system/boot volumes remain outside this allocation. Retain the 3 TB project ceiling and refresh changing capacity at the execution window.
 
-### Remaining Phase 0 gate
+### Remaining private preflight and provisioning gate
 
 Check available CPU/RAM, VM load/reservations, outstanding thin-disk commitments, actual ESXi swap placement, backing storage health/latency, VM compatibility and guest features, approved local network/admin recovery paths, offline package/model artifacts and agreed quality/latency targets. Map each dependency to local, approved LAN or provisioning-only.
 
 For the new Zabbix path, prepare a separate monitoring VM; when an appropriate authorized installation already exists, inspect and reuse it instead of duplicating it. Confirm frontend base path/version, read-only host-group scope, protected token delivery, self-monitoring items, required monitored guests and sample questions. Do not put private details or tokens into the repository.
 
-Produce the active-prompt section 26 report: repository findings, tests actually run, known/unknown hardware, traceability, module/identity/network/storage boundaries, typed data/workflow/API/MCP contracts, CPU model/benchmark plan, secret/policy/approval threat model, bilingual UI, connector roadmap, CI/offline/release/restore gates, blockers and one next increment. Use only authorized read-only discovery. No installation, model download, target access, patch, stress test, network change or reboot is implied by documentation publication. Resume the next unfinished authorized stage if preflight and approval are already evidenced.
+The active-prompt section 26 report is now drafted. Before any infrastructure operation, use only authorized read-only discovery to close the facts that affect that operation. No installation, model download, target access, patch, stress test, network change or reboot is implied by documentation publication. Resume the next unfinished authorized stage only after acceptance and the applicable authorization are evidenced.
 
 ### Selected starting profile after authorization
 
@@ -62,11 +75,24 @@ Use dependency-aware service readiness, not fixed sleeps or an Internet test. Th
 
 After each stage, update PROJECT_STATE with actual work, created roles, exact versions/test commands/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. This update is documentation only; no host, VM, LVM, model, Zabbix, network, restart or recovery work has been performed here.
 
-## فارسی — پیش‌نیازها و ادامه از گام ناتمامِ دارای مجوز
+## فارسی — بازبینی مرحلهٔ صفر و سپس برش کوچک 1A
 
 [پرامپت فعال](requirements/NEXTOPS_MASTER_PROMPT.md)، [اصلاحیهٔ تازهٔ چیدمان](requirements/DEPLOYMENT_UPDATE.md)، [راهنمای Zabbix](fa/ZABBIX_SERVER.md)، [رکورد تخصیص](requirements/ZABBIX_SERVER_PLAN.json)، [شروع کار](fa/START_HERE.md)، [وضعیت پروژه](PROJECT_STATE.md)، [نقشهٔ راه](fa/ROADMAP.md)، [سرورها](fa/SERVER_PLAN.md)، [ذخیره‌سازی](STORAGE_PLAN.md)، [آفلاین](fa/OFFLINE_RUNTIME.md)، [ESXi](fa/ESXI_BASELINE.md) و [شاهد سخت‌افزار](requirements/HARDWARE_BASELINE.json) خوانده شوند. جزئیات اولیه در [بایگانی ثابت نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) باقی است؛ ۵۱ بخش و یازده اتصال حذف نمی‌شوند.
 
 اصلاحیه فقط نمونهٔ آزمایشگاهی کوچک و مجموع منابع وابسته به آن را در بخش ۱۸ پرامپت ۳.۰ و مثال‌های قدیمی جایگزین می‌کند؛ تعداد سه ماشین اولیهٔ خود NextOps و شروط مجوز تغییر نمی‌کنند. پیش از ادامه، Git، کار موجود، تأییدها و نتیجهٔ آزمون بررسی شوند؛ کار بازنویسی یا شناسایی تکمیل‌شده بی‌دلیل تکرار نشود.
+
+### نقطهٔ فعلی: بازبینی مالک
+
+[گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md) و [مدل تهدید](requirements/nextops-threat-model.md) بازبینی شوند. مالک تک‌سازمانی بودن فعلی، مقیاس کوچک اولیه با رشد آینده و مسیر `zabbix-server` مستقل را تأیید کرده است.
+
+تنها تصمیم بعدی، پذیرش یا اصلاح معماری چهارماشینی، مرزهای اعتماد، ترتیب 1A تا 1E و برش قرارداد دارای نوع با رد پیش‌فرض در بخش ۱۸ گزارش است. پذیرش فقط checkpoint معماری را می‌بندد؛ مجوز ساخت VM، نصب، شبکه، دانلود مدل، credential یا دسترسی عملیاتی نیست.
+
+شاهد پذیرش مرحلهٔ صفر:
+
+- مالک معماری، roadmap و نخستین برش کد را صریحاً می‌پذیرد یا اصلاح می‌کند؛
+- واقعیت‌های غایب میزبان، Zabbix، مقیاس و بازیابی به‌عنوان مانع خصوصی باقی می‌مانند و ساخته نمی‌شوند؛
+- ADRهای 0001 تا 0006 تا ثبت پذیرش همچنان پیشنهادی‌اند؛
+- implementation فقط از 1A پذیرفته‌شده و با مجوز جداگانهٔ ساخت آغاز می‌شود.
 
 ### اطلاعات موجود
 
@@ -74,13 +100,13 @@ ESXi 8.0.3 با ساخت 24414501، چهار بستهٔ CPU، تعداد ۱۱۲ 
 
 نام واقعی datastore، UUID، نشانی و اطلاعات ورود خصوصی بمانند. DS-C محل پیشنهادی بر اساس ظرفیت است؛ DS-A و DS-B و حجم‌های سیستم و راه‌اندازی خارج از تخصیص‌اند. سقف سه‌ترابایتی حفظ و فضای آزاد هنگام اجرای تغییر تازه‌سازی شود.
 
-### شرط باقی‌ماندهٔ مرحلهٔ صفر
+### شرط خصوصیِ باقی‌مانده برای ساخت
 
 CPU/RAM آزاد، بار و رزرو ماشین‌ها، رشد تعهدشدهٔ thin، محل swap، سلامت و تأخیر دیسک، سازگاری VM و ویژگی مهمان، شبکه و بازیابی مجاز، فایل آفلاین و هدف کیفیت و زمان پاسخ بررسی شوند. هر وابستگی محلی، شبکهٔ داخلیِ مجاز یا صرفاً زمان آماده‌سازی باشد.
 
 برای مسیر جدید، ماشین پایش مستقل آماده شود؛ اگر Zabbix مناسب و مجاز موجود است، ابتدا بررسی و همان استفاده شود. مسیر پایه و نسخهٔ API، گروه‌های میزبان، روش امن توکن، خودپایشی، مهمان‌های هدف و سؤال نمونه معلوم شوند. جزئیات خصوصی در مخزن نباشند.
 
-گزارش بخش ۲۶ پرامپت شامل یافتهٔ مخزن و آزمون واقعی، واقعیت و مجهول، ردیابی، مرز ماژول و هویت و شبکه و دیسک، قرارداد داده و گردش‌کار و API و MCP، برنامهٔ مدل و سنجش، تهدید و سیاست و تأیید، رابط دوزبانه، اتصال‌ها، CI و آفلاین و انتشار و بازیابی، موانع و یک گام بعد باشد. فقط شناسایی مجاز و فقط‌خواندنی انجام شود. انتشار مستندات مجوز نصب، دانلود، دسترسی مقصد، وصله، فشار، شبکه یا reboot نیست. اگر مرحلهٔ صفر قبلاً واقعاً تأیید شده، گام ناتمام بعدی ادامه یابد.
+گزارش بخش ۲۶ اکنون آماده است. پیش از هر عملیات زیرساخت، فقط با شناسایی مجاز و فقط‌خواندنی واقعیت مؤثر همان عملیات روشن شود. انتشار مستندات مجوز نصب، دانلود، دسترسی مقصد، وصله، فشار، شبکه یا reboot نیست. فقط پس از پذیرش و ثبت مجوز مربوط، گام ناتمام بعدی ادامه یابد.
 
 ### چیدمان منتخب پس از مجوز
 

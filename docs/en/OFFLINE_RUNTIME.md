@@ -91,7 +91,7 @@ Zero prohibited requests and all defined functional/security cases passing are r
 
 Phase 0 must map every runtime dependency to `local`, `approved LAN` or `provisioning only`, including frontend calls, model artifacts, auth, keys, time and certificates. Reject Internet-required components for the offline runtime. Preserve the master prompt and update paired guides together.
 
-Phase 1 establishes local authentication, durable state, CPU loading and offline test fixtures. Phase 2 must demonstrate the first read-only investigation and actual bilingual local generation with Internet blocked. Later enabled components must pass the relevant offline cases before release. Production qualification includes offline restart, restore and sustained tests, with security approvals unchanged.
+Phase 1 establishes local authentication, durable state, CPU loading and the first read-only Zabbix investigation with actual bilingual local generation while Internet is blocked. Phase 2 adds direct Linux enrichment and broader history/event diagnostics. Later enabled components must pass the relevant offline cases before release. Production qualification includes offline restart, restore and sustained tests, with security approvals unchanged.
 
 Original requirements 3, 25–27, 29–30, 35–39 and 48 are relevant; enhanced sections 2, 9, 17–21 and 22 govern the CPU, deployment and testing baseline. The existing [traceability matrix](../requirements/TRACEABILITY.md) remains in place. This document adds test identifiers rather than silently rewriting archived requirements.
 

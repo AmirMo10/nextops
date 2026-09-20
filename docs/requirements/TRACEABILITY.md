@@ -6,7 +6,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 
 | Original | Requirement / نیاز | Planned owner/location | Phase | Acceptance evidence / شاهد پذیرش | Status |
 |---|---|---|---|---|---|
-| 1 | Inspect before changes / بررسی پیش از تغییر | `docs/NEXT_TASK.md` | 0 | Repository/host report; preserve dirty work / گزارش و حفظ تغییرات | P |
+| 1 | Inspect before changes / بررسی پیش از تغییر | `docs/en/PHASE_0_REPORT.md`, `docs/fa/PHASE_0_REPORT.md` | 0 | Repository/host report; preserve dirty work / گزارش و حفظ تغییرات | D |
 | 2 | Product objective / هدف محصول | `apps/api`, `application` | 2–8 | Evidence-linked end-to-end flow / جریان کامل مستند | P |
 | 3 | Persian/English / فارسی و انگلیسی | `localization`, `apps/web` | 1–8 | Native wording and RTL/LTR tests / آزمون زبان و جهت | P |
 | 4 | Core architecture / معماری اصلی | `domain`, `application`, `infrastructure` | 0–1 | Reviewed boundaries / بازبینی مرزها | D |
@@ -22,7 +22,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 14 | Juniper MCP / اتصال جونیپر | `connectors/juniper` | 3 | Junos contract/diff/commit-state tests / قرارداد و وضعیت تنظیمات | P |
 | 15 | FortiGate MCP / اتصال فورتی‌گیت | `connectors/fortigate` | 4 | Scoped VPN/routing/policy evidence / شواهد محدود شبکه و سیاست | P |
 | 16 | Sophos MCP / اتصال سوفوس | `connectors/sophos` | 4 | Verified API coverage and explicit limits / پوشش و محدودیت روشن API | P |
-| 17 | Zabbix MCP / اتصال زبیکس | `connectors/zabbix` | 2 | Bounded event/history correlation / هم‌بستگی محدود رویداد و تاریخچه | P |
+| 17 | Zabbix MCP / اتصال زبیکس | `connectors/zabbix` | 1–2 | Phase 1 status reads; Phase 2 bounded history correlation / خواندن وضعیت در مرحلهٔ یک و تاریخچه در مرحلهٔ دو | P |
 | 18 | Grafana MCP / اتصال گرافانا | `connectors/grafana` | 3 | Authorized datasource queries / پرس‌وجوی منبع مجاز | P |
 | 19 | SQL Server MCP / اتصال SQL Server | `connectors/sqlserver` | 5 | Read-only identity, DMV/limits tests / هویت فقط‌خواندنی و محدودیت | P |
 | 20 | MySQL MCP / اتصال MySQL | `connectors/mysql` | 5 | Engine/version and bounded SQL tests / موتور و نسخه و SQL محدود | P |
@@ -56,7 +56,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 48 | Self-verification / بررسی نتیجه | `application`, `connectors` | 2,7 | Fresh postconditions; unknown-outcome reconciliation / نتیجهٔ تازه و رفع ابهام | P |
 | 49 | Phased delivery / تحویل مرحله‌ای | `docs/en/ROADMAP.md`, `docs/fa/ROADMAP.md` | 0–8 | Revised gates, all original scope retained / معیار جدید و حفظ دامنه | D |
 | 50 | Phase completion / پایان مرحله | `docs/PROJECT_STATE.md`, `tests` | 0–8 | Implement/test/fix/document/commit evidence / شاهد ساخت و آزمون و ثبت | P |
-| 51 | First architecture report / گزارش معماری نخست | `docs/NEXT_TASK.md` | 0 | Actual discovery and owner approval before implementation / شناخت واقعی و تأیید | P |
+| 51 | First architecture report / گزارش معماری نخست | `docs/en/PHASE_0_REPORT.md`, `docs/fa/PHASE_0_REPORT.md` | 0 | Report drafted; owner approval required before implementation / گزارش آماده؛ تأیید پیش از ساخت لازم است | D |
 
 ## Explicit revisions / اصلاحات صریح
 

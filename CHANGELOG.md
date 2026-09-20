@@ -1,5 +1,19 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-20 — Phase 0 report and threat model / گزارش مرحلهٔ صفر و مدل تهدید
+
+### English
+
+Added paired English/Persian Phase 0 architecture, gap and readiness reports plus a repository-grounded threat model. Recorded the verified local repository state, owner-confirmed single-organization/small-start/dedicated-Zabbix context, four-VM proposal, trust and data boundaries, CPU benchmark plan, resource/storage gates, all-connector roadmap, offline/recovery tests, blockers and the smallest denial-first Stage 1A slice. Updated project state, next task, indexes and traceability without marking architecture accepted or implementation complete.
+
+Aligned stale offline wording so the first read-only Zabbix answer is a Phase 1 outcome and Linux enrichment follows in Phase 2. Updated current clone commands to `Omid-NextAI/nextops`; preserved historical provenance that names the earlier repository. No infrastructure, model, package, network, Zabbix, ESXi or storage change was performed.
+
+### فارسی
+
+گزارش متناظر فارسی و انگلیسی مرحلهٔ صفر دربارهٔ معماری، فاصله‌ها و آمادگی و نیز مدل تهدید مبتنی بر مخزن افزوده شد. وضعیت واقعی مخزن، فرض‌های تأییدشدهٔ تک‌سازمانی و شروع کوچک و Zabbix مستقل، چیدمان چهارماشینی، مرز اعتماد و داده، برنامهٔ سنجش CPU، کنترل منابع و دیسک، نقشهٔ همهٔ اتصال‌ها، آزمون آفلاین و بازیابی، موانع و کوچک‌ترین برش 1A با رد پیش‌فرض ثبت شدند. وضعیت پروژه، کار بعدی، فهرست‌ها و ردیابی بدون ادعای پذیرش معماری یا تکمیل پیاده‌سازی به‌روز شدند.
+
+عبارت قدیمی راهنمای آفلاین اصلاح شد تا پاسخ فقط‌خواندنی نخست Zabbix خروجی مرحلهٔ یک و بررسی مستقیم Linux در مرحلهٔ دو باشد. فرمان‌های clone جاری به `Omid-NextAI/nextops` تغییر کردند و سابقهٔ تاریخی نام پیشین حفظ شد. هیچ زیرساخت، مدل، بسته، شبکه، Zabbix، ESXi یا دیسکی تغییر نکرد.
+
 ## 2026-09-20 — Startup order and Phase 1A–1E / ترتیب شروع و گام‌های مرحلهٔ یک
 
 ### English
