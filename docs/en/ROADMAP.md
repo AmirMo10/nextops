@@ -1,47 +1,55 @@
 # Phased roadmap and acceptance gates
 
-[فارسی](../fa/ROADMAP.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
+[فارسی](../fa/ROADMAP.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
 
-**Status: proposed sequencing; no software phase is complete. Updated 2026-09-20.** Source: master specification sections 3 and 22–26, mandatory offline contract, and the owner's clarification that the first implementation milestone must end with an AI answer about Zabbix status. Publishing documentation does not approve the architecture or authorize server changes.
+**Status: proposed sequencing; no software phase is complete. Updated 2026-09-20.** The master specification, mandatory offline contract, owner-supplied hardware evidence and later Zabbix-first clarification govern this plan. Publishing documentation does not authorize provisioning, host changes or production access.
 
-**First delivery is now Phase 1: a new question -> authorized read-only Zabbix data -> local CPU-generated answer -> source/time references and audit, with Internet blocked.** Linux enrichment follows in Phase 2. This explicitly supersedes older text that placed the first useful answer in Phase 2; the archived prompt is unchanged.
+**First delivery remains Phase 1: a new question → authorized read-only Zabbix data → local CPU-generated answer → source/time references and audit, with Internet blocked.** Linux enrichment follows in Phase 2. The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
-| Phase | Deliverable | NextOps runtime VMs on one G10 | Exit evidence |
+## Create these VMs first
+
+After Phase 0 approval, create **`nextops-app` → `nextops-ai` → `nextops-connectors-ro`**. Their proposed allocations are respectively **8/32/200**, **24/128/500** and **4/8/80**, expressed as vCPU / RAM GiB / disk GiB. Total: **3 VMs, 36 vCPU, 168 GiB RAM and 780 GiB disk**. PostgreSQL initially runs as a separate restricted service inside the app VM. Do not create the dedicated database or write-execution VM yet.
+
+The [startup guide](START_HERE.md) separates VM creation, software implementation and service restart order. Reuse existing LAN Zabbix; if none exists, add one approved small lab VM before 1C. With that optional lab the total becomes 4 VMs / 40 vCPU / 176 GiB RAM / 880 GiB disk. These are planning budgets, not free-capacity measurements or production Zabbix sizing.
+
+## Overall phases
+
+| Phase | Deliverable | NextOps VMs on one G10 | Exit evidence |
 |---|---|---:|---|
-| 0 — Discover and design | Repository/host report, threat model, architecture, ADRs, 51-section traceability, workload assumptions and CPU benchmark plan | 0 new | Owner approves architecture/roadmap; unavailable facts remain explicit blockers |
-| 1 — Safe foundation and Zabbix status MVP | Conventions/CI, API, PostgreSQL/migrations, local identity/scopes, audit, durable jobs, policy/approval contracts, simulator, CPU harness, real read-only Zabbix adapter and minimal question/answer interface | 3 | A new Persian and English status question produces a local evidence-linked answer with WAN blocked; ZBX-01–ZBX-08, offline startup and denial tests pass in an authorized environment |
-| 2 — Linux/Zabbix incident explanation | Add bounded history/events and direct Linux diagnostics to the working status flow | 3 | Fixtures and authorized lab investigations, restart and offline tests; no mutations enabled |
-| 3 — Network and observability | Windows, Cisco, Juniper, Grafana, evidence-linked inventory/topology; recommended database separation | 4 recommended | Versioned contracts and simulators; scoped lab tests; isolated connector failures; tested data migration/recovery |
-| 4 — Firewalls | FortiGate and Sophos VPN/routing/policy diagnostics | 4 | Version/API limitations verified; cross-device evidence; no unapproved changes |
-| 5 — Databases and virtualization | SQL Server, MySQL/MariaDB and ESXi | 4 | Read-only account/query controls and documented version/license limits |
-| 6 — Knowledge and RCA | Incident memory, local retrieval, topology-based correlation and stronger bilingual evaluation | 4 | Held-out quality results, freshness and scope controls, measured CPU budgets |
-| 7 — Controlled remediation | Small reviewed runbook set, exact-action approval, verification, reconciliation and rollback; isolated write executor | 5 if enabled | Replay/TOCTOU/unknown-outcome tests; lab sign-off before any production mutation |
-| 8 — Production qualification | Hardened deployment, complete UI/docs, offline bundle, release/rollback and independent backup/restore drill | 5 with remediation; 4 read-only | Reviewed readiness checklist, measured operating envelope and RPO/RTO, accepted single-host risks |
+| 0 — Remaining preflight and design | Preserve repository work; reuse supplied hardware/build; check free capacity, storage, network/recovery access, VM compatibility, Zabbix access, workload goals, threat model and offline artifact plan | 0 new | Owner approves architecture and provisioning plan; unavailable facts stay explicit. Do not request the already supplied CPU/RAM totals or ESXi build again. |
+| 1 — Safe foundation and Zabbix status MVP | Complete 1A–1E below, including local identity, database, audit, durable work, CPU model, read-only Zabbix and a minimal answer interface | 3 | New Persian/English status questions produce evidence-linked local answers with WAN blocked; ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 cases pass. |
+| 2 — Linux/Zabbix incident explanation | Bounded history/events and direct Linux diagnostics enrich the existing status flow | 3 | Simulator and authorized lab investigations; restart/offline checks; mutations disabled. |
+| 3 — Network and observability | Windows, Cisco, Juniper, Grafana and evidence-linked inventory/topology; recommended database separation | 4 recommended | Versioned contracts, scoped lab tests and isolated connector failures; database migration and recovery tested. |
+| 4 — Firewalls | FortiGate and Sophos VPN/routing/policy diagnostics | 4 | Verified API/version limits, cross-device evidence and no unapproved changes. |
+| 5 — Databases and virtualization | SQL Server, MySQL/MariaDB and ESXi | 4 | Read-only identity/query controls and documented version/license limits. |
+| 6 — Knowledge and RCA | Incident memory, local retrieval, topology correlation and stronger bilingual evaluation | 4 | Held-out quality results, freshness/scope controls and measured CPU budgets. |
+| 7 — Controlled remediation | Reviewed runbooks, exact-action approval, verification, reconciliation and rollback; separate write executor | 5 if enabled | Replay, time-of-check/time-of-use and unknown-outcome tests; authorized lab sign-off before production mutations. |
+| 8 — Production qualification | Hardened deployment, complete UI/docs, offline bundle, release/rollback and independent backup/restore drill | 5 with remediation; 4 read-only | Reviewed readiness checklist, measured operating envelope and RPO/RTO, accepted single-host risks. |
 
-Counts refer to one serving environment, not physical servers or connector count. They exclude existing Zabbix/managed systems, temporary test VMs and backup destinations. A missing Zabbix instance adds one optional lab VM. The [server plan](SERVER_PLAN.md) defines allocations, optional additions, headroom and the exception under which a small read-only pilot can remain on three VMs. The Phase 3 fourth VM is for data lifecycle/access separation, not proven throughput need.
+Counts cover one serving environment, not physical hosts or connector families. Existing Zabbix/managed systems, temporary tests and independent backup destinations are separate. The fourth VM is recommended for database lifecycle/access isolation, not a measured throughput need; a small reviewed read-only pilot may remain on three under the exception in [SERVER_PLAN](SERVER_PLAN.md). Adding a connector does not automatically add a VM.
 
-## Phase 1 increments: the phase must end with an answer
+## Phase 1 work packages
 
-1. Establish typed contracts, local identity, deny-by-default policy, durable state and audit before real target access.
-2. Provision one verified CPU model under the approved process, benchmark bounded generation, and test offline loading.
-3. Implement the allowlisted Zabbix reads, scoped credentials, deterministic status aggregation and evidence provenance.
-4. Connect a minimal web view or authenticated CLI to new Persian/English questions, local generation and source display.
-5. Run ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 cases, including fresh login and cold start with WAN blocked. Record actual test outcomes and unresolved deployment gates.
+| Stage | Primary VM and work | Exit checkpoint |
+|---|---|---|
+| **1A — Application and safety foundation** | Create app VM first; implement typed contracts, local identity/scopes, PostgreSQL/migrations, durable requests, audit, minimal UI/API and deny-by-default policy using fixtures | Local login/state work; policy/audit/denial tests pass before real target credentials are used. |
+| **1B — Local CPU service** | Create AI VM second; import one reviewed model/runtime, enforce service authentication and budgets, verify CPU execution and offline loading | Fresh Persian/English local answers and recorded latency/resource measurements; not yet a Zabbix completion result. |
+| **1C — Zabbix evidence** | Create read-only connector VM third; gateway plus isolated runner, restricted token, named allowlisted reads, deterministic aggregation and evidence provenance | Real scoped API evidence; correct counts and freshness; denied writes/unsupported methods; sanitized audit. |
+| **1D — End-to-end answer** | Join the app, connector and model flow using the same three VMs | A new question returns a readable answer matching captured Zabbix facts with scope, timestamps and references. |
+| **1E — Offline acceptance** | Block Internet for the test workloads and fresh browser while preserving approved LAN routes; exercise startup, failure and bounded-load cases | Recorded ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 outcomes, including fresh local login and authorized cold-start/reboot checks. |
 
-These are increments inside Phase 1, not permission to call the phase complete after scaffolding or a model 'hello world'. Advanced RAG, direct Linux SSH and the other ten integrations do not block the first Zabbix status answer. Distinguish API reachability, monitored-host state and monitoring-engine health.
+All stages are **NOT STARTED / NOT TESTED** unless a later evidence-backed project-state entry records otherwise. VM creation order does not require completing every feature of the first VM before creating the next. Implementation can start with a small contract increment, but Phase 1 cannot end with scaffolding, a model hello-world, raw JSON, cached answers or simulator-only results.
 
-## Explicit changes to the original fourteen-phase order
+Advanced RAG, direct Linux SSH, a full dashboard and the other ten connector families must not delay the first Zabbix status answer. Separate API connectivity, monitored-host state and monitoring-engine health. The model must not invent counts, live observations or missing self-monitoring data.
 
-Security and local CPU inference move to the foundation, not late phases. Integrations remain in scope but arrive as tested complete flows. PostgreSQL is the initial authoritative backend; alternative internal backends stay tracked. External AI providers are disabled. Admin does not bypass safeguards. Root-cause claims require evidence. Single-host deployments are not high availability. See [ADRs](../adr/README.md) and [traceability](../requirements/TRACEABILITY.md).
+## Explicit revisions and unchanged safeguards
 
-The latest owner clarification additionally brings Zabbix-only answers forward to Phase 1. Original requirement 17 is first exercised there and extended by Phase 2; other requirements remain in scope. New VM placements are proposals pending host verification, not claims of provisioned infrastructure.
+Security and local CPU inference belong in the foundation, not late phases. All eleven integrations remain in scope as tested complete flows. PostgreSQL is authoritative initially; alternative internal backends remain tracked. External AI is disabled. Admin does not bypass safeguards. Root-cause claims require evidence. One G10 is one failure domain. See [ADRs](../adr/README.md) and [traceability](../requirements/TRACEABILITY.md).
 
-## Cross-cutting done criteria
+The owner's Zabbix-first clarification moves original requirement 17 into Phase 1 and extends it in Phase 2. This startup revision adds 1A–1E and fixes the stale 44-vCPU initial total in NEXT_TASK to **36**; it does not enlarge the VM allocations or modify the archived prompt. The [hardware record](../requirements/HARDWARE_BASELINE.json) and [ESXi supplement](ESXI_BASELINE.md) supersede old 90-CPU/1-TB and unknown-build assumptions.
 
-Every increment includes typed working code, tests at the real boundary, recorded results, security review, Persian/English documentation, traceability and a commit. All phases retain bounded execution, credential isolation and CPU-only operation. Do not call a phase production-ready merely because its feature exists.
+## Done and next action
 
-Read-only production pilots and mutation enablement require separate approvals even after lab tests. Dependencies, hardware access, license limits, backups and missing operational targets are explicit blockers rather than guessed facts. The [offline contract](OFFLINE_RUNTIME.md) applies to every enabled component; documented tests are not passing results.
+Every increment needs working typed code, boundary tests with actual outcomes, security review, Persian/English documentation, traceability and a commit. Keep CPU-only execution, credential isolation, bounded work and audit throughout. The [offline contract](OFFLINE_RUNTIME.md) applies to every enabled dependency. Documentation is not proof of implementation or deployment.
 
-## Immediate next action
-
-Complete [Phase 0 discovery and architecture review](../NEXT_TASK.md) using the new Phase 1 outcome as the first implementation target. The smallest implementation can still start with one testable foundation contract, but the phase must end with the Zabbix answer. Approval to document the repository is not approval to deploy or mutate infrastructure.
+Read [START_HERE](START_HERE.md), then complete the remaining [Phase 0 tasks](../NEXT_TASK.md). Provision only after the necessary authorization. Read-only production pilots and later mutations each require their own approval; missing credentials, workload targets, compatible artifacts or recovery access are explicit blockers, not invented facts.
