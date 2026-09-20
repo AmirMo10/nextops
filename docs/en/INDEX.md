@@ -6,13 +6,16 @@
 
 > **Mandatory constraint:** after provisioning, Internet loss must not stop local CPU answers, new local login or offline restart. Read the [offline operating contract and acceptance suite](OFFLINE_RUNTIME.md) before selecting any runtime dependency.
 
+> **First implementation outcome:** Phase 1 must end with a real, evidence-linked local AI answer about Zabbix status while Internet is blocked. The [G10 server plan](SERVER_PLAN.md) proposes three initial NextOps VMs and defines the later four/five-VM layout; the [revised roadmap](ROADMAP.md) supersedes older first-answer timing.
+
 ## Reading paths
 
-Start with the [offline operating contract](OFFLINE_RUNTIME.md), [diagram atlas](DIAGRAMS.md), [suggested technology stack](TECH_STACK.md), [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
+Start with the [offline operating contract](OFFLINE_RUNTIME.md), [G10 server plan](SERVER_PLAN.md), [diagram atlas](DIAGRAMS.md), [suggested technology stack](TECH_STACK.md), [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
 
 | Guide | Contents |
 |---|---|
 | [Offline operating contract](OFFLINE_RUNTIME.md) | Mandatory local answers, offline cold start/login, dependency inventory, LAN boundaries and OFF-01–OFF-10 acceptance tests |
+| [G10 servers and Zabbix milestone](SERVER_PLAN.md) | Per-phase VM counts, proposed resource budgets, existing versus lab Zabbix, trust placement and ZBX-01–ZBX-08 acceptance gates |
 | [Diagram atlas](DIAGRAMS.md) | Seven Mermaid views: context, deployment, investigation, approvals, data, CPU scheduling and releases |
 | [Suggested technology stack](TECH_STACK.md) | Core choices, UI system, CPU AI profile, optional additions, alternatives and official references |
 | [Architecture](ARCHITECTURE.md) | Boundaries, service responsibilities, stack, repository layout |
@@ -28,7 +31,7 @@ Start with the [offline operating contract](OFFLINE_RUNTIME.md), [diagram atlas]
 | [Testing](TESTING.md) | Adversarial, integration, offline, language, and model evaluation |
 | [Operations](OPERATIONS.md) | Observability, backup/restore, outage modes, release rollback |
 | [Troubleshooting](TROUBLESHOOTING.md) | Safe diagnostic decision paths and unknown outcomes |
-| [Roadmap](ROADMAP.md) | Phases 0–8 and measurable acceptance gates |
+| [Roadmap](ROADMAP.md) | Phases 0–8, Zabbix answers in Phase 1 and measurable acceptance gates |
 | [Glossary](GLOSSARY.md) | Consistent English/Persian product terminology |
 
 ## Sources and project control

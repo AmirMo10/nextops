@@ -2,7 +2,7 @@
 
 ### CPU-only AI for evidence-grounded IT operations
 
-[فارسی](README_FA.md) · [Documentation](docs/en/INDEX.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project status](docs/PROJECT_STATE.md)
+[فارسی](README_FA.md) · [Documentation](docs/en/INDEX.md) · [G10 server plan](docs/en/SERVER_PLAN.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project status](docs/PROJECT_STATE.md)
 
 > **Status: documentation and architecture baseline.** The application, connectors, deployment services, and benchmarks are not implemented or validated yet. This repository does not currently provide a runnable NextOps installation.
 
@@ -10,7 +10,7 @@
 
 NextOps is a proposed bilingual IT operations platform for investigating infrastructure incidents, correlating monitoring evidence, and recommending safe next steps. A later, separately approved phase introduces tightly controlled remediation. Persian and English are first-class product and documentation languages.
 
-The first operational milestone is deliberately narrow: **a Persian request → read-only Zabbix/Linux evidence collection → an evidence-linked incident answer → an audit record**. Eleven integration families remain in the roadmap; none is advertised as working before its tests and capability record exist.
+The first operational milestone is now **Phase 1: a new Persian/English question → authorized read-only Zabbix data → a locally generated, evidence-linked status answer → an audit record, with Internet blocked**. Direct Linux diagnostics enrich this flow in Phase 2; they are not a prerequisite for the first Zabbix answer. Eleven integration families remain in the roadmap; none is advertised as working before its tests and capability record exist.
 
 ## Deployment constraints
 
@@ -20,11 +20,13 @@ The first operational milestone is deliberately narrow: **a Persian request → 
 | Initial host | One G10-class server; exact hardware remains unverified |
 | Reported resources | Approximately 90 CPU units, 1 TB RAM, sufficient disk capacity |
 | AI execution | Local CPUs only; no GPU, external inference, or cloud fallback |
-| Offline operation | No Internet dependency after provisioning; authorized management-LAN access remains necessary |
+| Offline operation | No Internet dependency after provisioning, including fresh login and cold start; authorized management-LAN access remains necessary for live evidence |
 | Languages | Native Persian with RTL support; English with LTR support |
 | Safety | Read-only first; deterministic authorization; exact-action approval for later mutations |
 
 “90 CPU units” is not assumed to mean 90 physical cores. Model size, thread counts, NUMA placement, and concurrency will be selected from measurements, not installed RAM capacity.
+
+**Proposed VM plan:** three NextOps VMs for Phase 1–2, four after recommended database separation, and five when controlled remediation is enabled. Existing Zabbix is not duplicated; a missing instance adds one optional lab VM. Initial proposal: 44 vCPU and 168 GiB RAM in total, not a measured minimum or capacity guarantee. See the [per-phase allocations and Zabbix acceptance gates](docs/en/SERVER_PLAN.md) and the [mandatory offline contract](docs/en/OFFLINE_RUNTIME.md).
 
 ## Proposed architecture
 
@@ -44,7 +46,7 @@ flowchart TB
 
 **The model proposes. Application policy authorizes. The execution boundary holds device credentials.** A single host remains one failure domain; containers do not provide host-level high availability.
 
-The [diagram atlas](docs/en/DIAGRAMS.md) expands this overview into seven views: system context, G10 deployment zones, read-only investigation, future remediation approvals, data relationships, CPU scheduling, and release delivery. All views are proposed; the MVP keeps mutations disabled.
+The [diagram atlas](docs/en/DIAGRAMS.md) expands this overview into seven views: system context, G10 deployment zones, read-only investigation, future remediation approvals, data relationships, CPU scheduling, and release delivery. All views are proposed; the MVP keeps mutations disabled. The [server plan](docs/en/SERVER_PLAN.md) supplies the current phase-specific VM placement; the earlier Linux/Zabbix combined investigation is now the Phase 2 expansion.
 
 ## Suggested technology stack
 
@@ -77,12 +79,14 @@ cd nextops
 
 Read the [documentation index](docs/en/INDEX.md), [current state](docs/PROJECT_STATE.md), and [next task](docs/NEXT_TASK.md). The [installation guide](docs/en/INSTALL.md) distinguishes today's repository setup from the future deployment procedure; there is no fabricated installer or compose command.
 
-The [engineering master prompt](docs/requirements/NEXTOPS_MASTER_PROMPT.md) is retained as supplied, without a new translation. Its original Persian appendix is historical source material. Human-facing documentation is maintained in matching English and Persian guides.
+The [engineering master prompt](docs/requirements/NEXTOPS_MASTER_PROMPT.md) is retained as supplied, without a new translation. Its original Persian appendix is historical source material. Human-facing documentation is maintained in matching English and Persian guides. The revised roadmap explicitly records the owner's later Zabbix-first milestone requirement.
 
 ## Documentation
 
 | Topic | English | فارسی |
 |---|---|---|
+| G10 capacity and first Zabbix answer | [Server plan](docs/en/SERVER_PLAN.md) | [سرورها و اولین پاسخ Zabbix](docs/fa/SERVER_PLAN.md) |
+| Offline operating contract | [Offline runtime](docs/en/OFFLINE_RUNTIME.md) | [الزام آفلاین](docs/fa/OFFLINE_RUNTIME.md) |
 | Visual architecture | [Diagram atlas](docs/en/DIAGRAMS.md) | [نمودارهای معماری](docs/fa/DIAGRAMS.md) |
 | Technology decisions | [Suggested stack](docs/en/TECH_STACK.md) | [فناوری‌های پیشنهادی](docs/fa/TECH_STACK.md) |
 | System design | [Architecture](docs/en/ARCHITECTURE.md) | [معماری](docs/fa/ARCHITECTURE.md) |
