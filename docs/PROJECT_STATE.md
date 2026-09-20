@@ -1,101 +1,102 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-20 — startup order and Phase 1 work packages. This is a documentation baseline, not a deployment report.
+Updated: 2026-09-20 — dedicated Zabbix profile published as a documentation change. This is not a deployment report.
 
 ## English
 
-### Requirements and repository history
+### Requirements and preserved history
 
-The connected owner is `AmirMo10`. The previously empty public `AmirMo10/nextops` repository was populated with English/native-Persian documentation. Visibility remains unchanged. Subsequent owner clarifications require local CPU-only AI, new answers and startup without Internet, Zabbix status as the first useful delivery, per-phase VM planning, and now an explicit starting order. The archived master prompt remains unchanged; original scope is retained through 51-section traceability and proposed ADRs.
+The repository is `AmirMo10/nextops`; its public visibility is unchanged. The owner requested English and native-Persian documentation, a single English active prompt, local CPU-only AI, continued operation after Internet loss, a first useful Zabbix status answer, phased VM allocations, storage limits and now publication of the dedicated Zabbix server recommendation. All eleven integrations and the 51 original specification sections remain in scope.
 
-The first accepted deliverable remains **a real authorized Zabbix status answer generated locally with Internet blocked**, with source times, scope and audit. Linux enrichment is Phase 2. No software phase has been completed or approved as production-ready through these documentation changes.
+The active [master prompt v3.0](requirements/NEXTOPS_MASTER_PROMPT.md) and [v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) remain unchanged in this update. The new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md) explicitly supersedes only the old small-lab recommendation and combined budgets; non-conflicting security, acceptance and feature requirements remain mandatory. The archive still contains the original Persian specification.
 
-### Supplied hardware versus unknown capacity
+The first deliverable is a new Persian/English question about authorized Zabbix status, answered by local CPU generation from actual evidence, with source times, scope and audit while Internet is blocked. Linux enrichment follows in Phase 2. Documentation publication does not complete a software phase or establish deployment approval.
 
-[HARDWARE_BASELINE.json](requirements/HARDWARE_BASELINE.json) retains the owner's ESXCLI evidence: 4 CPU packages, 112 physical cores, 224 logical threads, hyperthreading active/enabled/supported, 4 NUMA nodes and 1,442,743,631,872 bytes RAM. Calculated memory is 1,343.6597 GiB / 1.3121677 TiB / 1.4427436 decimal TB. ESXi is 8.0.3, build 24414501, Update 3, raw Patch 55. The partial CPU sample covers CPU 0 completely and CPU 1 partly: family/model/stepping 6/85/7, GenuineIntel, package/node 0/0, reported 2,693,671,674 Hz, CPU 0 L2/L3 1 MiB/38.5 MiB and microcode 0x5003707.
+### Supplied hardware and storage evidence
 
-The [ESXi supplement](en/ESXI_BASELINE.md) separately records the official build mapping to Update 3c (2024-12-12) and CPU tuple mapping to CLX-SP B1 / Xeon Scalable Gen2. These do not confirm an exact marketing SKU, rated base/turbo frequency or all-package identity. The 28-core and 335.9149-GiB per-node figures are arithmetic averages, not measured distribution or free capacity. Preserve ESXi; Ubuntu is the proposed guest. Do not repeat requests for supplied totals/build. No direct assistant host inspection, GPU inventory or memory-health test occurred.
+The [hardware record](requirements/HARDWARE_BASELINE.json) preserves the owner's ESXCLI output: ESXi 8.0.3 build 24414501; 4 CPU packages, 112 physical cores, 224 logical threads, active hyperthreading, 4 NUMA nodes and 1,442,743,631,872 memory bytes (calculated about 1343.66 GiB). It includes the partial CPU 0/1 sample, reported speed/cache/microcode and reference mappings documented in [ESXI_BASELINE](en/ESXI_BASELINE.md). Exact marketing SKU, rated speed, all-package consistency, guest ISA and actual per-node distribution are not established by that sample. Arithmetic averages are not observed topology or free resources.
 
-Still unresolved: free CPU/memory, existing workload/reservations, per-node mapping, exact CPU SKU/all-package consistency, guest ISA, VM hardware level, license/VM limits, vCenter availability, storage capacity/latency, workload scale, Zabbix endpoint/version/permissions and self-monitoring items. These are tracked prerequisites, not invented facts.
+Owner-supplied mounted VMFS rows now establish point-in-time capacity: DS-A 149.75 GiB total / 148.34 GiB free; DS-B 1117.50 / 1109.87; DS-C 3576.75 / 3166.8701171875. Public aliases omit real names, UUIDs and mount paths. [STORAGE_PLAN](STORAGE_PLAN.md) excludes VMFSOS/boot volumes, leaves DS-A/DS-B outside the initial allocation and retains the 3 TB project ceiling. The proposed DS-C free target is 25%, exactly 894.1875 GiB or conservatively about 900 GiB. No datastore reservation, RAID/health inspection or I/O benchmark follows from the supplied listing.
 
-### Delivered documentation and current plan
+Preserve ESXi; Ubuntu Server 24.04 LTS is a guest proposal, not a host replacement. Supplied totals/build/listing should not be requested as missing. Current available CPU/RAM, load/reservations, actual NUMA placement, VM compatibility and license limits, storage backing/health/latency, outstanding growth and swap placement remain to be checked at execution time. No direct assistant host access or compatibility certification was performed.
 
-The repository contains bilingual READMEs and paired guides for architecture, security, CPU inference, configuration, MCP and all eleven integrations, data/API/UI, development, testing, operations, troubleshooting, roadmap, glossary, diagrams, technology choices, offline operation, server planning, ESXi baseline and now [START_HERE](en/START_HERE.md). Existing diagrams, source records, master prompt, review templates, agent/contributor/security rules and documentation tooling are preserved. Technology choices are proposals, not installed/locked dependencies. Prior [visual review](VISUAL_REVIEW.md) limitations still apply.
+### Current proposed deployment
 
-The current VM proposal is unchanged:
-
-| Role | First phase | vCPU | RAM GiB | Disk GiB |
+| Role | First needed | vCPU | RAM GiB | Disk GiB |
 |---|---|---:|---:|---:|
-| nextops-app | 1 | 8 | 32 | 200 |
-| nextops-ai | 1 | 24 | 128 | 500 |
-| nextops-connectors-ro | 1 | 4 | 8 | 80 |
-| nextops-db | 3, recommended | 8 | 64 | 300 |
-| nextops-executor-rw | 7, only if enabled | 4 | 16 | 80 |
+| nextops-app | Phase 1 | 8 | 32 | 200 |
+| nextops-ai | Phase 1 | 24 | 128 | 500 |
+| nextops-connectors-ro | Phase 1 | 4 | 8 | 80 |
+| **zabbix-server** | **Before Stage 1C live integration** | **4** | **16** | **200** |
+| nextops-db | Phase 3, recommended | 8 | 64 | 300 |
+| nextops-executor-rw | Phase 7, remediation only | 4 | 16 | 80 |
 
-Totals for 3/4/5 VMs remain 36/44/48 vCPU, 168/232/248 GiB RAM and 780/1,080/1,160 GiB disk. These are not reservations, proven NUMA placement or capacity guarantees. Existing Zabbix, an optional lab VM, temporary tests, optional dedicated observability and independent backups are separate. The startup update corrects NEXT_TASK's stale initial 44-vCPU figure to 36.
+The new Zabbix VM runs its own monitoring database/frontend/API, not the AI model or the NextOps database. It replaces the earlier 4-vCPU/8-GiB/100-GiB lab fallback for the new-server path. Do not create both; inspect and reuse suitable existing local monitoring instead when available. NextOps-only counts remain 3/4/5; inclusive counts are 4/5/6.
 
-Create the initial VMs in the order **app → AI → read-only connectors**, after preflight and provisioning approval. PostgreSQL is initially an isolated service in the app VM, not a fourth VM. The [roadmap](en/ROADMAP.md) now defines:
+The first combined profile is **40 vCPU / 184 GiB RAM / 980 GiB VMDKs**, plus provisional 184-GiB ESXi swap = **1164 GiB before other overhead**. Later combined profiles are 48/248/1280 (1528 GiB with provisional swap) and 52/264/1360 (1624 GiB). Against unchanged prior DS-C free space, projected free values are 2002.87, 1638.87 and 1542.87 GiB. These are alternative budgets, not cumulative additions, reservations, benchmarks or approval to consume all remaining headroom. Count growth/VMX/snapshot/staging/restore obligations separately and reconcile already-created VMs.
 
-| Stage | Planned outcome | Actual status |
+The [new English guide](en/ZABBIX_SERVER.md) and [Persian guide](fa/ZABBIX_SERVER.md) document the proposed native Zabbix 7.0 LTS / PostgreSQL 16 / Nginx / PHP-FPM / Agent 2 stack, full `vg_zabbix` LVM layout, 7-day history / 90-day numeric-trend starting policy, read-only API identity, self-monitoring, offline acceptance and single-host recovery limits. Exact packages, retention settings and VM/LVM configuration are not installed or tested by these documents. Machine-readable proposed values are in [ZABBIX_SERVER_PLAN.json](requirements/ZABBIX_SERVER_PLAN.json), separate from the supplied hardware evidence.
+
+### Milestones and actual evidence status
+
+| Stage | Required result | Evidence status for this update |
 |---|---|---|
-| 0 | Close remaining prerequisites and approve the plan | Documentation prepared; host/access/capacity checks and approval not established |
-| 1A | App/local identity/database/audit/policy foundation | Not started; tests not run |
-| 1B | Local CPU model with offline loading and new bilingual answers | Not started; tests not run |
-| 1C | Real scoped read-only Zabbix evidence | Not started; tests not run |
-| 1D | Evidence-linked local Zabbix answer | Not started; tests not run |
-| 1E | Offline, restart, security and failure acceptance | Not started; tests not run |
+| 0 | Remaining preflight and appropriate approvals | Planning documented; no direct new host/access/capacity validation |
+| 1A | Local identity, policy, database, durable work and audit | Implementation and tests not verified here |
+| 1B | New local CPU answers and offline model cold load | No model run or benchmark performed here |
+| Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | No VM, installation, account or API call performed here |
+| 1C | Real bounded read-only evidence with correct counts | Live connector tests not run here |
+| 1D | New evidence-linked Zabbix answer with audit | End-to-end answer not demonstrated here |
+| 1E | Offline fresh login/restart, security/failure/capacity tests | ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 not run here |
 
-The [offline contract](en/OFFLINE_RUNTIME.md) still governs local model knowledge, local documents and live LAN evidence. OFF-01–OFF-10 and ZBX-01–ZBX-08 are all NOT RUN; applicable cases may not be silently skipped. Startup order, readiness checks and local Q&A during connector failure are documented in START_HERE. A running VM/model or a cached demonstration does not complete Phase 1.
+The user may perform provisioning independently; verify their actual state before claiming a VM either exists or does not exist. A screenshot of VM settings is not proof of an accepted application workflow. Resume from the next evidenced, authorized incomplete stage rather than resetting progress.
 
-### Limits, validation and next step
+### Scope of this publication and next action
 
-No API, frontend, database schema, connector, simulator, production model, benchmark harness, installer, Compose deployment or systemd service was implemented here. No VM was provisioned, host setting changed, patch installed, Zabbix queried, model run, or offline/restart/restore/load test executed. No vulnerability audit or compatibility certification was performed. GitHub Actions, branch protection, required reviews and private vulnerability reporting are not asserted to be configured; no software license has been selected.
+This change adds paired Zabbix guides, a deployment amendment and allocation JSON, and updates START_HERE, both indexes, NEXT_TASK and this state record. Existing source requirements, archived prompt, diagrams and application files are preserved. Official references were checked for the named Zabbix software details; this is not a new host vulnerability audit or compatibility lock.
 
-This change is limited to documentation. The editing environment could not clone GitHub because its direct GitHub hostname resolution failed; repository reads/writes use the connected GitHub API instead. Do not claim a local clone-based documentation test, application test or browser-rendering test passed. Review the commit diff and published file content separately from runtime readiness.
+Local arithmetic checks confirmed the LVM nominal sum, combined VM totals and datastore projections. Direct GitHub cloning failed because hostname resolution was unavailable in the editing container; reads and publication use the connected GitHub API. Do not report a full clone-based documentation checker, browser renderer or runtime test as passing. Inspect the published commit and records separately from operating readiness. No VM, disk, network, ESXi patch, model, database or monitoring service was modified.
 
-Next: follow [NEXT_TASK](NEXT_TASK.md) and [START_HERE](en/START_HERE.md), resolve only remaining actionable preflight gaps, and obtain the required authorizations. Define latency/quality goals, verify offline artifacts and local key/certificate recovery, review VM topology and a supported host patch/firmware baseline, and identify an independent backup destination. Host/network changes, production access, installs, stress tests and reboots require separate approval. Record one actual next stage after each increment; do not promise background continuation.
+Follow [NEXT_TASK](NEXT_TASK.md), [START_HERE](en/START_HERE.md) and the Zabbix guide. Close only actionable missing preflight facts; obtain provisioning/access authorization; prepare the monitoring dependency before 1C; retain deterministic policy, scoped token handling, no external AI, local assets/login/keys/certificates, independent backups and host-outage limits. Repo protection/CI/private vulnerability reporting and a software license are not asserted to be configured. No asynchronous work is promised.
 
 ## فارسی
 
-### نیازها و پیشینهٔ مخزن
+### نیازها و سابقهٔ محفوظ
 
-مالک متصل `AmirMo10` است. مخزن عمومی و قبلاً خالی `AmirMo10/nextops` با مستندات انگلیسی و فارسی تکمیل شد؛ وضعیت عمومی تغییر نکرده است. توضیحات بعدی مالک، اجرای صرفاً محلی روی CPU، پاسخ تازه و شروع بدون اینترنت، پاسخ وضعیت Zabbix در اولین تحویل، برنامهٔ ماشین‌های هر مرحله و اکنون ترتیب روشن آغاز کار را الزامی کرده‌اند. پرامپت بایگانی‌شده تغییر نکرده و دامنهٔ اولیه با ردیابی ۵۱ بخش و سوابق تصمیم پیشنهادی حفظ شده است.
+مخزن `AmirMo10/nextops` است و وضعیت عمومی آن تغییر نکرده است. مالک مستندات فارسی طبیعی و انگلیسی، یک پرامپت فعال انگلیسی، AI محلی روی CPU، ادامهٔ کار پس از قطع اینترنت، پاسخ وضعیت Zabbix در اولین تحویل، برنامهٔ ماشین‌ها و محدودیت ذخیره‌سازی و اکنون انتشار پیشنهاد سرور مستقل Zabbix را خواسته است. یازده اتصال و ۵۱ بخش مشخصات اولیه در دامنه باقی‌اند.
 
-اولین خروجی پذیرفته‌شده همچنان **پاسخ واقعی دربارهٔ Zabbix مجاز، تولیدشده روی CPU محلی و با اینترنت قطع** است؛ همراه زمان، دامنه و ممیزی. بررسی تکمیلی Linux در مرحلهٔ دو است. هیچ مرحلهٔ نرم‌افزاری از طریق این تغییر مستندات تکمیل یا آمادهٔ بهره‌برداری اعلام نشده است.
+[پرامپت فعال ۳.۰](requirements/NEXTOPS_MASTER_PROMPT.md) و [بایگانی نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) در این تغییر دست‌نخورده‌اند. [اصلاحیهٔ استقرار](requirements/DEPLOYMENT_UPDATE.md) فقط پیشنهاد آزمایشگاه کوچک و مجموع منابع وابسته را صریح جایگزین می‌کند؛ سایر نیازهای امنیت، پذیرش و قابلیت‌ها پابرجا هستند. مشخصات فارسی اولیه همچنان در بایگانی محفوظ است.
 
-### سخت‌افزار ارسالی و ظرفیت نامشخص
+اولین خروجی، پاسخ تازهٔ فارسی یا انگلیسی دربارهٔ وضعیت مجاز Zabbix، تولیدشده روی CPU محلی و مستند به دادهٔ واقعی، همراه منبع و زمان و دامنه و ممیزی با اینترنت قطع است. بررسی مستقیم Linux در مرحلهٔ دو می‌آید. انتشار مستندات، پایان مرحلهٔ نرم‌افزاری یا اثبات مجوز استقرار نیست.
 
-[رکورد سخت‌افزار](requirements/HARDWARE_BASELINE.json) شواهد ESXCLI مالک را نگه می‌دارد: چهار بستهٔ CPU، تعداد ۱۱۲ هستهٔ فیزیکی و ۲۲۴ رشتهٔ منطقی، Hyperthreading فعال و روشن و پشتیبانی‌شده، چهار گرهٔ NUMA و حافظهٔ ۱٬۴۴۲٬۷۴۳٬۶۳۱٬۸۷۲ بایت. تبدیل حافظه برابر ۱٬۳۴۳٫۶۵۹۷ GiB، یا ۱٫۳۱۲۱۶۷۷ TiB، یا ۱٫۴۴۲۷۴۳۶ TB ده‌دهی است. ESXi برابر 8.0.3، ساخت 24414501، Update 3 و مقدار خام Patch 55 است. نمونهٔ ناقص CPU، رکورد صفر را کامل و رکورد یک را ناقص پوشش می‌دهد: خانواده و مدل و بازنگری 6/85/7، سازندهٔ GenuineIntel، بسته و گرهٔ صفر، سرعت گزارش‌شدهٔ ۲٬۶۹۳٬۶۷۱٬۶۷۴ هرتز، L2 و L3 برابر ۱ و ۳۸٫۵ MiB و میکروکد 0x5003707 در CPU 0.
+### شواهد ارسالی سخت‌افزار و دیسک
 
-[یادداشت ESXi](fa/ESXI_BASELINE.md) نگاشت مستقل و رسمیِ build به Update 3c با تاریخ ۱۲ دسامبر ۲۰۲۴ و شناسهٔ CPU به CLX-SP B1 / Xeon Scalable Gen2 را ثبت می‌کند. این‌ها مدل تجاری دقیق، فرکانس اسمی پایه و توربو یا هویت همهٔ بسته‌ها را ثابت نمی‌کنند. اعداد ۲۸ هسته و ۳۳۵٫۹۱۴۹ GiB در هر گره، میانگین‌اند؛ نه توزیع یا ظرفیت آزاد سنجیده. ESXi حفظ و Ubuntu مهمان پیشنهادی باشد. مجموع‌ها و build دوباره درخواست نشوند. اتصال مستقیم دستیار، فهرست GPU یا آزمون سلامت حافظه انجام نشده است.
+[رکورد سخت‌افزار](requirements/HARDWARE_BASELINE.json) خروجی ESXCLI مالک را حفظ می‌کند: ESXi 8.0.3 با ساخت 24414501، چهار بستهٔ پردازنده، ۱۱۲ هسته، ۲۲۴ رشته، Hyperthreading فعال، چهار گرهٔ NUMA و حافظهٔ ۱٬۴۴۲٬۷۴۳٬۶۳۱٬۸۷۲ بایت، تقریباً ۱۳۴۳٫۶۶ GiB. نمونهٔ ناقص CPU 0 و 1، سرعت و cache و microcode ارسالی و نگاشت‌های مرجع در [یادداشت ESXi](fa/ESXI_BASELINE.md) ثبت‌اند. مدل تجاری دقیق، فرکانس اسمی، یکسان بودن همهٔ بسته‌ها، ISA مهمان و توزیع واقعی گره‌ها از نمونه ثابت نمی‌شوند. میانگین حسابی، توپولوژی یا ظرفیت آزاد مشاهده‌شده نیست.
 
-CPU و حافظهٔ آزاد، بار و رزرو موجود، نگاشت گره‌ها، مدل دقیق و یکسان بودن بسته‌ها، ISA مهمان، سطح سخت‌افزار VM، مجوز و محدودیت‌ها، وجود vCenter، ظرفیت و تأخیر دیسک، بار هدف، نشانی و نسخه و مجوز Zabbix و شاخص‌های خودپایشی همچنان باید روشن شوند. این موارد پیش‌نیاز پیگیری‌شده‌اند، نه واقعیت فرضی.
+ظرفیت لحظه‌ای VMFS ارسالی: DS-A برابر ۱۴۹٫۷۵ GiB کل و ۱۴۸٫۳۴ آزاد؛ DS-B برابر ۱۱۱۷٫۵۰ و ۱۱۰۹٫۸۷؛ DS-C برابر ۳۵۷۶٫۷۵ و 3166.8701171875. نام واقعی، UUID و مسیر در رکورد عمومی نیستند. [برنامهٔ دیسک](STORAGE_PLAN.md) حجم‌های سیستم و راه‌اندازی را کنار می‌گذارد، DS-A و DS-B را تخصیص نمی‌دهد و سقف سه‌ترابایتی را حفظ می‌کند. هدف پیشنهادی فضای آزاد DS-C برابر ۲۵ درصد، دقیقاً 894.1875 GiB و با گردکردن حدود ۹۰۰ GiB است. فهرست ارسالی، رزرو، سلامت RAID یا سنجش I/O نیست.
 
-### مستندات تحویل‌شده و برنامهٔ فعلی
+ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است. مجموع‌ها و نسخه و فهرست دوباره به‌عنوان دادهٔ غایب خواسته نشوند. CPU/RAM آزاد فعلی، بار و رزرو، جای‌گذاری NUMA، سازگاری و محدودیت مجوز، سلامت و تأخیر دیسک، رشد و محل swap باید هنگام اجرا بررسی شوند. اتصال مستقیم دستیار یا تأیید سازگاری انجام نشده است.
 
-READMEهای دوزبانه و راهنماهای متناظر معماری، امنیت، CPU، تنظیمات، MCP و یازده اتصال، داده و API و رابط، توسعه، آزمون، عملیات، عیب‌یابی، نقشهٔ راه، واژه‌نامه، نمودار، فناوری، آفلاین، سرورها، ESXi و اکنون [شروع کار](fa/START_HERE.md) موجودند. نمودارها، منابع، پرامپت، قالب بازبینی، قواعد عامل و مشارکت و امنیت و ابزار مستندات حفظ شده‌اند. فناوری‌ها پیشنهادند، نه وابستگی نصب‌شده یا تثبیت‌شده. محدودیت‌های [بازبینی تصویری](VISUAL_REVIEW.md) همچنان برقرارند.
+### چیدمان فعلیِ پیشنهادی
 
-منابع پیشنهادی تغییر نکرده‌اند: ماشین برنامه ۸ vCPU، حافظهٔ ۳۲ GiB و دیسک ۲۰۰ GiB؛ ماشین AI برابر ۲۴، ۱۲۸ و ۵۰۰؛ اتصال فقط‌خواندنی برابر ۴، ۸ و ۸۰. پایگاه مستقل از مرحلهٔ سه، در صورت پذیرش پیشنهاد، ۸، ۶۴ و ۳۰۰؛ ماشین اجرای تغییر فقط در مرحلهٔ هفت و هنگام فعال شدن آن، ۴، ۱۶ و ۸۰ است.
+برنامهٔ NextOps همان ۸ vCPU و ۳۲ GiB و ۲۰۰ GiB؛ AI همان ۲۴ و ۱۲۸ و ۵۰۰؛ اتصال همان ۴ و ۸ و ۸۰ است. **سرور مستقل `zabbix-server` با ۴ vCPU، حافظهٔ ۱۶ GiB و دیسک ۲۰۰ GiB پیش از اتصال زندهٔ 1C** اضافه می‌شود. پایگاه NextOps از مرحلهٔ سه با ۸ و ۶۴ و ۳۰۰ پیشنهاد می‌شود؛ اجرای تغییر فقط در مرحلهٔ هفت و با مجوز، ۴ و ۱۶ و ۸۰ است.
 
-برای سه، چهار و پنج ماشین، مجموع vCPU به‌ترتیب ۳۶، ۴۴ و ۴۸؛ حافظه ۱۶۸، ۲۳۲ و ۲۴۸ GiB؛ و دیسک ۷۸۰، ۱٬۰۸۰ و ۱٬۱۶۰ GiB است. این‌ها رزرو اعمال‌شده، جای‌گذاری اثبات‌شده یا تضمین ظرفیت نیستند. Zabbix موجود، نمونهٔ اختیاری آزمایشگاهی، آزمون موقت، پایش اختصاصی اختیاری و پشتیبان مستقل جدا حساب می‌شوند. این تغییر عدد قدیمیِ مجموع اولیهٔ ۴۴ vCPU در NEXT_TASK را به ۳۶ اصلاح می‌کند.
+سرور Zabbix پایگاه پایش، رابط و API خودش را دارد، نه مدل یا پایگاه NextOps. در مسیر جدید، جایگزین آزمایشگاه ۴ vCPU و ۸ GiB و ۱۰۰ GiB می‌شود؛ هر دو ساخته نشوند. Zabbix محلی موجودِ مناسب و مجاز ابتدا بررسی و استفاده شود. تعداد ماشین‌های خود NextOps همچنان ۳، ۴ و ۵ و مجموع شامل پایش ۴، ۵ و ۶ است.
 
-پس از بررسی و مجوز، ماشین‌ها به‌ترتیب **برنامه، AI و اتصال فقط‌خواندنی** ساخته شوند. PostgreSQL در ابتدا سرویس جدا و محدودشدهٔ ماشین برنامه است، نه VM چهارم. [نقشهٔ راه](fa/ROADMAP.md) اکنون گام‌های زیر را مشخص می‌کند:
+چیدمان اولیه **۴۰ vCPU، حافظهٔ ۱۸۴ GiB و دیسک ۹۸۰ GiB** دارد؛ با سهم موقت ESXi swap برابر ۱۸۴ GiB، جمع پیش از سربار **۱۱۶۴ GiB** است. چیدمان‌های بعدی به‌ترتیب ۴۸ و ۲۴۸ و ۱۲۸۰، با جمع ۱۵۲۸ GiB؛ و ۵۲ و ۲۶۴ و ۱۳۶۰، با جمع ۱۶۲۴ GiB هستند. با مصرف قبلی ثابت، فضای آزاد فرضی DS-C برابر ۲۰۰۲٫۸۷، ۱۶۳۸٫۸۷ و ۱۵۴۲٫۸۷ GiB می‌شود. این‌ها بودجه‌های جایگزین‌اند، نه جمع‌شونده، رزرو، سنجش یا مجوز مصرف همهٔ فضا. رشد، VMX، snapshot، ورود فایل و بازیابی جدا و ماشین موجود بدون دوباره‌شماری حساب شوند.
 
-| گام | خروجی برنامه‌ریزی‌شده | وضعیت واقعی |
-|---|---|---|
-| صفر | پیش‌نیازهای باقی‌مانده و تأیید برنامه | مستندات آماده است؛ بررسی میزبان و دسترسی و ظرفیت و تأیید احراز نشده‌اند. |
-| 1A | برنامه، هویت محلی، پایگاه، ممیزی و سیاست | شروع و آزمون نشده است. |
-| 1B | مدل CPU با بارگذاری آفلاین و پاسخ تازهٔ دوزبانه | شروع و آزمون نشده است. |
-| 1C | شواهد واقعی، محدود و فقط‌خواندنی Zabbix | شروع و آزمون نشده است. |
-| 1D | پاسخ محلی مستند دربارهٔ Zabbix | شروع و آزمون نشده است. |
-| 1E | پذیرش آفلاین، شروع مجدد، امنیت و خطا | شروع و آزمون نشده است. |
+راهنمای [فارسی](fa/ZABBIX_SERVER.md) و [انگلیسی](en/ZABBIX_SERVER.md) نرم‌افزار پیشنهادی Zabbix 7.0 LTS، PostgreSQL 16، Nginx، PHP-FPM و Agent 2، چیدمان کامل `vg_zabbix`، پیشنهاد history هفت‌روزه و trends عددی نودروزه، هویت API محدود، خودپایشی، پذیرش آفلاین و خطر تک‌میزبان را ثبت می‌کنند. بستهٔ دقیق، تنظیم نگهداری و VM/LVM از طریق این مستندات نصب یا آزموده نشده‌اند. اعداد پیشنهادی در [رکورد Zabbix](requirements/ZABBIX_SERVER_PLAN.json) جدا از شاهد سخت‌افزار آمده‌اند.
 
-[الزام آفلاین](fa/OFFLINE_RUNTIME.md) همچنان دانش مدل، سند محلی و شاهد تازهٔ داخلی را از هم جدا می‌کند. OFF-01 تا OFF-10 و ZBX-01 تا ZBX-08 همگی اجرا نشده‌اند؛ مورد لازم بی‌سروصدا کنار گذاشته نشود. ترتیب شروع، آمادگی سرویس و باقی ماندن سؤال‌وجواب محلی هنگام خرابی اتصال در راهنمای شروع آمده است. بالا بودن VM یا مدل یا نمایش کش‌شده پایان مرحلهٔ یک نیست.
+### گام‌ها و وضعیت شواهد
 
-### محدودیت، اعتبارسنجی و گام بعد
+مرحلهٔ صفر طرح دارد، اما بررسی مستقیم تازهٔ میزبان و دسترسی و ظرفیت در این تغییر انجام نشده است. پیاده‌سازی و آزمون 1A در این جلسه تأیید نشده؛ مدل و سنجش 1B اجرا نشده؛ VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E در این تغییر آزموده نشده‌اند.
 
-در این کار API، رابط، schema پایگاه، اتصال‌دهنده، شبیه‌ساز، مدل عملیاتی، ابزار سنجش، نصب‌کننده، Compose یا systemd پیاده نشده‌اند. VM ساخته نشده؛ میزبان تغییر نکرده؛ وصله نصب نشده؛ Zabbix فراخوانی و مدل اجرا نشده؛ آزمون آفلاین، شروع مجدد، بازیابی یا بار انجام نشده است. ممیزی آسیب‌پذیری و تأیید سازگاری نیز انجام نشده‌اند. تنظیم بودن Actions، حفاظت شاخه، بازبینی الزامی و گزارش خصوصی آسیب‌پذیری ادعا نمی‌شود؛ مجوز نرم‌افزاری انتخاب نشده است.
+ممکن است مالک مستقل ماشین ساخته باشد؛ پیش از ادعای وجود یا نبود آن، وضعیت واقعی بررسی شود. تصویر تنظیمات VM به معنای قبولی مسیر برنامه نیست. ادامه از نخستین گام ناتمامِ دارای شاهد و مجوز باشد، نه پاک کردن پیشرفت.
 
-دامنهٔ تغییر فقط مستندات است. محیط ویرایش به‌دلیل شکست نام‌یابی مستقیم GitHub نتوانست clone بگیرد؛ خواندن و نوشتن از اتصال API گیت‌هاب انجام می‌شود. قبولی آزمون مستندات مبتنی بر clone محلی، آزمون برنامه یا نمایش مرورگر ادعا نشود. تفاوت commit و محتوای منتشرشده جدا از آمادگی اجرایی بررسی شوند.
+### دامنهٔ انتشار و کار بعدی
 
-گام بعد مطابق [کار بعدی](NEXT_TASK.md) و [راهنمای شروع](fa/START_HERE.md) است: فقط پیش‌نیاز مؤثر و باقی‌مانده روشن و مجوز لازم گرفته شود. هدف کیفیت و تأخیر، فایل آفلاین، بازیابی کلید و گواهی، توپولوژی VM، مبنای پشتیبانی‌شدهٔ وصله و میان‌افزار و مقصد پشتیبان مستقل مشخص شوند. تغییر میزبان و شبکه، دسترسی عملیاتی، نصب، آزمون فشار و راه‌اندازی دوباره مجوز جدا می‌خواهند. پس از هر تحویل فقط یک گام بعدِ واقعی ثبت و ادامهٔ پس‌زمینه وعده داده نشود.
+راهنماهای دوزبانهٔ Zabbix، اصلاحیه و JSON تخصیص اضافه و راهنمای شروع، هر دو فهرست، کار بعدی و این سند به‌روز شدند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و فایل‌های برنامه حفظ شده‌اند. منابع رسمی برای جزئیات نرم‌افزاری بررسی شده‌اند؛ ممیزی امنیت میزبان یا تثبیت سازگاری انجام نشده است.
+
+محاسبهٔ محلی، جمع اسمی LVM، منابع مجموع و برآورد فضای datastore را تأیید کرد. clone مستقیم به‌دلیل نبود نام‌یابی GitHub در محیط ویرایش شکست خورد؛ خواندن و انتشار با اتصال API انجام می‌شود. قبولی ابزار کامل مستندات مبتنی بر clone، نمایش مرورگر یا آزمون اجرایی ادعا نشود. commit و رکورد منتشرشده جدا از آمادگی عملیاتی بررسی شوند. هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه یا سرویس پایش تغییر نکرده است.
+
+[کار بعدی](NEXT_TASK.md)، [شروع کار](fa/START_HERE.md) و راهنمای Zabbix مبنا باشند. فقط پیش‌نیاز مؤثر باقی‌مانده روشن، مجوز ساخت و دسترسی دریافت و پایش پیش از 1C آماده شود. سیاست قطعی، توکن محدود، منع AI خارجی، رابط و ورود و کلید و گواهی محلی، پشتیبان مستقل و محدودیت خرابی میزبان حفظ شوند. حفاظت مخزن، CI، گزارش خصوصی آسیب‌پذیری و مجوز نرم‌افزاری تنظیم‌شده فرض نشده‌اند. ادامهٔ کار پس‌زمینه وعده داده نمی‌شود.

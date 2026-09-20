@@ -1,81 +1,86 @@
 # Start here: first VMs and the offline Zabbix milestone
 
-[فارسی](../fa/START_HERE.md) · [Index](INDEX.md) · [Roadmap](ROADMAP.md) · [Server plan](SERVER_PLAN.md)
+[فارسی](../fa/START_HERE.md) · [Index](INDEX.md) · [Roadmap](ROADMAP.md) · [Server plan](SERVER_PLAN.md) · [Dedicated Zabbix](ZABBIX_SERVER.md)
 
-**Updated: 2026-09-20. Status: implementation plan; no VMs or application services have been created by this documentation change.** This guide orders the existing plan; it does not increase the server count or change the archived master prompt. All acceptance cases remain NOT RUN.
+**Updated: 2026-09-20 — dedicated Zabbix deployment profile.** This is an implementation plan, not a report of provisioned VMs or completed tests. It updates the former small-lab recommendation without increasing the number of NextOps core VMs. Read the [deployment amendment](../requirements/DEPLOYMENT_UPDATE.md) with the active prompt; all non-conflicting safety and feature requirements remain in force.
 
 ## 1. First decision
 
-Keep the existing ESXi host. After the limited Phase 0 preflight and provisioning approval, create these three NextOps VMs in this order:
+Keep the existing ESXi host. After the remaining Phase 0 preflight and provisioning authorization, create the three NextOps VMs in the existing order and prepare the dedicated Zabbix dependency before Stage 1C:
 
-| Order | VM | vCPU | RAM GiB | Total disk GiB | Initial responsibility |
+| Order / deadline | VM | vCPU | RAM GiB | Total disk GiB | Responsibility |
 |---|---|---:|---:|---:|---|
-| 1 | `nextops-app` | 8 | 32 | 200 | API, local login, minimal interface, workflow worker, and PostgreSQL as a separate restricted service. |
-| 2 | `nextops-ai` | 24 | 128 | 500 | One local CPU inference service and verified model artifacts. No device credentials. |
-| 3 | `nextops-connectors-ro` | 4 | 8 | 80 | Protected MCP gateway and isolated read-only Zabbix runner. |
-| **Total** | **3 NextOps VMs** | **36** | **168** | **780** | **One serving environment; not measured minimum requirements.** |
+| 1 | `nextops-app` | 8 | 32 | 200 | Local login, API/UI, durable worker and independent restricted NextOps PostgreSQL service |
+| 2 | `nextops-ai` | 24 | 128 | 500 | One local CPU inference service and verified model artifacts; no device credentials |
+| 3 | `nextops-connectors-ro` | 4 | 8 | 80 | Protected MCP gateway and isolated read-only Zabbix runner |
+| Ready before 1C; may be prepared alongside 1A/1B | `zabbix-server` | 4 | 16 | 200 | Zabbix, its own PostgreSQL, web frontend/API and Agent 2 |
+| **Combined total** | **3 NextOps + 1 Zabbix = 4 VMs** | **40** | **184** | **980** | **One proposed serving profile** |
 
-Ubuntu Server 24.04 LTS remains the proposed guest baseline, subject to the compatibility review in [ESXi baseline](ESXI_BASELINE.md). Do not replace ESXi with Ubuntu or install NextOps in the ESXi management shell. VM creation order is an operational convenience, not a technical requirement to finish every application feature before creating the AI VM. All three may be provisioned in the same approved work session.
+Ubuntu Server 24.04 LTS is the proposed guest OS after compatibility review, not an ESXi replacement. Do not install these services in the ESXi management shell. DS-C is the capacity-based datastore proposal; it is not a performance or resilience certification. Actual names, addresses and credentials remain in private deployment inventory.
 
-These allocations are initial experiments, not reservations already applied or guarantees of free host capacity. The 24-vCPU AI setting is not 24 simultaneous questions or an instruction to set every thread pool to 24. Begin with one active generation request; compare bounded CPU configurations before resizing. The generous 128 GiB/500 GiB allocation is not the minimum footprint of the first quantized model.
+The three NextOps VMs alone still total 36 vCPU / 168 GiB RAM / 780 GiB disks. Do not mistake the fourth monitoring VM for a new NextOps database VM. `zabbix-server` replaces the old 4-vCPU/8-GiB/100-GiB lab recommendation for this new-server path; do not create both. Inspect and reuse a suitable authorized existing Zabbix instance instead when already available. Never duplicate or reinstall an existing server merely to match this document.
 
-**Zabbix is a separate dependency.** Reuse an existing authorized LAN installation. If none exists, provision one separate approved `zabbix-lab` VM before Stage 1C: provisional 4 vCPU, 8 GiB RAM and 100 GiB disk for a small lab only. Total with this optional lab is 4 VMs, 40 vCPU, 176 GiB RAM and 880 GiB disk. Production Zabbix sizing requires its own workload and retention data. Never assume an instance exists, or rebuild an existing one unnecessarily.
+All VMs may be prepared in one approved session. Creation order does not require completing every app feature before creating the AI VM. The AI budget is an experiment, not 24 concurrent questions or 24 mandatory threads; start with one active generation request. Exact CPU SKU, guest-visible features and NUMA placement require their separate evidence.
 
-## 2. Phase 0: close only the remaining prerequisites
+The [Zabbix guide](ZABBIX_SERVER.md) contains its full 200-GiB LVM layout, proposed native Zabbix 7.0 LTS / PostgreSQL 16 / Nginx / PHP-FPM stack, seven-day history / ninety-day numeric-trend proposal, role restrictions and self-monitoring gates. These are recommendations, not installed settings or workload guarantees.
 
-Do not repeat discovery already supplied by the owner: ESXi 8.0.3 build 24414501; 4 packages, 112 physical cores, 224 logical threads, 4 NUMA nodes and 1,442,743,631,872 bytes RAM. See [hardware evidence](../requirements/HARDWARE_BASELINE.json). These are host totals, not currently available capacity.
+## 2. Phase 0: close only remaining prerequisites
 
-Before allocating resources, verify available CPU/memory, existing VM reservations and load, usable datastore capacity/latency, the selected VM compatibility level, and approved network/administrative access. Record actual per-node distribution when available; the 28-core per-node average does not prove placement. Exact CPU SKU is still useful for tuning, but is not a reason to repeat the supplied build/totals or indefinitely postpone safe planning. Runtime compatibility must be verified from guest-visible features before selecting its build.
+Already supplied: ESXi 8.0.3 build 24414501; four packages, 112 physical cores, 224 logical threads, four NUMA nodes, 1,442,743,631,872 memory bytes and point-in-time datastore values. Read [HARDWARE_BASELINE](../requirements/HARDWARE_BASELINE.json), [ESXI_BASELINE](ESXI_BASELINE.md) and [STORAGE_PLAN](../STORAGE_PLAN.md). Do not ask for supplied totals as missing or confuse them with free capacity.
 
-Record the Zabbix endpoint/version, permitted host groups, protected credential delivery, and a small agreed question set. Define response-time/quality goals and the authorized offline test window. Keep actual addresses, tokens and private inventories outside this public repository. Preserve ESXi recovery access. Obtain approval for provisioning, installation and network rules; this documentation request alone does not authorize them. Missing Zabbix access can block live testing without blocking independent foundation work.
+Verify available CPU/RAM, existing load/reservations, outstanding datastore commitments, backing storage health/latency, VM compatibility and guest ISA, approved networks and recovery access. The 28-core per-node average is not measured distribution. Refresh free bytes at the change window. Keep system/boot volumes and DS-A/DS-B outside this initial allocation.
 
-Review the [ESXi supplement](ESXI_BASELINE.md) before configuring topology. Automatic vTopology requires virtual hardware version 20 or later and the appropriate automatic Cores per Socket setting [1]. Verify the saved result: the standalone Host Client has a documented case of replacing automatic assignment with one core per socket [2]. Do not create vCenter merely for this project, guess a NUMA node to pin, change BIOS settings, or upgrade existing VMs without a reviewed plan. Review host patches/firmware before a production pilot; do not turn that review into an unapproved host upgrade.
+Define the authorized Zabbix endpoint/version, permitted host groups, protected credential delivery, self-monitoring items, target question set and response-quality/latency goals. When creating the new server, verify monitoring data before the live AI test. Missing target access blocks live validation, not unrelated foundation work. No indefinite planning loop over already supplied data.
+
+Preserve ESXi recovery access. Obtain approvals for provisioning, installation, network rules and target access. This documentation is not permission for production changes, stress tests, model downloads, patches or reboots. Read the ESXi supplement before topology changes; verify supported automatic settings and the saved result, especially with the standalone Host Client. Do not guess NUMA pins or create vCenter solely for this project.
 
 ## 3. Phase 1: five steps, one completion gate
 
-Stages 1A–1E are work packages inside Phase 1, not new top-level phases. Phase 1 remains incomplete until 1E passes for the deployed profile.
+Stages 1A–1E are work packages within Phase 1. Prepare the Zabbix dependency alongside them; it does not introduce another top-level phase.
 
-| Stage | Work and VM placement | Required checkpoint |
+| Stage | Work and placement | Required checkpoint |
 |---|---|---|
-| **1A — Application and safety foundation** | Create `nextops-app` first. Establish guest administration, locally stored configuration, typed contracts, PostgreSQL/migrations, local authentication/scopes, durable requests and audit. Prepare the minimal UI/API and deny-by-default policy with synthetic fixtures. | Local login and durable state work; forbidden operations fail; permissions/audit tests pass. No target credentials or production-device access in this stage. |
-| **1B — Local CPU answer service** | Create `nextops-ai` second. Import one reviewed quantized multilingual model and compatible pinned CPU runtime. Authenticate the internal service, enforce resource limits and verify local artifact loading. | A fresh Persian question and English question receive actual locally generated answers; cold-load without Internet works. Record latency and resource measurements. General model answers do not count as Zabbix evidence. |
-| **1C — Read-only Zabbix evidence** | Create `nextops-connectors-ro` third. Implement the MCP gateway and separate Zabbix runner identities. Provision a restricted Zabbix identity through an approved secret path only after Stage 1A controls pass. | Real authorized API reads yield scoped, timestamped evidence and deterministic counts. Writes and unsupported methods are denied. Token/error/output handling is sanitized. Fixtures remain labeled as fixtures. |
-| **1D — The first useful answer** | Connect the application request, read-only collection, deterministic aggregation, local CPU synthesis and source display. Use the same three VMs. | A new Zabbix question produces a readable Persian/English explanation matching captured evidence, with scope, freshness, missing data and audit. A raw JSON response or cached demo is insufficient. |
-| **1E — Offline acceptance** | Test all three VMs and a fresh browser with WAN blocked and the authorized Zabbix LAN route available. Test service restart, permitted reboot, failure cases and bounded load. | ZBX-01–ZBX-08 and all applicable OFF-01–OFF-10 cases have recorded outcomes; no skipped applicable case is presented as passing. Phase 1 finishes only after live-data, security and offline gates pass. |
+| **1A — App and safety** | `nextops-app`: guest administration, typed contracts, PostgreSQL/migrations, local identity/scopes, durable requests, audit, minimal UI/API and fixture-based policy tests | Login and state work; prohibited actions denied; mandatory audit tested before real target credentials |
+| **1B — CPU answers** | `nextops-ai`: approved local model/runtime import, internal authentication, resource budgets and persistent artifacts | New Persian/English answers and offline cold loading measured; general model output is not monitoring evidence |
+| **Zabbix preparation — before 1C** | `zabbix-server`: separate PostgreSQL mount/instance, monitoring service/frontend, self-monitoring and scoped API account | Actual services and relevant fresh data available; database separate from NextOps; restricted API policy verified |
+| **1C — Read-only evidence** | Gateway and separate Zabbix runner on `nextops-connectors-ro`; deliver token through the approved secret path after 1A | Real scoped API data, deterministic counts and timestamps; writes and unlisted methods denied |
+| **1D — Useful answer** | Connect question, collection, aggregation, local synthesis, source display and audit using the four-VM profile | New Zabbix question answered from captured evidence with freshness, scope and unknowns; not raw JSON or a cache demo |
+| **1E — Offline acceptance** | Test the actual profile and fresh browser with Internet blocked and approved local routes retained | Recorded ZBX-01–ZBX-08 and applicable OFF-01–OFF-10, including Zabbix restart, fresh login, failure behavior and measured limits |
 
-The source specification already requires Zabbix host/problem/history analysis and auditing; this guide makes the owner's later Zabbix-first delivery order actionable. Direct Linux diagnostics, full topology, advanced RAG, every other connector and remediation are not prerequisites for the first answer.
+The phase ends with the accepted answer, not with VM creation, a model hello-world or the Zabbix dashboard alone. Direct Linux diagnostics, advanced RAG, full topology, every connector and remediation are not prerequisites. Installing a read-only OS monitoring agent is administrative monitoring setup, not implementation of the future direct Linux connector or permission for AI-initiated changes.
 
 ## 4. Connections and credentials from day one
 
-The application initiates authenticated internal requests to the AI service and MCP gateway; results return over those connections. The connector runner alone initiates approved Zabbix API calls. The AI cannot directly query Zabbix, read target credentials, reach the managed-device LAN or call external AI. The app has no direct managed-device access. Only intended clients and the approved administration path can reach the application ingress.
+The app makes authenticated internal requests to the model and MCP gateway. Only the isolated Zabbix runner reads the Zabbix API. The model receives sanitized evidence, not tokens, database credentials or a management-device route. Gateway and runners retain separate identities even on the same VM. The app cannot bypass the gateway to query managed systems.
 
-Keep PostgreSQL internal to the app VM initially, with separate service roles and restricted storage. Gateway and runner remain distinct processes/identities even on the same connector VM. An allowlisted API token is delivered only to its runner. Additional NICs or port groups are not permission to route or bridge networks; enforce destination/service rules and verify there is no bypass. Choose actual IPs, VLANs and ports from the operator's environment, not examples copied into public documentation.
+Zabbix monitors continuously; NextOps retrieves evidence on demand when a user asks. A new API call may return an older measurement, so show both source time and collection time. Separate API reachability, monitored-estate status and monitoring-engine health. Use fresh self-monitoring items for the last of these; missing items mean unknown, not healthy.
 
-Runtime has no Internet dependency. Provision dependencies through a controlled download/import step and keep the AI runtime isolated. Models, tokenizer files, UI assets, local login, key access, certificates and required data must survive restart. GitHub and package registries are release/provisioning sources only. Do not enable public SSH or attach a privileged GitHub Actions runner to these serving VMs. Untrusted builds/tests use a separate disposable environment without service credentials; count its concurrent resource use separately.
+OS monitoring traffic, where enabled, needs an explicit narrow admin-reviewed path and separate agent identity; do not give the inference service broad network access. No unrestricted remote commands, public management interfaces, shared superuser or browser-to-model route. Additional NICs do not authorize bridging. Keep both PostgreSQL instances internal to their own VMs initially and configure storage ownership correctly.
 
-## 5. Do not confuse creation order with restart order
+All required models, dependencies, UI assets, dictionaries, identity, DNS/time/key/certificate services and state must work locally. GitHub and registries are provisioning/release sources, not runtime dependencies. No privileged PR runner on a serving VM. Untrusted tests/builds use isolated infrastructure without operational secrets; count their peak resource use separately.
 
-Creation order is **app → AI → read-only connectors**. After installation, the operational startup sequence is dependency-aware: local storage/key/time prerequisites and PostgreSQL first; AI and gateway/runner services may start independently; the API may provide login and truthful degraded status while dependencies warm; the worker admits a Zabbix investigation only when the required database, audit, authorization, model and connector checks pass. Use bounded readiness/retry behavior, not fixed sleeps or Internet connectivity tests. Zabbix unavailability must not block general local Q&A when its own dependencies are healthy.
+## 5. Creation order is not startup order
 
-After a restart, recover durable jobs without blindly replaying remote effects. Guest service readiness must be checked even if ESXi has already powered on the VM. Shutdown should drain or persist work before stopping its dependencies; do not confuse a stopped browser request with a cancelled remote operation.
+Use dependency-aware readiness: local storage, keys and time first; both PostgreSQL services before their dependants. Zabbix must have its database and valid monitoring evidence. AI and gateway may start independently. API can expose login and truthful degraded health during warm-up. Admit a Zabbix investigation only when required identity, policy, DB, audit, model and connector checks pass. General local Q&A must not wait indefinitely for unavailable Zabbix.
 
-## 6. Add later, not now
+Use bounded readiness/retries, not fixed sleeps or Internet probes. A powered-on VM is not a ready application. Recover durable jobs without replaying uncertain external effects; persist/drain work before stopping dependencies. Cold-start tests include the new Zabbix server and a fresh browser session, not just an already loaded model.
 
-| When | VM decision |
-|---|---|
-| Phase 2 | Keep 3; add bounded Linux diagnostics and Zabbix history within the existing read-only boundary. |
-| Phase 3 | Recommend adding `nextops-db` (8 vCPU, 64 GiB RAM, 300 GiB disk); migrate and test restore before removing the old database service. Total 4 VMs / 44 vCPU / 232 GiB RAM / 1,080 GiB disk. This is an isolation decision, not a measured throughput requirement. |
-| Phases 4–6 | Keep 4 unless measured demand or an additional trust boundary justifies more. A reviewed small read-only pilot may remain on 3 as described in SERVER_PLAN. |
-| Phase 7 | Add `nextops-executor-rw` (4 vCPU, 16 GiB RAM, 80 GiB disk) only for separately approved remediation. Total 5 VMs / 48 vCPU / 248 GiB RAM / 1,160 GiB disk. |
-| Phase 8 | No automatic extra VM: qualify 5 with remediation or 4 read-only. Require an independent backup destination and an actual restore drill. Same-host replicas/backups do not protect against loss of the G10. |
+## 6. Combined capacity and later VMs
 
-Do not create a standalone database, write executor, dedicated monitoring VM, per-connector VMs, Kubernetes cluster, separate vector service or second AI VM just to begin Phase 1. Basic health/metrics/audit still belong in the first delivery; only the extra infrastructure is deferred.
+| Phase/profile including zabbix-server | NextOps VMs | All VMs | vCPU | RAM GiB | VMDK GiB | Disk + provisional ESXi swap GiB |
+|---|---:|---:|---:|---:|---:|---:|
+| 1–2 | 3 | 4 | 40 | 184 | 980 | 1164 |
+| 3–6, separate NextOps DB | 4 | 5 | 48 | 248 | 1280 | 1528 |
+| 7–8, remediation enabled | 5 | 6 | 52 | 264 | 1360 | 1624 |
 
-## 7. Handoff and validation record
+The Phase 3 `nextops-db` remains 8 vCPU / 64 GiB / 300 GiB; migrate and restore-test before retiring the old service. The Phase 7 `nextops-executor-rw` remains 4 vCPU / 16 GiB / 80 GiB and requires separate remediation approval. A read-only Phase 8 may keep the middle profile. A reviewed small read-only pilot may retain three NextOps VMs plus its Zabbix dependency. Extra services require measured demand or a trust boundary, not a phase number alone.
 
-After each stage, record its status, VM roles actually created, versions, exact test commands/results, remaining blockers and the next checkpoint in [PROJECT_STATE](../PROJECT_STATE.md) and [NEXT_TASK](../NEXT_TASK.md). A check mark requires evidence; VM allocation, model startup and documentation publication are different from the first accepted Zabbix answer. Architecture approval, host access, model runs, VM provisioning, network isolation and acceptance tests are not claimed by this guide.
+These are alternative profiles, not cumulative totals. Do not add the old lab or count Zabbix PostgreSQL as another VM. Keep the 3 TB project ceiling and DS-C headroom: exactly 894.1875 GiB for the proposed 25% target, conservatively about 900 GiB. The first 1164-GiB subtotal projects 2002.87 GiB free from the earlier snapshot before extra overhead/growth. Apply the full storage gate for thin-disk commitments, real swap placement, VMX files, snapshots/consolidation, offline staging and restore copies. Reconcile any already-created VMs. Do not shrink disks or change memory reservations to make accounting fit.
 
-Sources: existing [server plan](SERVER_PLAN.md), [offline contract](OFFLINE_RUNTIME.md), [hardware record](../requirements/HARDWARE_BASELINE.json), [master specification](../requirements/NEXTOPS_MASTER_PROMPT.md), and the owner's subsequent clarifications. Resource budgets and ordering are engineering proposals. Official topology references checked 2026-09-20 support only the named ESXi behaviors, not NextOps performance.
+Do not create another monitoring VM, second AI service, per-connector VMs, Kubernetes or a separate vector service for this first result. Preserve basic metrics/audit. Same-host VMs and datastores are one host-failure domain; require independent backups and an external host-outage check where needed before production.
 
-[1]: https://knowledge.broadcom.com/external/article/438023
-[2]: https://knowledge.broadcom.com/external/article/425838
+## 7. Handoff and validation
+
+Update [PROJECT_STATE](../PROJECT_STATE.md) and [NEXT_TASK](../NEXT_TASK.md) after each real stage with created roles, versions, exact tests, failures/skips and blockers. Documentation publication does not mark provisioning or a test complete. See [DEPLOYMENT_UPDATE](../requirements/DEPLOYMENT_UPDATE.md) and [ZABBIX_SERVER_PLAN](../requirements/ZABBIX_SERVER_PLAN.json) for the scoped amendment and machine-readable totals.
+
+No VM, model, Zabbix service, filesystem, network rule or acceptance test has been created or executed by this documentation change. The active prompt and original archived scope remain intact; the current dedicated-server profile takes precedence over their older small-lab examples.

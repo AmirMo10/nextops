@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "revision_date": "2026-09-20",
+  "status": "recommended_not_provisioned_not_tested",
+  "source": "Owner requested GitHub publication of the dedicated Zabbix VM recommendation.",
+  "hardware_source": "docs/requirements/HARDWARE_BASELINE.json",
+  "amendment": "docs/requirements/DEPLOYMENT_UPDATE.md",
+  "guides": {"en": "docs/en/ZABBIX_SERVER.md", "fa": "docs/fa/ZABBIX_SERVER.md"},
+  "replaces_for_new_server_path": "Optional zabbix-lab at 4 vCPU, 8 GiB RAM, 100 GiB disk; do not allocate both by default.",
+  "existing_zabbix_policy": "Inspect and reuse a suitable authorized local instance rather than duplicating or reinstalling it.",
+  "new_monitoring_vm": {
+    "name": "zabbix-server", "kind": "monitoring_dependency_not_nextops_core",
+    "vcpu": 4, "ram_gib": 16, "disk_gib": 200,
+    "proposed_datastore_alias": "DS-C", "guest_os": "Ubuntu Server 24.04 LTS",
+    "new_install_firmware": "UEFI", "manual_cores_per_socket": 4, "manual_sockets": 1,
+    "automatic_topology": "Preferred only after verifying supported VM compatibility and saved setting.",
+    "cpu_hot_add_proposal": false,
+    "software_proposal": ["Zabbix 7.0 LTS maintained patch", "PostgreSQL 16 maintained patch", "Nginx", "compatible PHP-FPM", "Zabbix Agent 2", "native packages and systemd"],
+    "exact_package_versions_locked": false,
+    "database": "Dedicated local Zabbix PostgreSQL instance, not NextOps PostgreSQL.",
+    "required_before": "Stage 1C real Zabbix integration",
+    "lvm": {
+      "volume_group": "vg_zabbix", "new_empty_disk_only": true,
+      "outer_partitions": [
+        {"purpose": "EFI", "size_gib": 1, "filesystem": "FAT32_ESP", "mount": "/boot/efi"},
+        {"purpose": "boot", "size_gib": 2, "filesystem": "ext4", "mount": "/boot"}
+      ],
+      "logical_volumes": [
+        {"name": "lv_root", "size_gib": 32, "filesystem": "ext4", "mount": "/"},
+        {"name": "lv_var", "size_gib": 16, "filesystem": "ext4", "mount": "/var"},
+        {"name": "lv_log", "size_gib": 8, "filesystem": "ext4", "mount": "/var/log"},
+        {"name": "lv_pg", "size_gib": 112, "filesystem": "ext4", "mount": "/var/lib/postgresql"},
+        {"name": "lv_swap", "size_gib": 4, "filesystem": "swap", "mount": null}
+      ],
+      "approximate_unallocated_vg_gib": 25,
+      "free_space_note": "Alignment and LVM metadata reduce actual free extents; not an LV and not a separate datastore credit."
+    },
+    "retention_proposal": {"history_days": 7, "numeric_trends_days": 90, "configured": false, "exceptions_and_growth_review_required": true}
+  },
+  "initial_nextops_vms_unchanged": [
+    {"name": "nextops-app", "vcpu": 8, "ram_gib": 32, "disk_gib": 200},
+    {"name": "nextops-ai", "vcpu": 24, "ram_gib": 128, "disk_gib": 500},
+    {"name": "nextops-connectors-ro", "vcpu": 4, "ram_gib": 8, "disk_gib": 80}
+  ],
+  "combined_profiles_including_zabbix": [
+    {"phase": "1-2", "nextops_vm_count": 3, "total_vm_count": 4, "vcpu": 40, "ram_gib": 184, "virtual_disks_gib": 980, "provisional_esxi_swap_gib": 184, "subtotal_before_other_overhead_gib": 1164, "projected_ds_c_free_gib": 2002.8701171875, "above_exact_free_target_gib": 1108.6826171875},
+    {"phase": "3-6", "nextops_vm_count": 4, "total_vm_count": 5, "vcpu": 48, "ram_gib": 248, "virtual_disks_gib": 1280, "provisional_esxi_swap_gib": 248, "subtotal_before_other_overhead_gib": 1528, "projected_ds_c_free_gib": 1638.8701171875, "above_exact_free_target_gib": 744.6826171875},
+    {"phase": "7-8_with_remediation", "nextops_vm_count": 5, "total_vm_count": 6, "vcpu": 52, "ram_gib": 264, "virtual_disks_gib": 1360, "provisional_esxi_swap_gib": 264, "subtotal_before_other_overhead_gib": 1624, "projected_ds_c_free_gib": 1542.8701171875, "above_exact_free_target_gib": 648.6826171875}
+  ],
+  "storage": {
+    "project_ceiling_decimal_bytes": 3000000000000,
+    "ds_c_reported_free_bytes": 3400400896000,
+    "ds_c_reported_size_bytes": 3840506068992,
+    "free_space_target_fraction": 0.25,
+    "exact_free_space_target_gib": 894.1875,
+    "rounded_operating_target_gib": 900,
+    "projections_are_not_reservations": true,
+    "assumptions": "New allocations, unchanged existing usage, all profile disks and provisional ESXi swap on DS-C; additional overhead, existing growth, snapshots, staging and recovery copies excluded. Reconcile already-created VMs. Do not count the old lab as well."
+  },
+  "integration": {
+    "read_only": true,
+    "identity_example_not_created": "nextops-reader",
+    "token_location": "protected Zabbix runner only",
+    "transport": "certificate-verified internal HTTPS to configured frontend api_jsonrpc.php",
+    "read_methods": ["host.get", "hostinterface.get", "problem.get", "trigger.get", "item.get"],
+    "conditional_history_methods": ["history.get", "event.get"],
+    "version_probe": "apiinfo.version",
+    "mutations_enabled": false,
+    "model_has_target_credentials": false,
+    "model_calls_zabbix_directly": false
+  },
+  "runtime_internet_required": false,
+  "all_ai_execution": "local_cpu_only",
+  "first_result": "New authorized Persian/English Zabbix-status question answered with local CPU generation, actual evidence, timestamps and audit while WAN is blocked.",
+  "acceptance_status": "All runtime, provisioning, mount, API, model, offline and recovery tests NOT RUN for this documentation change."
+}
