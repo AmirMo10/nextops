@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "received_date": "2026-09-20",
-  "source_kind": "owner_supplied_esxcli_output",
+  "source_kind": "owner_supplied_esxcli_output_with_separately_attributed_storage_statement",
   "direct_host_access_performed": false,
   "capture_timestamp": null,
   "commands": [
@@ -67,6 +67,28 @@
     "sample_l2_cache_mib": 1,
     "sample_l3_cache_mib": 38.5
   },
+  "storage_constraint": {
+    "received_date": "2026-09-20",
+    "source_kind": "owner_statement_not_esxcli_measurement",
+    "reported_quantity": 3,
+    "reported_unit": "TB",
+    "raw_raid_usable_datastore_total_or_current_free": "not_established",
+    "decimal_or_binary_unit_confirmed": false,
+    "conditional_decimal_bytes": 3000000000000,
+    "conditional_decimal_gib": 2793.9677238464355,
+    "verified_usable_datastore_bytes": null,
+    "verified_free_datastore_bytes": null,
+    "guide": "docs/STORAGE_PLAN.md",
+    "proposed_normal_operation_free_fraction": 0.25,
+    "free_fraction_is_vendor_requirement": false,
+    "vm_disk_budgets_changed": false,
+    "phase_profiles": [
+      {"phase_profile": "1-2", "nextops_vms": 3, "vmdk_budget_gib": 780, "provisional_swap_allowance_gib": 168, "subtotal_before_other_overhead_gib": 948},
+      {"phase_profile": "3-6", "nextops_vms": 4, "vmdk_budget_gib": 1080, "provisional_swap_allowance_gib": 232, "subtotal_before_other_overhead_gib": 1312},
+      {"phase_profile": "7-8_with_remediation", "nextops_vms": 5, "vmdk_budget_gib": 1160, "provisional_swap_allowance_gib": 248, "subtotal_before_other_overhead_gib": 1408}
+    ],
+    "allowance_note": "Swap allowance is provisionally equal to configured guest RAM, not a measured file size or full overhead ceiling. Verify actual swap placement, reservation settings, VMX overhead, snapshots, maintenance peaks, existing commitments and per-datastore free capacity. No host settings changed."
+  },
   "external_reference_mappings": {
     "reviewed_date": "2026-09-20",
     "esxi_release_name": "ESXi 8.0 Update 3c",
@@ -82,13 +104,16 @@
     "vm_hardware_version", "vcenter_presence_and_version",
     "license_and_per_vm_limits", "per_node_cpu_and_memory_mapping",
     "free_cpu_capacity", "available_memory", "existing_vm_load_and_reservations",
-    "guest_visible_instruction_sets", "storage_capacity_and_latency",
+    "guest_visible_instruction_sets", "storage_unit_and_raw_vs_usable_vs_free_scope",
+    "usable_datastore_capacity_and_free_bytes", "storage_layout_and_latency",
+    "existing_storage_growth_commitments_and_vm_swap_placement",
     "local_zabbix_access", "model_quality_and_latency"
   ],
   "constraints": {
     "ai_execution": "local_cpu_only",
     "internet_required_at_runtime": false,
-    "phase_1_result": "real_authorized_zabbix_status_answer_generated_locally_with_internet_blocked"
+    "phase_1_result": "real_authorized_zabbix_status_answer_generated_locally_with_internet_blocked",
+    "storage": "Owner-reported 3 TB ceiling; do not assume unlimited or entirely free storage. Verify usable/free capacity before provisioning."
   },
   "proposed_vm_allocations_not_deployed": [
     {"name": "nextops-app", "first_phase": 1, "vcpu": 8, "ram_gib": 32, "disk_gib": 200},
@@ -107,5 +132,5 @@
     "host_changes_authorized_by_this_record": false,
     "note": "The installed build is historical and later 8.0 U3 builds exist. Review compatible OEM firmware, drivers, security advisories, backups and an offline update/recovery path before choosing a target. No patch or vulnerability audit has been performed."
   },
-  "status": "Planning evidence only. No VM provisioning, NUMA-placement test, inference benchmark, patch installation or offline acceptance test performed."
+  "status": "Planning evidence only. No VM provisioning, NUMA-placement test, inference benchmark, patch installation, datastore inspection or offline acceptance test performed."
 }
