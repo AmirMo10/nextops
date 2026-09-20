@@ -16,6 +16,7 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 
 | Guide | Contents |
 |---|---|
+| [Phase 0 report](PHASE_0_REPORT.md) | Repository findings, architecture, gaps, threat summary, resource plan and the approval checkpoint |
 | [Start here](START_HERE.md) | Creation order, four-VM profile, Phase 1A–1E, boundaries and restart dependencies |
 | [Dedicated Zabbix server](ZABBIX_SERVER.md) | 4 vCPU / 16 GiB / 200 GiB, detailed LVM, software, retention, read-only API, self-monitoring and combined budgets |
 | [Offline operating contract](OFFLINE_RUNTIME.md) | New local answers, cold start/login, hidden dependencies, LAN boundaries and OFF-01–OFF-10 |
