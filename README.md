@@ -2,7 +2,7 @@
 
 ### CPU-only AI for evidence-grounded IT operations
 
-[فارسی](README_FA.md) · [Documentation](docs/en/INDEX.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project status](docs/PROJECT_STATE.md)
+[فارسی](README_FA.md) · [Documentation](docs/en/INDEX.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project status](docs/PROJECT_STATE.md)
 
 > **Status: documentation and architecture baseline.** The application, connectors, deployment services, and benchmarks are not implemented or validated yet. This repository does not currently provide a runnable NextOps installation.
 
@@ -28,30 +28,39 @@ The first operational milestone is deliberately narrow: **a Persian request → 
 
 ## Proposed architecture
 
-```text
-Browser / CLI / monitoring events
-                |
-         TLS reverse proxy
-                |
-      API + operations console
-                |
-       Durable workflow worker
-          /             \
- Local CPU inference   Scoped evidence / topology
-          \             /
-       Deterministic policy checks
-                |
-      Protected MCP execution gateway
-                |
-      Isolated connector runners
-                |
-      Authorized infrastructure
-
-PostgreSQL: durable state, jobs, approvals, audit, evidence metadata
-Restricted local storage: evidence and verified model artifacts
+```mermaid
+flowchart TB
+    U["Browser / CLI / authenticated events"] --> P["TLS reverse proxy"]
+    P --> A["FastAPI + operations console"]
+    A --> D[("PostgreSQL | durable jobs and state")]
+    W["Bounded workflow worker"] <-->|"Lease and checkpoint"| D
+    W <-->|"Sanitized context"| L["Local CPU inference"]
+    W <-->|"Scoped retrieval"| E["Evidence and topology"]
+    W <-->|"Typed operations and results"| G["MCP gateway | policy, approval and audit"]
+    G <--> C["Isolated connector runners"]
+    C <--> T["Authorized infrastructure"]
+    S["Target-scoped credentials"] --> C
 ```
 
 **The model proposes. Application policy authorizes. The execution boundary holds device credentials.** A single host remains one failure domain; containers do not provide host-level high availability.
+
+The [diagram atlas](docs/en/DIAGRAMS.md) expands this overview into seven views: system context, G10 deployment zones, read-only investigation, future remediation approvals, data relationships, CPU scheduling, and release delivery. All views are proposed; the MVP keeps mutations disabled.
+
+## Suggested technology stack
+
+These are implementation recommendations, not installed packages or measured results. See the [full stack guide](docs/en/TECH_STACK.md) for ownership, alternatives, official references and adoption gates.
+
+| Layer | Recommended starting point |
+|---|---|
+| Operational frontend | React · TypeScript · Vite |
+| Design system and languages | Tailwind CSS · shadcn/ui · react-i18next |
+| API and contracts | Python · FastAPI · Pydantic · Uvicorn |
+| Data and migrations | PostgreSQL · SQLAlchemy · Alembic |
+| Durable work and tools | Bounded Python worker · PostgreSQL jobs · official MCP Python SDK |
+| CPU inference | One pinned local llama.cpp service; benchmark models before selection |
+| Delivery and quality | Nginx · Docker Compose / systemd · uv · Ruff · mypy · pytest · Playwright |
+
+**Add only when needed:** pgvector for evaluated semantic retrieval; TanStack Query for frontend server state; React Flow for a bounded topology view; Prometheus/Grafana and OpenTelemetry for local observability. Redis, Kubernetes and additional workflow engines are not initial requirements. No external AI provider is enabled.
 
 ## Planned integrations
 
@@ -74,6 +83,8 @@ The [engineering master prompt](docs/requirements/NEXTOPS_MASTER_PROMPT.md) is r
 
 | Topic | English | فارسی |
 |---|---|---|
+| Visual architecture | [Diagram atlas](docs/en/DIAGRAMS.md) | [نمودارهای معماری](docs/fa/DIAGRAMS.md) |
+| Technology decisions | [Suggested stack](docs/en/TECH_STACK.md) | [فناوری‌های پیشنهادی](docs/fa/TECH_STACK.md) |
 | System design | [Architecture](docs/en/ARCHITECTURE.md) | [معماری](docs/fa/ARCHITECTURE.md) |
 | CPU inference and benchmarks | [CPU-only AI](docs/en/CPU_AI.md) | [هوش مصنوعی روی CPU](docs/fa/CPU_AI.md) |
 | Security and approvals | [Security](docs/en/SECURITY.md) | [امنیت و تأیید عملیات](docs/fa/SECURITY.md) |

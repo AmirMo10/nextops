@@ -6,10 +6,12 @@
 
 ## Reading paths
 
-Start with [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
+Start with the [diagram atlas](DIAGRAMS.md), [suggested technology stack](TECH_STACK.md), [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
 
 | Guide | Contents |
 |---|---|
+| [Diagram atlas](DIAGRAMS.md) | Seven Mermaid views: context, deployment, investigation, approvals, data, CPU scheduling and releases |
+| [Suggested technology stack](TECH_STACK.md) | Core choices, UI system, CPU AI profile, optional additions, alternatives and official references |
 | [Architecture](ARCHITECTURE.md) | Boundaries, service responsibilities, stack, repository layout |
 | [CPU-only AI](CPU_AI.md) | Models, runtime, benchmark stages, resource limits |
 | [Security](SECURITY.md) | Identity, credentials, policy, approvals, threat model |
@@ -28,6 +30,6 @@ Start with [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [secur
 
 ## Sources and project control
 
-[Source notes](../requirements/SOURCES.md) identify the supplied documents. [Master prompt](../requirements/NEXTOPS_MASTER_PROMPT.md) contains the enhanced specification and the original Persian appendix. [Traceability](../requirements/TRACEABILITY.md) maps all 51 original sections. [ADRs](../adr/README.md) record proposed architectural choices. [Project state](../PROJECT_STATE.md) and [next task](../NEXT_TASK.md) distinguish delivered documentation from unimplemented software.
+[Source notes](../requirements/SOURCES.md) identify the supplied documents. [Master prompt](../requirements/NEXTOPS_MASTER_PROMPT.md) contains the enhanced specification and the original Persian appendix. [Traceability](../requirements/TRACEABILITY.md) maps all 51 original sections. [ADRs](../adr/README.md) record proposed architectural choices. [Project state](../PROJECT_STATE.md) and [next task](../NEXT_TASK.md) distinguish delivered documentation from unimplemented software. The [visual documentation review](../VISUAL_REVIEW.md) records the scope and limits of this update's checks.
 
 Every English guide has a Persian counterpart with the same filename. Update both in the same change. Machine identifiers, protocol fields, executable commands, and the master prompt are not translated. Source examples are not live inventory or measured results.

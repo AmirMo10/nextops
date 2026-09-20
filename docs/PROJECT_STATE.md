@@ -1,16 +1,18 @@
 # Project state / وضعیت پروژه
 
-Baseline: 2026-09-20.
+Baseline: 2026-09-20. Visual documentation update: 2026-09-20.
 
 ## English
 
 ### Observed
 
-The connected GitHub identity is `AmirMo10`. `AmirMo10/nextops` existed as an empty public repository with default branch `main` before this documentation work. Its visibility has not been changed. The owner authorized documenting the project in English and native Persian, except a new translation of the master prompt.
+The connected GitHub identity is `AmirMo10`. `AmirMo10/nextops` existed as an empty public repository with default branch `main` before this documentation work. Its visibility has not been changed. The owner authorized documenting the project in English and native Persian, except a new translation of the master prompt, and subsequently requested diagrams and suggested technology stacks.
 
 ### Delivered scope
 
-English/Persian READMEs and 16 paired guides; architecture, CPU-only inference, security, configuration, MCP, eleven integration families, data/API/UI, development, testing, operations, troubleshooting and roadmap; glossary; original-requirement traceability; proposed ADRs; agent/contributor/security rules; review templates; and a local documentation checker. The source prompt is preserved as a single document with its existing Persian appendix, not a newly translated duplicate.
+English/Persian READMEs and 18 paired guides; architecture, CPU-only inference, security, configuration, MCP, eleven integration families, data/API/UI, development, testing, operations, troubleshooting and roadmap; glossary; original-requirement traceability; proposed ADRs; agent/contributor/security rules; review templates; and a local documentation checker. The source prompt is preserved as a single document with its existing Persian appendix, not a newly translated duplicate.
+
+The visual update adds seven Mermaid architecture views in each language, a compact overview in each README, and paired technology-stack guides with core/optional choices, an RTL-aware frontend proposal, CPU-only model evaluation, alternatives and official references. Documentation indexes link the new guides. The [visual review record](VISUAL_REVIEW.md) distinguishes local structural checks from unperformed Mermaid rendering and runtime tests. These are proposals, not installed dependencies or approved architecture changes.
 
 ### Not delivered or verified
 
@@ -28,11 +30,13 @@ Next: [Phase 0](NEXT_TASK.md). Update this record only with observed evidence, a
 
 ### مشاهده‌شده
 
-هویت متصل GitHub برابر `AmirMo10` است. مخزن `AmirMo10/nextops` پیش از این کار وجود داشت، عمومی و خالی بود و شاخهٔ پیش‌فرض آن `main` بود. وضعیت عمومی تغییر نکرده است. مالک مستندسازی انگلیسی و فارسی طبیعی را خواسته و پرامپت را از ترجمهٔ تازه مستثنا کرده است.
+هویت متصل GitHub برابر `AmirMo10` است. مخزن `AmirMo10/nextops` پیش از این کار وجود داشت، عمومی و خالی بود و شاخهٔ پیش‌فرض آن `main` بود. وضعیت عمومی تغییر نکرده است. مالک مستندسازی انگلیسی و فارسی طبیعی را خواسته و پرامپت را از ترجمهٔ تازه مستثنا کرده است. سپس افزودن نمودار و پیشنهاد فناوری‌ها را درخواست کرده است.
 
 ### دامنهٔ تحویل
 
-README دوزبانه و ۱۶ راهنمای متناظر؛ معماری، اجرای CPU-only، امنیت، تنظیمات، MCP، یازده خانوادهٔ اتصال، داده و API و رابط، توسعه، آزمون، عملیات، عیب‌یابی و نقشهٔ راه؛ واژه‌نامه؛ ردیابی نیازهای اولیه؛ تصمیم‌های معماری پیشنهادی؛ قواعد عامل و مشارکت و امنیت؛ قالب بازبینی و ابزار بررسی مستندات. پرامپت منبع در یک فایل و با پیوست فارسی موجود حفظ می‌شود و نسخهٔ ترجمه‌شدهٔ جدیدی ندارد.
+README دوزبانه و ۱۸ راهنمای متناظر؛ معماری، اجرای CPU-only، امنیت، تنظیمات، MCP، یازده خانوادهٔ اتصال، داده و API و رابط، توسعه، آزمون، عملیات، عیب‌یابی و نقشهٔ راه؛ واژه‌نامه؛ ردیابی نیازهای اولیه؛ تصمیم‌های معماری پیشنهادی؛ قواعد عامل و مشارکت و امنیت؛ قالب بازبینی و ابزار بررسی مستندات. پرامپت منبع در یک فایل و با پیوست فارسی موجود حفظ می‌شود و نسخهٔ ترجمه‌شدهٔ جدیدی ندارد.
+
+در به‌روزرسانی تصویری، هفت نمای معماری Mermaid در هر زبان، نمودار خلاصه در هر README و راهنمای متناظر فناوری‌ها اضافه شده‌اند. ابزارهای اصلی و اختیاری، پیشنهاد رابط سازگار با RTL، ارزیابی مدل CPU، گزینه‌های جایگزین و منابع رسمی مشخص شده‌اند. فهرست‌ها به راهنماهای جدید پیوند دارند. [گزارش بازبینی](VISUAL_REVIEW.md) کنترل ساختاری محلی را از نمایش Mermaid و آزمون اجراییِ انجام‌نشده جدا می‌کند. این موارد پیشنهادند، نه وابستگی نصب‌شده یا تغییر معماریِ تأییدشده.
 
 ### تحویل‌نشده یا بررسی‌نشده
 
