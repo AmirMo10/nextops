@@ -1,0 +1,41 @@
+# Secrets and local state / اطلاعات محرمانه و وضعیت محلی
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.yaml
+secrets/
+.local/
+# Models, operational data and backups / مدل، دادهٔ عملیاتی و پشتیبان
+*.gguf
+*.safetensors
+*.onnx
+*.pt
+*.pth
+models/
+model-cache/
+data/
+logs/
+backups/
+*.log
+*.dump
+*.sql.gz
+*.sqlite
+*.sqlite3
+# Development outputs / خروجی ابزار توسعه
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+node_modules/
+dist/
+build/
+.DS_Store
+Thumbs.db

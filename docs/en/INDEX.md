@@ -1,0 +1,33 @@
+# Documentation index
+
+[فارسی](../fa/INDEX.md) · [Home](../../README.md)
+
+**Baseline date: 2026-09-20. Status: proposed design and documentation.** The guides describe what must be built; they are not evidence of a working deployment. The supplied master prompt retains its original preparation date and is not translated again.
+
+## Reading paths
+
+Start with [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
+
+| Guide | Contents |
+|---|---|
+| [Architecture](ARCHITECTURE.md) | Boundaries, service responsibilities, stack, repository layout |
+| [CPU-only AI](CPU_AI.md) | Models, runtime, benchmark stages, resource limits |
+| [Security](SECURITY.md) | Identity, credentials, policy, approvals, threat model |
+| [Installation](INSTALL.md) | Current repository setup; future Compose/systemd deployment gates |
+| [Configuration](CONFIGURATION.md) | Settings contracts, inventories, models, secret references |
+| [MCP](MCP.md) | Protocol, gateway, tool and execution contracts |
+| [Integrations](INTEGRATIONS.md) | All eleven families, capabilities, safety and compatibility status |
+| [Data and API](DATA_API.md) | Persistence, jobs, evidence, memory, topology, RCA, endpoints |
+| [UI](UI.md) | Operations console, bilingual layouts, design system, approval screens |
+| [Development](DEVELOPMENT.md) | Module ownership, GitHub workflow, CI/release, coding discipline |
+| [Testing](TESTING.md) | Adversarial, integration, offline, language, and model evaluation |
+| [Operations](OPERATIONS.md) | Observability, backup/restore, outage modes, release rollback |
+| [Troubleshooting](TROUBLESHOOTING.md) | Safe diagnostic decision paths and unknown outcomes |
+| [Roadmap](ROADMAP.md) | Phases 0–8 and measurable acceptance gates |
+| [Glossary](GLOSSARY.md) | Consistent English/Persian product terminology |
+
+## Sources and project control
+
+[Source notes](../requirements/SOURCES.md) identify the supplied documents. [Master prompt](../requirements/NEXTOPS_MASTER_PROMPT.md) contains the enhanced specification and the original Persian appendix. [Traceability](../requirements/TRACEABILITY.md) maps all 51 original sections. [ADRs](../adr/README.md) record proposed architectural choices. [Project state](../PROJECT_STATE.md) and [next task](../NEXT_TASK.md) distinguish delivered documentation from unimplemented software.
+
+Every English guide has a Persian counterpart with the same filename. Update both in the same change. Machine identifiers, protocol fields, executable commands, and the master prompt are not translated. Source examples are not live inventory or measured results.
