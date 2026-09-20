@@ -8,14 +8,17 @@
 
 > **First implementation outcome:** Phase 1 must end with a real, evidence-linked local AI answer about Zabbix status while Internet is blocked. The [G10 server plan](SERVER_PLAN.md) proposes three initial NextOps VMs and defines the later four/five-VM layout; the [revised roadmap](ROADMAP.md) supersedes older first-answer timing.
 
+> **Latest host evidence:** the owner supplied ESXi 8.0.3 build 24414501 and a partial Intel CPU listing. Read [the ESXi/CPU supplement](ESXI_BASELINE.md) alongside the server plan; the ESXi build is no longer unknown, and exact CPU SKU/guest capabilities still require evidence.
+
 ## Reading paths
 
-Start with the [offline operating contract](OFFLINE_RUNTIME.md), [G10 server plan](SERVER_PLAN.md), [diagram atlas](DIAGRAMS.md), [suggested technology stack](TECH_STACK.md), [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
+Start with the [offline operating contract](OFFLINE_RUNTIME.md), [G10 server plan](SERVER_PLAN.md), [ESXi/CPU supplement](ESXI_BASELINE.md), [diagram atlas](DIAGRAMS.md), [suggested technology stack](TECH_STACK.md), [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
 
 | Guide | Contents |
 |---|---|
 | [Offline operating contract](OFFLINE_RUNTIME.md) | Mandatory local answers, offline cold start/login, dependency inventory, LAN boundaries and OFF-01–OFF-10 acceptance tests |
 | [G10 servers and Zabbix milestone](SERVER_PLAN.md) | Per-phase VM counts, proposed resource budgets, existing versus lab Zabbix, trust placement and ZBX-01–ZBX-08 acceptance gates |
+| [ESXi build and CPU baseline](ESXI_BASELINE.md) | Supplied build/CPU identifiers, official mappings, HW20+ topology, Host Client caveat, guest ISA and patch-review gates |
 | [Diagram atlas](DIAGRAMS.md) | Seven Mermaid views: context, deployment, investigation, approvals, data, CPU scheduling and releases |
 | [Suggested technology stack](TECH_STACK.md) | Core choices, UI system, CPU AI profile, optional additions, alternatives and official references |
 | [Architecture](ARCHITECTURE.md) | Boundaries, service responsibilities, stack, repository layout |

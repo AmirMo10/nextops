@@ -4,9 +4,19 @@
   "source_kind": "owner_supplied_esxcli_output",
   "direct_host_access_performed": false,
   "capture_timestamp": null,
-  "commands": ["esxcli hardware cpu global get", "esxcli hardware memory get"],
+  "commands": [
+    "esxcli hardware cpu global get",
+    "esxcli hardware memory get",
+    "esxcli system version get",
+    "esxcli hardware cpu list | head -n 35"
+  ],
   "reported": {
     "host_platform": "VMware ESXi",
+    "esxi_version": "8.0.3",
+    "esxi_build_raw": "Releasebuild-24414501",
+    "esxi_build_number": 24414501,
+    "esxi_update": 3,
+    "esxi_patch_raw": 55,
     "cpu_packages": 4,
     "physical_cpu_cores": 112,
     "logical_cpu_threads": 224,
@@ -16,7 +26,33 @@
     "hv_support_raw": 3,
     "physical_memory_bytes": 1442743631872,
     "reliable_memory_raw_bytes": 0,
-    "numa_node_count": 4
+    "numa_node_count": 4,
+    "cpu_list_sample": {
+      "complete_cpu_ids": [0],
+      "partial_cpu_ids": [1],
+      "all_packages_sampled": false,
+      "cpu_0": {
+        "package_id": 0,
+        "node": 0,
+        "family": 6,
+        "model": 85,
+        "type": 0,
+        "stepping": 7,
+        "brand": "GenuineIntel",
+        "core_speed_hz": 2693671674,
+        "bus_speed_raw": 24941403,
+        "apic_id_raw": "0x0",
+        "microcode_revision_raw": "0x5003707",
+        "l2_cache_bytes": 1048576,
+        "l2_cache_associativity": 16,
+        "l2_cache_line_size_bytes": 64,
+        "l2_cache_cpu_count": 2,
+        "l3_cache_bytes": 40370176,
+        "l3_cache_associativity": 11,
+        "l3_cache_line_size_bytes": 64,
+        "l3_cache_cpu_count": 56
+      }
+    }
   },
   "derived": {
     "physical_memory_gib": 1343.6597137451172,
@@ -25,10 +61,25 @@
     "average_cores_per_package": 28,
     "average_cores_per_numa_node": 28,
     "average_memory_gib_per_numa_node": 335.9149284362793,
-    "per_node_distribution_verified": false
+    "per_node_distribution_verified": false,
+    "sample_family_model_stepping_hex": "06-55-07",
+    "sample_reported_core_speed_ghz": 2.693671674,
+    "sample_l2_cache_mib": 1,
+    "sample_l3_cache_mib": 38.5
+  },
+  "external_reference_mappings": {
+    "reviewed_date": "2026-09-20",
+    "esxi_release_name": "ESXi 8.0 Update 3c",
+    "esxi_release_date": "2024-12-12",
+    "esxi_build_reference": "https://knowledge.broadcom.com/external/article/316595",
+    "sample_cpu_reference_entry": "CLX-SP / B1 / 06-55-07 / Xeon Scalable Gen2",
+    "sample_cpu_family_status": "Reference mapping, not a confirmed marketing SKU or an inventory of all four packages.",
+    "cpu_reference": "https://raw.githubusercontent.com/intel/Intel-Linux-Processor-Microcode-Data-Files/main/releasenote.md"
   },
   "unknown": [
-    "cpu_model_and_frequency", "esxi_version_and_build", "vm_hardware_version",
+    "exact_cpu_marketing_model", "rated_base_and_turbo_frequency",
+    "cpu_identity_and_microcode_consistency_across_all_packages",
+    "vm_hardware_version", "vcenter_presence_and_version",
     "license_and_per_vm_limits", "per_node_cpu_and_memory_mapping",
     "free_cpu_capacity", "available_memory", "existing_vm_load_and_reservations",
     "guest_visible_instruction_sets", "storage_capacity_and_latency",
@@ -46,5 +97,15 @@
     {"name": "nextops-db", "first_phase": 3, "vcpu": 8, "ram_gib": 64, "disk_gib": 300},
     {"name": "nextops-executor-rw", "first_phase": 7, "vcpu": 4, "ram_gib": 16, "disk_gib": 80}
   ],
-  "status": "Planning evidence only. No VM provisioning, NUMA-placement test, inference benchmark or offline acceptance test performed."
+  "detail_guides": {
+    "en": "docs/en/ESXI_BASELINE.md",
+    "fa": "docs/fa/ESXI_BASELINE.md"
+  },
+  "patch_review": {
+    "required_before_production": true,
+    "target_build": null,
+    "host_changes_authorized_by_this_record": false,
+    "note": "The installed build is historical and later 8.0 U3 builds exist. Review compatible OEM firmware, drivers, security advisories, backups and an offline update/recovery path before choosing a target. No patch or vulnerability audit has been performed."
+  },
+  "status": "Planning evidence only. No VM provisioning, NUMA-placement test, inference benchmark, patch installation or offline acceptance test performed."
 }
