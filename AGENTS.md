@@ -4,6 +4,8 @@
 
 Read `docs/requirements/NEXTOPS_MASTER_PROMPT.md`, `docs/PROJECT_STATE.md` and `docs/NEXT_TASK.md` before work. The master prompt is retained without a new translation; this file is a short repository agreement, not a replacement specification.
 
+Also read [the mandatory offline operating contract](docs/en/OFFLINE_RUNTIME.md). After provisioning, Internet loss must not prevent new local Persian/English answers, fresh local login, or startup after stopped services/reboot. Local CPU inference is the normal path even when Internet exists; never wait for cloud failure or introduce an external fallback. Every stack proposal is subordinate to this constraint. Preload required artifacts, serve browser assets locally, provide a provisioned local authentication path, and separate Internet loss from LAN/device unreachability. Label model knowledge, local documents and fresh tool evidence distinctly. Require the OFF-01 through OFF-10 acceptance cases before claiming offline readiness; documentation and cached demonstrations do not count as passing tests.
+
 Inspect Git status, existing code, dependency locks, tests and deployment definitions before changes. Preserve uncommitted work. This repository starts as documentation only: do not report nonexistent application tests, connectors or deployments as successful.
 
 All NextOps AI must run locally on CPUs. No GPU dependency, external inference/embedding/reranking service or silent cloud fallback. Verify hardware rather than interpreting the reported 90 CPU units as physical cores. Benchmark before selecting thread counts, model size or concurrency.
@@ -17,6 +19,8 @@ Complete Phase 0 discovery/design and obtain architecture approval before implem
 ## فارسی
 
 پیش از کار، پرامپت اصلی، وضعیت پروژه و کار بعدی را در مسیرهای بالا بخوانید. پرامپت بدون ترجمهٔ جدید نگه داشته می‌شود و این فایل فقط توافق کوتاه کار در مخزن است، نه جایگزین مشخصات.
+
+[الزام کارکرد آفلاین](docs/fa/OFFLINE_RUNTIME.md) نیز باید خوانده شود. پس از آماده‌سازی، قطع اینترنت نباید مانع پاسخ تازهٔ فارسی یا انگلیسی، ورود محلیِ جدید یا راه‌اندازی پس از توقف سرویس یا روشن شدن دوبارهٔ سرور شود. اجرای CPU محلی حتی با وجود اینترنت مسیر اصلی است؛ انتظار برای شکست سرویس ابری یا جایگزین خارجی مجاز نیست. همهٔ پیشنهادهای فناوری تابع این شرط‌اند. فایل‌های لازم از پیش نصب، فایل‌های مرورگر محلی و مسیر ورود محلی آماده شوند. قطع اینترنت با قطع شبکهٔ داخلی یا تجهیز یکی دانسته نشود. دانش مدل، سند محلی و شاهد تازهٔ ابزار جدا مشخص شوند. پیش از ادعای آمادگی آفلاین، موارد OFF-01 تا OFF-10 باید آزموده شوند؛ مستندات یا نمایش مبتنی بر پاسخ کش‌شده، آزمون موفق نیست.
 
 وضعیت Git، کد، فایل قفل وابستگی، آزمون و تنظیمات استقرار بررسی و تغییرات ثبت‌نشده حفظ شوند. مخزن با مستندات آغاز می‌شود؛ موفقیت آزمون، اتصال یا استقرارِ ناموجود گزارش نشود.
 

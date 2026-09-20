@@ -4,12 +4,15 @@
 
 **Baseline date: 2026-09-20. Status: proposed design and documentation.** The guides describe what must be built; they are not evidence of a working deployment. The supplied master prompt retains its original preparation date and is not translated again.
 
+> **Mandatory constraint:** after provisioning, Internet loss must not stop local CPU answers, new local login or offline restart. Read the [offline operating contract and acceptance suite](OFFLINE_RUNTIME.md) before selecting any runtime dependency.
+
 ## Reading paths
 
-Start with the [diagram atlas](DIAGRAMS.md), [suggested technology stack](TECH_STACK.md), [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
+Start with the [offline operating contract](OFFLINE_RUNTIME.md), [diagram atlas](DIAGRAMS.md), [suggested technology stack](TECH_STACK.md), [architecture](ARCHITECTURE.md), [CPU-only AI](CPU_AI.md), and [security](SECURITY.md). Then read [installation](INSTALL.md), [configuration](CONFIGURATION.md), and [development](DEVELOPMENT.md) before any implementation or host change.
 
 | Guide | Contents |
 |---|---|
+| [Offline operating contract](OFFLINE_RUNTIME.md) | Mandatory local answers, offline cold start/login, dependency inventory, LAN boundaries and OFF-01–OFF-10 acceptance tests |
 | [Diagram atlas](DIAGRAMS.md) | Seven Mermaid views: context, deployment, investigation, approvals, data, CPU scheduling and releases |
 | [Suggested technology stack](TECH_STACK.md) | Core choices, UI system, CPU AI profile, optional additions, alternatives and official references |
 | [Architecture](ARCHITECTURE.md) | Boundaries, service responsibilities, stack, repository layout |
@@ -30,6 +33,6 @@ Start with the [diagram atlas](DIAGRAMS.md), [suggested technology stack](TECH_S
 
 ## Sources and project control
 
-[Source notes](../requirements/SOURCES.md) identify the supplied documents. [Master prompt](../requirements/NEXTOPS_MASTER_PROMPT.md) contains the enhanced specification and the original Persian appendix. [Traceability](../requirements/TRACEABILITY.md) maps all 51 original sections. [ADRs](../adr/README.md) record proposed architectural choices. [Project state](../PROJECT_STATE.md) and [next task](../NEXT_TASK.md) distinguish delivered documentation from unimplemented software. The [visual documentation review](../VISUAL_REVIEW.md) records the scope and limits of this update's checks.
+[Source notes](../requirements/SOURCES.md) identify the supplied documents. [Master prompt](../requirements/NEXTOPS_MASTER_PROMPT.md) contains the enhanced specification and the original Persian appendix. [Traceability](../requirements/TRACEABILITY.md) maps all 51 original sections. [ADRs](../adr/README.md) record proposed architectural choices. [Project state](../PROJECT_STATE.md) and [next task](../NEXT_TASK.md) distinguish delivered documentation from unimplemented software. The [visual documentation review](../VISUAL_REVIEW.md) records the scope and limits of the diagram/technology update's checks, not offline runtime validation.
 
 Every English guide has a Persian counterpart with the same filename. Update both in the same change. Machine identifiers, protocol fields, executable commands, and the master prompt are not translated. Source examples are not live inventory or measured results.
