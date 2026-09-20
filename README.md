@@ -17,16 +17,16 @@ The first operational milestone is now **Phase 1: a new Persian/English question
 | Requirement | Project baseline |
 |---|---|
 | Repository | GitHub monorepo |
-| Initial host | One G10-class server; exact hardware remains unverified |
-| Reported resources | Approximately 90 CPU units, 1 TB RAM, sufficient disk capacity |
+| Initial host | One existing G10 running ESXi according to owner-supplied output; version/build and free capacity still unknown |
+| Reported resources | 4 CPU packages, 112 physical cores, 224 logical threads, 4 NUMA nodes; 1,442,743,631,872 bytes RAM (1,343.66 GiB); disk capacity remains unverified |
 | AI execution | Local CPUs only; no GPU, external inference, or cloud fallback |
 | Offline operation | No Internet dependency after provisioning, including fresh login and cold start; authorized management-LAN access remains necessary for live evidence |
 | Languages | Native Persian with RTL support; English with LTR support |
 | Safety | Read-only first; deterministic authorization; exact-action approval for later mutations |
 
-“90 CPU units” is not assumed to mean 90 physical cores. Model size, thread counts, NUMA placement, and concurrency will be selected from measurements, not installed RAM capacity.
+The owner's ESXi output replaces the earlier approximately 90 CPU / 1 TB estimate; see the [sanitized evidence record](docs/requirements/HARDWARE_BASELINE.json). These are reported host totals, not a direct inspection or available-capacity measurement. The average is 28 cores per NUMA node, but actual per-node CPU/memory distribution is not yet verified. Preserve ESXi; Ubuntu is the proposed guest OS, and application containers/systemd services belong inside the VMs.
 
-**Proposed VM plan:** three NextOps VMs for Phase 1–2, four after recommended database separation, and five when controlled remediation is enabled. Existing Zabbix is not duplicated; a missing instance adds one optional lab VM. Initial proposal: 44 vCPU and 168 GiB RAM in total, not a measured minimum or capacity guarantee. See the [per-phase allocations and Zabbix acceptance gates](docs/en/SERVER_PLAN.md) and the [mandatory offline contract](docs/en/OFFLINE_RUNTIME.md).
+**Proposed VM plan:** three NextOps VMs for Phase 1–2, four after recommended database separation, and five when controlled remediation is enabled. Existing Zabbix is not duplicated; a missing instance adds one optional lab VM. Revised initial proposal: **36 vCPU and 168 GiB RAM** in total, including a **24-vCPU / 128-GiB AI VM** for a topology-aware benchmark baseline. This is not a measured minimum, confirmed single-node placement or capacity guarantee. See the [per-phase allocations and Zabbix acceptance gates](docs/en/SERVER_PLAN.md) and the [mandatory offline contract](docs/en/OFFLINE_RUNTIME.md).
 
 ## Proposed architecture
 
@@ -50,7 +50,7 @@ The [diagram atlas](docs/en/DIAGRAMS.md) expands this overview into seven views:
 
 ## Suggested technology stack
 
-These are implementation recommendations, not installed packages or measured results. See the [full stack guide](docs/en/TECH_STACK.md) for ownership, alternatives, official references and adoption gates.
+These are implementation recommendations, not installed packages or measured results. See the [full stack guide](docs/en/TECH_STACK.md) for ownership, alternatives, official references and adoption gates. The latest server evidence takes precedence over older generic host assumptions: retain ESXi and evaluate Ubuntu 24.04 LTS as the guest OS.
 
 | Layer | Recommended starting point |
 |---|---|
@@ -60,7 +60,7 @@ These are implementation recommendations, not installed packages or measured res
 | Data and migrations | PostgreSQL · SQLAlchemy · Alembic |
 | Durable work and tools | Bounded Python worker · PostgreSQL jobs · official MCP Python SDK |
 | CPU inference | One pinned local llama.cpp service; benchmark models before selection |
-| Delivery and quality | Nginx · Docker Compose / systemd · uv · Ruff · mypy · pytest · Playwright |
+| Delivery and quality | Nginx · Docker Compose / systemd inside guests · uv · Ruff · mypy · pytest · Playwright |
 
 **Add only when needed:** pgvector for evaluated semantic retrieval; TanStack Query for frontend server state; React Flow for a bounded topology view; Prometheus/Grafana and OpenTelemetry for local observability. Redis, Kubernetes and additional workflow engines are not initial requirements. No external AI provider is enabled.
 
