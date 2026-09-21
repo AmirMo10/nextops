@@ -14,6 +14,19 @@ from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 LINK = re.compile(r"!?\[[^\]\n]*\]\(([^)\n]+)\)")
+CATALOG_ENTRY = re.compile(r"^- `([^`\n]+\.md)`(?: — .*)?$", re.MULTILINE)
+EXCLUDED_MARKDOWN_DIRS = frozenset(
+    {
+        ".git",
+        ".local",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".venv",
+        "__pycache__",
+        "dist",
+    }
+)
 REQUIRED = (
     "README.md",
     "README_FA.md",
@@ -26,6 +39,36 @@ REQUIRED = (
     "docs/requirements/TRACEABILITY.md",
     "docs/requirements/SOURCES.md",
 )
+
+
+def project_markdown_files(root: Path) -> list[Path]:
+    """Return project-owned Markdown while excluding generated and dependency trees."""
+
+    return sorted(
+        path
+        for path in root.rglob("*.md")
+        if not EXCLUDED_MARKDOWN_DIRS.intersection(path.relative_to(root).parts)
+    )
+
+
+def markdown_catalog_entries(text: str) -> set[str]:
+    """Read normalized repository-relative Markdown paths from the context index."""
+
+    return {match.replace("\\", "/") for match in CATALOG_ENTRY.findall(text)}
+
+
+def markdown_catalog_errors(
+    root: Path, markdown: tuple[Path, ...] | list[Path], catalog_text: str
+) -> list[str]:
+    """Report project Markdown missing from the index and stale index entries."""
+
+    actual = {path.relative_to(root).as_posix() for path in markdown}
+    cataloged = markdown_catalog_entries(catalog_text)
+    errors = [f"Markdown context index is missing: {path}" for path in sorted(actual - cataloged)]
+    errors.extend(
+        f"Markdown context index has stale entry: {path}" for path in sorted(cataloged - actual)
+    )
+    return errors
 
 
 def without_fenced_code(text: str) -> str:
@@ -62,11 +105,9 @@ def main() -> int:
     if not en:
         errors.append("No paired guides found")
 
-    markdown = sorted(ROOT.rglob("*.md"))
+    markdown = project_markdown_files(ROOT)
     checked = 0
     for path in markdown:
-        if ".git" in path.relative_to(ROOT).parts:
-            continue
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeError as exc:
