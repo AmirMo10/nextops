@@ -2,9 +2,23 @@
 
 ## English
 
+### Durable project memory and skills
+
+Use the repository skill `nextops-project-context` for every NextOps task. It makes Git and maintained
+artifacts—not chat history—the source of durable memory. Use `nextops-server-operations` for server,
+storage, package, deployment, recovery, ESXi, AI-host, connector-host, or Zabbix operations. Use
+`nextops-bilingual-documentation` whenever Markdown, requirements, traceability, an ADR, or a public
+guide changes.
+
+The complete project-owned Markdown inventory and task router is
+[MARKDOWN_CONTEXT_INDEX](docs/MARKDOWN_CONTEXT_INDEX.md). Use it to select relevant documents; do not
+load all entries into one context window. Whenever a Markdown file is added, renamed, or removed,
+update that index in the same change. `scripts/check_docs.py` enforces complete catalog coverage and
+excludes generated/dependency trees.
+
 ### Active prompt and source precedence
 
-Read [the active master prompt v3.0](docs/requirements/NEXTOPS_MASTER_PROMPT.md), [prompt changes](docs/requirements/PROMPT_CHANGELOG.md), [PROJECT_STATE](docs/PROJECT_STATE.md), [NEXT_TASK](docs/NEXT_TASK.md), [START_HERE](docs/en/START_HERE.md), [SERVER_PLAN](docs/en/SERVER_PLAN.md), [STORAGE_PLAN](docs/STORAGE_PLAN.md), [OFFLINE_RUNTIME](docs/en/OFFLINE_RUNTIME.md) and [HARDWARE_BASELINE](docs/requirements/HARDWARE_BASELINE.json) before work. Read the complete [v2 archive](docs/requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) for original detailed requirements and its preserved Persian appendix. Non-conflicting details remain required; all 51 original sections and eleven integrations remain in scope.
+Before work, read [PROJECT_STATE](docs/PROJECT_STATE.md), [NEXT_TASK](docs/NEXT_TASK.md), and the relevant route in [MARKDOWN_CONTEXT_INDEX](docs/MARKDOWN_CONTEXT_INDEX.md). For scope, architecture, security, acceptance, or deployment decisions, also read the applicable sections of [the active master prompt v3.0](docs/requirements/NEXTOPS_MASTER_PROMPT.md), [prompt changes](docs/requirements/PROMPT_CHANGELOG.md), [START_HERE](docs/en/START_HERE.md), [SERVER_PLAN](docs/en/SERVER_PLAN.md), [STORAGE_PLAN](docs/STORAGE_PLAN.md), [OFFLINE_RUNTIME](docs/en/OFFLINE_RUNTIME.md), and [HARDWARE_BASELINE](docs/requirements/HARDWARE_BASELINE.json). Read the complete [v2 archive](docs/requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) for original-requirement audits or when current sources route to its detailed requirements and preserved Persian appendix. Non-conflicting details remain required; all 51 original sections and eleven integrations remain in scope.
 
 The owner explicitly authorized this active-prompt update on 2026-09-20. Old guide statements that the prompt must stay unchanged now apply to the archived v2 source. Do not translate or alter that archive. The canonical prompt path is active v3.0 and records the precedence of later owner instructions, supplied evidence and current plans. Keep future changes versioned; do not silently reinterpret history or invent architectural approval.
 
@@ -38,9 +52,23 @@ Complete the remaining Phase 0 review and obtain the applicable approval before 
 
 ## فارسی
 
+### حافظهٔ ماندگار پروژه و skillها
+
+برای هر کار NextOps از skill با نام `nextops-project-context` استفاده شود تا Git و artifactهای
+نگه‌داری‌شده، نه حافظهٔ گفتگو، منبع وضعیت باشند. برای کار سرور، storage، package، deployment،
+recovery، ESXi، میزبان AI یا connector و Zabbix از `nextops-server-operations` و برای تغییر
+Markdown، نیازمندی، traceability، ADR یا راهنمای عمومی از `nextops-bilingual-documentation` استفاده
+شود.
+
+فهرست کامل Markdownهای متعلق به پروژه و مسیر انتخاب سند در
+[MARKDOWN_CONTEXT_INDEX](docs/MARKDOWN_CONTEXT_INDEX.md) است. سندهای مرتبط با کار انتخاب شوند و همهٔ
+فهرست هم‌زمان وارد context نشود. با افزودن، تغییر نام یا حذف هر Markdown، همان فهرست نیز در همان
+تغییر به‌روز شود. `scripts/check_docs.py` کامل بودن فهرست را کنترل و پوشه‌های تولیدی و وابستگی را
+حذف می‌کند.
+
 ### پرامپت فعال و تقدم منابع
 
-پیش از کار، [پرامپت فعال نسخهٔ ۳.۰](docs/requirements/NEXTOPS_MASTER_PROMPT.md)، [تاریخچهٔ تغییر آن](docs/requirements/PROMPT_CHANGELOG.md)، [وضعیت پروژه](docs/PROJECT_STATE.md)، [کار بعدی](docs/NEXT_TASK.md)، [راهنمای شروع](docs/fa/START_HERE.md)، [برنامهٔ سرورها](docs/fa/SERVER_PLAN.md)، [برنامهٔ ذخیره‌سازی](docs/STORAGE_PLAN.md)، [الزام آفلاین](docs/fa/OFFLINE_RUNTIME.md) و [رکورد سخت‌افزار](docs/requirements/HARDWARE_BASELINE.json) خوانده شوند. برای جزئیات کامل اولیه و پیوست فارسی، [بایگانی نسخهٔ ۲](docs/requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) نیز کامل بررسی شود. جزئیات بدون تعارض، هر ۵۱ بخش اولیه و یازده خانوادهٔ اتصال همچنان الزامی‌اند.
+پیش از کار، [وضعیت پروژه](docs/PROJECT_STATE.md)، [کار بعدی](docs/NEXT_TASK.md) و مسیر مرتبط در [فهرست context](docs/MARKDOWN_CONTEXT_INDEX.md) خوانده شوند. برای تصمیم دامنه، معماری، امنیت، پذیرش یا استقرار، بخش‌های مرتبط [پرامپت فعال نسخهٔ ۳.۰](docs/requirements/NEXTOPS_MASTER_PROMPT.md)، [تاریخچهٔ تغییر آن](docs/requirements/PROMPT_CHANGELOG.md)، [راهنمای شروع](docs/fa/START_HERE.md)، [برنامهٔ سرورها](docs/fa/SERVER_PLAN.md)، [برنامهٔ ذخیره‌سازی](docs/STORAGE_PLAN.md)، [الزام آفلاین](docs/fa/OFFLINE_RUNTIME.md) و [رکورد سخت‌افزار](docs/requirements/HARDWARE_BASELINE.json) نیز بررسی شوند. [بایگانی نسخهٔ ۲](docs/requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) برای audit نیازمندی اولیه یا زمانی که منبع جاری به جزئیات و پیوست فارسی آن ارجاع می‌دهد کامل خوانده شود. جزئیات بدون تعارض، هر ۵۱ بخش اولیه و یازده خانوادهٔ اتصال همچنان الزامی‌اند.
 
 مالک در ۲۰ سپتامبر ۲۰۲۶ به‌روزرسانی پرامپت فعال را صریحاً خواسته است. عبارت‌های قدیمیِ ثابت ماندن پرامپت از این پس به بایگانی نسخهٔ ۲ اشاره دارند؛ آن فایل ترجمه یا دست‌کاری نشود. مسیر اصلی، نسخهٔ فعال ۳.۰ است و تقدم دستورهای بعدی مالک، شواهد ارسالی و برنامه‌های فعلی را روشن می‌کند. تغییر بعدی نیز نسخه‌دار باشد و سابقه یا تأیید معماری به‌صورت ضمنی بازنویسی نشود.
 
