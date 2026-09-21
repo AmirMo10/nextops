@@ -2,15 +2,27 @@
 
 [فارسی](../fa/DEVELOPMENT.md) · [Index](INDEX.md)
 
-**Status: development policy. Application CI and deployment automation are not configured in this baseline.** Source: master specification sections 4, 7–8 and 21–26.
+**Status: development policy with isolated application CI; deployment automation is not
+configured.** Source: master specification sections 4, 7–8 and 21–26.
 
 ## Inspect before implementation
 
 Read [AGENTS.md](../../AGENTS.md), the master specification, project state and next task. Inspect Git status, instructions, tracked files, manifests, locks, tests, migrations and deployment definitions. Preserve dirty changes and existing implementations. Review scripts before running them in an isolated environment without production credentials. Do not use destructive reset/clean, overwrite work or rewrite history.
 
-Application work has begun with the tested Stage 1A typed-contract and deterministic-policy slice. It is not yet a runnable API, UI, database, connector, or AI service; do not treat its unit pass as a deployed application pass. Phase 0 architecture was accepted on 2026-09-21, while hardware discovery and every infrastructure authorization remain separate gates.
+Stage 1A now contains typed contracts and deterministic policy plus a runnable local API,
+PostgreSQL/Alembic schema, local identity, durable runs/leases, append-restricted audit,
+and an explicit bilingual fixture result. It still has no browser UI, connector, model,
+production service definition, offline release, or deployment acceptance; do not treat CI
+as a deployed-application pass. Phase 0 architecture was accepted on 2026-09-21, while
+hardware discovery and every infrastructure authorization remain separate gates.
 
-For the current Python slice, install the generated lock with `uv sync --extra dev --frozen`, then run `uv run --extra dev ruff check packages tests`, `uv run --extra dev mypy packages tests`, and `uv run --extra dev pytest`. Regenerate `uv.lock` only with reviewed dependency changes; run `uv audit --frozen` before release work.
+For the current Python slice, install the generated lock with
+`uv sync --extra dev --frozen`, then run `uv run ruff format --check packages migrations
+tests scripts`, `uv run ruff check packages migrations tests scripts`, `uv run mypy
+packages tests`, and `uv run pytest`. Real database acceptance additionally requires an
+isolated PostgreSQL URL in `NEXTOPS_TEST_DATABASE_URL`; a skipped database suite is not a
+pass. Regenerate `uv.lock` only with reviewed dependency changes and run the pinned
+dependency audit before release work.
 
 ## Module discipline
 
@@ -22,7 +34,13 @@ Create source directories, manifests and locks when the corresponding implementa
 
 Use short-lived branches, small commits, clear acceptance criteria and pull requests. Link each feature to an original requirement and phase. Update both language guides, project state, next task and traceability with each delivered increment. CODEOWNERS and templates support review; they do not prove branch protection is enabled. Protected main and review rules must be explicitly configured and verified when available.
 
-Future CI covers formatting/lint/types, unit and protocol/contract/security tests, real PostgreSQL integration tests, frontend build/browser tests, secret scanning, dependency checks and release manifests. Pin reviewed actions by commit SHA and use minimal workflow permissions. These are requirements, not claims of an existing green pipeline.
+The pinned workflow in `.github/workflows/ci.yml` runs formatting/lint/types, unit and API
+contracts, documentation/dossier validation, package build, dependency audit, full-history
+secret scanning, and migrations/roles/identity/idempotency/lease/audit tests against an
+ephemeral PostgreSQL service. It has read-only default permissions and no infrastructure
+credential or management-network route. Frontend build/browser checks, release manifests,
+SBOM/signing, hardware/lab tests, and branch-protection settings remain future or separately
+verified work.
 
 Untrusted pull-request code must run in disposable isolated workers with no production secrets or management-LAN access. Never attach a privileged persistent G10 runner to arbitrary PR execution. Do not execute an untrusted checkout under `pull_request_target` with secrets. Trusted hardware tests need a separate authorized and resource-limited workflow.
 

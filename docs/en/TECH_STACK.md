@@ -2,7 +2,7 @@
 
 [فارسی](../fa/TECH_STACK.md) · [Index](INDEX.md) · [Diagram atlas](DIAGRAMS.md) · [CPU evaluation](CPU_AI.md)
 
-> **Architecture recommendation with one implemented foundation slice.** Python 3.12, `uv`, Pydantic, Ruff, mypy and pytest are now declared and locked for Stage 1A contracts/policy. The remaining API, database, frontend, connector, inference and deployment choices below are not installed product services. No model or performance result has been validated on the G10.
+> **Architecture recommendation with two implemented Stage 1A slices.** Python 3.12, `uv`, Pydantic, FastAPI/Uvicorn, PostgreSQL through SQLAlchemy/Alembic/Psycopg, Ruff, mypy and pytest are declared and locked for the source application. The frontend, connector, inference and deployment choices below are not installed product services. No model or performance result has been validated on the G10.
 
 ## Recommended starting combination
 
@@ -12,7 +12,7 @@ Build a modular application, not a service per library. The API and worker share
 
 ## 1. Core stack and ownership
 
-Except for the locked Python contract/quality tooling noted above, entries remain proposed. “Core” means part of the initial implementation target, not a deployed service. Linked documentation establishes library capabilities, not measured suitability for this server.
+The Python contract/API/persistence/quality entries have an implemented source slice; the remaining entries are proposed. “Core” means part of the initial implementation target, not a deployed service. Linked documentation establishes library capabilities, not measured suitability for this server.
 
 | Layer | Suggested choice | Purpose in NextOps | Important constraint |
 |---|---|---|---|
@@ -31,7 +31,7 @@ Except for the locked Python contract/quality tooling noted above, entries remai
 | Evidence storage | Restricted local filesystem + PostgreSQL metadata | Content hashes, provenance and permission-scoped retrieval | Redact before model exposure; controlled retention and off-host recovery. |
 | Quality tooling | Ruff, mypy, pytest, HTTPX; Vitest and Playwright | Formatting/types, backend contracts and browser tests [11] | Simulator tests are not device validation; document failed/skipped/unrun tests. |
 
-The original baseline selected Python/FastAPI, PostgreSQL, React/Vite, local CPU inference and MCP. Stage 1A now adopts `uv`, Pydantic, Ruff, mypy and pytest for the local contract/policy slice; FastAPI and the remaining UI, database, MCP and inference dependencies still require their own reviewed increments.
+The original baseline selected Python/FastAPI, PostgreSQL, React/Vite, local CPU inference and MCP. Stage 1A now locks and tests the Python/FastAPI/PostgreSQL source stack. React/Vite, MCP, CPU inference, production packaging and server deployment still require reviewed increments.
 
 ## 2. Visual and interaction stack
 

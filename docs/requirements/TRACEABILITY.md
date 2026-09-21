@@ -12,10 +12,10 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 4 | Core architecture / معماری اصلی | `packages/nextops/domain`, `contracts`, `policy`; future `application`, `infrastructure` | 0–1 | Accepted boundaries plus tested contract/policy slice / مرز پذیرفته و برش آزموده | I |
 | 5 | Independent integrations / اتصال مستقل | `connectors` | 2–5 | Eleven versioned capability records / پروندهٔ یازده اتصال | P |
 | 6 | Central MCP gateway / درگاه مرکزی | `apps/mcp_gateway` | 1–2 | Auth, routing, limits, failure isolation / هویت و محدودیت و جداسازی | P |
-| 7 | RBAC / نقش و دسترسی | `packages/nextops/policy` | 1 | Deny-by-default organization/environment/target/action/scope tests; durable identity remains / آزمون دامنه؛ هویت ماندگار باقی است | I |
+| 7 | RBAC / نقش و دسترسی | `packages/nextops/policy`, `packages/nextops/application` | 1 | Deny-by-default policy plus server-derived durable actor/session and cross-scope tests; full administration remains / سیاست رد و هویت ماندگار سمت سرور؛ مدیریت کامل باقی است | I |
 | 8 | Approval / تأیید عملیات | `application`, `policy` | 1,7 | Exact digest, replay and expiry tests / هش دقیق و انقضا و بازپخش | P |
 | 9 | Secrets / اطلاعات محرمانه | `infrastructure` | 1 | Boundary-local credentials, no leaks / مرز اطلاعات ورود و عدم نشت | P |
-| 10 | Audit / ممیزی | `infrastructure`, `observability` | 1 | Durable sanitized decisions/effects / ثبت ماندگار و پالایش‌شده | P |
+| 10 | Audit / ممیزی | `packages/nextops/persistence`, `application`; future `observability` | 1 | Transactional append-restricted events and rollback tests exist; browsing/export/checkpoints remain / رخداد ماندگار و rollback آزموده؛ مرور و checkpoint باقی است | I |
 | 11 | Linux MCP / اتصال لینوکس | `connectors/linux` | 2 | Bounded diagnostics, simulator/lab evidence / عیب‌یابی محدود و شاهد | P |
 | 12 | Windows MCP / اتصال ویندوز | `connectors/windows` | 3 | Constrained authenticated operations / عملیات محدود و دارای هویت | P |
 | 13 | Cisco MCP / اتصال سیسکو | `connectors/cisco` | 3 | Version-specific read diagnostics / خواندن وابسته به نسخه | P |
@@ -33,15 +33,15 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 25 | LLM abstraction / رابط مدل | `inference` | 1–2 | CPU-only provider contract; no cloud fallback / قرارداد محلی | P |
 | 26 | Offline mode / حالت آفلاین | `deploy/server-dependencies`, `scripts` | 1,2,8 | Per-server local/approved-LAN/provisioning-only dependencies documented; Internet-blocked end-to-end test remains / وابستگی هر سرور مستند؛ آزمون کامل بدون اینترنت باقی است | P |
 | 27 | Memory / حافظه | `knowledge` | 6 | Scoped, fresh conversation/incident memory / حافظهٔ محدود و تازه | P |
-| 28 | Database abstraction / رابط پایگاه داده | `infrastructure`, `migrations` | 1 | Real PostgreSQL tests; alternatives tracked / آزمون واقعی و پیگیری جایگزین | P |
-| 29 | API / رابط برنامه | `apps/api`, `contracts` | 1–2 | Authenticated versioned routes / مسیر نسخه‌دار و دارای هویت | P |
+| 28 | Database abstraction / رابط پایگاه داده | `packages/nextops/persistence`, `migrations` | 1 | Baseline, roles and durability tested on real PostgreSQL; production lock/backup and alternatives remain / migration و role آزموده؛ تولید و جایگزین باقی است | I |
+| 29 | API / رابط برنامه | `packages/nextops/api`, `contracts` | 1–2 | Minimal authenticated `/api/v1` identity/run routes and structured errors tested; later domains remain / مسیر حداقلی و خطای ساخت‌یافته آزموده؛ دامنه‌های بعدی باقی است | I |
 | 30 | UI / رابط کاربری | `apps/web` | 2–8 | Operations views, summaries and accessibility / نماهای عملیات و دسترس‌پذیری | P |
 | 31 | Configuration / پیکربندی | `config`, `deploy/server-dependencies/*.yaml` | 1 | Schema-validated deployer inputs/paths/secret references drafted; runtime parsers and typed external settings remain / ورودی و مسیر و ارجاع محرمانه مستند؛ parser اجرایی باقی است | D |
-| 32 | Inventory / موجودی تجهیزات | `packages/nextops/contracts`, future `infrastructure` | 1–2 | Immutable scoped target contract and denial tests; inventory persistence remains / قرارداد هدف و رد؛ ماندگاری باقی است | I |
+| 32 | Inventory / موجودی تجهیزات | `packages/nextops/contracts`, `persistence`; future connectors | 1–2 | Immutable scoped target plus persisted fixture and denial tests; real inventory synchronization remains / هدف محدود و fixture ماندگار؛ همگام‌سازی واقعی باقی است | I |
 | 33 | Health checks / بررسی سلامت | `apps`, `connectors` | 1–5 | Honest readiness/capability states / آمادگی و قابلیت واقعی | P |
-| 34 | Error handling / مدیریت خطا | `packages/nextops/contracts`, future `application` | 1–5 | Typed error contract exists; retry/isolation behavior remains / قرارداد خطا موجود؛ رفتار اجرا باقی است | I |
+| 34 | Error handling / مدیریت خطا | `packages/nextops/contracts`, `application`, `api` | 1–5 | Typed application/API errors, correlation and dependency failure tested; broader retry/isolation remains / خطا و correlation آزموده؛ retry گسترده باقی است | I |
 | 35 | Observability / مشاهده‌پذیری | `observability` | 1,8 | Metrics/logs and audit distinction / تفکیک متریک و لاگ و ممیزی | P |
-| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 18 unit cases plus lint/type/lock/audit evidence; integration/evals remain / ۱۸ آزمون و کنترل؛ integration باقی است | I |
+| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 39 unit/API/schema plus 5 real-PostgreSQL cases and CI quality/security gates; browser/model/evals remain / ۳۹ آزمون محلی و ۵ PostgreSQL؛ مدل و مرورگر باقی است | I |
 | 37 | Docker / کانتینر | `deploy/compose` | 1,8 | Restricted clean install and offline test / نصب محدود و آفلاین | P |
 | 38 | Installation docs / مستندات نصب | `docs/en/INSTALL.md`, `docs/fa/INSTALL.md`, paired `DEPLOYMENT_DOSSIERS.md`, `deploy/server-dependencies` | 0–8 | Four machine-readable handoffs and paired workflow drafted; blocked installers and clean-install commands remain / چهار پرونده و گردش کار آماده؛ نصب‌کننده و فرمان آزموده باقی است | D |
 | 39 | Native Persian docs / مستندات فارسی طبیعی | `docs/fa`, `docs/en` | 0–8 | Paired guides and language review / همتای دو زبان و بازبینی | D |
@@ -55,7 +55,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 47 | Decision workflow / گردش تصمیم | `application` | 1–2 | Bounded persisted state machine / ماشین حالت محدود و ماندگار | P |
 | 48 | Self-verification / بررسی نتیجه | `application`, `connectors` | 2,7 | Fresh postconditions; unknown-outcome reconciliation / نتیجهٔ تازه و رفع ابهام | P |
 | 49 | Phased delivery / تحویل مرحله‌ای | `docs/en/ROADMAP.md`, `docs/fa/ROADMAP.md` | 0–8 | Revised gates, all original scope retained / معیار جدید و حفظ دامنه | D |
-| 50 | Phase completion / پایان مرحله | `docs/PROJECT_STATE.md`, `tests` | 0–8 | Implement/test/fix/document/commit evidence / شاهد ساخت و آزمون و ثبت | P |
+| 50 | Phase completion / پایان مرحله | `docs/PROJECT_STATE.md`, `tests` | 0–8 | Phase 0 and two Stage 1A increments have implementation/test/document evidence; deployment and later phases remain / مرحلهٔ صفر و دو برش 1A شاهد دارند؛ استقرار و مراحل بعدی باقی است | I |
 | 51 | First architecture report / گزارش معماری نخست | `docs/en/PHASE_0_REPORT.md`, `docs/fa/PHASE_0_REPORT.md` | 0 | Owner accepted on 2026-09-21; infrastructure authorization remains separate / پذیرش مالک؛ مجوز زیرساخت جداست | A |
 
 ## Explicit revisions / اصلاحات صریح

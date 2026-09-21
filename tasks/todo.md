@@ -19,12 +19,12 @@
 
 **Acceptance criteria:**
 
-- [ ] Bootstrap is one-time; recovery rotates credentials and revokes prior sessions.
-- [ ] Password and bearer-token storage is non-reversible and comparison is constant-time.
-- [ ] Revoked/expired/cross-scope actors are denied.
-- [ ] Run creation is idempotent for identical intent and conflicts for changed intent.
-- [ ] Worker leases are atomic, renewable by their owner, and recoverable after expiry.
-- [ ] Required audit failure prevents an operation from reporting success.
+- [x] Bootstrap is one-time; recovery rotates credentials and revokes prior sessions.
+- [x] Password and bearer-token storage is non-reversible and comparison is constant-time.
+- [x] Revoked/expired/cross-scope actors are denied.
+- [x] Run creation is idempotent for identical intent and conflicts for changed intent.
+- [x] Worker leases are atomic, renewable by their owner, and recoverable after expiry.
+- [x] Required audit failure prevents an operation from reporting success.
 
 **Verification:** service tests followed by real PostgreSQL transaction/concurrency tests.
 
@@ -52,10 +52,10 @@
 
 **Acceptance criteria:**
 
-- [ ] Baseline upgrade and downgrade work on isolated PostgreSQL.
-- [ ] Constraints, restricted grants, append-only audit, idempotency, leases, restart
+- [x] Baseline upgrade and downgrade work on isolated PostgreSQL.
+- [x] Constraints, restricted grants, append-only audit, idempotency, leases, restart
   recovery, and transaction rollback are exercised against PostgreSQL.
-- [ ] No skipped database test is counted as acceptance evidence.
+- [x] No skipped database test is counted as acceptance evidence.
 
 **Verification:** container-backed PostgreSQL integration suite and recorded exact output.
 
@@ -67,9 +67,9 @@
 
 **Acceptance criteria:**
 
-- [ ] Paired English/Persian checklists state what the operator can collect now, what
+- [x] Paired English/Persian checklists state what the operator can collect now, what
   needs a separate provisioning approval, and what must wait for application release.
-- [ ] Project state, traceability, indexes, next task, and deployment dossier match only
+- [x] Project state, traceability, indexes, next task, and deployment dossier match only
   tested implementation.
 - [ ] Full quality, lock, audit, documentation, and secret-review gates pass before merge.
 

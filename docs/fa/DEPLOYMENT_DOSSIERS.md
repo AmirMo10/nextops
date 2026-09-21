@@ -82,7 +82,7 @@ python scripts/check_docs.py
 
 ### `nextops-app`
 
-پیش از نصب توقف کنید، زیرا هنوز API و UI اجرایی، migration و role پایگاه، worker، installer، Compose stack یا systemd unit در مخزن وجود ندارد. Increment 2 از 1A باید این‌ها را بسازد و بیازماید. برای جبران، environment variable ساختگی یا PostgreSQL شبکه‌ای نسازید.
+پیش از نصب توقف کنید. اکنون API در سطح source، migration و role گروهی PostgreSQL و رفتار worker با fixture وجود دارد، اما release آفلاین تأییدشده، UI مرورگر، تحویل login role تولید، reverse proxy، installer، Compose، systemd unit و backup/restore آزموده وجود ندارد. فرمان CI را runbook تولید نکنید و برای جبران environment variable ساختگی یا PostgreSQL شبکه‌ای نسازید.
 
 ### `nextops-ai`
 

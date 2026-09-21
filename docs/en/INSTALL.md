@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INSTALL.md) · [Index](INDEX.md)
 
-**Current capability: clone, review documentation, and run the local Stage 1A contract/policy checks.** The repository now has `pyproject.toml` and generated `uv.lock`, but no runnable application installer, migration runner, Compose stack, connector, AI service, or systemd unit. Host preparation steps below remain an implementation checklist, not authorization or commands for a deployed product.
+**Current capability: clone, review documentation, run the Stage 1A source API, and test its contracts and PostgreSQL migration in an isolated development environment.** The repository has a locked Python project, FastAPI entrypoint, Alembic baseline, and durable service code, but no approved production installer, offline release, reverse proxy, browser UI, Compose stack, connector, AI service, backup/restore bundle, or systemd unit. Host preparation steps below remain an implementation checklist, not authorization or commands for a deployed product.
 
 ## Available now
 
@@ -11,7 +11,10 @@ git clone https://github.com/Omid-NextAI/nextops.git
 cd nextops
 git status --short
 uv sync --extra dev --frozen
-uv run --extra dev pytest
+uv run ruff format --check packages migrations tests scripts
+uv run ruff check packages migrations tests scripts
+uv run mypy packages tests
+uv run pytest -m "not integration"
 ```
 
 Read the master specification, architecture, security, CPU plan and next task before changing the host. Use an authenticated administrative connection approved by the owner; do not post SSH keys or passwords in GitHub issues.
@@ -42,7 +45,7 @@ Ubuntu is the source requirement; Ubuntu 24.04 LTS and Python 3.12 are proposed 
 
 ## Future Compose path
 
-After architecture approval and implementation: verify a pinned release and its artifacts; preflight host resources and ports; provision restricted service identities/storage; supply credential references outside Git; import verified CPU model files; initialize PostgreSQL; run serialized migrations; bootstrap local authentication without a default password; start internal services; validate the reverse proxy, health checks and denied operations. Enable only simulators or explicitly authorized lab connectors.
+After a deployable release is approved: verify its artifacts; preflight host resources and ports; provision restricted service identities/storage; supply credential references outside Git; import verified CPU model files; initialize the selected PostgreSQL patch; run serialized migrations; bootstrap local authentication without a default password; start internal services; validate the reverse proxy, health checks and denied operations. Enable only simulators or explicitly authorized lab connectors.
 
 Require non-root/restricted containers, tested resource limits and network separation. Do not expose the database, inference or MCP ports publicly or mount the container engine socket. Publish exact runnable commands only when the corresponding files have passed clean-install tests.
 

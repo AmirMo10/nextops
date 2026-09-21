@@ -45,7 +45,7 @@ result. No target credential, connector, model, VM, network, or host mutation is
 - [x] Implement atomic run creation with idempotency conflict detection.
 - [x] Implement lease claim/renew/release and expired-lease recovery.
 - [x] Make audit/database failure return a typed failure; never report unlogged success.
-- [ ] Cover security boundaries and persistence behavior with focused tests.
+- [x] Cover security boundaries and persistence behavior with focused tests.
 
 ### Slice 3: authenticated API and fixture result
 
@@ -58,18 +58,18 @@ result. No target credential, connector, model, VM, network, or host mutation is
 
 ### Slice 4: PostgreSQL and operational proof
 
-- [ ] Run upgrade/downgrade, constraint, role, audit append, idempotency, lease,
+- [x] Run upgrade/downgrade, constraint, role, audit append, idempotency, lease,
   restart-recovery, and rollback/recovery tests against isolated real PostgreSQL.
-- [ ] Run Ruff, strict mypy, pytest, documentation checks, frozen install, dependency
+- [x] Run Ruff, strict mypy, pytest, documentation checks, frozen install, dependency
   audit, and a staged secret review.
-- [ ] Record exact pass/fail/blocked evidence; do not count skipped PostgreSQL tests as
+- [x] Record exact pass/fail/blocked evidence; do not count skipped PostgreSQL tests as
   acceptance.
 
 ### Slice 5: deployer handoff and project state
 
-- [ ] Add paired English/Persian server-start checklists that distinguish safe preflight,
+- [x] Add paired English/Persian server-start checklists that distinguish safe preflight,
   separately authorized provisioning, and not-yet-deployable application steps.
-- [ ] Update indexes, traceability, project state, next task, and the app deployment
+- [x] Update indexes, traceability, project state, next task, and the app deployment
   dossier only for capabilities that actually exist and were tested.
 - [ ] Commit small verified slices, publish a review branch, and merge only after required
   checks pass.
@@ -98,7 +98,8 @@ result. No target credential, connector, model, VM, network, or host mutation is
 
 ## Open gate
 
-The workstation has Docker installed but the Docker engine is currently stopped. Real
-PostgreSQL acceptance remains open until the engine is available or another isolated
-PostgreSQL endpoint is explicitly supplied. This does not authorize starting services on
-the target servers.
+Local Docker remained unavailable, so it was not counted. The isolated GitHub Actions
+PostgreSQL 17.6 service executes all five integration cases, including migration rollback,
+restricted grants, identity recovery, idempotency, lease restart recovery, append-only
+audit, and transaction rollback. This does not select the production PostgreSQL patch or
+authorize starting services on target servers.

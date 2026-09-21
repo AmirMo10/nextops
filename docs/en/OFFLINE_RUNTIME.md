@@ -2,7 +2,7 @@
 
 [فارسی](../fa/OFFLINE_RUNTIME.md) · [Index](INDEX.md) · [Technology stack](TECH_STACK.md) · [CPU-only AI](CPU_AI.md)
 
-**Requirement confirmed by the owner: 2026-09-20. Runtime implementation and acceptance tests: NOT RUN.** This is a mandatory delivery constraint, not an optional feature or a claim that the current contract/policy foundation is an offline-capable product.
+**Requirement confirmed by the owner: 2026-09-20. Source application work has started; full offline runtime acceptance: NOT RUN.** This is a mandatory delivery constraint, not an optional feature or a claim that the current API/database slice is an offline-capable product.
 
 ## 1. The operating contract
 
