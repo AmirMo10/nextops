@@ -4,16 +4,16 @@
 
 [English](../en/DEPLOYMENT_DOSSIERS.md) · [فهرست](INDEX.md) · [برنامهٔ سرورها](SERVER_PLAN.md) · [شرط ذخیره‌سازی](../STORAGE_PLAN.md)
 
-**وضعیت: قرارداد تحویل به مسئول استقرار؛ نه نصب‌کننده و نه مجوز استقرار.** چهار فایل JSON در مسیر [`deploy/server-dependencies`](../../deploy/server-dependencies) اندازه‌های معلوم، مرزهای پیشنهادی، وابستگی‌ها، مسیر تنظیمات، الگوهای فرمان، شاهدهای لازم و ورودی‌های حل‌نشدهٔ چیدمان پذیرفته‌شده را یک‌جا ثبت می‌کنند. همهٔ دروازه‌های پذیرش اجرایی همچنان `not_run` هستند.
+**وضعیت: قرارداد تحویل به مسئول استقرار؛ نه نصب‌کننده و نه مجوز استقرار.** چهار فایل YAML خوانا در مسیر [`deploy/server-dependencies`](../../deploy/server-dependencies) اندازه‌های معلوم، مرزهای پیشنهادی، وابستگی‌ها، مسیر تنظیمات، الگوهای فرمان، شاهدهای لازم و ورودی‌های حل‌نشدهٔ چیدمان پذیرفته‌شده را یک‌جا ثبت می‌کنند. همهٔ دروازه‌های پذیرش اجرایی همچنان `not_run` هستند.
 
 ## فایل‌ها و مسئولیت‌ها
 
 | پروندهٔ سرور | مسئولیت | منابع پیشنهادی |
 |---|---|---:|
-| [`nextops-app.json`](../../deploy/server-dependencies/nextops-app.json) | TLS، رابط، API، هویت، worker و audit ماندگار و PostgreSQL محدود اولیهٔ NextOps | ۸ vCPU / حافظهٔ ۳۲ GiB / دیسک ۲۰۰ GiB |
-| [`nextops-ai.json`](../../deploy/server-dependencies/nextops-ai.json) | یک سرویس AI محلی روی CPU با فایل‌های مدل و runtime تأییدشده | ۲۴ vCPU / حافظهٔ ۱۲۸ GiB / دیسک ۵۰۰ GiB |
-| [`nextops-connectors-ro.json`](../../deploy/server-dependencies/nextops-connectors-ro.json) | درگاه حفاظت‌شده و runner جدا و فقط‌خواندنی Zabbix | ۴ vCPU / حافظهٔ ۸ GiB / دیسک ۸۰ GiB |
-| [`zabbix-server.json`](../../deploy/server-dependencies/zabbix-server.json) | طرح Zabbix 7.0 LTS مستقل، PostgreSQL 16، رابط/API، Agent 2 و LVM کامل | ۴ vCPU / حافظهٔ ۱۶ GiB / دیسک ۲۰۰ GiB |
+| [`nextops-app.yaml`](../../deploy/server-dependencies/nextops-app.yaml) | TLS، رابط، API، هویت، worker و audit ماندگار و PostgreSQL محدود اولیهٔ NextOps | ۸ vCPU / حافظهٔ ۳۲ GiB / دیسک ۲۰۰ GiB |
+| [`nextops-ai.yaml`](../../deploy/server-dependencies/nextops-ai.yaml) | یک سرویس AI محلی روی CPU با فایل‌های مدل و runtime تأییدشده | ۲۴ vCPU / حافظهٔ ۱۲۸ GiB / دیسک ۵۰۰ GiB |
+| [`nextops-connectors-ro.yaml`](../../deploy/server-dependencies/nextops-connectors-ro.yaml) | درگاه حفاظت‌شده و runner جدا و فقط‌خواندنی Zabbix | ۴ vCPU / حافظهٔ ۸ GiB / دیسک ۸۰ GiB |
+| [`zabbix-server.yaml`](../../deploy/server-dependencies/zabbix-server.yaml) | طرح Zabbix 7.0 LTS مستقل، PostgreSQL 16، رابط/API، Agent 2 و LVM کامل | ۴ vCPU / حافظهٔ ۱۶ GiB / دیسک ۲۰۰ GiB |
 | [`server-dependency.schema.json`](../../deploy/server-dependencies/server-dependency.schema.json) | قرارداد عمومی نسخهٔ ۱.۰.۰ برای همهٔ پرونده‌ها | سرور نیست |
 
 مجموع پیشنهادی چهار ماشین، ۴۰ vCPU، حافظهٔ ۱۸۴ GiB و دیسک مجازی ۹۸۰ GiB است. سهم موقت swap در ESXi نیز ۱۸۴ GiB است و جمع پیش از VMX، snapshot، رشد thin، staging، نگهداری و restore به ۱۱۶۴ GiB می‌رسد. این اعداد ورودی برنامه‌ریزی‌اند؛ نه رزرو و نه اثبات ظرفیت آزاد.
@@ -42,31 +42,18 @@
 | `guarded_template` | الگوی بازبینی‌شده با ورودی‌های نام‌دار. ورودی‌ها باید ابتدا در رکورد خصوصی حل و اعتبارسنجی شوند. این الگو اسکریپت خودکار نیست. |
 | `blocked` | هنوز فرمان دقیق و امن در مخزن وجود ندارد. مقدار `command` عمداً `null` است و مانع و شرط لازم کنار آن آمده است. |
 
-سامانه‌ای نسازید که رشته‌های داخل JSON را خودکار و بدون بازبینی اجرا کند. این فایل‌ها قرارداد تحویل برای change procedure بازبینی‌شده‌اند. پیش از هر تغییر، مقصد، مجوز، mount، artifact، permission و authorization دوباره بررسی شوند.
+سامانه‌ای نسازید که رشته‌های داخل YAML را خودکار و بدون بازبینی اجرا کند. این فایل‌ها قرارداد تحویل برای change procedure بازبینی‌شده‌اند. پیش از هر تغییر، مقصد، مجوز، mount، artifact، permission و authorization دوباره بررسی شوند.
 
 ## فرمان‌های اعتبارسنجی
 
-بررسی ساختار JSON روی هر میزبان دارای Python:
+ابتدا وابستگی‌های قفل‌شدهٔ توسعه را نصب و سپس اعتبارسنج مخزن را اجرا کنید:
 
 ```bash
-python -m json.tool deploy/server-dependencies/nextops-app.json >/dev/null
-python -m json.tool deploy/server-dependencies/nextops-ai.json >/dev/null
-python -m json.tool deploy/server-dependencies/nextops-connectors-ro.json >/dev/null
-python -m json.tool deploy/server-dependencies/zabbix-server.json >/dev/null
+uv sync --extra dev --frozen
+uv run --extra dev python scripts/check_deployment_dossiers.py
 ```
 
-اعتبارسنجی کامل schema در PowerShell 7:
-
-```powershell
-$schema = Resolve-Path deploy/server-dependencies/server-dependency.schema.json
-Get-ChildItem deploy/server-dependencies/*.json |
-  Where-Object Name -ne 'server-dependency.schema.json' |
-  ForEach-Object {
-    if (-not (Test-Json -LiteralPath $_.FullName -SchemaFile $schema)) {
-      throw "Schema validation failed: $($_.Name)"
-    }
-  }
-```
+اعتبارسنج هر چهار سند YAML را ایمن parse می‌کند، آنها را با JSON Schema نسخهٔ Draft 2020-12 می‌سنجد، باقی‌ماندن نسخهٔ قدیمی JSON را رد می‌کند، شناسهٔ سرورهای پذیرفته‌شده را کنترل می‌کند و مجموع ۴۰ vCPU، حافظهٔ ۱۸۴ GiB و دیسک ۹۸۰ GiB را تطبیق می‌دهد.
 
 بررسی مستندات مخزن:
 
@@ -74,7 +61,7 @@ Get-ChildItem deploy/server-dependencies/*.json |
 python scripts/check_docs.py
 ```
 
-قبولی JSON یا schema فقط شکل داده را ثابت می‌کند؛ مقدار خصوصی، اصالت artifact، ظرفیت زیرساخت، رفتار سرویس یا مجوز را تأیید نمی‌کند.
+قبولی YAML یا schema فقط شکل داده را ثابت می‌کند؛ مقدار خصوصی، اصالت artifact، ظرفیت زیرساخت، رفتار سرویس یا مجوز را تأیید نمی‌کند.
 
 ## گردش امن استقرار
 

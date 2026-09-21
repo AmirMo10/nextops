@@ -4,7 +4,7 @@ Status: approved by the owner's 2026-09-21 request to create a dependency file f
 
 ## Objective
 
-Give a deployer one self-contained, machine-readable dossier for each approved initial server:
+Give a deployer one self-contained, human-readable and machine-validated YAML dossier for each approved initial server:
 
 - `nextops-app`
 - `nextops-ai`
@@ -15,13 +15,11 @@ Each dossier must distinguish owner-supplied facts, accepted architecture, engin
 
 ## Commands
 
-Validate every dossier as JSON:
+Install the locked development tools and validate every YAML dossier against the shared JSON Schema:
 
 ```bash
-python -m json.tool deploy/server-dependencies/nextops-app.json > /dev/null
-python -m json.tool deploy/server-dependencies/nextops-ai.json > /dev/null
-python -m json.tool deploy/server-dependencies/nextops-connectors-ro.json > /dev/null
-python -m json.tool deploy/server-dependencies/zabbix-server.json > /dev/null
+uv sync --extra dev --frozen
+uv run --extra dev python scripts/check_deployment_dossiers.py
 ```
 
 Validate repository documentation and the existing implementation:
@@ -41,12 +39,13 @@ The dossier command entries are either read-only commands that can be reviewed n
 ```text
 deploy/server-dependencies/
   server-dependency.schema.json  # versioned public contract
-  nextops-app.json               # app/API/UI/database host dossier
-  nextops-ai.json                # local CPU inference host dossier
-  nextops-connectors-ro.json     # protected read-only gateway/runner dossier
-  zabbix-server.json             # dedicated monitoring host dossier
+  nextops-app.yaml               # app/API/UI/database host dossier
+  nextops-ai.yaml                # local CPU inference host dossier
+  nextops-connectors-ro.yaml     # protected read-only gateway/runner dossier
+  zabbix-server.yaml             # dedicated monitoring host dossier
 docs/en/DEPLOYMENT_DOSSIERS.md  # English deployer workflow
 docs/fa/DEPLOYMENT_DOSSIERS.md  # Persian deployer workflow
+scripts/check_deployment_dossiers.py  # YAML/schema/cross-file validation
 ```
 
 ## Data style
@@ -60,8 +59,8 @@ docs/fa/DEPLOYMENT_DOSSIERS.md  # Persian deployer workflow
 
 ## Testing strategy
 
-1. Parse every manifest with Python's standard JSON parser.
-2. Check each instance against `server-dependency.schema.json` with a Draft 2020-12 validator when one is available in the controlled toolchain; the schema remains useful without adding a runtime dependency to NextOps.
+1. Parse every manifest with PyYAML's safe loader from the locked development toolchain.
+2. Check each instance against `server-dependency.schema.json` with a Draft 2020-12 validator; PyYAML and jsonschema remain development-only dependencies, not NextOps runtime dependencies.
 3. Run the repository documentation checker for bilingual parity, UTF-8, RTL wrappers, and local links.
 4. Review arithmetic and cross-file values against `HARDWARE_BASELINE.json` and `ZABBIX_SERVER_PLAN.json`.
 5. Run the existing Stage 1A quality gates to prove this documentation change did not regress the implemented slice.
@@ -86,12 +85,12 @@ Never:
 
 - commit a real secret, private infrastructure identifier, production inventory, or usable endpoint;
 - publish destructive storage commands for an unidentified disk;
-- imply that documentation, a VM definition, or a successful JSON parse is deployment acceptance;
+- imply that documentation, a VM definition, or a successful YAML parse is deployment acceptance;
 - silently download dependencies or route AI work to an external provider at runtime.
 
 ## Success criteria
 
-- Four self-contained JSON dossiers validate as JSON and against one versioned schema.
+- Four self-contained YAML dossiers parse safely and validate against one versioned JSON Schema.
 - Every dossier contains resource, dependency, configuration, identity, network, storage, artifact, secret-reference, command, verification, backup/rollback, required-input, and acceptance sections.
 - Exact known values match the accepted Phase 0 records.
 - Unknown private or not-yet-implemented values are explicit blockers rather than fabricated defaults.

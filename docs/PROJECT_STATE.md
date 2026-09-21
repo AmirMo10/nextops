@@ -1,6 +1,6 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 1 implemented and tested locally; per-server deployment dossiers added. This is not a deployment report.
+Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 1 implemented and tested locally; per-server deployment dossiers converted to human-readable YAML. This is not a deployment report.
 
 ## English
 
@@ -43,9 +43,9 @@ The [new English guide](en/ZABBIX_SERVER.md) and [Persian guide](fa/ZABBIX_SERVE
 
 ### Per-server deployer dossiers
 
-The versioned [deployment-dossier specification](requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md), shared [JSON Schema](../deploy/server-dependencies/server-dependency.schema.json), and four server instances now provide one handoff record for `nextops-app`, `nextops-ai`, `nextops-connectors-ro`, and `zabbix-server`. The paired [English](en/DEPLOYMENT_DOSSIERS.md) and [Persian](fa/DEPLOYMENT_DOSSIERS.md) guides define how a deployer resolves private inputs without committing them.
+The versioned [deployment-dossier specification](requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md), shared [JSON Schema](../deploy/server-dependencies/server-dependency.schema.json), and four human-readable YAML server instances now provide one handoff record for `nextops-app`, `nextops-ai`, `nextops-connectors-ro`, and `zabbix-server`. The paired [English](en/DEPLOYMENT_DOSSIERS.md) and [Persian](fa/DEPLOYMENT_DOSSIERS.md) guides define how a deployer resolves private inputs without committing them.
 
-Each dossier includes authorization state, source records, VM sizing, service identities, software/artifact locks, configuration paths, reference-only secrets, network/storage boundaries, dependency order, read-only or guarded command templates, explicit blocked commands, observability, backup/rollback, required private inputs, acceptance gates, and known limitations. Exact known resources reconcile to 40 vCPU / 184 GiB RAM / 980 GiB VMDKs, and the Zabbix mount/LVM entries reconcile to the 200-GiB proposal. PowerShell 7 `Test-Json` validation passed all four instances against schema 1.0.0; Python JSON parsing and cross-file invariant checks also passed.
+Each dossier includes authorization state, source records, VM sizing, service identities, software/artifact locks, configuration paths, reference-only secrets, network/storage boundaries, dependency order, read-only or guarded command templates, explicit blocked commands, observability, backup/rollback, required private inputs, acceptance gates, and known limitations. Exact known resources reconcile to 40 vCPU / 184 GiB RAM / 980 GiB VMDKs, and the Zabbix mount/LVM entries reconcile to the 200-GiB proposal. The owner-requested JSON-to-YAML conversion preserved every data value. The repository validator safely parses the four YAML files, checks schema 1.0.0 and the approved server IDs, rejects stale JSON dossier copies, and verifies the combined resource totals.
 
 These records expose rather than hide the deployment blockers: no application/gateway/connector installer or service definitions exist; the model/runtime/package locks are unresolved; app/AI/connector disk layouts are not designed; the actual Zabbix disk and private networks/endpoints/credentials are unknown; and all runtime acceptance evidence remains `not_run`. No VM, disk, package, account, route, token, certificate, database, model, service, backup, restore, or target was changed or accessed while creating them.
 
@@ -105,9 +105,9 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است.
 
 ### پروندهٔ هر سرور برای مسئول استقرار
 
-[مشخصات پرونده](requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md)، [JSON Schema مشترک](../deploy/server-dependencies/server-dependency.schema.json) و چهار فایل مربوط به `nextops-app`، `nextops-ai`، `nextops-connectors-ro` و `zabbix-server` اکنون تحویل ماشین‌خوان هر سرور را فراهم می‌کنند. راهنمای [فارسی](fa/DEPLOYMENT_DOSSIERS.md) و [انگلیسی](en/DEPLOYMENT_DOSSIERS.md) روش تکمیل ورودی خصوصی بدون commit آن را شرح می‌دهند.
+[مشخصات پرونده](requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md)، [JSON Schema مشترک](../deploy/server-dependencies/server-dependency.schema.json) و چهار فایل YAML خوانا برای `nextops-app`، `nextops-ai`، `nextops-connectors-ro` و `zabbix-server` اکنون تحویل ماشین‌خوان هر سرور را فراهم می‌کنند. راهنمای [فارسی](fa/DEPLOYMENT_DOSSIERS.md) و [انگلیسی](en/DEPLOYMENT_DOSSIERS.md) روش تکمیل ورودی خصوصی بدون commit آن را شرح می‌دهند.
 
-هر پرونده وضعیت مجوز، منبع، منابع VM، هویت سرویس، قفل نرم‌افزار و artifact، مسیر تنظیمات، secret reference، مرز شبکه و storage، ترتیب سرویس، فرمان فقط‌خواندنی یا الگوی محافظت‌شده، فرمان مسدود، مشاهده‌پذیری، backup و rollback، ورودی لازم، دروازهٔ پذیرش و محدودیت را دارد. مقدارهای معلوم با مجموع ۴۰ vCPU، حافظهٔ ۱۸۴ GiB و دیسک ۹۸۰ GiB سازگارند و mountهای Zabbix با طرح ۲۰۰ GiB تطبیق دارند. هر چهار فایل با `Test-Json` در PowerShell 7 و schema نسخهٔ ۱.۰.۰ قبول شدند؛ parse با Python و کنترل invariant بین فایل‌ها نیز قبول شد.
+هر پرونده وضعیت مجوز، منبع، منابع VM، هویت سرویس، قفل نرم‌افزار و artifact، مسیر تنظیمات، secret reference، مرز شبکه و storage، ترتیب سرویس، فرمان فقط‌خواندنی یا الگوی محافظت‌شده، فرمان مسدود، مشاهده‌پذیری، backup و rollback، ورودی لازم، دروازهٔ پذیرش و محدودیت را دارد. مقدارهای معلوم با مجموع ۴۰ vCPU، حافظهٔ ۱۸۴ GiB و دیسک ۹۸۰ GiB سازگارند و mountهای Zabbix با طرح ۲۰۰ GiB تطبیق دارند. تبدیل درخواستی JSON به YAML همهٔ مقدارها را بدون اتلاف حفظ کرد. اعتبارسنج مخزن چهار فایل YAML را ایمن parse می‌کند، schema نسخهٔ ۱.۰.۰ و شناسه‌های پذیرفته‌شده را می‌سنجد، باقی‌ماندن نسخهٔ قدیمی JSON را رد می‌کند و مجموع منابع را تطبیق می‌دهد.
 
 این پرونده‌ها مانع را پنهان نمی‌کنند: installer و service definition برای برنامه و gateway و connector وجود ندارد؛ قفل مدل و runtime و package حل نشده؛ layout دیسک app و AI و connector طراحی نشده؛ دیسک واقعی زبیکس و شبکه و endpoint و credential خصوصی معلوم نیست؛ و همهٔ شاهدهای اجرایی `not_run` هستند. هنگام ساخت پرونده‌ها هیچ VM، دیسک، بسته، حساب، route، token، گواهی، پایگاه، مدل، سرویس، backup، restore یا مقصدی تغییر یا استفاده نشد.
 

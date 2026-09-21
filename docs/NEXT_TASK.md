@@ -14,7 +14,7 @@ The owner accepted the paired [Phase 0 report](en/PHASE_0_REPORT.md), [Persian r
 
 The next bounded change is Increment 2: define the local identity bootstrap/recovery flow, add PostgreSQL migrations and least-privilege roles for organization/environment/target/run/audit state, persist idempotent run creation and worker leases, expose the minimal authenticated versioned API, and return one bilingual fixture-backed result. Build and test this locally before any target credential or model integration.
 
-The four schema-validated files under `deploy/server-dependencies` are now the public deployer handoff for the selected servers. They do not make Increment 2 or any VM deployable. Increment 2 should replace the app dossier's currently blocked installer/readiness entries only after actual migrations, roles, runtime dependencies, service definitions, clean offline install, backup, and rollback procedures exist and are tested. Environment-specific values belong in an approved private deployment record keyed by `required_inputs`, never in these public files.
+The four schema-validated YAML files under `deploy/server-dependencies` are now the public deployer handoff for the selected servers. They do not make Increment 2 or any VM deployable. Increment 2 should replace the app dossier's currently blocked installer/readiness entries only after actual migrations, roles, runtime dependencies, service definitions, clean offline install, backup, and rollback procedures exist and are tested. Environment-specific values belong in an approved private deployment record keyed by `required_inputs`, never in these public files.
 
 Acceptance evidence for Increment 2:
 
@@ -90,7 +90,7 @@ After each increment, update PROJECT_STATE with actual work, created roles, exac
 
 تغییر محدود بعدی Increment 2 است: طراحی bootstrap و recovery هویت محلی، migration و role محدود PostgreSQL برای سازمان، محیط، هدف، run و audit، ساخت idempotent run و lease ماندگار، API نسخه‌دار و احرازهویت‌شدهٔ حداقلی و یک نتیجهٔ دوزبانه با fixture. این مسیر ابتدا محلی و بدون credential مقصد یا مدل ساخته و آزموده شود.
 
-چهار فایل معتبرشده با schema در `deploy/server-dependencies` اکنون قرارداد عمومی تحویل به مسئول استقرارند؛ اما Increment 2 یا هیچ VM را آمادهٔ نصب نمی‌کنند. ورودی مسدود app فقط پس از وجود و آزمون migration، role، dependency، service definition، نصب پاک آفلاین، backup و rollback واقعی جایگزین شود. مقدار محیط واقعی در رکورد خصوصی و بر اساس شناسهٔ `required_inputs` قرار می‌گیرد، نه در فایل عمومی.
+چهار فایل YAML معتبرشده با schema در `deploy/server-dependencies` اکنون قرارداد عمومی تحویل به مسئول استقرارند؛ اما Increment 2 یا هیچ VM را آمادهٔ نصب نمی‌کنند. ورودی مسدود app فقط پس از وجود و آزمون migration، role، dependency، service definition، نصب پاک آفلاین، backup و rollback واقعی جایگزین شود. مقدار محیط واقعی در رکورد خصوصی و بر اساس شناسهٔ `required_inputs` قرار می‌گیرد، نه در فایل عمومی.
 
 شاهد پذیرش Increment 2:
 
