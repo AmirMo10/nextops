@@ -2,7 +2,7 @@
 
 [فارسی](../fa/ARCHITECTURE.md) · [Index](INDEX.md)
 
-**Status: proposed.** Source: [master specification](../requirements/NEXTOPS_MASTER_PROMPT.md), sections 2–8, 16–20. The repository currently contains documentation, not the services below.
+**Status: Phase 0 architecture accepted; selected source boundaries are implemented and tested.** Source: [master specification](../requirements/NEXTOPS_MASTER_PROMPT.md), sections 2–8 and 16–20. The repository contains the app/API, persistence, policy, identity and local-inference foundations, but not the complete web, gateway, connector or production deployment described below.
 
 ## Decision
 

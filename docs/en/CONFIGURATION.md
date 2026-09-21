@@ -2,7 +2,7 @@
 
 [فارسی](../fa/CONFIGURATION.md) · [Index](INDEX.md)
 
-**Status: proposed configuration design. No parser or runtime schema exists yet.** The filenames below come from the master specification; illustrative values are documentation, not an executable configuration.
+**Status: partial runtime configuration is implemented; the complete file-based contract remains proposed.** Typed fail-closed environment loaders now cover the app/database/session boundary and local llama.cpp service boundary. The filenames below come from the master specification; illustrative values are documentation, not executable configuration files.
 
 ## Separation of concerns
 
@@ -15,7 +15,7 @@
 | `policies.example.yaml` | Deny-by-default scopes, named diagnostics, risk, approval and execution limits |
 | `resource-profiles.example.yaml` | Measured CPU/memory/thread/concurrency profiles and queue limits |
 
-The implementation must introduce typed schemas, validation errors, configuration versioning and documented loading rules. Avoid inventing unsupported environment variables in installation commands. Application state belongs in PostgreSQL, not mutable YAML used as a job queue.
+The remaining file-based implementation must introduce typed schemas, validation errors, configuration versioning and documented loading rules. Current supported environment variables are defined by `AppSettings` and `LlamaCppSettings`; avoid inventing others in installation commands. Application state belongs in PostgreSQL, not mutable YAML used as a job queue.
 
 ## Language and identity
 

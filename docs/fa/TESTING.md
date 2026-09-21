@@ -4,7 +4,7 @@
 
 [English](../en/TESTING.md) · [فهرست](INDEX.md)
 
-**وضعیت: برنامهٔ آزمون محصول. هنوز آزمون برنامه، تجهیز واقعی یا کارایی G10 اجرا نشده است.** مبنا: بخش‌های ۱۰ تا ۱۴ و ۲۱ تا ۲۳ مشخصات اصلی. بررسی ساختار مستندات با اعتبارسنجی برنامه تفاوت دارد.
+**وضعیت: برنامهٔ آزمون همراه زیرمجموعهٔ مخزنی تأییدشده.** CI میزبانی‌شده ۶۸ آزمون unit/API/schema/installer و ۵ آزمون integration روی PostgreSQL را می‌گذراند. آزمون مرورگر، connector یا تجهیز، مدل واقعی، اجرای package، سرور آفلاین، restore یا benchmark روی G10 انجام نشده است. مبنا: بخش‌های ۱۰ تا ۱۴ و ۲۱ تا ۲۳ مشخصات اصلی.
 
 ## لایه‌های آزمون
 
@@ -39,8 +39,26 @@
 
 هر گزارش شامل commit، فرمان، تعداد آزمون، شکست و skip، نسخهٔ داده و مدل، هویت سخت‌افزار و محیط اجرا، اندازه‌گیری، محدودیت و روش بازتولید پالایش‌شده است. نمونهٔ خام کارایی در صورت ایمن بودن نگه داشته شود. هدف با مشاهده، سلامت با شبیه‌سازی و شبیه‌سازی با آمادگی عملیاتی اشتباه نشوند.
 
-## بررسی مستندات موجود در این مرحله
+## بررسی‌های مخزن که اکنون قابل اجرا هستند
 
-پس از دریافت مخزن، `python3 scripts/check_docs.py` اجرا شود. این ابزار لینک محلی Markdown، همتای فارسی و انگلیسی، پوشش راست‌به‌چپ و فایل‌های کنترلی لازم را بررسی می‌کند. برنامه یا تجهیز را آزمون نمی‌کند، لینک خارجی دریافت نمی‌کند و صحت فنی یا طبیعی بودن زبان را نمی‌سنجد. موفقیت آن نباید موفقیت آزمون محصول معرفی شود.
+پس از دریافت مخزن، محیط قفل‌شدهٔ توسعه نصب و همان بررسی‌های اصلی CI اجرا شوند:
+
+</div>
+
+```bash
+uv sync --extra dev --frozen
+uv run ruff format --check packages migrations tests scripts deploy/installers
+uv run ruff check packages migrations tests scripts deploy/installers
+uv run mypy packages tests deploy/installers
+uv run pytest -m "not integration" -q
+uv run python scripts/check_docs.py
+uv run python scripts/check_deployment_dossiers.py
+uv run python scripts/check_inference_artifacts.py
+uv run python scripts/check_server_installers.py
+```
+
+<div dir="rtl">
+
+مجموعهٔ integration به PostgreSQL جدا در `NEXTOPS_TEST_DATABASE_URL` نیاز دارد؛ CI میزبانی‌شده PostgreSQL را فراهم و ۵ مورد integration را اجرا می‌کند. بررسی مستندات لینک محلی، همتای راهنماها، پوشش راست‌به‌چپ و فایل‌های کنترلی را می‌سنجد. این بررسی‌ها با تجهیز تماس نمی‌گیرند، bundle بسته را اعمال نمی‌کنند، مدل دریافت نمی‌کنند، طبیعی بودن زبان را نمی‌سنجند و پذیرش استقرار را ثابت نمی‌کنند.
 
 </div>

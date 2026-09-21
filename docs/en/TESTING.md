@@ -2,7 +2,7 @@
 
 [فارسی](../fa/TESTING.md) · [Index](INDEX.md)
 
-**Status: application test plan. No application, device or G10 benchmark tests have run.** Source: master specification sections 10–14 and 21–23. Repository documentation checks are separate from application validation.
+**Status: test plan with a verified repository-level subset.** Hosted CI passes 68 unit/API/schema/installer cases plus 5 PostgreSQL integration cases. No browser, connector/device, real-model, package-apply, offline-server, restore, or G10 benchmark test has run. Source: master specification sections 10–14 and 21–23.
 
 ## Test layers
 
@@ -37,6 +37,24 @@ Measure correct tool/argument selection, policy outcomes, unsupported-claim rate
 
 Each report records commit, commands, test counts, failures/skips, dataset and model versions, hardware/runtime identity, measurements, limitations and sanitized reproduction steps. Preserve raw benchmark samples where safe. Targets are distinct from observations. Health, simulated capability and production qualification are distinct statuses.
 
-## Documentation checks available with this baseline
+## Repository checks available now
 
-Run `python3 scripts/check_docs.py` after cloning. It checks local Markdown links, language-pair filenames, Persian RTL wrappers and required project-control files. It does not execute application tests, contact equipment, fetch links, validate technical claims or assess native-language quality. Its successful result must not be reported as a platform test pass.
+After cloning, install the frozen development environment and run the same core checks as CI:
+
+```bash
+uv sync --extra dev --frozen
+uv run ruff format --check packages migrations tests scripts deploy/installers
+uv run ruff check packages migrations tests scripts deploy/installers
+uv run mypy packages tests deploy/installers
+uv run pytest -m "not integration" -q
+uv run python scripts/check_docs.py
+uv run python scripts/check_deployment_dossiers.py
+uv run python scripts/check_inference_artifacts.py
+uv run python scripts/check_server_installers.py
+```
+
+The PostgreSQL integration suite requires an isolated database URL in
+`NEXTOPS_TEST_DATABASE_URL`; hosted CI supplies PostgreSQL and runs the 5 integration cases.
+The documentation checker covers local links, paired guide filenames, Persian RTL wrappers and
+required control files. These checks do not contact equipment, apply a package bundle, fetch a
+model, assess natural-language quality, or establish deployment acceptance.

@@ -2,7 +2,7 @@
 
 [فارسی](../fa/SECURITY.md) · [Index](INDEX.md)
 
-**Status: required controls, not implemented controls.** Source: master specification sections 11–14, 18, 20–21. See also the [repository security policy](../../SECURITY.md).
+**Status: required control set with a tested source-level subset.** Local identity, server-derived scopes, deterministic denial, secret checks, append-restricted audit and inference service authentication are implemented; complete gateway, connector, deployment and remediation controls remain unimplemented. Source: master specification sections 11–14, 18 and 20–21. See also the [repository security policy](../../SECURITY.md).
 
 ## Trust model
 

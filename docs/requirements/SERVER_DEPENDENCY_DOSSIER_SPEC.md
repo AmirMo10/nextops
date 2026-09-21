@@ -1,6 +1,6 @@
 # Spec: per-server deployment dependency dossiers
 
-Status: approved by the owner's 2026-09-21 request to create a dependency file for each approved server. This specification authorizes repository documentation only. It does not authorize provisioning, installation, target access, network changes, or service restarts.
+Status: approved by the owner's 2026-09-21 request to create a dependency file for each approved server and amended by the request for one package installer per server. This specification authorizes repository records and guarded package-layer code only. It does not authorize provisioning, package application, product installation, target access, network changes, or service restarts.
 
 ## Objective
 
@@ -11,7 +11,7 @@ Give a deployer one self-contained, human-readable and machine-validated YAML do
 - `nextops-connectors-ro`
 - `zabbix-server`
 
-Each dossier must distinguish owner-supplied facts, accepted architecture, engineering proposals, missing private inputs, and runtime evidence that has not yet been collected. It must identify dependencies, configuration files, service identities, network/storage boundaries, artifacts, secret references, command templates, verification, backup, rollback, and acceptance gates without storing credentials or pretending that undeveloped installers exist.
+Each dossier must distinguish owner-supplied facts, accepted architecture, engineering proposals, missing private inputs, and runtime evidence that has not yet been collected. It must identify dependencies, configuration files, service identities, network/storage boundaries, artifacts, secret references, command templates, verification, backup, rollback, and acceptance gates without storing credentials or implying that the guarded OS-package layer is a complete product installer.
 
 ## Commands
 
@@ -27,12 +27,14 @@ Validate repository documentation and the existing implementation:
 ```bash
 python scripts/check_docs.py
 uv run --extra dev pytest
-uv run --extra dev ruff check packages tests
-uv run --extra dev mypy packages tests
+uv run --extra dev ruff format --check packages migrations tests scripts deploy/installers
+uv run --extra dev ruff check packages migrations tests scripts deploy/installers
+uv run --extra dev mypy packages tests deploy/installers
+uv run --extra dev python scripts/check_server_installers.py
 git diff --check
 ```
 
-The dossier command entries are either read-only commands that can be reviewed now, guarded templates that require named inputs and authorization, or explicitly blocked commands with a reason. A missing installer is represented as `null`, never as an invented command.
+The dossier command entries are either read-only commands that can be reviewed now, guarded templates that require named inputs and authorization, or explicitly blocked commands with a reason. The guarded package-layer command invokes the exact role script; every undeveloped product-install or lifecycle action remains `null`, never an invented command.
 
 ## Project structure
 
@@ -43,6 +45,7 @@ deploy/server-dependencies/
   nextops-ai.yaml                # local CPU inference host dossier
   nextops-connectors-ro.yaml     # protected read-only gateway/runner dossier
   zabbix-server.yaml             # dedicated monitoring host dossier
+deploy/installers/               # four role entries plus shared guarded package engine
 docs/en/DEPLOYMENT_DOSSIERS.md  # English deployer workflow
 docs/fa/DEPLOYMENT_DOSSIERS.md  # Persian deployer workflow
 scripts/check_deployment_dossiers.py  # YAML/schema/cross-file validation
@@ -63,7 +66,8 @@ scripts/check_deployment_dossiers.py  # YAML/schema/cross-file validation
 2. Check each instance against `server-dependency.schema.json` with a Draft 2020-12 validator; PyYAML and jsonschema remain development-only dependencies, not NextOps runtime dependencies.
 3. Run the repository documentation checker for bilingual parity, UTF-8, RTL wrappers, and local links.
 4. Review arithmetic and cross-file values against `HARDWARE_BASELINE.json` and `ZABBIX_SERVER_PLAN.json`.
-5. Run the existing Stage 1A quality gates to prove this documentation change did not regress the implemented slice.
+5. Validate the four installer entries, Python engine, Bash syntax/executable modes, and role-to-dossier mapping without applying packages.
+6. Run the existing Stage 1A/1B quality gates to prove this change did not regress the implemented slices.
 
 ## Boundaries
 
@@ -78,7 +82,7 @@ Always:
 Ask first:
 
 - actual provisioning, package installation, partitioning, firewall changes, certificate issuance, target access, reboots, or restore tests;
-- selecting exact application, MCP, model, image, package, or OS patch versions;
+- selecting exact application, MCP, model, image, package-lock, or OS patch versions;
 - changing storage layouts, VM allocations, exposure, retention, or backup destinations.
 
 Never:
@@ -95,7 +99,8 @@ Never:
 - Exact known values match the accepted Phase 0 records.
 - Unknown private or not-yet-implemented values are explicit blockers rather than fabricated defaults.
 - English and Persian deployer guides explain the safe execution order and evidence record.
-- Repository documentation and Stage 1A checks remain green.
+- Every dossier points to the exact guarded role script while blocked product lifecycle commands remain explicit.
+- Repository documentation and Stage 1A/1B/installer checks remain green.
 
 ## Open questions intentionally left for the deployment gate
 

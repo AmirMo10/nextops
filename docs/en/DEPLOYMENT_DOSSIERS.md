@@ -5,7 +5,7 @@
 For the exact first actions, provisioning order, read-only guest commands, and installation
 holds, use the [server start checklist](SERVER_START_CHECKLIST.md) before opening a change.
 
-**Status: deployer handoff contract, not an installer or deployment authorization.** The four human-readable YAML files under [`deploy/server-dependencies`](../../deploy/server-dependencies) collect the known sizing, proposed boundaries, dependencies, configuration paths, command templates, evidence requirements, and unresolved deployment inputs for the accepted initial profile. All runtime acceptance gates remain `not_run`.
+**Status: deployer handoff contract with guarded OS-package installers, not a complete product installer or deployment authorization.** The four human-readable YAML files under [`deploy/server-dependencies`](../../deploy/server-dependencies) collect the known sizing, proposed boundaries, dependencies, configuration paths, command templates, evidence requirements, and unresolved deployment inputs for the accepted initial profile. The matching scripts under [`deploy/installers`](../../deploy/installers) cover only the authenticated offline package layer. All runtime acceptance gates remain `not_run`.
 
 ## Files and ownership
 
@@ -16,6 +16,10 @@ holds, use the [server start checklist](SERVER_START_CHECKLIST.md) before openin
 | [`nextops-connectors-ro.yaml`](../../deploy/server-dependencies/nextops-connectors-ro.yaml) | Protected gateway and separately restricted read-only Zabbix runner | 4 vCPU / 8 GiB / 80 GiB |
 | [`zabbix-server.yaml`](../../deploy/server-dependencies/zabbix-server.yaml) | Dedicated Zabbix 7.0 LTS proposal, PostgreSQL 16, frontend/API, Agent 2, and detailed LVM | 4 vCPU / 16 GiB / 200 GiB |
 | [`server-dependency.schema.json`](../../deploy/server-dependencies/server-dependency.schema.json) | Version 1.0.0 public contract shared by every dossier | Not a server |
+
+The [installer operator guide](../../deploy/installers/README.md) maps each role to its entry
+script and defines bundle layout, check/apply commands, authorization gates, and the package-only
+boundary.
 
 The combined proposal is 4 VMs, 40 vCPU, 184 GiB RAM, and 980 GiB of VMDKs. The provisional ESXi swap allowance is another 184 GiB, giving 1164 GiB before VMX, snapshots, thin growth, staging, maintenance, and restore space. These values are planning inputs, not reservations or proof of available resources.
 
@@ -40,7 +44,7 @@ Every command entry has a mode:
 | Mode | Meaning |
 |---|---|
 | `read_only` | A command that changes no intended system state, but still requires target authorization when it runs on infrastructure. Keep sensitive output private. |
-| `guarded_template` | A reviewed pattern with named required inputs. Resolve and validate those inputs in the private record before an operator runs it. It is not an automatic script. |
+| `guarded_template` | A reviewed pattern with named required inputs. It may invoke a repository script, but it is not blanket authorization; resolve and validate every input in the private record first. |
 | `blocked` | The repository does not yet have a safe exact command. `command` is deliberately `null`; the blocking inputs and failure rule explain what must exist first. |
 
 Never build an executor that reads these YAML files and blindly runs the strings. The dossiers are handoff contracts for a reviewed change procedure. Re-resolve targets, permissions, mounts, artifacts, and authorization immediately before any state-changing step.
@@ -52,6 +56,7 @@ Install the locked development dependencies, then run the repository validator:
 ```bash
 uv sync --extra dev --frozen
 uv run --extra dev python scripts/check_deployment_dossiers.py
+uv run --extra dev python scripts/check_server_installers.py
 ```
 
 The validator safely parses all four YAML documents, checks them against the Draft 2020-12 JSON Schema, rejects stale JSON dossier copies, verifies the approved server IDs, and reconciles the 40-vCPU / 184-GiB-RAM / 980-GiB-disk total.

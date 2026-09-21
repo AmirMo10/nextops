@@ -1,16 +1,17 @@
 # Server start checklist
 
-**Status: operator handoff, not permission to provision.** Phase 0 and Stage 1A code
-work are approved. VM creation, guest installation, network/firewall changes, package
-installation, target access, reboots, and destructive storage work still require a
-separate recorded change authorization.
+**Status: operator handoff, not permission to provision.** Phase 0 and the current Stage
+1A/1B source work, including guarded package-layer scripts, are approved. VM creation,
+guest installation, network/firewall changes, package application, target access, reboots,
+and destructive storage work still require a separate recorded change authorization.
 
 ## What to do first
 
-Start with the **private deployment preflight for `nextops-app`**. Do not install NextOps
-on a server yet: the repository has an application foundation, but no approved offline
-release bundle, production service units, reverse-proxy configuration, backup/restore
-procedure, or completed production database-version lock.
+Start with the **private deployment preflight for `nextops-app`**. Do not install the
+NextOps product on a server yet: the repository has an application foundation and guarded
+OS-package scripts, but no approved role package bundle, offline application release,
+production service units, reverse-proxy configuration, backup/restore procedure, or
+completed production database-version lock.
 
 In the same approved planning window, prepare the information for all four machines.
 After a separate provisioning approval, use this creation order:
@@ -91,6 +92,27 @@ correct vCPU/RAM/disk values, only the reviewed disks and mounts, trusted local 
 no unexplained listener or port conflict. Keep the full output private because it may
 contain infrastructure identifiers.
 
+## 4. Validate the package bundle before any package apply
+
+Prepare the exact authenticated offline bundle for the server role outside Git and follow the
+[installer operator guide](../../deploy/installers/README.md). For the first app server,
+validate the entire bundle without changing packages or services:
+
+```bash
+./deploy/installers/install-nextops-app.sh --check \
+  --bundle-dir /srv/nextops-bundles/nextops-app \
+  --bundle-manifest-sha256 "$APP_BUNDLE_MANIFEST_SHA256"
+```
+
+Use the matching `install-nextops-ai.sh`, `install-nextops-connectors-ro.sh`, or
+`install-zabbix-server.sh` entry on the other roles. Stop validation if the exact package
+lock, separately approved manifest hash, or signed local repository is missing. Run
+`--apply` only after separate package-installation authorization, successful Ubuntu
+24.04/VMware preflight, root ownership/non-writable bundle checks, and the required
+authorization marker and change ID from the operator guide. These scripts install only the
+exact Ubuntu package layer: they do not initialize a database, configure or start services,
+deploy NextOps, import a model, or prove a server ready.
+
 Then apply these server-specific holds:
 
 - **`nextops-app`:** reserve the guest and complete OS/network/storage evidence only. Do
@@ -111,7 +133,7 @@ Then apply these server-specific holds:
   mounts before database initialization. Never apply its disk commands to an identified
   or non-empty disk.
 
-## 4. Do not call a powered-on VM “ready”
+## 5. Do not call a powered-on VM “ready”
 
 A server moves from *prepared* to *ready* only when its dossier acceptance gates have
 evidence. For `nextops-app`, that eventually includes a verified offline artifact,

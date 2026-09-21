@@ -4,7 +4,7 @@
 
 [English](../en/DEVELOPMENT.md) · [فهرست](INDEX.md)
 
-**وضعیت: قواعد توسعه همراه CI جداشدهٔ برنامه؛ استقرار خودکار تنظیم نشده است.** مبنا:
+**وضعیت: قواعد توسعه همراه CI جداشدهٔ برنامه و خودکارسازی محافظت‌شدهٔ لایهٔ package؛ استقرار کامل خودکار تنظیم نشده است.** مبنا:
 بخش‌های ۴، ۷، ۸ و ۲۱ تا ۲۶ مشخصات اصلی.
 
 ## پیش از پیاده‌سازی بررسی کنید
@@ -13,15 +13,18 @@
 
 1A اکنون قرارداد دارای نوع و سیاست قطعی را همراه API محلی قابل‌اجرا، schema و migration
 PostgreSQL، هویت محلی، run و lease ماندگار، audit append-restricted و نتیجهٔ fixture
-دوزبانه دارد. هنوز UI مرورگر، connector، مدل، unit تولید، release آفلاین یا قبولی استقرار
-وجود ندارد؛ CI به معنای قبولی برنامهٔ مستقر نیست. معماری مرحلهٔ صفر در ۲۱ سپتامبر ۲۰۲۶
-پذیرفته شد، اما شناخت سخت‌افزار و همهٔ مجوزهای زیرساخت شرط‌های جدا باقی می‌مانند.
+دوزبانه دارد. 1B نیز مرز احرازهویت‌شدهٔ inference روی loopback و scheduler محدود دارد.
+چهار script محافظت‌شده فقط لایهٔ بسته‌های Ubuntu آفلاین و احرازشده را پیاده می‌کنند.
+هنوز UI مرورگر، connector، مدل واردشده، unit تولید، release آفلاین برنامه یا قبولی استقرار
+وجود ندارد؛ CI یا check لایهٔ package به معنای قبولی برنامهٔ مستقر نیست. معماری مرحلهٔ صفر
+در ۲۱ سپتامبر ۲۰۲۶ پذیرفته شد، اما شناخت سخت‌افزار و همهٔ مجوزهای زیرساخت شرط‌های جدا
+باقی می‌مانند.
 
-برای برش Python فعلی، محیط با `uv sync --extra dev --frozen` نصب و سپس format، Ruff،
-mypy سخت‌گیرانه و pytest روی `packages`، `migrations`، `tests` و `scripts` اجرا شود. پذیرش
-پایگاه به PostgreSQL جدا در `NEXTOPS_TEST_DATABASE_URL` نیاز دارد؛ suite ردشده با skip،
-قبولی نیست. `uv.lock` فقط همراه تغییر بازبینی‌شده تولید و audit وابستگی pin‌شده پیش از
-انتشار اجرا شود.
+برای برش Python فعلی، محیط با `uv sync --extra dev --frozen` نصب و سپس format و Ruff روی
+`packages`، `migrations`، `tests`، `scripts` و `deploy/installers`، mypy روی `packages`،
+`tests` و `deploy/installers` و در پایان pytest اجرا شود. پذیرش پایگاه به PostgreSQL جدا
+در `NEXTOPS_TEST_DATABASE_URL` نیاز دارد؛ suite ردشده با skip، قبولی نیست. `uv.lock` فقط
+همراه تغییر بازبینی‌شده تولید و audit وابستگی pin‌شده پیش از انتشار اجرا شود.
 
 ## نظم ماژول‌ها
 
@@ -34,11 +37,11 @@ mypy سخت‌گیرانه و pytest روی `packages`، `migrations`، `tests` 
 شاخهٔ کوتاه‌عمر، commit کوچک، معیار پذیرش روشن و pull request به‌کار رود. هر ویژگی به نیاز اولیه و مرحلهٔ مربوط متصل شود. هر تحویل باید راهنمای هر دو زبان، وضعیت، کار بعدی و ردیابی را به‌روز کند. CODEOWNERS و قالب‌ها به بازبینی کمک می‌کنند، اما فعال بودن حفاظت شاخه را ثابت نمی‌کنند. قواعد main و بازبینی باید جداگانه تنظیم و بررسی شوند.
 
 workflow ثابت در `.github/workflows/ci.yml` قالب‌بندی، lint، type، unit و قرارداد API،
-بررسی سند و dossier، ساخت package، audit وابستگی، اسکن همهٔ تاریخچه برای secret و آزمون
-migration/role/identity/idempotency/lease/audit روی PostgreSQL موقت را اجرا می‌کند. permission
-پیش‌فرض فقط‌خواندنی است و credential زیرساخت یا مسیر شبکهٔ مدیریت ندارد. ساخت frontend و
-آزمون مرورگر، manifest انتشار، SBOM و امضا، آزمون سخت‌افزار و تنظیم branch protection هنوز
-کار آینده یا بررسی جدا هستند.
+بررسی سند و dossier و inference و installer، syntax و mode اجرایی Bash، ساخت package، audit
+وابستگی، اسکن همهٔ تاریخچه برای secret و آزمون migration/role/identity/idempotency/lease/audit
+روی PostgreSQL موقت را اجرا می‌کند. permission پیش‌فرض فقط‌خواندنی است و credential زیرساخت
+یا مسیر شبکهٔ مدیریت ندارد. ساخت frontend و آزمون مرورگر، manifest انتشار، SBOM و امضا،
+آزمون سخت‌افزار، اجرای واقعی package و تنظیم branch protection هنوز کار آینده یا بررسی جدا هستند.
 
 کد PR غیرقابل‌اعتماد در worker موقت و جدا، بدون رمز عملیاتی و مسیر شبکهٔ مدیریت اجرا شود. runner دائمی و دارای اختیار روی G10 در اختیار PR دلخواه قرار نگیرد. checkout غیرقابل‌اعتماد با `pull_request_target` و secrets اجرا نشود. آزمون سخت‌افزار معتبر به مسیر جدا، مجوز و محدودیت منابع نیاز دارد.
 
