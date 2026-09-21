@@ -37,9 +37,9 @@
 
 **Acceptance criteria:**
 
-- [ ] All stateful endpoints are versioned under `/api/v1` and use structured errors.
-- [ ] Actor context comes from an opaque authenticated session, never the request body.
-- [ ] A fixture-backed run result supports `en` and `fa` and labels source, time, scope,
+- [x] All stateful endpoints are versioned under `/api/v1` and use structured errors.
+- [x] Actor context comes from an opaque authenticated session, never the request body.
+- [x] A fixture-backed run result supports `en` and `fa` and labels source, time, scope,
   partial/stale state, typed errors, and audit reference.
 
 **Verification:** ASGI API tests for happy, denied, invalid, replay, and degraded paths.

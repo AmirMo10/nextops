@@ -10,8 +10,10 @@ class ErrorCode(StrEnum):
     """Codes safe for programmatic handling across interfaces."""
 
     INVALID_REQUEST = "invalid_request"
+    UNAUTHENTICATED = "unauthenticated"
     POLICY_DENIED = "policy_denied"
     NOT_FOUND = "not_found"
+    CONFLICT = "conflict"
     DEPENDENCY_UNAVAILABLE = "dependency_unavailable"
     INTERNAL_ERROR = "internal_error"
 

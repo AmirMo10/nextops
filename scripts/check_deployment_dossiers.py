@@ -103,9 +103,7 @@ def validate_repository(repository_root: Path) -> ValidationSummary:
         )
 
     legacy_json = sorted(
-        path.name
-        for path in dossier_directory.glob("*.json")
-        if path.name != schema_path.name
+        path.name for path in dossier_directory.glob("*.json") if path.name != schema_path.name
     )
     if legacy_json:
         raise DossierValidationError(f"legacy JSON dossiers remain: {legacy_json}")

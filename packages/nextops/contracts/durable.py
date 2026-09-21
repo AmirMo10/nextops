@@ -7,7 +7,13 @@ from uuid import UUID
 from pydantic import AwareDatetime, Field, JsonValue, SecretStr
 
 from nextops.contracts.errors import ErrorDetail
-from nextops.contracts.models import ActionName, FrozenContract, ParameterName, ScopeName
+from nextops.contracts.models import (
+    ActionName,
+    ActorContext,
+    FrozenContract,
+    ParameterName,
+    ScopeName,
+)
 
 Slug = Annotated[str, Field(pattern=r"^[a-z][a-z0-9-]{1,62}$")]
 Username = Annotated[str, Field(pattern=r"^[a-z][a-z0-9_.-]{2,63}$")]
@@ -63,6 +69,31 @@ class SessionToken(FrozenContract):
     expires_at: AwareDatetime
 
 
+class AuthenticatedSession(FrozenContract):
+    """Server-derived actor plus a newly issued bearer token."""
+
+    actor: ActorContext
+    session: SessionToken
+
+
+class BootstrapResult(FrozenContract):
+    """Identifiers created atomically by the one-time installation bootstrap."""
+
+    organization_id: UUID
+    environment_id: UUID
+    admin_identity_id: UUID
+    fixture_target_id: UUID
+    authenticated_session: AuthenticatedSession
+
+
+class RecoveryResult(FrozenContract):
+    """Credential-rotation receipt; login is required after recovery."""
+
+    identity_id: UUID
+    revoked_session_count: int = Field(ge=0)
+    credential_version: int = Field(ge=2)
+
+
 class RunCreateRequest(FrozenContract):
     """Untrusted run intent; actor and scope are always derived server-side."""
 
@@ -110,6 +141,17 @@ class RunRecord(FrozenContract):
     created_at: AwareDatetime
     updated_at: AwareDatetime
     result: FixtureResult | None = None
+
+
+class LeaseGrant(FrozenContract):
+    """Opaque, expiring worker ownership returned only to the claimant."""
+
+    run_id: UUID
+    owner_id: str = Field(pattern=r"^[a-zA-Z0-9_.:-]{3,128}$")
+    lease_token: str = Field(min_length=32, max_length=256, repr=False)
+    generation: int = Field(ge=1)
+    acquired_at: AwareDatetime
+    expires_at: AwareDatetime
 
 
 class AuditRecord(FrozenContract):

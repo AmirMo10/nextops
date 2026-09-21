@@ -40,21 +40,21 @@ result. No target credential, connector, model, VM, network, or host mutation is
 
 ### Slice 2: durable services
 
-- [ ] Implement password hashing, opaque token hashing, one-time bootstrap, login,
+- [x] Implement password hashing, opaque token hashing, one-time bootstrap, login,
   recovery rotation, revocation checks, and server-derived actor context.
-- [ ] Implement atomic run creation with idempotency conflict detection.
-- [ ] Implement lease claim/renew/release and expired-lease recovery.
-- [ ] Make audit/database failure return a typed failure; never report unlogged success.
+- [x] Implement atomic run creation with idempotency conflict detection.
+- [x] Implement lease claim/renew/release and expired-lease recovery.
+- [x] Make audit/database failure return a typed failure; never report unlogged success.
 - [ ] Cover security boundaries and persistence behavior with focused tests.
 
 ### Slice 3: authenticated API and fixture result
 
-- [ ] Add a `/api/v1` FastAPI application with health, bootstrap, recovery, login,
+- [x] Add a `/api/v1` FastAPI application with health, bootstrap, recovery, login,
   current-actor, run-create, run-read, and worker-lease boundaries.
-- [ ] Return consistent structured errors with correlation identifiers.
-- [ ] Return one deterministic Persian/English fixture result with source, collection
+- [x] Return consistent structured errors with correlation identifiers.
+- [x] Return one deterministic Persian/English fixture result with source, collection
   and measurement time, scope, partial/stale flags, typed errors, and audit reference.
-- [ ] Verify unauthenticated, revoked, cross-scope, invalid, duplicate, and degraded cases.
+- [x] Verify unauthenticated, revoked, cross-scope, invalid, duplicate, and degraded cases.
 
 ### Slice 4: PostgreSQL and operational proof
 

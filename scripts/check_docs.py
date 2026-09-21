@@ -4,6 +4,7 @@
 بررسی ساختار مستندات؛ بدون تماس با شبکه یا تجهیزات.
 This is not an application, security, model-quality, or language-quality test.
 """
+
 from __future__ import annotations
 
 import re
@@ -14,10 +15,16 @@ from urllib.parse import unquote, urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 LINK = re.compile(r"!?\[[^\]\n]*\]\(([^)\n]+)\)")
 REQUIRED = (
-    "README.md", "README_FA.md", "AGENTS.md", "CONTRIBUTING.md",
-    "SECURITY.md", "docs/PROJECT_STATE.md", "docs/NEXT_TASK.md",
+    "README.md",
+    "README_FA.md",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "docs/PROJECT_STATE.md",
+    "docs/NEXT_TASK.md",
     "docs/requirements/NEXTOPS_MASTER_PROMPT.md",
-    "docs/requirements/TRACEABILITY.md", "docs/requirements/SOURCES.md",
+    "docs/requirements/TRACEABILITY.md",
+    "docs/requirements/SOURCES.md",
 )
 
 
@@ -49,7 +56,9 @@ def main() -> int:
     en = {p.name for p in (ROOT / "docs/en").glob("*.md")}
     fa = {p.name for p in (ROOT / "docs/fa").glob("*.md")}
     if en != fa:
-        errors.append(f"Language pairs differ: EN-only={sorted(en-fa)}, FA-only={sorted(fa-en)}")
+        errors.append(
+            f"Language pairs differ: EN-only={sorted(en - fa)}, FA-only={sorted(fa - en)}"
+        )
     if not en:
         errors.append("No paired guides found")
 
@@ -84,7 +93,10 @@ def main() -> int:
         for error in errors:
             print(f"- {error}")
         return 1
-    print(f"PASS: {checked} Markdown files; {len(en)} EN/FA guide pairs; local links and RTL wrappers checked.")
+    print(
+        f"PASS: {checked} Markdown files; {len(en)} EN/FA guide pairs; "
+        "local links and RTL wrappers checked."
+    )
     print("This is documentation validation only; application and hardware tests were not run.")
     print("این نتیجه فقط مربوط به مستندات است؛ برنامه و سخت‌افزار آزموده نشده‌اند.")
     return 0

@@ -19,14 +19,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "httpx>=0.28,<1",
+  "httpx2>=2.13,<3",
   "jsonschema>=4.23,<5",
   "mypy>=1.13,<2",
   "pytest>=8.3,<10",
   "pyyaml>=6.0,<7",
   "ruff>=0.8,<1",
   "setuptools>=83,<84",
-  "testcontainers[postgres]>=4.12,<5",
   "types-jsonschema>=4.23,<5",
   "types-pyyaml>=6.0,<7",
 ]
@@ -40,6 +39,9 @@ where = ["packages"]
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
 testpaths = ["tests"]
+markers = [
+  "integration: requires an isolated PostgreSQL database",
+]
 
 [tool.ruff]
 line-length = 100
