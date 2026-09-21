@@ -1,5 +1,29 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-21 — Durable repository context / حافظهٔ ماندگار مخزن
+
+### English
+
+Added three repository-scoped Codex skills for general NextOps context, authorized server operations,
+and bilingual documentation. Added a task-routing index that catalogs every project-owned Markdown
+file without loading all documents into every task. Updated `AGENTS.md` and contributing guidance to
+use Git and maintained artifacts as durable memory.
+
+The documentation validator now excludes dependency/build trees and requires complete catalog
+coverage. Three focused tests verify project Markdown discovery plus missing and stale entries. No
+application behavior, package, VM, network, model, database, or service was changed.
+
+### فارسی
+
+سه skill مخصوص مخزن برای context عمومی NextOps، عملیات مجاز سرور و مستندات دوزبانه افزوده شد.
+فهرست مسیردهی تازه، همهٔ فایل‌های Markdown متعلق به پروژه را ثبت می‌کند، بدون اینکه هر بار همهٔ
+سندها وارد context شوند. `AGENTS.md` و راهنمای مشارکت نیز Git و artifact نگه‌داری‌شده را حافظهٔ
+ماندگار پروژه می‌دانند.
+
+اعتبارسنج مستندات اکنون پوشه‌های وابستگی و build را حذف و پوشش کامل catalog را الزامی می‌کند. سه
+آزمون متمرکز discovery و ورودی غایب یا قدیمی را می‌سنجند. رفتار برنامه، package، VM، شبکه، مدل،
+پایگاه یا سرویس تغییر نکرد.
+
 ## 2026-09-20 — Phase 0 report and threat model / گزارش مرحلهٔ صفر و مدل تهدید
 
 ### English

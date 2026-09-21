@@ -2,7 +2,7 @@
 
 [فارسی](../fa/TESTING.md) · [Index](INDEX.md)
 
-**Status: test plan with a verified repository-level subset.** Hosted CI passes 68 unit/API/schema/installer cases plus 5 PostgreSQL integration cases. No browser, connector/device, real-model, package-apply, offline-server, restore, or G10 benchmark test has run. Source: master specification sections 10–14 and 21–23.
+**Status: test plan with a verified repository-level subset.** Hosted CI passes 71 unit/API/schema/installer/context cases plus 5 PostgreSQL integration cases. No browser, connector/device, real-model, package-apply, offline-server, restore, or G10 benchmark test has run. Source: master specification sections 10–14 and 21–23.
 
 ## Test layers
 

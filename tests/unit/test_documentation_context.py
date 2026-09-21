@@ -16,6 +16,7 @@ def test_project_markdown_files_excludes_generated_and_dependency_trees(tmp_path
     tracked_paths = (
         ".agents/skills/context/SKILL.md",
         ".github/pull_request_template.md",
+        "docs/dist/guide.md",
         "docs/guide.md",
     )
     ignored_paths = (
@@ -50,3 +51,20 @@ def test_markdown_catalog_reports_missing_and_stale_entries(tmp_path: Path) -> N
         "Markdown context index is missing: docs/guide.md",
         "Markdown context index has stale entry: docs/removed.md",
     ]
+
+    duplicate_catalog = """
+- `README.md` — First entry.
+- `README.md` — Duplicate entry.
+- `docs/guide.md` — Guide.
+"""
+    assert markdown_catalog_errors(tmp_path, project_paths, duplicate_catalog) == [
+        "Markdown context index has duplicate entry: README.md"
+    ]
+
+
+def test_repository_markdown_context_index_is_complete() -> None:
+    root = Path(__file__).resolve().parents[2]
+    project_paths = project_markdown_files(root)
+    catalog = (root / "docs/MARKDOWN_CONTEXT_INDEX.md").read_text(encoding="utf-8")
+
+    assert markdown_catalog_errors(root, project_paths, catalog) == []

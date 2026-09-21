@@ -41,7 +41,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 33 | Health checks / بررسی سلامت | `packages/nextops/api`, `packages/nextops/inference` | 1–5 | App liveness and safe inference readiness states tested; deployed dependency health remains / سلامت برنامه و آمادگی امن inference آزموده؛ استقرار باقی است | I |
 | 34 | Error handling / مدیریت خطا | `packages/nextops/contracts`, `application`, `api` | 1–5 | Typed application/API errors, correlation and dependency failure tested; broader retry/isolation remains / خطا و correlation آزموده؛ retry گسترده باقی است | I |
 | 35 | Observability / مشاهده‌پذیری | `observability` | 1,8 | Metrics/logs and audit distinction / تفکیک متریک و لاگ و ممیزی | P |
-| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 68 unit/API/schema/installer plus 5 real-PostgreSQL cases and CI quality/security gates; browser/model/evals remain / ۶۸ آزمون محلی و ۵ PostgreSQL؛ مدل و مرورگر باقی است | I |
+| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 71 unit/API/schema/installer/context plus 5 real-PostgreSQL cases and CI quality/security gates; browser/model/evals remain / ۷۱ آزمون محلی و ۵ PostgreSQL؛ مدل و مرورگر باقی است | I |
 | 37 | Docker / کانتینر | `deploy/compose` | 1,8 | Restricted clean install and offline test / نصب محدود و آفلاین | P |
 | 38 | Installation docs / مستندات نصب | `docs/en/INSTALL.md`, `docs/fa/INSTALL.md`, paired `DEPLOYMENT_DOSSIERS.md`, `deploy/server-dependencies`, `deploy/installers` | 0–8 | Four validated handoffs and guarded offline OS-package workflows exist; approved role bundles, complete application installers and clean-server evidence remain / چهار پرونده و نصب بستهٔ محافظت‌شده موجود؛ bundle و نصب کامل و شاهد سرور تمیز باقی است | I |
 | 39 | Native Persian docs / مستندات فارسی طبیعی | `docs/fa`, `docs/en` | 0–8 | Paired guides and language review / همتای دو زبان و بازبینی | D |
@@ -49,7 +49,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 41 | Systemd / سرویس بومی | `deploy/systemd` | 1,8 | Units, hardening, resource and recovery tests / آزمون واحد سرویس و بازیابی | P |
 | 42 | Security docs / مستندات امنیت | `docs/en/SECURITY.md`, `docs/fa/SECURITY.md` | 0–8 | Documented RBAC/secrets/TLS/audit/backup / راهنمای کنترل‌های امنیت | D |
 | 43 | README / معرفی پروژه | `README.md`, `README_FA.md` | 0–8 | Honest status and bilingual navigation / وضعیت واقعی و مسیر دو زبان | D |
-| 44 | Development rules / قواعد توسعه | `AGENTS.md`, `CONTRIBUTING.md` | 0–8 | Types, reviews, tests, no credential commits / نوع و بازبینی و آزمون | D |
+| 44 | Development rules / قواعد توسعه | `AGENTS.md`, `.agents/skills`, `docs/MARKDOWN_CONTEXT_INDEX.md`, `CONTRIBUTING.md` | 0–8 | Three repo skills, complete Markdown routing/catalog tests, types, reviews and no credential commits / سه skill مخزن، catalog آزموده، نوع و بازبینی | I |
 | 45 | Real MCP interface / پروتکل واقعی MCP | `contracts`, `connectors/base` | 1–2 | SDK/protocol conformance tests / آزمون انطباق | P |
 | 46 | Tool risk / ریسک ابزار | `packages/nextops/domain`, `packages/nextops/policy` | 1 | Trusted risk registry; request/model actor and risk fields rejected; all mutation classes denied / ریسک معتبر و رد تغییر | I |
 | 47 | Decision workflow / گردش تصمیم | `application` | 1–2 | Bounded persisted state machine / ماشین حالت محدود و ماندگار | P |
