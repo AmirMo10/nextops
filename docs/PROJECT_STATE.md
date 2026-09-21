@@ -1,6 +1,6 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-21 — Phase 0 and Stage 1A accepted; Stage 1B repository foundation implemented and locally tested; server/model qualification is next. This is not a deployment report.
+Updated: 2026-09-21 — Phase 0 and Stage 1A accepted; Stage 1B repository foundation implemented and locally tested; sanitized guest preflight found an incompatible Ubuntu baseline, and clean 24.04 replacement is planned before server/model qualification. This is not a deployment report.
 
 ## English
 
@@ -24,7 +24,15 @@ The [hardware record](requirements/HARDWARE_BASELINE.json) preserves the owner's
 
 Owner-supplied mounted VMFS rows now establish point-in-time capacity: DS-A 149.75 GiB total / 148.34 GiB free; DS-B 1117.50 / 1109.87; DS-C 3576.75 / 3166.8701171875. Public aliases omit real names, UUIDs and mount paths. [STORAGE_PLAN](STORAGE_PLAN.md) excludes VMFSOS/boot volumes, leaves DS-A/DS-B outside the initial allocation and retains the 3 TB project ceiling. The proposed DS-C free target is 25%, exactly 894.1875 GiB or conservatively about 900 GiB. No datastore reservation, RAID/health inspection or I/O benchmark follows from the supplied listing.
 
-Preserve ESXi; Ubuntu Server 24.04 LTS is a guest proposal, not a host replacement. Supplied totals/build/listing should not be requested as missing. Current available CPU/RAM, load/reservations, actual NUMA placement, VM compatibility and license limits, storage backing/health/latency, outstanding growth and swap placement remain to be checked at execution time. No direct assistant host access or compatibility certification was performed.
+Preserve ESXi; Ubuntu Server 24.04 LTS is the approved guest baseline, not a host replacement. Supplied totals/build/listing should not be requested as missing. Current available CPU/RAM, load/reservations, actual physical NUMA placement, VM compatibility and license limits, storage backing/health/latency, outstanding growth and swap placement remain to be checked at execution time. No direct ESXi host access or compatibility certification was performed.
+
+### Sanitized guest preflight and replacement decision
+
+On 2026-09-21, authorized read-only SSH preflight reached all four role guests with pinned host-key and key-only authentication. The configured vCPU, memory and virtual-disk totals matched the public role budgets; VMware Tools, time synchronization and the existing monitoring agents were active. No package, service, disk, network, reboot, credential, model or application state was changed.
+
+All four observed guests ran Ubuntu 22.04 rather than the repository's enforced Ubuntu 24.04 baseline. The three NextOps role services were absent, so no NextOps deployment acceptance was attempted. The observed Zabbix installation was running, but its legacy database/web/agent choices and HTTP-only frontend differed from the proposed fresh-server profile; no authenticated Zabbix API or monitoring-data acceptance call was made. One guest reported a pending reboot and two reported a failed firmware-refresh unit; these observations belong to the superseded guests and are not acceptance evidence for their replacements.
+
+The owner stated that the observed VMs will be removed and replaced with clean Ubuntu 24.04 guests before development and deployment continue. This records planned operator work, not evidence that deletion or replacement has occurred. After replacement, treat every SSH host key as new: verify each fingerprint through an independent trusted channel before replacing the local pins, then repeat the complete read-only guest preflight. Keep addresses, fingerprints and raw command output in the approved private change record, not Git.
 
 ### Current proposed deployment
 
@@ -61,10 +69,10 @@ Three repository-scoped Codex skills under `.agents/skills` now route general pr
 
 | Stage | Required result | Evidence status for this update |
 |---|---|---|
-| 0 | Architecture/gap/threat report and appropriate approvals | Owner accepted architecture/roadmap and ADRs on 2026-09-21; infrastructure preflight/authorization remains separate |
+| 0 | Architecture/gap/threat report and appropriate approvals | Owner accepted architecture/roadmap and ADRs on 2026-09-21; limited guest preflight is recorded above, while ESXi/storage refresh and operation-specific authorization remain separate |
 | 1A | Local identity, policy, database, durable work and audit | Increments 1–2 source-complete for contracts/policy, identity, PostgreSQL, durable runs/leases, audit and API fixture; this behavior remains covered by the current 71 non-integration and 5 real-PostgreSQL cases; browser UI and deployment acceptance remain |
 | 1B | New local CPU answers and offline model cold load | Source candidate, authenticated boundary and bounded scheduler implemented/tested; no model import, run, benchmark or offline cold start performed |
-| Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | No VM, installation, account or API call performed here |
+| Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | A legacy guest was observed read-only but did not match the fresh-server profile; replacement is planned, and no authenticated API or acceptance call was performed |
 | 1C | Real bounded read-only evidence with correct counts | Live connector tests not run here |
 | 1D | New evidence-linked Zabbix answer with audit | End-to-end answer not demonstrated here |
 | 1E | Offline fresh login/restart, security/failure/capacity tests | ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 not run here |
@@ -77,7 +85,7 @@ This state records Phase 0 acceptance, two Stage 1A code increments, the Stage 1
 
 The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2, and pytest 9.1.1 with a generated `uv.lock`. Hosted CI covers 71 unit/API/schema/installer/context cases plus 5 integration cases against ephemeral PostgreSQL 17.6. Format/lint, strict types, documentation/catalog/dossier/artifact/installer validation, Bash syntax/executable-mode checks, package build, dependency audit, migration upgrade/downgrade, restricted grants, identity/recovery, idempotency, lease recovery, append-only audit, inference boundary/failure behavior, rollback behavior, and full-history secret scanning are merge gates. PostgreSQL 17.6 is CI evidence, not the production version selection. No browser, real model, CPU benchmark, real package apply, or server acceptance ran, and no VM, disk, network, ESXi patch, model, production database, or monitoring service was modified.
 
-The next checkpoint is Stage 1B server qualification in [NEXT_TASK](NEXT_TASK.md): authorize read-only private preflight, build and hash the pinned CPU runtime, import and locally verify the pinned model, then measure fresh Persian/English generation from a cold start with Internet blocked. Stage 1A deployment work—browser UI, offline release, service units, reverse proxy, production PostgreSQL lock, backup/restore and VM acceptance—remains open and requires infrastructure authorization. Phase 0 approval does not grant provisioning or target access. Repo branch protection/private vulnerability reporting and a project software license are not asserted to be configured.
+The next checkpoint is Stage 1B server qualification in [NEXT_TASK](NEXT_TASK.md): after the owner confirms the clean Ubuntu 24.04 replacements, independently verify their new SSH fingerprints, repeat read-only private preflight, then build and hash the pinned CPU runtime, import and locally verify the pinned model, and measure fresh Persian/English generation from a cold start with Internet blocked under the applicable authorizations. Stage 1A deployment work—browser UI, offline release, service units, reverse proxy, production PostgreSQL lock, backup/restore and VM acceptance—remains open and requires infrastructure authorization. Phase 0 approval does not grant package application, model import, deployment or target access. Repo branch protection/private vulnerability reporting and a project software license are not asserted to be configured.
 
 ## فارسی
 
@@ -101,7 +109,15 @@ Increment 3 از 1B اکنون قرارداد سخت‌گیر و مستقل `LLM
 
 ظرفیت لحظه‌ای VMFS ارسالی: DS-A برابر ۱۴۹٫۷۵ GiB کل و ۱۴۸٫۳۴ آزاد؛ DS-B برابر ۱۱۱۷٫۵۰ و ۱۱۰۹٫۸۷؛ DS-C برابر ۳۵۷۶٫۷۵ و 3166.8701171875. نام واقعی، UUID و مسیر در رکورد عمومی نیستند. [برنامهٔ دیسک](STORAGE_PLAN.md) حجم‌های سیستم و راه‌اندازی را کنار می‌گذارد، DS-A و DS-B را تخصیص نمی‌دهد و سقف سه‌ترابایتی را حفظ می‌کند. هدف پیشنهادی فضای آزاد DS-C برابر ۲۵ درصد، دقیقاً 894.1875 GiB و با گردکردن حدود ۹۰۰ GiB است. فهرست ارسالی، رزرو، سلامت RAID یا سنجش I/O نیست.
 
-ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است. مجموع‌ها و نسخه و فهرست دوباره به‌عنوان دادهٔ غایب خواسته نشوند. CPU/RAM آزاد فعلی، بار و رزرو، جای‌گذاری NUMA، سازگاری و محدودیت مجوز، سلامت و تأخیر دیسک، رشد و محل swap باید هنگام اجرا بررسی شوند. اتصال مستقیم دستیار یا تأیید سازگاری انجام نشده است.
+ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ مهمان است، نه جایگزین میزبان. مجموع‌ها و نسخه و فهرست دوباره به‌عنوان دادهٔ غایب خواسته نشوند. CPU/RAM آزاد فعلی، بار و رزرو، جای‌گذاری فیزیکی NUMA، سازگاری و محدودیت مجوز، سلامت و تأخیر دیسک، رشد و محل swap باید هنگام اجرا بررسی شوند. اتصال مستقیم به میزبان ESXi یا تأیید سازگاری انجام نشده است.
+
+### پیش‌بررسی پاک‌سازی‌شدهٔ مهمان‌ها و تصمیم جایگزینی
+
+در ۲۱ سپتامبر ۲۰۲۶، پیش‌بررسی فقط‌خواندنی و مجاز از طریق SSH به هر چهار مهمان نقش با کلید میزبان ثابت‌شده و احراز هویت فقط با کلید رسید. vCPU، حافظه و دیسک مجازی با بودجهٔ عمومی نقش‌ها برابر بود؛ VMware Tools، همگام‌سازی زمان و عامل‌های پایش موجود فعال بودند. هیچ package، service، دیسک، شبکه، reboot، credential، مدل یا وضعیت برنامه تغییر نکرد.
+
+هر چهار مهمان مشاهده‌شده Ubuntu 22.04 داشتند، نه خط مبنای اجباری Ubuntu 24.04 مخزن. سرویس‌های سه نقش NextOps وجود نداشتند؛ بنابراین پذیرش استقرار NextOps انجام نشد. نصب موجود Zabbix فعال بود، اما انتخاب‌های قدیمی پایگاه، وب و agent و رابط فقط-HTTP آن با profile پیشنهادی سرور تازه تفاوت داشت؛ هیچ API احرازهویت‌شدهٔ Zabbix یا پذیرش دادهٔ پایش اجرا نشد. یک مهمان نیاز به reboot و دو مهمان شکست واحد firmware-refresh را گزارش کردند؛ این مشاهده‌ها مربوط به مهمان‌های کنارگذاشته‌شونده‌اند و شاهد پذیرش جایگزین‌ها نیستند.
+
+مالک اعلام کرد مهمان‌های مشاهده‌شده حذف و پیش از ادامهٔ توسعه و استقرار با Ubuntu 24.04 تمیز جایگزین می‌شوند. این متن برنامهٔ کار مالک را ثبت می‌کند، نه شاهد انجام حذف یا جایگزینی. پس از جایگزینی، همهٔ کلیدهای میزبان SSH تازه‌اند: پیش از جایگزینی pinهای محلی، اثرانگشت هرکدام از مسیر مستقل و مورداعتماد بررسی و سپس پیش‌بررسی کامل فقط‌خواندنی تکرار شود. نشانی، اثرانگشت و خروجی خام فرمان فقط در رکورد خصوصی تغییر بماند، نه Git.
 
 ### چیدمان فعلیِ پیشنهادی
 
@@ -129,7 +145,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است.
 
 ### گام‌ها و وضعیت شواهد
 
-معماری، نقشه و ADRهای مرحلهٔ صفر پذیرفته شده‌اند؛ بررسی خصوصی تازهٔ میزبان، مجوز دسترسی و ظرفیت همچنان پیش از زیرساخت لازم‌اند. Incrementهای 1 و 2 از 1A برای قرارداد، هویت، PostgreSQL، run/lease، audit و API fixture در CI جدا آزموده شده‌اند؛ UI مرورگر و پذیرش استقرار باقی است. در 1B نامزد منبع، مرز احرازهویت‌شده و صف محدود پیاده و آزموده شده، اما مدل وارد یا اجرا نشده و benchmark و cold start آفلاین انجام نشده‌اند. VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E آزموده نشده‌اند.
+معماری، نقشه و ADRهای مرحلهٔ صفر پذیرفته شده‌اند؛ پیش‌بررسی محدود مهمان در بالا ثبت شده، اما تازه‌سازی شاهد ESXi/storage و مجوز مخصوص هر عملیات همچنان جداست. Incrementهای 1 و 2 از 1A برای قرارداد، هویت، PostgreSQL، run/lease، audit و API fixture در CI جدا آزموده شده‌اند؛ UI مرورگر و پذیرش استقرار باقی است. در 1B نامزد منبع، مرز احرازهویت‌شده و صف محدود پیاده و آزموده شده، اما مدل وارد یا اجرا نشده و benchmark و cold start آفلاین انجام نشده‌اند. مهمان قدیمی Zabbix فقط‌خواندنی مشاهده شد ولی با profile سرور تازه برابر نبود؛ جایگزینی برنامه‌ریزی شده و هیچ API احرازهویت‌شده یا پذیرش انجام نشده است. اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E آزموده نشده‌اند.
 
 ممکن است مالک مستقل ماشین ساخته باشد؛ پیش از ادعای وجود یا نبود آن، وضعیت واقعی بررسی شود. تصویر تنظیمات VM به معنای قبولی مسیر برنامه نیست. ادامه از نخستین گام ناتمامِ دارای شاهد و مجوز باشد، نه پاک کردن پیشرفت.
 
@@ -139,4 +155,4 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است.
 
 برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. CI میزبانی‌شده ۷۱ آزمون unit/API/schema/installer/context و ۵ آزمون integration را روی PostgreSQL موقت 17.6 پوشش می‌دهد و format/lint/type، سند و catalog و dossier و artifact و installer، syntax و mode اجرایی Bash، build، audit وابستگی، migration، grant محدود، هویت، idempotency، lease، audit append-only، رفتار خطای inference، rollback و اسکن secret را شرط merge می‌داند. PostgreSQL 17.6 شاهد CI است، نه قفل تولید. آزمون مرورگر، مدل واقعی، benchmark CPU، اجرای واقعی package یا پذیرش سرور انجام نشد و هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه تولید یا سرویس پایش تغییر نکرد.
 
-نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) صلاحیت‌سنجی سرور 1B است: preflight خصوصی فقط‌خواندنی مجاز شود، runtime ثابت CPU ساخته و هش شود، مدل ثابت وارد و محلی بررسی شود، سپس تولید تازهٔ فارسی و انگلیسی از cold start با اینترنت قطع اندازه‌گیری شود. کار استقرار 1A شامل UI مرورگر، release آفلاین، unit سرویس، reverse proxy، قفل PostgreSQL تولید و backup/restore همچنان باز و مجوز جدا می‌خواهد. پذیرش مرحلهٔ صفر مجوز ساخت یا دسترسی مقصد نیست. حفاظت شاخه، گزارش خصوصی آسیب‌پذیری و مجوز پروژه تنظیم‌شده فرض نشده‌اند.
+نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) صلاحیت‌سنجی سرور 1B است: پس از تأیید جایگزین‌های تمیز Ubuntu 24.04 توسط مالک، اثرانگشت‌های تازهٔ SSH مستقل بررسی، preflight خصوصی فقط‌خواندنی تکرار و سپس با مجوزهای لازم runtime ثابت CPU ساخته و هش، مدل ثابت وارد و محلی بررسی و تولید تازهٔ فارسی و انگلیسی از cold start با اینترنت قطع اندازه‌گیری شود. کار استقرار 1A شامل UI مرورگر، release آفلاین، unit سرویس، reverse proxy، قفل PostgreSQL تولید و backup/restore همچنان باز و مجوز جدا می‌خواهد. پذیرش مرحلهٔ صفر مجوز اجرای package، ورود مدل، استقرار یا دسترسی مقصد نیست. حفاظت شاخه، گزارش خصوصی آسیب‌پذیری و مجوز پروژه تنظیم‌شده فرض نشده‌اند.
