@@ -155,6 +155,10 @@ class DurableAppService:
                         expires_at=expires_at,
                     )
                 )
+                # Establish every referenced scope row before inserting its audit record.
+                # Both flushes remain inside the same transaction, so audit failure still
+                # rolls the complete bootstrap back.
+                session.flush()
                 self._add_audit(
                     session,
                     organization_id=organization_id,
@@ -170,9 +174,11 @@ class DurableAppService:
         except ApplicationError:
             raise
         except IntegrityError as exc:
-            raise ApplicationError(
-                ErrorCode.CONFLICT, "identity.bootstrap_already_complete"
-            ) from exc
+            if self._is_bootstrap_conflict(exc):
+                raise ApplicationError(
+                    ErrorCode.CONFLICT, "identity.bootstrap_already_complete"
+                ) from exc
+            raise self._database_error() from exc
         except SQLAlchemyError as exc:
             raise self._database_error() from exc
 
@@ -876,6 +882,12 @@ class DurableAppService:
             "database.transaction_failed",
             retryable=True,
         )
+
+    @staticmethod
+    def _is_bootstrap_conflict(error: IntegrityError) -> bool:
+        diagnostic = getattr(error.orig, "diag", None)
+        constraint_name = getattr(diagnostic, "constraint_name", None)
+        return constraint_name in {"uq_organizations_singleton", "uq_organizations_slug"}
 
     def _now(self) -> datetime:
         now = self._clock()
