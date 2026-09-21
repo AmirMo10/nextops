@@ -43,7 +43,7 @@ Add a versioned deployment-dossier contract, one self-contained JSON instance fo
 
 - [x] Acceptance criteria in the dossier specification are met.
 - [x] No infrastructure operation was performed or claimed.
-- [ ] Changes are committed and published for review.
+- [x] Changes are committed and published for review in pull request #2.
 
 ## Risks and mitigations
 
