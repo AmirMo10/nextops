@@ -1,105 +1,68 @@
-# Implementation plan: Stage 1A Increment 2 durable local app
+# Implementation plan: Stage 1B Increment 3 local CPU inference foundation
 
 ## Outcome
 
-Deliver the smallest restart-safe local application slice: one-organization identity
-bootstrap and recovery, PostgreSQL-authoritative state, authenticated versioned API,
-idempotent run creation and worker leases, append-only audit, and one bilingual fixture
-result. No target credential, connector, model, VM, network, or host mutation is in scope.
+Deliver the repository-only foundation for one authenticated, CPU-only inference service:
+a reviewed runtime/model candidate manifest, strict `LLMProvider` contracts, a bounded
+single-active-request scheduler, a loopback-only llama.cpp provider adapter, a minimal
+service API, and tests. Do not download model weights, build a runtime, provision a VM,
+open a listener on infrastructure, or claim offline/model acceptance in this increment.
 
-## Architecture decisions
+## Source-backed decisions
 
-- PostgreSQL is the only authoritative runtime database; SQLite is not a compatibility
-  substitute.
-- SQLAlchemy defines persistence mappings and Alembic owns schema changes.
-- Authentication uses opaque, expiring bearer sessions stored only as hashes. Passwords
-  use a memory-hard password hash; bootstrap/recovery secrets come from deployment
-  configuration and never enter Git or application logs.
-- The API derives actor organization, environment, roles, and scopes from the validated
-  server-side session. Client payloads cannot supply actor context.
-- Run idempotency is enforced by a database uniqueness constraint and request-payload
-  hash. A reused key with different intent is a conflict.
-- Worker lease acquisition is atomic and time-bounded. Expired leases can be recovered
-  after restart; live leases cannot be stolen.
-- Audit rows are append-only at the application role and every accepted or denied
-  security-sensitive path records a stable event. Required audit failure fails the
-  operation explicitly.
-- The first result is deterministic fixture data in Persian and English. It is not
-  presented as live infrastructure evidence.
+- Pin llama.cpp source tag `v0.4.1` and commit
+  `b29c606e28a01b1bc8c1351026a0fa6e616bf6c4`; an authorized CPU build must later
+  record compiler, flags, native libraries, binary SHA-256, and startup device evidence.
+- Select the official Qwen evaluation artifact `Qwen3-8B-Q4_K_M.gguf` from repository
+  revision `7c41481f57cb95916b40956ab2f0b139b296d974`, size 5,027,783,488 bytes,
+  SHA-256 `d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785`,
+  Apache-2.0. Selection permits controlled evaluation only; it is not import approval.
+- llama.cpp remains behind a NextOps wrapper on loopback. The wrapper uses its documented
+  OpenAI-compatible chat route and API-key support, while enforcing stricter NextOps
+  limits and service authentication.
+- Disable llama.cpp tools, agent/MCP, Web UI, external model resolution, context shifting,
+  and accelerator offload. The model boundary receives no infrastructure credential.
+- Start with one active generation request and a queue of two. Exact threads, affinity,
+  context, memory, latency, and quality promotion thresholds require G10 evidence.
 
 ## Delivery slices
 
-### Slice 1: contracts and migration
+### Slice 1: candidate artifact contract
 
-- [x] Add strict identity, session, run, lease, audit, and result contracts.
-- [x] Add SQLAlchemy mappings for organization, environment, target, identity, session,
-  run, and audit state.
-- [x] Add an Alembic baseline with constraints, indexes, append-only audit protections,
-  and least-privilege PostgreSQL role/grant definitions.
-- [x] Add failing contract/schema tests first, then make them pass.
+- [ ] Add human-readable YAML manifest plus JSON Schema for the selected evaluation pair.
+- [ ] Validate immutable source revisions, license, model size/checksum, offline-only paths,
+  and unresolved CPU binary checksum.
+- [ ] Update the AI deployment dossier without claiming import, install, or benchmark.
 
-### Slice 2: durable services
+### Slice 2: strict inference boundary
 
-- [x] Implement password hashing, opaque token hashing, one-time bootstrap, login,
-  recovery rotation, revocation checks, and server-derived actor context.
-- [x] Implement atomic run creation with idempotency conflict detection.
-- [x] Implement lease claim/renew/release and expired-lease recovery.
-- [x] Make audit/database failure return a typed failure; never report unlogged success.
-- [x] Cover security boundaries and persistence behavior with focused tests.
+- [ ] Add immutable request/result/readiness contracts and an `LLMProvider` protocol.
+- [ ] Reject oversized prompts, excessive output/context limits, unknown fields, and
+  client-supplied system/tool/provider settings.
+- [ ] Add failing tests first, then implement the contracts.
 
-### Slice 3: authenticated API and fixture result
+### Slice 3: bounded service and llama.cpp adapter
 
-- [x] Add a `/api/v1` FastAPI application with health, bootstrap, recovery, login,
-  current-actor, run-create, run-read, and worker-lease boundaries.
-- [x] Return consistent structured errors with correlation identifiers.
-- [x] Return one deterministic Persian/English fixture result with source, collection
-  and measurement time, scope, partial/stale flags, typed errors, and audit reference.
-- [x] Verify unauthenticated, revoked, cross-scope, invalid, duplicate, and degraded cases.
+- [ ] Implement one-active-request scheduling, bounded queue admission, queue timeout,
+  provider timeout, cancellation cleanup, and explicit overload/dependency errors.
+- [ ] Implement a loopback-only OpenAI-compatible llama.cpp adapter with proxy bypass,
+  API-key authentication, fixed model identity, non-thinking prompt mode, and strict
+  response parsing.
+- [ ] Add an authenticated FastAPI surface for liveness, safe readiness, and generation.
 
-### Slice 4: PostgreSQL and operational proof
+### Slice 4: verification and handoff
 
-- [x] Run upgrade/downgrade, constraint, role, audit append, idempotency, lease,
-  restart-recovery, and rollback/recovery tests against isolated real PostgreSQL.
-- [x] Run Ruff, strict mypy, pytest, documentation checks, frozen install, dependency
-  audit, and a staged secret review.
-- [x] Record exact pass/fail/blocked evidence; do not count skipped PostgreSQL tests as
-  acceptance.
+- [ ] Test accepted, unauthenticated, overloaded, timed-out, cancelled, malformed-provider,
+  wrong-model, and degraded-readiness behavior without network/model dependencies.
+- [ ] Run format/lint, strict types, unit/API tests, document/dossier/artifact validation,
+  build, dependency audit, and secret review.
+- [ ] Update paired docs, traceability, state and next task with exact pass/fail/not-run
+  evidence; publish a PR but do not merge unreviewed work.
 
-### Slice 5: deployer handoff and project state
+## Acceptance boundary
 
-- [x] Add paired English/Persian server-start checklists that distinguish safe preflight,
-  separately authorized provisioning, and not-yet-deployable application steps.
-- [x] Update indexes, traceability, project state, next task, and the app deployment
-  dossier only for capabilities that actually exist and were tested.
-- [ ] Commit small verified slices, publish a review branch, and merge only after required
-  checks pass.
+This increment can prove contracts, scheduling and adapter behavior with deterministic
+fakes. It cannot prove CPU-only execution, Persian/English quality, cold-start latency,
+offline startup, memory/NUMA fit, service TLS, backup/restore, or server readiness without
+the separately authorized AI VM, imported artifacts and benchmark window.
 
-## Checkpoints
-
-- Contract checkpoint: boundary validation and migration metadata tests pass.
-- Persistence checkpoint: the real PostgreSQL suite proves constraints, roles,
-  idempotency, leases, audit, restart behavior, and migration rollback.
-- API checkpoint: authentication and actor derivation are server-side and the fixture
-  response is explicit about provenance and limitations.
-- Handoff checkpoint: deployers have exact starting actions without any implied authority
-  to provision or install.
-
-## Risks and mitigations
-
-| Risk | Impact | Mitigation |
-|---|---|---|
-| Bootstrap endpoint remains usable after first setup | Critical | Database singleton guard, configured one-time secret, conflict after bootstrap |
-| Stolen session token is reusable | High | Store only token hash, expire sessions, support revocation and recovery-wide rotation |
-| Duplicate retry creates two runs | High | Transaction plus scoped unique constraint and canonical request hash |
-| Worker restart strands work | High | Expiring database lease with atomic compare-and-set semantics |
-| Audit write fails after state change | High | State mutation and required audit append share one transaction |
-| Tests silently use SQLite semantics | High | PostgreSQL-only integration suite; blocked means blocked, never accepted |
-| Server checklist is mistaken for approval | High | Explicit authority gates and non-executable placeholders for private inputs |
-
-## Open gate
-
-Local Docker remained unavailable, so it was not counted. The isolated GitHub Actions
-PostgreSQL 17.6 service executes all five integration cases, including migration rollback,
-restricted grants, identity recovery, idempotency, lease restart recovery, append-only
-audit, and transaction rollback. This does not select the production PostgreSQL patch or
-authorize starting services on target servers.
