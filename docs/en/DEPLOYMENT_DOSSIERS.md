@@ -2,16 +2,16 @@
 
 [فارسی](../fa/DEPLOYMENT_DOSSIERS.md) · [Index](INDEX.md) · [Server plan](SERVER_PLAN.md) · [Storage gate](../STORAGE_PLAN.md)
 
-**Status: deployer handoff contract, not an installer or deployment authorization.** The four JSON files under [`deploy/server-dependencies`](../../deploy/server-dependencies) collect the known sizing, proposed boundaries, dependencies, configuration paths, command templates, evidence requirements, and unresolved deployment inputs for the accepted initial profile. All runtime acceptance gates remain `not_run`.
+**Status: deployer handoff contract, not an installer or deployment authorization.** The four human-readable YAML files under [`deploy/server-dependencies`](../../deploy/server-dependencies) collect the known sizing, proposed boundaries, dependencies, configuration paths, command templates, evidence requirements, and unresolved deployment inputs for the accepted initial profile. All runtime acceptance gates remain `not_run`.
 
 ## Files and ownership
 
 | Server dossier | Responsibility | Resource proposal |
 |---|---|---:|
-| [`nextops-app.json`](../../deploy/server-dependencies/nextops-app.json) | Local TLS/UI/API, identity, durable worker/audit, and initial restricted NextOps PostgreSQL | 8 vCPU / 32 GiB / 200 GiB |
-| [`nextops-ai.json`](../../deploy/server-dependencies/nextops-ai.json) | One isolated local CPU inference service and verified model/runtime artifacts | 24 vCPU / 128 GiB / 500 GiB |
-| [`nextops-connectors-ro.json`](../../deploy/server-dependencies/nextops-connectors-ro.json) | Protected gateway and separately restricted read-only Zabbix runner | 4 vCPU / 8 GiB / 80 GiB |
-| [`zabbix-server.json`](../../deploy/server-dependencies/zabbix-server.json) | Dedicated Zabbix 7.0 LTS proposal, PostgreSQL 16, frontend/API, Agent 2, and detailed LVM | 4 vCPU / 16 GiB / 200 GiB |
+| [`nextops-app.yaml`](../../deploy/server-dependencies/nextops-app.yaml) | Local TLS/UI/API, identity, durable worker/audit, and initial restricted NextOps PostgreSQL | 8 vCPU / 32 GiB / 200 GiB |
+| [`nextops-ai.yaml`](../../deploy/server-dependencies/nextops-ai.yaml) | One isolated local CPU inference service and verified model/runtime artifacts | 24 vCPU / 128 GiB / 500 GiB |
+| [`nextops-connectors-ro.yaml`](../../deploy/server-dependencies/nextops-connectors-ro.yaml) | Protected gateway and separately restricted read-only Zabbix runner | 4 vCPU / 8 GiB / 80 GiB |
+| [`zabbix-server.yaml`](../../deploy/server-dependencies/zabbix-server.yaml) | Dedicated Zabbix 7.0 LTS proposal, PostgreSQL 16, frontend/API, Agent 2, and detailed LVM | 4 vCPU / 16 GiB / 200 GiB |
 | [`server-dependency.schema.json`](../../deploy/server-dependencies/server-dependency.schema.json) | Version 1.0.0 public contract shared by every dossier | Not a server |
 
 The combined proposal is 4 VMs, 40 vCPU, 184 GiB RAM, and 980 GiB of VMDKs. The provisional ESXi swap allowance is another 184 GiB, giving 1164 GiB before VMX, snapshots, thin growth, staging, maintenance, and restore space. These values are planning inputs, not reservations or proof of available resources.
@@ -40,31 +40,18 @@ Every command entry has a mode:
 | `guarded_template` | A reviewed pattern with named required inputs. Resolve and validate those inputs in the private record before an operator runs it. It is not an automatic script. |
 | `blocked` | The repository does not yet have a safe exact command. `command` is deliberately `null`; the blocking inputs and failure rule explain what must exist first. |
 
-Never build an executor that reads these JSON files and blindly runs the strings. The dossiers are handoff contracts for a reviewed change procedure. Re-resolve targets, permissions, mounts, artifacts, and authorization immediately before any state-changing step.
+Never build an executor that reads these YAML files and blindly runs the strings. The dossiers are handoff contracts for a reviewed change procedure. Re-resolve targets, permissions, mounts, artifacts, and authorization immediately before any state-changing step.
 
 ## Validation commands
 
-JSON syntax on any host with Python:
+Install the locked development dependencies, then run the repository validator:
 
 ```bash
-python -m json.tool deploy/server-dependencies/nextops-app.json >/dev/null
-python -m json.tool deploy/server-dependencies/nextops-ai.json >/dev/null
-python -m json.tool deploy/server-dependencies/nextops-connectors-ro.json >/dev/null
-python -m json.tool deploy/server-dependencies/zabbix-server.json >/dev/null
+uv sync --extra dev --frozen
+uv run --extra dev python scripts/check_deployment_dossiers.py
 ```
 
-Full schema validation on PowerShell 7:
-
-```powershell
-$schema = Resolve-Path deploy/server-dependencies/server-dependency.schema.json
-Get-ChildItem deploy/server-dependencies/*.json |
-  Where-Object Name -ne 'server-dependency.schema.json' |
-  ForEach-Object {
-    if (-not (Test-Json -LiteralPath $_.FullName -SchemaFile $schema)) {
-      throw "Schema validation failed: $($_.Name)"
-    }
-  }
-```
+The validator safely parses all four YAML documents, checks them against the Draft 2020-12 JSON Schema, rejects stale JSON dossier copies, verifies the approved server IDs, and reconciles the 40-vCPU / 184-GiB-RAM / 980-GiB-disk total.
 
 Repository documentation validation:
 

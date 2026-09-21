@@ -36,7 +36,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 28 | Database abstraction / رابط پایگاه داده | `infrastructure`, `migrations` | 1 | Real PostgreSQL tests; alternatives tracked / آزمون واقعی و پیگیری جایگزین | P |
 | 29 | API / رابط برنامه | `apps/api`, `contracts` | 1–2 | Authenticated versioned routes / مسیر نسخه‌دار و دارای هویت | P |
 | 30 | UI / رابط کاربری | `apps/web` | 2–8 | Operations views, summaries and accessibility / نماهای عملیات و دسترس‌پذیری | P |
-| 31 | Configuration / پیکربندی | `config`, `deploy/server-dependencies/*.json` | 1 | Schema-validated deployer inputs/paths/secret references drafted; runtime parsers and typed external settings remain / ورودی و مسیر و ارجاع محرمانه مستند؛ parser اجرایی باقی است | D |
+| 31 | Configuration / پیکربندی | `config`, `deploy/server-dependencies/*.yaml` | 1 | Schema-validated deployer inputs/paths/secret references drafted; runtime parsers and typed external settings remain / ورودی و مسیر و ارجاع محرمانه مستند؛ parser اجرایی باقی است | D |
 | 32 | Inventory / موجودی تجهیزات | `packages/nextops/contracts`, future `infrastructure` | 1–2 | Immutable scoped target contract and denial tests; inventory persistence remains / قرارداد هدف و رد؛ ماندگاری باقی است | I |
 | 33 | Health checks / بررسی سلامت | `apps`, `connectors` | 1–5 | Honest readiness/capability states / آمادگی و قابلیت واقعی | P |
 | 34 | Error handling / مدیریت خطا | `packages/nextops/contracts`, future `application` | 1–5 | Typed error contract exists; retry/isolation behavior remains / قرارداد خطا موجود؛ رفتار اجرا باقی است | I |
@@ -45,7 +45,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 37 | Docker / کانتینر | `deploy/compose` | 1,8 | Restricted clean install and offline test / نصب محدود و آفلاین | P |
 | 38 | Installation docs / مستندات نصب | `docs/en/INSTALL.md`, `docs/fa/INSTALL.md`, paired `DEPLOYMENT_DOSSIERS.md`, `deploy/server-dependencies` | 0–8 | Four machine-readable handoffs and paired workflow drafted; blocked installers and clean-install commands remain / چهار پرونده و گردش کار آماده؛ نصب‌کننده و فرمان آزموده باقی است | D |
 | 39 | Native Persian docs / مستندات فارسی طبیعی | `docs/fa`, `docs/en` | 0–8 | Paired guides and language review / همتای دو زبان و بازبینی | D |
-| 40 | Lifecycle scripts / اسکریپت چرخهٔ عمر | `scripts`, `deploy/server-dependencies/*.json` | 1,8 | Safe preflight/templates and explicit blockers documented; idempotent install/setup/start/stop/test/backup/restore remain / preflight و مانع مستند؛ اسکریپت تکرارپذیر باقی است | P |
+| 40 | Lifecycle scripts / اسکریپت چرخهٔ عمر | `scripts`, `deploy/server-dependencies/*.yaml` | 1,8 | Safe preflight/templates and explicit blockers documented; idempotent install/setup/start/stop/test/backup/restore remain / preflight و مانع مستند؛ اسکریپت تکرارپذیر باقی است | P |
 | 41 | Systemd / سرویس بومی | `deploy/systemd` | 1,8 | Units, hardening, resource and recovery tests / آزمون واحد سرویس و بازیابی | P |
 | 42 | Security docs / مستندات امنیت | `docs/en/SECURITY.md`, `docs/fa/SECURITY.md` | 0–8 | Documented RBAC/secrets/TLS/audit/backup / راهنمای کنترل‌های امنیت | D |
 | 43 | README / معرفی پروژه | `README.md`, `README_FA.md` | 0–8 | Honest status and bilingual navigation / وضعیت واقعی و مسیر دو زبان | D |

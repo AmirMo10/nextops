@@ -17,7 +17,7 @@
 
 **Acceptance criteria:**
 
-- [x] Each approved server has one self-contained JSON file.
+- [x] Each approved server has one self-contained YAML file.
 - [x] Known values match the accepted plans and all missing/private values are explicit.
 - [x] Commands are classified and no usable secret is present.
 
@@ -25,7 +25,7 @@
 
 **Dependencies:** Task 1.
 
-**Files:** four JSON files under `deploy/server-dependencies/`.
+**Files:** four YAML files under `deploy/server-dependencies/`.
 
 ## Task 3: publish the deployer handoff
 

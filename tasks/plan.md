@@ -2,7 +2,7 @@
 
 ## Overview
 
-Add a versioned deployment-dossier contract, one self-contained JSON instance for each approved initial server, and paired deployer guidance. The deliverable records what is known, what is proposed, what remains private, and what blocks execution; it does not provision infrastructure.
+Add a versioned deployment-dossier contract, one self-contained YAML instance for each approved initial server, and paired deployer guidance. The deliverable records what is known, what is proposed, what remains private, and what blocks execution; it does not provision infrastructure.
 
 ## Architecture decisions
 

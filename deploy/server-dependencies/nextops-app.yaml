@@ -1,0 +1,709 @@
+# Human-readable NextOps deployment dossier. This is a planning contract, not an installer.
+# Keep real infrastructure identifiers and secrets in the approved private deployment record.
+---
+$schema: ./server-dependency.schema.json
+schema_version: 1.0.0
+manifest_revision: '2026-09-21'
+server_id: nextops-app
+evidence_status: planning_contract_not_deployed
+purpose: Serve the local bilingual UI and authenticated API, run durable application workers and audit,
+  and host the initial restricted NextOps PostgreSQL service until the approved database split.
+authorization:
+  documentation_authorized: true
+  provisioning_authorized: false
+  operational_access_authorized: false
+  destructive_actions_authorized: false
+  notes: The owner authorized this deployment dossier and accepted Phase 0. VM creation, installation,
+    private network access, database initialization, and service changes still require a separate approved
+    change window.
+source_records:
+  - docs/requirements/HARDWARE_BASELINE.json
+  - docs/requirements/ZABBIX_SERVER_PLAN.json
+  - docs/en/SERVER_PLAN.md
+  - docs/en/ARCHITECTURE.md
+  - docs/en/CONFIGURATION.md
+  - docs/en/OFFLINE_RUNTIME.md
+  - docs/PROJECT_STATE.md
+vm:
+  hypervisor: VMware ESXi 8.0.3 build 24414501 (owner-supplied host evidence)
+  guest_os: Ubuntu Server 24.04 LTS proposed; exact image and maintained patch lock required
+  vcpu: 8
+  ram_gib: 32
+  disk_gib: 200
+  firmware: null
+  cpu_hot_add: null
+  proposed_datastore_alias: DS-C
+  placement_status: Capacity-based proposal only; no reservation or VM exists by evidence in this repository.
+  deployment_order: 1 of the three NextOps VMs; complete the private ESXi/storage/network preflight before
+    creation
+  preflight_requirements:
+    - Refresh DS-C free space and reconcile any already-created VM before subtracting capacity.
+    - Confirm available CPU/RAM, reservations, contention, VM compatibility level, guest features, and
+      ESXi swap placement.
+    - Confirm backing-storage health/latency, thin-disk commitments, snapshot/consolidation space, and
+      the approximately 900-GiB DS-C free-space target.
+    - Confirm approved local DNS, time, TLS, administrator recovery, and independent backup routes.
+    - Keep ESXi intact; do not install NextOps in the ESXi management shell.
+service_accounts:
+  - id: nextops-api
+    scope: API and application orchestration only; no target credentials or direct management-LAN route
+    login: false
+    privilege: non-root service identity with read-only release/config access and only required state
+      paths
+    status: planned_not_created
+  - id: nextops-worker
+    scope: durable jobs, evidence processing, and append-restricted audit through application interfaces
+    login: false
+    privilege: non-root service identity; no policy bypass, container socket, or target credentials
+    status: planned_not_created
+  - id: postgres
+    scope: local NextOps PostgreSQL engine only
+    login: false
+    privilege: database service identity; separate migration, runtime, audit, and backup roles required
+    status: planned_not_created
+  - id: nginx
+    scope: TLS termination and local static UI only
+    login: false
+    privilege: read-only static assets and certificate access; proxy only to the local API
+    status: planned_not_created
+software_dependencies:
+  - id: ubuntu-server
+    kind: guest_os
+    version: 24.04 LTS maintained patch (exact image pending)
+    runtime_location: local
+    required: true
+    status: proposed_not_installed
+    lock_evidence: null
+  - id: python
+    kind: runtime
+    version: '>=3.12,<3.13'
+    runtime_location: local
+    required: true
+    status: locked_for_current_stage_1a_source_only
+    lock_evidence: pyproject.toml and uv.lock
+  - id: nextops-python-package
+    kind: application
+    version: 0.1.0 source metadata; no production release artifact
+    runtime_location: local
+    required: true
+    status: contracts_and_policy_only_not_deployable
+    lock_evidence: pyproject.toml and uv.lock
+  - id: pydantic
+    kind: python_dependency
+    version: '>=2.10,<3'
+    runtime_location: local
+    required: true
+    status: locked_for_stage_1a
+    lock_evidence: uv.lock
+  - id: fastapi-server-stack
+    kind: application_runtime
+    version: null
+    runtime_location: local
+    required: true
+    status: proposed_not_added_or_locked
+    lock_evidence: null
+  - id: postgresql
+    kind: database
+    version: 16 proposed; maintained patch lock pending
+    runtime_location: local
+    required: true
+    status: proposed_not_installed
+    lock_evidence: null
+  - id: sqlalchemy-alembic
+    kind: database_client_and_migrations
+    version: null
+    runtime_location: local
+    required: true
+    status: proposed_not_added_or_locked
+    lock_evidence: null
+  - id: nginx
+    kind: reverse_proxy
+    version: null
+    runtime_location: local
+    required: true
+    status: proposed_not_locked
+    lock_evidence: null
+  - id: nextops-static-ui
+    kind: frontend_bundle
+    version: null
+    runtime_location: local
+    required: true
+    status: proposed_not_implemented_or_built
+    lock_evidence: null
+  - id: local-dns-time-pki
+    kind: infrastructure_service
+    version: null
+    runtime_location: approved_lan
+    required: true
+    status: private_input_not_verified
+    lock_evidence: null
+  - id: independent-backup-target
+    kind: recovery_service
+    version: null
+    runtime_location: approved_lan
+    required: true
+    status: production_gate_not_selected
+    lock_evidence: null
+artifacts:
+  - id: nextops-app-release
+    purpose: Signed or otherwise authenticated application release containing API, worker, migrations,
+      and local documentation assets
+    install_path: /srv/nextops/releases/<release-id>
+    version: null
+    sha256: null
+    license_record: null
+    source_record: null
+    status: not_built
+  - id: nextops-python-offline-dependencies
+    purpose: Complete locked wheel or image set for an offline clean install
+    install_path: /srv/nextops/artifacts/python
+    version: null
+    sha256: null
+    license_record: null
+    source_record: null
+    status: not_prepared
+  - id: nextops-static-ui-bundle
+    purpose: Built Persian/English browser assets with no CDN or Internet runtime dependency
+    install_path: /srv/nextops/releases/<release-id>/static
+    version: null
+    sha256: null
+    license_record: null
+    source_record: null
+    status: not_built
+  - id: database-migration-set
+    purpose: Reviewed forward and recovery migrations for durable identity, run, evidence, and audit state
+    install_path: /srv/nextops/releases/<release-id>/migrations
+    version: null
+    sha256: null
+    license_record: null
+    source_record: null
+    status: not_implemented
+  - id: tls-public-chain
+    purpose: Local trust chain and public certificate material; the private key is delivered separately
+    install_path: /etc/nextops/tls
+    version: null
+    sha256: null
+    license_record: not_applicable
+    source_record: null
+    status: private_pki_input_missing
+configuration_files:
+  - id: app-config
+    path: /etc/nextops/app.yaml
+    owner: root:nextops-api
+    mode: '0640'
+    contains_secret_values: false
+    status: planned_no_runtime_parser_or_example_file_yet
+    required_settings:
+      - organization and environment IDs
+      - local service endpoints
+      - language and UTC/display-time settings
+      - durable data/evidence paths
+      - request, queue, timeout, and output limits
+  - id: inventory-config
+    path: /etc/nextops/inventory.yaml
+    owner: root:nextops-api
+    mode: '0640'
+    contains_secret_values: false
+    status: planned_no_runtime_parser_or_example_file_yet
+    required_settings:
+      - immutable target IDs and organization/environment scope
+      - approved endpoint references without credentials
+      - target type, owner, tags, and last-verification time
+  - id: credential-reference-config
+    path: /etc/nextops/credentials.yaml
+    owner: root:nextops-api
+    mode: '0640'
+    contains_secret_values: false
+    status: planned_reference_only_no_runtime_parser_yet
+    required_settings:
+      - opaque secret reference IDs only
+      - consumer identity and rotation metadata
+      - no password, token, private key, or decrypting key
+  - id: policy-config
+    path: /etc/nextops/policies.yaml
+    owner: root:nextops-api
+    mode: '0640'
+    contains_secret_values: false
+    status: planned_external_policy_format_not_implemented
+    required_settings:
+      - deny-by-default organization/environment/target/action/scope rules
+      - Phase 1 READ_ONLY risk restriction
+      - trusted named operation registry
+  - id: reverse-proxy-config
+    path: /etc/nginx/sites-available/nextops.conf
+    owner: root:root
+    mode: '0644'
+    contains_secret_values: false
+    status: not_written_or_tested
+    required_settings:
+      - approved server name and TLS certificate paths
+      - local API upstream only
+      - security headers, request limits, timeouts, and static asset root
+secret_references:
+  - id: app-identity-key-ref
+    consumer: nextops-api
+    reference_only: true
+    delivery_requirement: Protected local key mechanism with tested offline unlock and recovery; never
+      stored in Git or the model context
+    rotation_requirement: Document rotation, revocation, session invalidation, and recovery before activation
+    status: mechanism_not_selected
+  - id: nextops-postgres-runtime-ref
+    consumer: nextops-api and nextops-worker through separate least-privilege database roles
+    reference_only: true
+    delivery_requirement: Boundary-local protected delivery; no shared superuser or plaintext repository
+      environment file
+    rotation_requirement: Test rotation without losing durable work or audit access
+    status: roles_and_delivery_not_implemented
+  - id: app-tls-private-key-ref
+    consumer: nginx
+    reference_only: true
+    delivery_requirement: Restricted private-key path or approved local key service; public chain may
+      be in the release bundle
+    rotation_requirement: Define offline renewal, revocation, rollback, and expiry alerting
+    status: private_pki_input_missing
+  - id: internal-service-auth-ref
+    consumer: nextops-api for authenticated calls to AI and connector services
+    reference_only: true
+    delivery_requirement: Use distinct audience-bound service credentials; do not reuse user sessions
+      or target tokens
+    rotation_requirement: Rotate per service boundary and retain overlap only for an audited cutover
+    status: internal_auth_design_not_implemented
+network:
+  runtime_internet_required: false
+  public_exposure_allowed: false
+  management_interface: Authorized local administrator route only; exact private network and recovery
+    path are external inputs.
+  rules:
+    - id: authorized-browser-https
+      direction: inbound
+      source: approved local user networks
+      destination: nextops-app reverse proxy
+      protocol: tcp
+      port: 443
+      tls: required with trusted local certificate validation
+      decision: allow_planned
+      status: source_ranges_dns_and_certificate_missing
+    - id: admin-ssh
+      direction: inbound
+      source: approved administrator network
+      destination: nextops-app guest
+      protocol: tcp
+      port: 22
+      tls: SSH host-key validation required
+      decision: allow_planned
+      status: private_admin_path_and_recovery_not_verified
+    - id: app-to-ai
+      direction: outbound
+      source: nextops-api/worker service identity
+      destination: nextops-ai internal inference service
+      protocol: tcp
+      port: null
+      tls: authenticated encrypted internal transport required
+      decision: allow_planned
+      status: internal_port_protocol_and_identity_not_selected
+    - id: app-to-connectors
+      direction: outbound
+      source: nextops-api/worker service identity
+      destination: nextops-connectors-ro protected gateway
+      protocol: tcp_or_local_transport
+      port: null
+      tls: authenticated transport required when not local stdio
+      decision: allow_planned
+      status: transport_port_and_identity_not_selected
+    - id: local-postgresql-only
+      direction: outbound
+      source: nextops-api/worker database roles
+      destination: local NextOps PostgreSQL
+      protocol: unix_socket_or_loopback_tcp
+      port: 5432
+      tls: local socket preferred; if TCP is used, authenticated encrypted transport and loopback binding
+        are required
+      decision: allow_planned
+      status: database_transport_not_implemented
+    - id: direct-target-access
+      direction: outbound
+      source: nextops-app
+      destination: managed infrastructure and Zabbix target APIs
+      protocol: any
+      port: any
+      tls: not_applicable
+      decision: deny_required
+      status: architectural_boundary
+    - id: runtime-internet
+      direction: outbound
+      source: all nextops-app services
+      destination: Internet
+      protocol: any
+      port: any
+      tls: not_applicable
+      decision: deny_required
+      status: must_be_enforced_and_tested
+  unresolved:
+    - Private IP, DNS name, VLAN, routing, and firewall source ranges
+    - Internal AI/gateway transport and ports
+    - Local DNS, NTP, CA, certificate renewal/revocation, and backup endpoints
+    - Administrative SSH policy, host keys, break-glass access, and recovery console
+storage:
+  total_disk_gib: 200
+  layout_status: Total VMDK approved as a starting proposal; partition/LVM/filesystem allocation is not
+    designed or authorized.
+  mounts:
+    - path: /
+      purpose: Guest OS and immutable application runtime
+      size_gib: null
+      filesystem: null
+      owner: root:root
+      mode: '0755'
+      status: layout_required_before_provisioning
+    - path: /etc/nextops
+      purpose: Validated configuration and secret references only
+      size_gib: null
+      filesystem: null
+      owner: root:nextops-api
+      mode: '0750'
+      status: planned_not_created
+    - path: /var/lib/nextops
+      purpose: Durable application state and restricted evidence files; PostgreSQL remains authoritative
+        for metadata/work
+      size_gib: null
+      filesystem: null
+      owner: nextops-worker:nextops-worker
+      mode: '0750'
+      status: planned_not_created
+    - path: /var/lib/postgresql
+      purpose: Initial NextOps database data/WAL until the separately approved Phase 3 split
+      size_gib: null
+      filesystem: null
+      owner: postgres:postgres
+      mode: '0700'
+      status: size_layout_backup_and_growth_model_missing
+    - path: /srv/nextops/releases
+      purpose: Versioned offline application releases and rollback candidate
+      size_gib: null
+      filesystem: null
+      owner: root:nextops-api
+      mode: '0750'
+      status: planned_not_created
+    - path: /var/log/nextops
+      purpose: Sanitized operational logs separate from append-restricted audit records
+      size_gib: null
+      filesystem: null
+      owner: nextops-api:nextops-api
+      mode: '0750'
+      status: retention_and_rotation_missing
+  capacity_rules:
+    - The 200-GiB VMDK includes OS, application, initial database, logs, artifacts, and guest swap; do
+      not add these again to the datastore budget.
+    - Do not proceed until the application/database partition layout, WAL growth, evidence retention,
+      rollback copy, and restore staging fit with measured margin.
+    - Retain the project 3-TB ceiling and approximately 900-GiB DS-C free-space target; refresh capacity
+      at the change window.
+    - Independent off-host backup is required; another path or VM on the same G10 is only staging.
+  destructive_commands_included: false
+service_order:
+  - order: 1
+    service: required mounts and protected key access
+    readiness: All expected filesystems are mounted with correct ownership; missing mounts fail closed.
+  - order: 2
+    service: NextOps PostgreSQL
+    readiness: Local engine accepts only the designed roles; migrations and append/audit constraints pass.
+  - order: 3
+    service: serialized database migration and identity bootstrap
+    readiness: Expected schema version and recoverable administrator identity exist; no default password.
+  - order: 4
+    service: nextops-api and nextops-worker
+    readiness: Authenticated health distinguishes database, AI, connector, and audit readiness without
+      exposing secrets.
+  - order: 5
+    service: nginx and local static UI
+    readiness: TLS, local assets, security headers, bilingual login, and bounded proxying pass.
+  - order: 6
+    service: backup/restore job
+    readiness: A versioned off-host backup and isolated restore test are recorded before production acceptance.
+commands:
+  - id: guest-os-preflight
+    phase: preflight
+    shell: bash
+    run_as: authorized operator
+    mode: read_only
+    requires_authorization: true
+    requires_inputs:
+      - authorization.read_only_guest_discovery
+    command: cat /etc/os-release && uname -r && systemd-detect-virt
+    purpose: Confirm the actual guest OS, kernel, and virtualization environment without changing them.
+    expected_result: Ubuntu release evidence and VMware virtualization are captured in the private change
+      record.
+    failure_rule: Stop if the OS, kernel support, or virtualization environment differs from the reviewed
+      lock.
+  - id: resource-and-mount-preflight
+    phase: preflight
+    shell: bash
+    run_as: authorized operator
+    mode: read_only
+    requires_authorization: true
+    requires_inputs:
+      - authorization.read_only_guest_discovery
+    command: lscpu && free -h && lsblk -o NAME,TYPE,SIZE,FSTYPE,MOUNTPOINTS,ROTA && findmnt && df -hT
+    purpose: Capture guest-visible CPU, memory, block devices, mounts, and free space.
+    expected_result: Resources and intended mount paths match the approved deployment record with sufficient
+      measured margin.
+    failure_rule: Stop on an unidentified disk, missing mount, unexpected existing data, memory pressure,
+      or insufficient capacity.
+  - id: time-and-listener-preflight
+    phase: preflight
+    shell: bash
+    run_as: authorized operator
+    mode: read_only
+    requires_authorization: true
+    requires_inputs:
+      - authorization.read_only_guest_discovery
+    command: timedatectl status && sudo ss -lntup
+    purpose: Verify trusted time state and identify port conflicts before services are installed.
+    expected_result: The approved local time source is healthy and planned ports do not collide.
+    failure_rule: Stop if time is untrusted, listeners are unexplained, or the output cannot be handled
+      as private evidence.
+  - id: current-repository-quality-gate
+    phase: build_validation
+    shell: bash
+    run_as: developer in an isolated checkout without operational credentials
+    mode: guarded_template
+    requires_authorization: false
+    requires_inputs: []
+    command: uv sync --extra dev --frozen && uv run --extra dev ruff check packages tests && uv run --extra
+      dev mypy packages tests && uv run --extra dev pytest
+    purpose: Validate the only currently implemented Stage 1A contracts/policy slice.
+    expected_result: Frozen install, lint, strict types, and tests pass; this still does not produce a
+      deployable application.
+    failure_rule: Do not build or promote an application release from a failing checkout.
+  - id: release-integrity-check
+    phase: artifact_import
+    shell: bash
+    run_as: authorized release operator
+    mode: guarded_template
+    requires_authorization: true
+    requires_inputs:
+      - artifact.nextops_app_release_dir
+      - artifact.nextops_app_release_lock
+    command: test -n "${NEXTOPS_RELEASE_DIR:-}" && cd -- "$NEXTOPS_RELEASE_DIR" && sha256sum -c SHA256SUMS
+    purpose: Verify every imported release artifact against the approved checksum manifest.
+    expected_result: All expected files verify and the release ID, signer/authenticity evidence, licenses,
+      and checksums are recorded.
+    failure_rule: Fail closed on a missing or mismatched listed artifact; separately compare the bundle
+      inventory with the approved lock and reject unlisted files. Never download a replacement during
+      runtime startup.
+  - id: install-application
+    phase: install
+    shell: bash
+    run_as: authorized deployment operator
+    mode: blocked
+    requires_authorization: true
+    requires_inputs:
+      - authorization.provisioning
+      - artifact.nextops_app_release_lock
+      - deployment.app_runtime_mode
+    command: null
+    purpose: Install the application, database roles/migrations, system units or Compose stack, and reverse
+      proxy.
+    expected_result: A reproducible clean offline install from pinned artifacts.
+    failure_rule: 'Blocked: no application installer, FastAPI stack, migrations, UI build, Compose definition,
+      or systemd units exist yet. Do not invent commands.'
+  - id: start-and-readiness
+    phase: start
+    shell: bash
+    run_as: authorized deployment operator
+    mode: blocked
+    requires_authorization: true
+    requires_inputs:
+      - artifact.nextops_app_release_lock
+      - deployment.app_runtime_mode
+      - network.internal_service_contracts
+    command: null
+    purpose: Start dependency-ordered services and verify authenticated readiness.
+    expected_result: PostgreSQL, migrations, API, worker, and Nginx become ready without Internet access
+      or fixed sleeps.
+    failure_rule: Blocked until reviewed service definitions and health contracts exist and pass clean-install
+      tests.
+  - id: rollback-release
+    phase: rollback
+    shell: bash
+    run_as: authorized recovery operator
+    mode: blocked
+    requires_authorization: true
+    requires_inputs:
+      - recovery.last_known_good_release
+      - recovery.database_compatibility
+      - recovery.restore_evidence
+    command: null
+    purpose: Return to a last-known-good application release and compatible database state.
+    expected_result: The previous release serves verified local login and retains durable audit/state
+      or restores them from tested backup.
+    failure_rule: Blocked until migrations define backward compatibility or an isolated restore procedure;
+      never roll binaries back across an incompatible schema blindly.
+observability:
+  - signal: API request rate, latency, errors, and saturation without prompt/secret content
+    source: local metrics/logs
+    required_before_acceptance: true
+    status: not_implemented
+  - signal: worker queue depth, lease age, retries, cancellation, and unknown outcomes
+    source: PostgreSQL-backed durable work
+    required_before_acceptance: true
+    status: not_implemented
+  - signal: audit append success/failure, redaction, and durable request/evidence references
+    source: append-restricted audit store
+    required_before_acceptance: true
+    status: not_implemented
+  - signal: database connections, locks, WAL growth, backup age, and free space
+    source: local PostgreSQL and filesystem monitoring
+    required_before_acceptance: true
+    status: not_configured
+  - signal: TLS expiry, time health, authentication failures, and reverse-proxy errors
+    source: local Nginx/identity monitoring
+    required_before_acceptance: true
+    status: not_configured
+backup_and_rollback:
+  backup_scope:
+    - NextOps PostgreSQL data plus roles/schema/version metadata using a consistent supported method
+    - application configuration and policy files without secret values
+    - encrypted/protected identity and key recovery material through its approved mechanism
+    - required evidence/audit files and their retention metadata
+    - release/checksum/license manifests needed for offline recreation
+  off_host_required: true
+  restore_test_required: true
+  rollback_trigger:
+    - migration or identity bootstrap failure
+    - mandatory audit cannot be persisted
+    - authentication/authorization regression
+    - offline startup or local asset failure
+    - unexpected exposure, secret leak, or resource exhaustion
+  rollback_procedure_status: not_implemented; release rollback and database restore compatibility must
+    be designed and tested before deployment
+required_inputs:
+  - id: authorization.provisioning
+    classification: authorization
+    required_before: any VM or guest change
+    status: pending_authorization
+    description: Approved change ticket/window with exact target VM, operator, operations, and rollback
+      authority.
+    validation: Match the approved operation digest and recheck immediately before execution.
+  - id: authorization.read_only_guest_discovery
+    classification: authorization
+    required_before: running guest preflight commands
+    status: pending_authorization
+    description: Authorization for read-only discovery on the actual guest.
+    validation: Record target identity, operator, timestamp, command list, and sanitized output reference.
+  - id: vm.compatibility_and_capacity
+    classification: runtime_evidence
+    required_before: VM creation
+    status: not_run
+    description: Current ESXi compatibility, available CPU/RAM, reservations/contention, datastore health/free
+      space, and swap placement.
+    validation: Private vSphere/ESXi evidence captured during the change window and reconciled against
+      the four-VM budget.
+  - id: deployment.app_runtime_mode
+    classification: deployment_decision
+    required_before: artifact build and installation
+    status: missing
+    description: 'Choose and document the primary production profile: restricted Compose or native systemd.'
+    validation: Clean offline installation, dependency ordering, hardening, resource limits, and rollback
+      pass for the selected profile.
+  - id: artifact.nextops_app_release_lock
+    classification: artifact_lock
+    required_before: installation
+    status: missing
+    description: Release ID, Python/application/frontend/database dependency locks, image digests or package
+      hashes, licenses, and signatures/checksums.
+    validation: Reproducible build plus clean offline install and complete checksum/license inventory.
+  - id: artifact.nextops_app_release_dir
+    classification: private
+    required_before: artifact verification
+    status: missing
+    description: Absolute staging path for the approved release bundle on the deployment host.
+    validation: Resolve under the approved staging root, verify ownership and checksum manifest, and do
+      not use an interactive-user cache.
+  - id: storage.app_layout
+    classification: deployment_decision
+    required_before: guest partitioning/database initialization
+    status: missing
+    description: Partition/LVM/filesystem, swap, database/WAL, evidence, log, release, and restore-staging
+      allocations within 200 GiB.
+    validation: Capacity model includes growth and rollback/restore margin; mount failure prevents dependent
+      service startup.
+  - id: database.app_contract
+    classification: deployment_decision
+    required_before: database initialization
+    status: missing
+    description: PostgreSQL patch, encoding/collation/timezone, authentication, roles, migrations, backup,
+      retention, and Phase 3 split procedure.
+    validation: Real isolated PostgreSQL tests cover least privilege, constraints, idempotency, audit,
+      backup, restore, and recovery.
+  - id: network.internal_service_contracts
+    classification: deployment_decision
+    required_before: firewall/TLS configuration
+    status: missing
+    description: Private addresses, names, ports, identities, certificates, routes, and allowlists for
+      browser, AI, connectors, DNS/time, administration, and backup.
+    validation: Only intended flows succeed; Internet, direct targets, database, model, and gateway exposure
+      fail closed.
+  - id: secrets.app_delivery
+    classification: deployment_decision
+    required_before: identity/database/TLS activation
+    status: missing
+    description: Protected local secret and key delivery, unlock, rotation, revocation, redaction, and
+      break-glass recovery.
+    validation: Fresh offline login and service restart work; no secret appears in Git, process arguments,
+      browser, logs, audit, or model context.
+  - id: recovery.independent_backup
+    classification: private
+    required_before: production acceptance
+    status: missing
+    description: Independent backup destination, access identity, encryption/recovery material, schedule,
+      retention, and agreed RPO/RTO.
+    validation: Isolated offline restore demonstrates usable identity, database, audit, evidence, and
+      release artifacts.
+  - id: acceptance.app_targets
+    classification: deployment_decision
+    required_before: qualification
+    status: missing
+    description: Expected concurrency, latency/error limits, retention, sustained-test duration, and low-space
+      thresholds.
+    validation: Targets are approved before measurement and actual p50/p95/error/resource results are
+      retained.
+acceptance_gates:
+  - id: APP-01
+    description: Fresh Persian and English local login works with correct organization/environment scope
+      and revoked/cross-scope access is denied.
+    status: not_run
+    evidence_reference: null
+  - id: APP-02
+    description: Real PostgreSQL migrations, roles, durable idempotent runs, leases, audit append restrictions,
+      restart recovery, backup, and restore pass.
+    status: not_run
+    evidence_reference: null
+  - id: APP-03
+    description: Only HTTPS is exposed to approved users; database, AI, gateway, telemetry administration,
+      and direct target access are not public.
+    status: not_run
+    evidence_reference: null
+  - id: APP-04
+    description: Cold start from durable local artifacts and a fresh browser login succeed while Internet
+      is blocked; no CDN, registry, public DNS wait, or external identity dependency occurs.
+    status: not_run
+    evidence_reference: null
+  - id: APP-05
+    description: Mandatory database/audit/AI/connector failures are reported honestly and general local
+      functions remain available where their own dependencies are healthy.
+    status: not_run
+    evidence_reference: null
+  - id: APP-06
+    description: Independent backup and isolated restore meet the approved RPO/RTO and preserve required
+      audit/evidence without relying on the same G10.
+    status: not_run
+    evidence_reference: null
+known_limitations:
+  - The repository currently contains Stage 1A contracts/policy only; there is no deployable API, UI,
+    database schema, worker, installer, Compose stack, or systemd unit.
+  - The 200-GiB disk has no approved partition or growth allocation and must not be formatted from this
+    dossier.
+  - Exact internal ports, certificate identities, secret mechanism, database roles, backup target, and
+    performance objectives are unresolved private/deployment inputs.
+  - All services share one physical G10 failure domain; this VM is not high availability.
