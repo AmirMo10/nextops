@@ -173,6 +173,7 @@ class Run(Base, TimestampMixin):
         UniqueConstraint(
             "organization_id", "actor_id", "idempotency_key", name="uq_runs_actor_idempotency"
         ),
+        UniqueConstraint("id", "organization_id", "environment_id", name="uq_runs_id_scope"),
         CheckConstraint(
             "status IN ('pending', 'running', 'succeeded', 'failed')",
             name="ck_runs_status",
@@ -237,6 +238,18 @@ class AuditEvent(Base):
             name="fk_audit_events_environment_scope",
             ondelete="RESTRICT",
         ),
+        ForeignKeyConstraint(
+            ["actor_id", "organization_id", "environment_id"],
+            ["identities.id", "identities.organization_id", "identities.environment_id"],
+            name="fk_audit_events_actor_scope",
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ["run_id", "organization_id", "environment_id"],
+            ["runs.id", "runs.organization_id", "runs.environment_id"],
+            name="fk_audit_events_run_scope",
+            ondelete="RESTRICT",
+        ),
         CheckConstraint(
             "outcome IN ('accepted', 'denied', 'failed')", name="ck_audit_events_outcome"
         ),
@@ -252,12 +265,8 @@ class AuditEvent(Base):
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
     organization_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
     environment_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
-    actor_id: Mapped[UUID | None] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey("identities.id", ondelete="RESTRICT")
-    )
-    run_id: Mapped[UUID | None] = mapped_column(
-        PGUUID(as_uuid=True), ForeignKey("runs.id", ondelete="RESTRICT")
-    )
+    actor_id: Mapped[UUID | None] = mapped_column(PGUUID(as_uuid=True))
+    run_id: Mapped[UUID | None] = mapped_column(PGUUID(as_uuid=True))
     correlation_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
     event_type: Mapped[str] = mapped_column(String(128), nullable=False)
     outcome: Mapped[str] = mapped_column(String(16), nullable=False)

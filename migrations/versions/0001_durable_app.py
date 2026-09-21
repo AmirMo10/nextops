@@ -54,7 +54,10 @@ GRANT USAGE, CREATE ON SCHEMA public TO nextops_migrator;
 GRANT USAGE ON SCHEMA public TO nextops_app, nextops_support_ro;
 
 GRANT SELECT, INSERT ON organizations, environments, targets TO nextops_app;
-GRANT SELECT, INSERT, UPDATE ON identities, sessions, runs TO nextops_app;
+GRANT SELECT, INSERT ON identities, sessions, runs TO nextops_app;
+GRANT UPDATE (password_hash, credential_version, updated_at) ON identities TO nextops_app;
+GRANT UPDATE (revoked_at, last_seen_at) ON sessions TO nextops_app;
+GRANT UPDATE (status, result, error, updated_at) ON runs TO nextops_app;
 GRANT SELECT, INSERT, UPDATE, DELETE ON run_leases TO nextops_app;
 GRANT SELECT, INSERT ON audit_events TO nextops_app;
 GRANT SELECT ON organizations, environments, targets, identities, sessions, runs,
@@ -242,6 +245,7 @@ def upgrade() -> None:
         sa.UniqueConstraint(
             "organization_id", "actor_id", "idempotency_key", name="uq_runs_actor_idempotency"
         ),
+        sa.UniqueConstraint("id", "organization_id", "environment_id", name="uq_runs_id_scope"),
     )
     op.create_index(
         "ix_runs_scope_status_created",
@@ -293,8 +297,18 @@ def upgrade() -> None:
             name="fk_audit_events_environment_scope",
             ondelete="RESTRICT",
         ),
-        sa.ForeignKeyConstraint(["actor_id"], ["identities.id"], ondelete="RESTRICT"),
-        sa.ForeignKeyConstraint(["run_id"], ["runs.id"], ondelete="RESTRICT"),
+        sa.ForeignKeyConstraint(
+            ["actor_id", "organization_id", "environment_id"],
+            ["identities.id", "identities.organization_id", "identities.environment_id"],
+            name="fk_audit_events_actor_scope",
+            ondelete="RESTRICT",
+        ),
+        sa.ForeignKeyConstraint(
+            ["run_id", "organization_id", "environment_id"],
+            ["runs.id", "runs.organization_id", "runs.environment_id"],
+            name="fk_audit_events_run_scope",
+            ondelete="RESTRICT",
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index("ix_audit_events_correlation", "audit_events", ["correlation_id"], unique=False)

@@ -117,4 +117,8 @@ def test_baseline_migration_defines_roles_and_append_only_audit_guard() -> None:
     assert "nextops_support_ro" in migration
     assert "nextops_prevent_audit_mutation" in migration
     assert "GRANT SELECT, INSERT ON audit_events TO nextops_app" in migration
+    assert "GRANT UPDATE (password_hash, credential_version, updated_at)" in migration
+    assert "GRANT SELECT, INSERT, UPDATE ON identities" not in migration
+    assert "fk_audit_events_actor_scope" in migration
+    assert "fk_audit_events_run_scope" in migration
     assert "DROP ROLE" not in migration

@@ -96,6 +96,18 @@ def test_migration_upgrade_downgrade_and_role_grants(
         assert not connection.scalar(
             text("SELECT has_table_privilege('nextops_app', 'audit_events', 'UPDATE')")
         )
+        assert connection.scalar(
+            text(
+                "SELECT has_column_privilege('nextops_app', 'identities', "
+                "'password_hash', 'UPDATE')"
+            )
+        )
+        assert not connection.scalar(
+            text("SELECT has_column_privilege('nextops_app', 'identities', 'roles', 'UPDATE')")
+        )
+        assert not connection.scalar(
+            text("SELECT has_column_privilege('nextops_app', 'identities', 'scopes', 'UPDATE')")
+        )
 
     command.downgrade(alembic_config, "base")
     assert "runs" not in set(inspect(admin_engine).get_table_names())
