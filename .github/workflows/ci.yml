@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality and unit tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install locked environment
+        run: |
+          python -m pip install uv==0.12.17
+          uv sync --extra dev --frozen
+
+      - name: Check formatting and lint
+        run: |
+          uv run ruff format --check packages migrations tests scripts
+          uv run ruff check packages migrations tests scripts
+
+      - name: Check strict types
+        run: uv run mypy packages tests
+
+      - name: Run unit, contract, and API tests
+        run: uv run pytest -m "not integration" -q
+
+      - name: Validate documentation and deployment dossiers
+        env:
+          PYTHONUTF8: "1"
+        run: |
+          uv run python scripts/check_docs.py
+          uv run python scripts/check_deployment_dossiers.py
+
+      - name: Build the locked package
+        run: uv build --no-sources
+
+      - name: Audit locked Python dependencies
+        run: |
+          uv export --frozen --extra dev --no-emit-project --no-hashes --output-file audit-requirements.txt
+          uvx --from pip-audit==2.10.1 pip-audit --requirement audit-requirements.txt
+
+  postgres:
+    name: PostgreSQL integration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17.6-alpine@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
+        env:
+          POSTGRES_DB: nextops_test
+          POSTGRES_USER: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d nextops_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Check out reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install locked environment
+        run: |
+          python -m pip install uv==0.12.17
+          uv sync --extra dev --frozen
+
+      - name: Run all real PostgreSQL acceptance tests
+        env:
+          NEXTOPS_TEST_DATABASE_URL: postgresql+psycopg://postgres@localhost:5432/nextops_test
+        run: uv run pytest -m integration -q
+
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Check out full history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Install pinned open-source scanner
+        run: go install github.com/zricethezav/gitleaks/v8@v8.30.1
+
+      - name: Scan committed content
+        run: |
+          "$(go env GOPATH)/bin/gitleaks" git --redact --no-banner --verbose

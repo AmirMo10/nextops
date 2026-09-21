@@ -2,7 +2,7 @@
 
 [فارسی](../fa/ROADMAP.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
 
-**Status: sequence accepted on 2026-09-21; Phase 0 is complete and Stage 1A Increment 1 is tested locally.** No complete application stage or deployed service exists. The master specification, mandatory offline contract, owner-supplied hardware evidence and later Zabbix-first clarification govern this plan. Acceptance does not authorize provisioning, host changes or production access.
+**Status: sequence accepted on 2026-09-21; Phase 0 is complete and Stage 1A Increments 1–2 are tested in isolated CI.** No deployed service or complete Phase 1 flow exists. The master specification, mandatory offline contract, owner-supplied hardware evidence and later Zabbix-first clarification govern this plan. Acceptance does not authorize provisioning, host changes or production access.
 
 **First delivery remains Phase 1: a new question → authorized read-only Zabbix data → local CPU-generated answer → source/time references and audit, with Internet blocked.** Linux enrichment follows in Phase 2. The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
@@ -38,7 +38,7 @@ Counts cover one serving environment, not physical hosts or connector families. 
 | **1D — End-to-end answer** | Join the app, connector and model flow using the same three VMs | A new question returns a readable answer matching captured Zabbix facts with scope, timestamps and references. |
 | **1E — Offline acceptance** | Block Internet for the test workloads and fresh browser while preserving approved LAN routes; exercise startup, failure and bounded-load cases | Recorded ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 outcomes, including fresh local login and authorized cold-start/reboot checks. |
 
-Phase 0 and Stage 1A Increment 1 have the evidence recorded in [PROJECT_STATE](../PROJECT_STATE.md); every other increment remains not started/not tested unless a later evidence-backed entry says otherwise. VM creation order does not require completing every feature of the first VM before creating the next. Phase 1 cannot end with contracts alone, scaffolding, a model hello-world, raw JSON, cached answers or simulator-only results.
+Phase 0 and Stage 1A Increments 1–2 have the evidence recorded in [PROJECT_STATE](../PROJECT_STATE.md). Stage 1B Increment 3 is next; Stage 1A browser/deployment acceptance remains open and every later stage remains not started/not tested unless an evidence-backed entry says otherwise. VM creation order does not require completing every feature of the first VM before creating the next. Phase 1 cannot end with contracts alone, scaffolding, a model hello-world, raw JSON, cached answers or simulator-only results.
 
 Advanced RAG, direct Linux SSH, a full dashboard and the other ten connector families must not delay the first Zabbix status answer. Separate API connectivity, monitored-host state and monitoring-engine health. The model must not invent counts, live observations or missing self-monitoring data.
 

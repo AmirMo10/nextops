@@ -1,0 +1,6 @@
+# Reviewed false positive: deterministic idempotency-key fixture, not a credential.
+d3268e3a93ef6f6bde4ad590c1c2bb4559d532d5:tests/unit/test_contracts_and_policy.py:generic-api-key:70
+
+# Reviewed false positives: requirements prose about execution/verification outcomes.
+aca8ed11af2bf400b67e37c63c28f217866736c0:docs/requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md:generic-api-key:463
+392b8c2f044fae62fe019a950e71ec3a9a6e34b2:docs/requirements/NEXTOPS_MASTER_PROMPT.md:generic-api-key:463

@@ -2,6 +2,9 @@
 
 [فارسی](../fa/DEPLOYMENT_DOSSIERS.md) · [Index](INDEX.md) · [Server plan](SERVER_PLAN.md) · [Storage gate](../STORAGE_PLAN.md)
 
+For the exact first actions, provisioning order, read-only guest commands, and installation
+holds, use the [server start checklist](SERVER_START_CHECKLIST.md) before opening a change.
+
 **Status: deployer handoff contract, not an installer or deployment authorization.** The four human-readable YAML files under [`deploy/server-dependencies`](../../deploy/server-dependencies) collect the known sizing, proposed boundaries, dependencies, configuration paths, command templates, evidence requirements, and unresolved deployment inputs for the accepted initial profile. All runtime acceptance gates remain `not_run`.
 
 ## Files and ownership
@@ -77,7 +80,7 @@ A successful parse or schema check proves structure only. It does not verify pri
 
 ### `nextops-app`
 
-Stop before installation because the repository has no runnable API/UI, PostgreSQL migrations/roles, worker, installer, Compose stack, or systemd units yet. Stage 1A Increment 2 must supply and test these. Do not invent environment variables or expose PostgreSQL to compensate.
+Stop before installation. The repository now has a source-level API, PostgreSQL baseline/group roles, and durable fixture worker behavior, but no approved offline release, browser UI, production login-role delivery, reverse proxy, installer, Compose stack, systemd units, or tested backup/restore procedure. Do not turn CI commands into a production runbook, invent environment variables, or expose PostgreSQL to compensate.
 
 ### `nextops-ai`
 

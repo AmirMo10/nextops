@@ -4,6 +4,9 @@
 
 [English](../en/DEPLOYMENT_DOSSIERS.md) · [فهرست](INDEX.md) · [برنامهٔ سرورها](SERVER_PLAN.md) · [شرط ذخیره‌سازی](../STORAGE_PLAN.md)
 
+برای نخستین اقدام‌ها، ترتیب ساخت، فرمان‌های فقط‌خواندنی مهمان و توقف‌های نصب، پیش از باز
+کردن تغییر از [چک‌لیست شروع سرورها](SERVER_START_CHECKLIST.md) استفاده کنید.
+
 **وضعیت: قرارداد تحویل به مسئول استقرار؛ نه نصب‌کننده و نه مجوز استقرار.** چهار فایل YAML خوانا در مسیر [`deploy/server-dependencies`](../../deploy/server-dependencies) اندازه‌های معلوم، مرزهای پیشنهادی، وابستگی‌ها، مسیر تنظیمات، الگوهای فرمان، شاهدهای لازم و ورودی‌های حل‌نشدهٔ چیدمان پذیرفته‌شده را یک‌جا ثبت می‌کنند. همهٔ دروازه‌های پذیرش اجرایی همچنان `not_run` هستند.
 
 ## فایل‌ها و مسئولیت‌ها
@@ -79,7 +82,7 @@ python scripts/check_docs.py
 
 ### `nextops-app`
 
-پیش از نصب توقف کنید، زیرا هنوز API و UI اجرایی، migration و role پایگاه، worker، installer، Compose stack یا systemd unit در مخزن وجود ندارد. Increment 2 از 1A باید این‌ها را بسازد و بیازماید. برای جبران، environment variable ساختگی یا PostgreSQL شبکه‌ای نسازید.
+پیش از نصب توقف کنید. اکنون API در سطح source، migration و role گروهی PostgreSQL و رفتار worker با fixture وجود دارد، اما release آفلاین تأییدشده، UI مرورگر، تحویل login role تولید، reverse proxy، installer، Compose، systemd unit و backup/restore آزموده وجود ندارد. فرمان CI را runbook تولید نکنید و برای جبران environment variable ساختگی یا PostgreSQL شبکه‌ای نسازید.
 
 ### `nextops-ai`
 

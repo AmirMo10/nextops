@@ -86,7 +86,7 @@ software_dependencies:
     version: 0.1.0 source metadata; no production release artifact
     runtime_location: local
     required: true
-    status: contracts_and_policy_only_not_deployable
+    status: stage_1a_authenticated_api_and_durable_foundation_implemented_not_deployable
     lock_evidence: pyproject.toml and uv.lock
   - id: pydantic
     kind: python_dependency
@@ -97,11 +97,11 @@ software_dependencies:
     lock_evidence: uv.lock
   - id: fastapi-server-stack
     kind: application_runtime
-    version: null
+    version: FastAPI 0.141.1 / Uvicorn 0.53.0 in current lock
     runtime_location: local
     required: true
-    status: proposed_not_added_or_locked
-    lock_evidence: null
+    status: locked_and_ci_tested_for_source_slice_not_installed
+    lock_evidence: pyproject.toml and uv.lock
   - id: postgresql
     kind: database
     version: 16 proposed; maintained patch lock pending
@@ -111,11 +111,11 @@ software_dependencies:
     lock_evidence: null
   - id: sqlalchemy-alembic
     kind: database_client_and_migrations
-    version: null
+    version: SQLAlchemy 2.0.54 / Alembic 1.20.0 / Psycopg 3.3.6 in current lock
     runtime_location: local
     required: true
-    status: proposed_not_added_or_locked
-    lock_evidence: null
+    status: locked_and_tested_against_ephemeral_postgresql_17_6_not_installed
+    lock_evidence: pyproject.toml, uv.lock, migrations/versions/0001_durable_app.py, and CI
   - id: nginx
     kind: reverse_proxy
     version: null
@@ -177,7 +177,7 @@ artifacts:
     sha256: null
     license_record: null
     source_record: null
-    status: not_implemented
+    status: baseline_source_implemented_and_ci_tested_not_packaged_for_deployment
   - id: tls-public-chain
     purpose: Local trust chain and public certificate material; the private key is delivered separately
     install_path: /etc/nextops/tls
@@ -253,7 +253,7 @@ secret_references:
     delivery_requirement: Boundary-local protected delivery; no shared superuser or plaintext repository
       environment file
     rotation_requirement: Test rotation without losing durable work or audit access
-    status: roles_and_delivery_not_implemented
+    status: restricted_group_roles_implemented_login_roles_and_delivery_not_selected
   - id: app-tls-private-key-ref
     consumer: nginx
     reference_only: true
@@ -469,11 +469,12 @@ commands:
     mode: guarded_template
     requires_authorization: false
     requires_inputs: []
-    command: uv sync --extra dev --frozen && uv run --extra dev ruff check packages tests && uv run --extra
-      dev mypy packages tests && uv run --extra dev pytest
-    purpose: Validate the only currently implemented Stage 1A contracts/policy slice.
-    expected_result: Frozen install, lint, strict types, and tests pass; this still does not produce a
-      deployable application.
+    command: uv sync --extra dev --frozen && uv run ruff format --check packages migrations tests scripts
+      && uv run ruff check packages migrations tests scripts && uv run mypy packages tests && uv run pytest
+    purpose: Validate the current Stage 1A contracts, policy, identity, PostgreSQL, durable-run, audit,
+      and authenticated API source slice.
+    expected_result: Frozen install, format/lint, strict types, unit/API tests, and real PostgreSQL tests
+      pass; this still does not produce a deployable release.
     failure_rule: Do not build or promote an application release from a failing checkout.
   - id: release-integrity-check
     phase: artifact_import
@@ -505,8 +506,9 @@ commands:
     purpose: Install the application, database roles/migrations, system units or Compose stack, and reverse
       proxy.
     expected_result: A reproducible clean offline install from pinned artifacts.
-    failure_rule: 'Blocked: no application installer, FastAPI stack, migrations, UI build, Compose definition,
-      or systemd units exist yet. Do not invent commands.'
+    failure_rule: 'Blocked: no approved offline release/wheel set, installer, UI build, reverse-proxy configuration,
+      production database lock, Compose definition, systemd units, or tested backup/restore bundle exists.
+      Do not invent commands.'
   - id: start-and-readiness
     phase: start
     shell: bash
@@ -700,8 +702,11 @@ acceptance_gates:
     status: not_run
     evidence_reference: null
 known_limitations:
-  - The repository currently contains Stage 1A contracts/policy only; there is no deployable API, UI,
-    database schema, worker, installer, Compose stack, or systemd unit.
+  - The repository contains a Stage 1A authenticated API, database baseline, identity flow, durable run/lease
+    service, audit guard, and fixture result. It still has no deployable offline release, browser UI, target
+    connector, model, installer, reverse proxy, Compose stack, or systemd unit.
+  - CI exercises PostgreSQL 17.6, while PostgreSQL 16 remains only the dossier proposal. Select and test one
+    maintained production patch before server installation; do not infer a production lock from CI.
   - The 200-GiB disk has no approved partition or growth allocation and must not be formatted from this
     dossier.
   - Exact internal ports, certificate identities, secret mechanism, database roles, backup target, and

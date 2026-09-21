@@ -1,6 +1,6 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 1 implemented and tested locally; per-server deployment dossiers converted to human-readable YAML. This is not a deployment report.
+Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 2 implemented and tested in isolated CI; Stage 1B is next. This is not a deployment report.
 
 ## English
 
@@ -14,7 +14,7 @@ The first deliverable is a new Persian/English question about authorized Zabbix 
 
 The paired [Phase 0 report](en/PHASE_0_REPORT.md) and [Persian report](fa/PHASE_0_REPORT.md) record repository evidence, the accepted four-VM architecture, trust boundaries, module and data contracts, CPU benchmark plan, resource gate, connector roadmap, test plan, blockers and the Stage 1A increments. The repository-grounded [threat model](requirements/nextops-threat-model.md) records TM-001–TM-010. On 2026-09-21 the owner accepted Phase 0 and ADRs 0001–0006, confirming one organization initially, small initial scale with future growth, and the dedicated Zabbix path. Every infrastructure authorization remains separate and pending.
 
-Stage 1A Increment 1 is implemented on the local development branch: Python 3.12 metadata, generated `uv.lock`, strict immutable actor/target/request/evidence/error contracts, trusted risk classes, and a deterministic one-organization/environment/target/action/scope policy. Authenticated actor context is separate from untrusted request/model intent. The policy denies unknown values and all non-`READ_ONLY` risk classes; no role, including admin, bypasses it. There is no runtime API, database, connector, credential, model, or network listener yet.
+Stage 1A Increments 1 and 2 are implemented in repository source. In addition to the locked Python project, strict contracts and deterministic denial policy, the code now has a local FastAPI surface, Argon2id identity bootstrap/login/recovery, hashed opaque sessions, PostgreSQL/Alembic state, idempotent durable runs, expiring worker leases, append-restricted audit, and an explicit bilingual fixture result. Actor organization, environment, roles and scopes are derived from server-side session state. There is still no browser UI, deployable offline release/service definition, target connector or credential, model runtime, or production listener.
 
 ### Supplied hardware and storage evidence
 
@@ -47,14 +47,14 @@ The versioned [deployment-dossier specification](requirements/SERVER_DEPENDENCY_
 
 Each dossier includes authorization state, source records, VM sizing, service identities, software/artifact locks, configuration paths, reference-only secrets, network/storage boundaries, dependency order, read-only or guarded command templates, explicit blocked commands, observability, backup/rollback, required private inputs, acceptance gates, and known limitations. Exact known resources reconcile to 40 vCPU / 184 GiB RAM / 980 GiB VMDKs, and the Zabbix mount/LVM entries reconcile to the 200-GiB proposal. The owner-requested JSON-to-YAML conversion preserved every data value. The repository validator safely parses the four YAML files, checks schema 1.0.0 and the approved server IDs, rejects stale JSON dossier copies, and verifies the combined resource totals.
 
-These records expose rather than hide the deployment blockers: no application/gateway/connector installer or service definitions exist; the model/runtime/package locks are unresolved; app/AI/connector disk layouts are not designed; the actual Zabbix disk and private networks/endpoints/credentials are unknown; and all runtime acceptance evidence remains `not_run`. No VM, disk, package, account, route, token, certificate, database, model, service, backup, restore, or target was changed or accessed while creating them.
+These records expose rather than hide the deployment blockers: the application source and migration now exist, but no approved offline release, installer, reverse proxy, production service definition, browser UI, or tested backup/restore bundle exists. The model/runtime/artifact locks are unresolved; app/AI/connector disk layouts are not designed; the actual Zabbix disk and private networks/endpoints/credentials are unknown; and server acceptance evidence remains `not_run`. No VM, disk, package, account, route, token, certificate, production database, model, service, backup, restore, or target was changed or accessed while creating them.
 
 ### Milestones and actual evidence status
 
 | Stage | Required result | Evidence status for this update |
 |---|---|---|
 | 0 | Architecture/gap/threat report and appropriate approvals | Owner accepted architecture/roadmap and ADRs on 2026-09-21; infrastructure preflight/authorization remains separate |
-| 1A | Local identity, policy, database, durable work and audit | Increment 1 contracts/policy tested locally; identity bootstrap, PostgreSQL, durable runs/audit and API/UI remain |
+| 1A | Local identity, policy, database, durable work and audit | Increments 1–2 source-complete for contracts/policy, identity, PostgreSQL, durable runs/leases, audit and API fixture; 44 tests include 5 real-PostgreSQL cases; browser UI and deployment acceptance remain |
 | 1B | New local CPU answers and offline model cold load | No model run or benchmark performed here |
 | Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | No VM, installation, account or API call performed here |
 | 1C | Real bounded read-only evidence with correct counts | Live connector tests not run here |
@@ -65,11 +65,11 @@ The user may perform provisioning independently; verify their actual state befor
 
 ### Scope of this publication and next action
 
-This state records Phase 0 acceptance, the first Stage 1A code increment, and the schema-validated per-server deployer handoff while preserving the source requirements, archived prompt, diagrams and proposed Zabbix profile. It is not a host vulnerability audit, compatibility lock, or provisioning record.
+This state records Phase 0 acceptance, two Stage 1A code increments, isolated CI evidence, and the schema-validated per-server deployer handoff while preserving the source requirements, archived prompt, diagrams and proposed Zabbix profile. It is not a host vulnerability audit, compatibility lock, or provisioning record.
 
-The Stage 1A slice uses Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, Ruff 0.16.8, mypy 1.20.2, pytest 9.1.1, and a generated `uv.lock`. Eighteen unit cases pass. `ruff check packages tests`, strict `mypy packages tests`, `pytest`, `uv lock --check`, a clean `uv sync --extra dev --frozen`, `uv pip check`, and `uv audit --frozen` passed; the audit reported no known vulnerabilities. Documentation validation and `git diff --check` are part of the final repository gate. No browser/runtime service test passed, and no VM, disk, network, ESXi patch, model, database or monitoring service was modified.
+The Stage 1A slice uses Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2, and pytest 9.1.1 with a generated `uv.lock`. CI runs 39 unit/API/schema cases plus 5 integration cases against ephemeral PostgreSQL 17.6. Format/lint, strict types, documentation and dossier validation, package build, dependency audit, migration upgrade/downgrade, restricted grants, identity/recovery, idempotency, lease recovery, append-only audit, rollback behavior, and full-history secret scanning are required merge gates. CI PostgreSQL 17.6 is test evidence, not the production version selection. No browser test or server acceptance ran, and no VM, disk, network, ESXi patch, model, production database, or monitoring service was modified.
 
-The next checkpoint is Stage 1A Increment 2 in [NEXT_TASK](NEXT_TASK.md): local identity bootstrap/recovery, real isolated PostgreSQL migrations and roles, durable idempotent runs, leases, append-restricted audit, minimal authenticated API, and one bilingual fixture result. Phase 0 approval does not grant provisioning or target access. Retain deterministic policy, scoped credential handling, no external AI, local assets/login/keys/certificates, independent backups and host-outage limits. Repo protection/CI/private vulnerability reporting and a software license are not asserted to be configured.
+The next code checkpoint is Stage 1B Increment 3 in [NEXT_TASK](NEXT_TASK.md): select reviewed CPU runtime/model artifacts, implement the authenticated `LLMProvider` boundary and bounded inference service, and prove fresh Persian/English generation from cold local artifacts with Internet blocked. Stage 1A deployment work—browser UI, offline release, service units, reverse proxy, production PostgreSQL lock, backup/restore and VM acceptance—remains open and may proceed only with its own authorization. Phase 0 approval does not grant provisioning or target access. Repo branch protection/private vulnerability reporting and a software license are not asserted to be configured.
 
 ## فارسی
 
@@ -83,7 +83,7 @@ remote بررسی‌شدهٔ مستقیم Git برابر `Omid-NextAI/nextops` �
 
 [گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md) و [مدل تهدید](requirements/nextops-threat-model.md) یافتهٔ مخزن، معماری چهارماشینی پذیرفته‌شده، مرز اعتماد، قرارداد ماژول و داده، برنامهٔ سنجش CPU، بودجه، نقشهٔ اتصال، آزمون و گام‌های 1A را ثبت می‌کنند. مالک در ۲۱ سپتامبر ۲۰۲۶ مرحلهٔ صفر و ADRهای 0001 تا 0006 را با تک‌سازمانی بودن فعلی، مقیاس کوچک اولیه با رشد آینده و Zabbix مستقل پذیرفت. همهٔ مجوزهای زیرساخت جدا و در انتظار باقی می‌مانند.
 
-Increment 1 از 1A در شاخهٔ محلی پیاده شده است: metadata برای Python 3.12، `uv.lock` تولیدشده، قراردادهای سخت‌گیر و ثابت actor، هدف، درخواست، شاهد و خطا، کلاس ریسک معتبر و سیاست قطعی سازمان/محیط/هدف/action/scope. Actor احرازشده از intent نامطمئن کاربر یا مدل جداست. مقدار ناشناخته و همهٔ کلاس‌های غیر `READ_ONLY` رد می‌شوند و admin میان‌بُر ندارد. هنوز API اجرایی، پایگاه، connector، credential، مدل یا listener شبکه وجود ندارد.
+Incrementهای 1 و 2 از 1A در کد مخزن پیاده شده‌اند. علاوه بر پروژهٔ Python قفل‌شده، قراردادهای سخت‌گیر و سیاست رد قطعی، اکنون FastAPI محلی، bootstrap/login/recovery با Argon2id، session غیرشفافِ hash‌شده، PostgreSQL/Alembic، run ماندگار و idempotent، lease منقضی‌شونده، audit محدود به append و نتیجهٔ fixture دوزبانه وجود دارد. سازمان، محیط، role و scope از session سمت سرور ساخته می‌شوند. هنوز UI مرورگر، release آفلاین قابل‌استقرار، service definition، connector یا credential مقصد، مدل یا listener تولید وجود ندارد.
 
 ### شواهد ارسالی سخت‌افزار و دیسک
 
@@ -109,18 +109,18 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است.
 
 هر پرونده وضعیت مجوز، منبع، منابع VM، هویت سرویس، قفل نرم‌افزار و artifact، مسیر تنظیمات، secret reference، مرز شبکه و storage، ترتیب سرویس، فرمان فقط‌خواندنی یا الگوی محافظت‌شده، فرمان مسدود، مشاهده‌پذیری، backup و rollback، ورودی لازم، دروازهٔ پذیرش و محدودیت را دارد. مقدارهای معلوم با مجموع ۴۰ vCPU، حافظهٔ ۱۸۴ GiB و دیسک ۹۸۰ GiB سازگارند و mountهای Zabbix با طرح ۲۰۰ GiB تطبیق دارند. تبدیل درخواستی JSON به YAML همهٔ مقدارها را بدون اتلاف حفظ کرد. اعتبارسنج مخزن چهار فایل YAML را ایمن parse می‌کند، schema نسخهٔ ۱.۰.۰ و شناسه‌های پذیرفته‌شده را می‌سنجد، باقی‌ماندن نسخهٔ قدیمی JSON را رد می‌کند و مجموع منابع را تطبیق می‌دهد.
 
-این پرونده‌ها مانع را پنهان نمی‌کنند: installer و service definition برای برنامه و gateway و connector وجود ندارد؛ قفل مدل و runtime و package حل نشده؛ layout دیسک app و AI و connector طراحی نشده؛ دیسک واقعی زبیکس و شبکه و endpoint و credential خصوصی معلوم نیست؛ و همهٔ شاهدهای اجرایی `not_run` هستند. هنگام ساخت پرونده‌ها هیچ VM، دیسک، بسته، حساب، route، token، گواهی، پایگاه، مدل، سرویس، backup، restore یا مقصدی تغییر یا استفاده نشد.
+این پرونده‌ها مانع را پنهان نمی‌کنند: کد برنامه و migration ساخته شده، اما release آفلاین تأییدشده، installer، reverse proxy، service definition تولید، UI مرورگر و بستهٔ backup/restore آزموده وجود ندارد. قفل model/runtime/artifact حل نشده، layout دیسک app و AI و connector طراحی نشده، دیسک واقعی زبیکس و شبکه و endpoint و credential خصوصی معلوم نیست و شاهد پذیرش سرور `not_run` است. هیچ VM، دیسک، بسته، حساب، route، token، گواهی، پایگاه تولید، مدل، سرویس، backup، restore یا مقصدی تغییر یا استفاده نشد.
 
 ### گام‌ها و وضعیت شواهد
 
-معماری، نقشه و ADRهای مرحلهٔ صفر پذیرفته شده‌اند؛ بررسی خصوصی تازهٔ میزبان، مجوز دسترسی و ظرفیت همچنان پیش از زیرساخت لازم‌اند. Increment 1 از 1A پیاده و آزموده شده، اما هویت ماندگار، پایگاه، audit و API/UI آن باقی است. مدل و سنجش 1B اجرا نشده؛ VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E آزموده نشده‌اند.
+معماری، نقشه و ADRهای مرحلهٔ صفر پذیرفته شده‌اند؛ بررسی خصوصی تازهٔ میزبان، مجوز دسترسی و ظرفیت همچنان پیش از زیرساخت لازم‌اند. Incrementهای 1 و 2 از 1A برای قرارداد، هویت، PostgreSQL، run/lease، audit و API fixture در CI جدا آزموده شده‌اند؛ UI مرورگر و پذیرش استقرار باقی است. مدل و سنجش 1B اجرا نشده؛ VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E آزموده نشده‌اند.
 
 ممکن است مالک مستقل ماشین ساخته باشد؛ پیش از ادعای وجود یا نبود آن، وضعیت واقعی بررسی شود. تصویر تنظیمات VM به معنای قبولی مسیر برنامه نیست. ادامه از نخستین گام ناتمامِ دارای شاهد و مجوز باشد، نه پاک کردن پیشرفت.
 
 ### دامنهٔ انتشار و کار بعدی
 
-این وضعیت پذیرش مرحلهٔ صفر، نخستین برش کد 1A و پروندهٔ معتبرشدهٔ تحویل هر سرور را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و طرح Zabbix حفظ شده‌اند. ممیزی امنیت میزبان، تثبیت سازگاری یا استقرار انجام نشده است.
+این وضعیت پذیرش مرحلهٔ صفر، دو برش کد 1A، شاهد CI جدا و پروندهٔ معتبرشدهٔ تحویل هر سرور را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و طرح Zabbix حفظ شده‌اند. ممیزی امنیت میزبان، تثبیت سازگاری یا استقرار انجام نشده است.
 
-برش 1A با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، Ruff 0.16.8، mypy 1.20.2، pytest 9.1.1 و `uv.lock` تولیدشده آزموده شد. ۱۸ آزمون unit و فرمان‌های Ruff، mypy سخت‌گیرانه، pytest، بررسی lock، نصب پاک قفل‌شده، `uv pip check` و audit وابستگی قبول شدند و audit آسیب‌پذیری شناخته‌شده‌ای گزارش نکرد. بررسی مستندات و `git diff --check` در دروازهٔ نهایی اجرا می‌شوند. آزمون سرویس یا مرورگر انجام نشده و هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه یا سرویس پایش تغییر نکرده است.
+برش 1A با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شد. CI تعداد ۳۹ آزمون unit/API/schema و ۵ آزمون integration را روی PostgreSQL موقت 17.6 اجرا می‌کند و format/lint/type، سند و dossier، build، audit وابستگی، migration بالا/پایین، grant محدود، هویت و recovery، idempotency، lease، audit append-only، rollback و اسکن کل تاریخچه برای secret را شرط merge می‌داند. PostgreSQL 17.6 شاهد CI است، نه قفل نسخهٔ تولید. آزمون مرورگر یا پذیرش سرور انجام نشد و هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه تولید یا سرویس پایش تغییر نکرد.
 
-نقطهٔ بعد Increment 2 از 1A در [کار بعدی](NEXT_TASK.md) است: bootstrap و recovery هویت محلی، migration و role واقعی PostgreSQL در محیط جدا، run و lease ماندگار، audit محدود، API حداقلی احرازشده و یک نتیجهٔ fixture دوزبانه. پذیرش مرحلهٔ صفر مجوز ساخت یا دسترسی مقصد نیست. سیاست قطعی، credential محدود، منع AI خارجی، دارایی و ورود و کلید و گواهی محلی، پشتیبان مستقل و محدودیت خرابی میزبان حفظ شوند. حفاظت مخزن، CI، گزارش خصوصی آسیب‌پذیری و مجوز نرم‌افزاری تنظیم‌شده فرض نشده‌اند.
+نقطهٔ بعد Increment 3 و Stage 1B در [کار بعدی](NEXT_TASK.md) است: انتخاب artifact بازبینی‌شدهٔ runtime/model برای CPU، مرز احرازهویت‌شدهٔ `LLMProvider`، محدودیت منابع و اثبات تولید تازهٔ فارسی و انگلیسی از فایل محلی سرد با اینترنت قطع. کار استقرار 1A شامل UI مرورگر، release آفلاین، unit سرویس، reverse proxy، قفل PostgreSQL تولید و backup/restore همچنان باز و نیازمند مجوز جداست. پذیرش مرحلهٔ صفر مجوز ساخت یا دسترسی مقصد نیست. حفاظت شاخه، گزارش خصوصی آسیب‌پذیری و مجوز نرم‌افزاری تنظیم‌شده فرض نشده‌اند.
