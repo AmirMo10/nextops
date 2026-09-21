@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INSTALL.md) · [Index](INDEX.md)
 
-**Current capability: clone and review documentation only.** The repository has no application installer, dependency lock, migration runner, Compose stack or systemd service yet. The future steps below are an implementation checklist, not commands that currently work.
+**Current capability: clone, review documentation, and run the local Stage 1A contract/policy checks.** The repository now has `pyproject.toml` and generated `uv.lock`, but no runnable application installer, migration runner, Compose stack, connector, AI service, or systemd unit. Host preparation steps below remain an implementation checklist, not authorization or commands for a deployed product.
 
 ## Available now
 
@@ -10,6 +10,8 @@
 git clone https://github.com/Omid-NextAI/nextops.git
 cd nextops
 git status --short
+uv sync --extra dev --frozen
+uv run --extra dev pytest
 ```
 
 Read the master specification, architecture, security, CPU plan and next task before changing the host. Use an authenticated administrative connection approved by the owner; do not post SSH keys or passwords in GitHub issues.

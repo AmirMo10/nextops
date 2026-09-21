@@ -1,10 +1,10 @@
 # NextOps threat model
 
-Status: Phase 0 proposal, pending owner acceptance and implementation evidence. Updated: 2026-09-20.
+Status: Phase 0 threat model accepted by the owner on 2026-09-21; implementation evidence remains incremental.
 
 ## Executive summary
 
-NextOps is currently a documentation-only repository, so every runtime control below is proposed rather than implemented. The highest-risk future boundaries are local identity and scope enforcement, isolation of the Zabbix credential inside the connector runner, prevention of target substitution and prompt injection, integrity of offline release/model bundles, and durable audit behavior. The initial deployment is one organization on an internal LAN/VPN with no intended public ingress, but its infrastructure evidence and credentials are sensitive. A future multi-organization mode must not reuse the initial single-organization authorization assumptions without a separate isolation design and test gate.
+NextOps now has the first Stage 1A contract/policy slice, but no runnable application or infrastructure integration. Immutable boundary contracts and deterministic denial tests are implemented locally; identity persistence, audit, PostgreSQL, the API/UI, connector isolation, credentials, model execution, and deployment controls remain proposed. The highest-risk future boundaries are local identity and scope enforcement, isolation of the Zabbix credential inside the connector runner, prevention of target substitution and prompt injection, integrity of offline release/model bundles, and durable audit behavior. The initial deployment is one organization on an internal LAN/VPN with no intended public ingress, but its infrastructure evidence and credentials are sensitive. A future multi-organization mode must not reuse the initial single-organization authorization assumptions without a separate isolation design and test gate.
 
 ## Scope and assumptions
 
@@ -13,7 +13,7 @@ NextOps is currently a documentation-only repository, so every runtime control b
 - The owner confirmed one organization initially, internal growth later, a small initial workload, and the dedicated `zabbix-server` path.
 - Assumption: intended user ingress is restricted to an approved internal LAN or VPN. Public Internet ingress is out of scope unless separately designed and approved.
 - Assumption: Phase 1 has no infrastructure mutation capability. Read-only requests still require authentication, authorization, budgets, evidence scoping, and audit.
-- Current implementation reality: there are no application entrypoints, dependency manifests, migrations, deployment definitions, CI workflows, or executable connector implementations in the repository.
+- Current implementation reality: `pyproject.toml`, generated `uv.lock`, typed contracts, deterministic policy, and unit tests exist. There are no application entrypoints, migrations, deployment definitions, CI workflows, operational credentials, or executable connector implementations.
 
 Open questions that affect risk ranking:
 
@@ -160,7 +160,7 @@ Ranking depends most on the internal-only ingress assumption, final Zabbix token
 | `docs/en/DIAGRAMS.md` | Proposed deployment, sequence, approval, data, CPU, and release flows | TM-001–TM-010 |
 | `docs/STORAGE_PLAN.md` | Capacity, low-space behavior, snapshots, and recovery workspace | TM-006, TM-008 |
 | `.github/` | Current review metadata and future CI/release trust boundary | TM-007 |
-| `scripts/check_docs.py` | The only executable project file; currently documentation-only and network-free | TM-007 |
+| `scripts/check_docs.py`, `packages/nextops`, `tests/unit` | Network-free documentation checks plus the local typed contract/policy unit slice; no runtime service or connector | TM-001, TM-002, TM-007 |
 
 ## Notes on use
 

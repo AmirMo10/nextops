@@ -2,15 +2,15 @@
 
 [فارسی](../fa/ROADMAP.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
 
-**Status: proposed sequencing; no software phase is complete. Updated 2026-09-20.** The master specification, mandatory offline contract, owner-supplied hardware evidence and later Zabbix-first clarification govern this plan. Publishing documentation does not authorize provisioning, host changes or production access.
+**Status: sequence accepted on 2026-09-21; Phase 0 is complete and Stage 1A Increment 1 is tested locally.** No complete application stage or deployed service exists. The master specification, mandatory offline contract, owner-supplied hardware evidence and later Zabbix-first clarification govern this plan. Acceptance does not authorize provisioning, host changes or production access.
 
 **First delivery remains Phase 1: a new question → authorized read-only Zabbix data → local CPU-generated answer → source/time references and audit, with Internet blocked.** Linux enrichment follows in Phase 2. The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
 ## Create these VMs first
 
-After Phase 0 approval, create **`nextops-app` → `nextops-ai` → `nextops-connectors-ro`**. Their proposed allocations are respectively **8/32/200**, **24/128/500** and **4/8/80**, expressed as vCPU / RAM GiB / disk GiB. Total: **3 VMs, 36 vCPU, 168 GiB RAM and 780 GiB disk**. PostgreSQL initially runs as a separate restricted service inside the app VM. Do not create the dedicated database or write-execution VM yet.
+After separate provisioning authorization, create **`nextops-app` → `nextops-ai` → `nextops-connectors-ro`**. Their proposed allocations are respectively **8/32/200**, **24/128/500** and **4/8/80**, expressed as vCPU / RAM GiB / disk GiB. Total: **3 VMs, 36 vCPU, 168 GiB RAM and 780 GiB disk**. PostgreSQL initially runs as a separate restricted service inside the app VM. Do not create the dedicated database or write-execution VM yet.
 
-The [startup guide](START_HERE.md) separates VM creation, software implementation and service restart order. Reuse existing LAN Zabbix; if none exists, add one approved small lab VM before 1C. With that optional lab the total becomes 4 VMs / 40 vCPU / 176 GiB RAM / 880 GiB disk. These are planning budgets, not free-capacity measurements or production Zabbix sizing.
+The [startup guide](START_HERE.md) separates VM creation, software implementation and service restart order. Reuse a suitable authorized LAN Zabbix when available. For the selected new-server path, prepare the dedicated 4-vCPU / 16-GiB / 200-GiB `zabbix-server` before 1C. The combined initial profile is 4 VMs / 40 vCPU / 184 GiB RAM / 980 GiB disk; do not add the older small lab as well. These are planning budgets, not free-capacity measurements or a measured monitoring capacity claim.
 
 ## Overall phases
 
@@ -38,7 +38,7 @@ Counts cover one serving environment, not physical hosts or connector families. 
 | **1D — End-to-end answer** | Join the app, connector and model flow using the same three VMs | A new question returns a readable answer matching captured Zabbix facts with scope, timestamps and references. |
 | **1E — Offline acceptance** | Block Internet for the test workloads and fresh browser while preserving approved LAN routes; exercise startup, failure and bounded-load cases | Recorded ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 outcomes, including fresh local login and authorized cold-start/reboot checks. |
 
-All stages are **NOT STARTED / NOT TESTED** unless a later evidence-backed project-state entry records otherwise. VM creation order does not require completing every feature of the first VM before creating the next. Implementation can start with a small contract increment, but Phase 1 cannot end with scaffolding, a model hello-world, raw JSON, cached answers or simulator-only results.
+Phase 0 and Stage 1A Increment 1 have the evidence recorded in [PROJECT_STATE](../PROJECT_STATE.md); every other increment remains not started/not tested unless a later evidence-backed entry says otherwise. VM creation order does not require completing every feature of the first VM before creating the next. Phase 1 cannot end with contracts alone, scaffolding, a model hello-world, raw JSON, cached answers or simulator-only results.
 
 Advanced RAG, direct Linux SSH, a full dashboard and the other ten connector families must not delay the first Zabbix status answer. Separate API connectivity, monitored-host state and monitoring-engine health. The model must not invent counts, live observations or missing self-monitoring data.
 

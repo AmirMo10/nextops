@@ -1,18 +1,18 @@
 # Original-requirement traceability / ردیابی نیازهای اولیه
 
-Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 original sections are retained. Paths below are **planned implementation locations**, not existing code. `P` = implementation planned; `D` = documentation drafted, implementation still unvalidated. Phase numbers follow the revised roadmap, not the original fourteen-phase order.
+Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 original sections are retained. Paths below are planned or now-started implementation locations. `P` = planned; `D` = documentation drafted; `A` = owner-accepted documentation gate, not runtime implementation; `I` = a tested implementation slice exists but the full requirement is incomplete. Phase numbers follow the revised roadmap, not the original fourteen-phase order.
 
-منبع: پیوست اولیهٔ پرامپت. هر ۵۱ بخش حفظ شده است. مسیرهای زیر **محل پیشنهادی پیاده‌سازی** هستند، نه کد موجود. `P` یعنی پیاده‌سازی برنامه‌ریزی‌شده و `D` یعنی پیش‌نویس مستندات آماده، بدون اعتبارسنجی برنامه. شمارهٔ مرحله بر اساس نقشهٔ راه جدید است.
+منبع: پیوست اولیهٔ پرامپت. هر ۵۱ بخش حفظ شده است. مسیرها محل برنامه‌ریزی‌شده یا شروع‌شده‌اند. `P` یعنی برنامه‌ریزی‌شده، `D` یعنی مستندات آماده، `A` یعنی دروازهٔ مستندات با پذیرش مالک و بدون ادعای runtime، و `I` یعنی یک برش پیاده‌سازی آزموده وجود دارد ولی نیاز کامل نشده است. شمارهٔ مرحله بر اساس نقشهٔ راه جدید است.
 
 | Original | Requirement / نیاز | Planned owner/location | Phase | Acceptance evidence / شاهد پذیرش | Status |
 |---|---|---|---|---|---|
-| 1 | Inspect before changes / بررسی پیش از تغییر | `docs/en/PHASE_0_REPORT.md`, `docs/fa/PHASE_0_REPORT.md` | 0 | Repository/host report; preserve dirty work / گزارش و حفظ تغییرات | D |
+| 1 | Inspect before changes / بررسی پیش از تغییر | `docs/en/PHASE_0_REPORT.md`, `docs/fa/PHASE_0_REPORT.md` | 0 | Owner-accepted repository report; private live preflight remains / گزارش پذیرفته‌شده؛ بررسی خصوصی باقی است | A |
 | 2 | Product objective / هدف محصول | `apps/api`, `application` | 2–8 | Evidence-linked end-to-end flow / جریان کامل مستند | P |
 | 3 | Persian/English / فارسی و انگلیسی | `localization`, `apps/web` | 1–8 | Native wording and RTL/LTR tests / آزمون زبان و جهت | P |
-| 4 | Core architecture / معماری اصلی | `domain`, `application`, `infrastructure` | 0–1 | Reviewed boundaries / بازبینی مرزها | D |
+| 4 | Core architecture / معماری اصلی | `packages/nextops/domain`, `contracts`, `policy`; future `application`, `infrastructure` | 0–1 | Accepted boundaries plus tested contract/policy slice / مرز پذیرفته و برش آزموده | I |
 | 5 | Independent integrations / اتصال مستقل | `connectors` | 2–5 | Eleven versioned capability records / پروندهٔ یازده اتصال | P |
 | 6 | Central MCP gateway / درگاه مرکزی | `apps/mcp_gateway` | 1–2 | Auth, routing, limits, failure isolation / هویت و محدودیت و جداسازی | P |
-| 7 | RBAC / نقش و دسترسی | `policy` | 1 | Deny-by-default scoped tests / آزمون رد پیش‌فرض | P |
+| 7 | RBAC / نقش و دسترسی | `packages/nextops/policy` | 1 | Deny-by-default organization/environment/target/action/scope tests; durable identity remains / آزمون دامنه؛ هویت ماندگار باقی است | I |
 | 8 | Approval / تأیید عملیات | `application`, `policy` | 1,7 | Exact digest, replay and expiry tests / هش دقیق و انقضا و بازپخش | P |
 | 9 | Secrets / اطلاعات محرمانه | `infrastructure` | 1 | Boundary-local credentials, no leaks / مرز اطلاعات ورود و عدم نشت | P |
 | 10 | Audit / ممیزی | `infrastructure`, `observability` | 1 | Durable sanitized decisions/effects / ثبت ماندگار و پالایش‌شده | P |
@@ -37,11 +37,11 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 29 | API / رابط برنامه | `apps/api`, `contracts` | 1–2 | Authenticated versioned routes / مسیر نسخه‌دار و دارای هویت | P |
 | 30 | UI / رابط کاربری | `apps/web` | 2–8 | Operations views, summaries and accessibility / نماهای عملیات و دسترس‌پذیری | P |
 | 31 | Configuration / پیکربندی | `config` | 1 | Typed external settings, no secrets / تنظیمات معتبر و بدون رمز | P |
-| 32 | Inventory / موجودی تجهیزات | `domain`, `infrastructure` | 1–2 | Stable scoped targets, ambiguity handling / مقصد ثابت و رفع ابهام | P |
+| 32 | Inventory / موجودی تجهیزات | `packages/nextops/contracts`, future `infrastructure` | 1–2 | Immutable scoped target contract and denial tests; inventory persistence remains / قرارداد هدف و رد؛ ماندگاری باقی است | I |
 | 33 | Health checks / بررسی سلامت | `apps`, `connectors` | 1–5 | Honest readiness/capability states / آمادگی و قابلیت واقعی | P |
-| 34 | Error handling / مدیریت خطا | `contracts`, `application` | 1–5 | Typed errors, bounded retries, isolation / خطای روشن و تکرار محدود | P |
+| 34 | Error handling / مدیریت خطا | `packages/nextops/contracts`, future `application` | 1–5 | Typed error contract exists; retry/isolation behavior remains / قرارداد خطا موجود؛ رفتار اجرا باقی است | I |
 | 35 | Observability / مشاهده‌پذیری | `observability` | 1,8 | Metrics/logs and audit distinction / تفکیک متریک و لاگ و ممیزی | P |
-| 36 | Testing / آزمون | `tests`, `evals` | 1–8 | Recorded unit/integration/security evidence / شاهد ثبت‌شدهٔ آزمون | P |
+| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 18 unit cases plus lint/type/lock/audit evidence; integration/evals remain / ۱۸ آزمون و کنترل؛ integration باقی است | I |
 | 37 | Docker / کانتینر | `deploy/compose` | 1,8 | Restricted clean install and offline test / نصب محدود و آفلاین | P |
 | 38 | Installation docs / مستندات نصب | `docs/en/INSTALL.md`, `docs/fa/INSTALL.md` | 0–8 | Guides drafted; clean-install commands pending / راهنما آماده، دستور آزموده در آینده | D |
 | 39 | Native Persian docs / مستندات فارسی طبیعی | `docs/fa`, `docs/en` | 0–8 | Paired guides and language review / همتای دو زبان و بازبینی | D |
@@ -51,12 +51,12 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 43 | README / معرفی پروژه | `README.md`, `README_FA.md` | 0–8 | Honest status and bilingual navigation / وضعیت واقعی و مسیر دو زبان | D |
 | 44 | Development rules / قواعد توسعه | `AGENTS.md`, `CONTRIBUTING.md` | 0–8 | Types, reviews, tests, no credential commits / نوع و بازبینی و آزمون | D |
 | 45 | Real MCP interface / پروتکل واقعی MCP | `contracts`, `connectors/base` | 1–2 | SDK/protocol conformance tests / آزمون انطباق | P |
-| 46 | Tool risk / ریسک ابزار | `policy` | 1 | Trusted risk classes, not model assignment / ریسک معتبر و مستقل از مدل | P |
+| 46 | Tool risk / ریسک ابزار | `packages/nextops/domain`, `packages/nextops/policy` | 1 | Trusted risk registry; request/model actor and risk fields rejected; all mutation classes denied / ریسک معتبر و رد تغییر | I |
 | 47 | Decision workflow / گردش تصمیم | `application` | 1–2 | Bounded persisted state machine / ماشین حالت محدود و ماندگار | P |
 | 48 | Self-verification / بررسی نتیجه | `application`, `connectors` | 2,7 | Fresh postconditions; unknown-outcome reconciliation / نتیجهٔ تازه و رفع ابهام | P |
 | 49 | Phased delivery / تحویل مرحله‌ای | `docs/en/ROADMAP.md`, `docs/fa/ROADMAP.md` | 0–8 | Revised gates, all original scope retained / معیار جدید و حفظ دامنه | D |
 | 50 | Phase completion / پایان مرحله | `docs/PROJECT_STATE.md`, `tests` | 0–8 | Implement/test/fix/document/commit evidence / شاهد ساخت و آزمون و ثبت | P |
-| 51 | First architecture report / گزارش معماری نخست | `docs/en/PHASE_0_REPORT.md`, `docs/fa/PHASE_0_REPORT.md` | 0 | Report drafted; owner approval required before implementation / گزارش آماده؛ تأیید پیش از ساخت لازم است | D |
+| 51 | First architecture report / گزارش معماری نخست | `docs/en/PHASE_0_REPORT.md`, `docs/fa/PHASE_0_REPORT.md` | 0 | Owner accepted on 2026-09-21; infrastructure authorization remains separate / پذیرش مالک؛ مجوز زیرساخت جداست | A |
 
 ## Explicit revisions / اصلاحات صریح
 

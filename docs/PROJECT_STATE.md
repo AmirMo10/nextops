@@ -1,6 +1,6 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-20 — Phase 0 architecture/gap/threat report drafted for owner acceptance. This is not a deployment report.
+Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 1 implemented and tested locally. This is not a deployment report.
 
 ## English
 
@@ -12,7 +12,9 @@ The active [master prompt v3.0](requirements/NEXTOPS_MASTER_PROMPT.md) and [v2 a
 
 The first deliverable is a new Persian/English question about authorized Zabbix status, answered by local CPU generation from actual evidence, with source times, scope and audit while Internet is blocked. Linux enrichment follows in Phase 2. Documentation publication does not complete a software phase or establish deployment approval.
 
-The paired [Phase 0 report](en/PHASE_0_REPORT.md) and [Persian report](fa/PHASE_0_REPORT.md) now record repository evidence, the four-VM proposal, trust boundaries, module and data contracts, CPU benchmark plan, resource gate, connector roadmap, test plan, blockers and the smallest Stage 1A change. The repository-grounded [threat model](requirements/nextops-threat-model.md) records TM-001–TM-010. The owner confirmed one organization initially, small initial scale with future growth, and the dedicated Zabbix path. Architecture acceptance and every infrastructure authorization remain pending.
+The paired [Phase 0 report](en/PHASE_0_REPORT.md) and [Persian report](fa/PHASE_0_REPORT.md) record repository evidence, the accepted four-VM architecture, trust boundaries, module and data contracts, CPU benchmark plan, resource gate, connector roadmap, test plan, blockers and the Stage 1A increments. The repository-grounded [threat model](requirements/nextops-threat-model.md) records TM-001–TM-010. On 2026-09-21 the owner accepted Phase 0 and ADRs 0001–0006, confirming one organization initially, small initial scale with future growth, and the dedicated Zabbix path. Every infrastructure authorization remains separate and pending.
+
+Stage 1A Increment 1 is implemented on the local development branch: Python 3.12 metadata, generated `uv.lock`, strict immutable actor/target/request/evidence/error contracts, trusted risk classes, and a deterministic one-organization/environment/target/action/scope policy. Authenticated actor context is separate from untrusted request/model intent. The policy denies unknown values and all non-`READ_ONLY` risk classes; no role, including admin, bypasses it. There is no runtime API, database, connector, credential, model, or network listener yet.
 
 ### Supplied hardware and storage evidence
 
@@ -43,8 +45,8 @@ The [new English guide](en/ZABBIX_SERVER.md) and [Persian guide](fa/ZABBIX_SERVE
 
 | Stage | Required result | Evidence status for this update |
 |---|---|---|
-| 0 | Architecture/gap/threat report and appropriate approvals | Report drafted and documentation checked; owner acceptance and private infrastructure preflight remain pending |
-| 1A | Local identity, policy, database, durable work and audit | Implementation and tests not verified here |
+| 0 | Architecture/gap/threat report and appropriate approvals | Owner accepted architecture/roadmap and ADRs on 2026-09-21; infrastructure preflight/authorization remains separate |
+| 1A | Local identity, policy, database, durable work and audit | Increment 1 contracts/policy tested locally; identity bootstrap, PostgreSQL, durable runs/audit and API/UI remain |
 | 1B | New local CPU answers and offline model cold load | No model run or benchmark performed here |
 | Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | No VM, installation, account or API call performed here |
 | 1C | Real bounded read-only evidence with correct counts | Live connector tests not run here |
@@ -55,11 +57,11 @@ The user may perform provisioning independently; verify their actual state befor
 
 ### Scope of this publication and next action
 
-This change adds the paired Phase 0 report and repository-grounded threat model, aligns the stale offline Phase-1 wording and traceability, and updates the documentation indexes, NEXT_TASK and this state record. Existing source requirements, archived prompt, diagrams and proposed Zabbix profile are preserved. This is not a host vulnerability audit, compatibility lock, or provisioning record.
+This change records Phase 0 acceptance and adds the first Stage 1A code increment while preserving the source requirements, archived prompt, diagrams and proposed Zabbix profile. It is not a host vulnerability audit, compatibility lock, or provisioning record.
 
-The local checkout was inspected at commit `41508444ff0b9408154fbe1b458f7e89a5428bf9`. With UTF-8 output enabled, `python scripts/check_docs.py` passed for 73 Markdown files and 23 language pairs, and `git diff --check` passed at the reviewed baseline. No browser renderer or runtime test passed. No VM, disk, network, ESXi patch, model, database or monitoring service was modified.
+The Stage 1A slice uses Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, Ruff 0.16.8, mypy 1.20.2, pytest 9.1.1, and a generated `uv.lock`. Eighteen unit cases pass. `ruff check packages tests`, strict `mypy packages tests`, `pytest`, `uv lock --check`, a clean `uv sync --extra dev --frozen`, `uv pip check`, and `uv audit --frozen` passed; the audit reported no known vulnerabilities. Documentation validation and `git diff --check` are part of the final repository gate. No browser/runtime service test passed, and no VM, disk, network, ESXi patch, model, database or monitoring service was modified.
 
-The next checkpoint is owner review of the Phase 0 architecture and the denial-first Stage 1A slice in [NEXT_TASK](NEXT_TASK.md). Approval of the report does not grant provisioning/access authorization. Close only actionable private preflight facts; prepare the monitoring dependency before 1C; retain deterministic policy, scoped token handling, no external AI, local assets/login/keys/certificates, independent backups and host-outage limits. Repo protection/CI/private vulnerability reporting and a software license are not asserted to be configured. No asynchronous work is promised.
+The next checkpoint is Stage 1A Increment 2 in [NEXT_TASK](NEXT_TASK.md): local identity bootstrap/recovery, real isolated PostgreSQL migrations and roles, durable idempotent runs, leases, append-restricted audit, minimal authenticated API, and one bilingual fixture result. Phase 0 approval does not grant provisioning or target access. Retain deterministic policy, scoped credential handling, no external AI, local assets/login/keys/certificates, independent backups and host-outage limits. Repo protection/CI/private vulnerability reporting and a software license are not asserted to be configured.
 
 ## فارسی
 
@@ -71,7 +73,9 @@ remote بررسی‌شدهٔ مستقیم Git برابر `Omid-NextAI/nextops` �
 
 اولین خروجی، پاسخ تازهٔ فارسی یا انگلیسی دربارهٔ وضعیت مجاز Zabbix، تولیدشده روی CPU محلی و مستند به دادهٔ واقعی، همراه منبع و زمان و دامنه و ممیزی با اینترنت قطع است. بررسی مستقیم Linux در مرحلهٔ دو می‌آید. انتشار مستندات، پایان مرحلهٔ نرم‌افزاری یا اثبات مجوز استقرار نیست.
 
-[گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md) و [مدل تهدید](requirements/nextops-threat-model.md) اکنون یافتهٔ مخزن، چیدمان چهارماشینی، مرز اعتماد، قرارداد ماژول و داده، برنامهٔ سنجش CPU، بودجه، نقشهٔ اتصال، آزمون، مانع و کوچک‌ترین برش 1A را ثبت می‌کنند. مالک تک‌سازمانی بودن فعلی، مقیاس کوچک اولیه با رشد آینده و Zabbix مستقل را تأیید کرد. پذیرش معماری و همهٔ مجوزهای زیرساخت هنوز لازم‌اند.
+[گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md) و [مدل تهدید](requirements/nextops-threat-model.md) یافتهٔ مخزن، معماری چهارماشینی پذیرفته‌شده، مرز اعتماد، قرارداد ماژول و داده، برنامهٔ سنجش CPU، بودجه، نقشهٔ اتصال، آزمون و گام‌های 1A را ثبت می‌کنند. مالک در ۲۱ سپتامبر ۲۰۲۶ مرحلهٔ صفر و ADRهای 0001 تا 0006 را با تک‌سازمانی بودن فعلی، مقیاس کوچک اولیه با رشد آینده و Zabbix مستقل پذیرفت. همهٔ مجوزهای زیرساخت جدا و در انتظار باقی می‌مانند.
+
+Increment 1 از 1A در شاخهٔ محلی پیاده شده است: metadata برای Python 3.12، `uv.lock` تولیدشده، قراردادهای سخت‌گیر و ثابت actor، هدف، درخواست، شاهد و خطا، کلاس ریسک معتبر و سیاست قطعی سازمان/محیط/هدف/action/scope. Actor احرازشده از intent نامطمئن کاربر یا مدل جداست. مقدار ناشناخته و همهٔ کلاس‌های غیر `READ_ONLY` رد می‌شوند و admin میان‌بُر ندارد. هنوز API اجرایی، پایگاه، connector، credential، مدل یا listener شبکه وجود ندارد.
 
 ### شواهد ارسالی سخت‌افزار و دیسک
 
@@ -93,14 +97,14 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است.
 
 ### گام‌ها و وضعیت شواهد
 
-گزارش معماری، فاصله و تهدید مرحلهٔ صفر آماده و بررسی ساختار مستندات قبول شده است، اما پذیرش مالک و بررسی خصوصی تازهٔ میزبان و دسترسی و ظرفیت هنوز لازم‌اند. پیاده‌سازی و آزمون 1A انجام نشده؛ مدل و سنجش 1B اجرا نشده؛ VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E آزموده نشده‌اند.
+معماری، نقشه و ADRهای مرحلهٔ صفر پذیرفته شده‌اند؛ بررسی خصوصی تازهٔ میزبان، مجوز دسترسی و ظرفیت همچنان پیش از زیرساخت لازم‌اند. Increment 1 از 1A پیاده و آزموده شده، اما هویت ماندگار، پایگاه، audit و API/UI آن باقی است. مدل و سنجش 1B اجرا نشده؛ VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E آزموده نشده‌اند.
 
 ممکن است مالک مستقل ماشین ساخته باشد؛ پیش از ادعای وجود یا نبود آن، وضعیت واقعی بررسی شود. تصویر تنظیمات VM به معنای قبولی مسیر برنامه نیست. ادامه از نخستین گام ناتمامِ دارای شاهد و مجوز باشد، نه پاک کردن پیشرفت.
 
 ### دامنهٔ انتشار و کار بعدی
 
-گزارش دوزبانهٔ مرحلهٔ صفر و مدل تهدید اضافه، متن قدیمی مرحلهٔ آفلاین و ردیابی هماهنگ و هر دو فهرست، کار بعدی و این سند به‌روز شدند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و طرح Zabbix حفظ شده‌اند. ممیزی امنیت میزبان یا تثبیت سازگاری انجام نشده است.
+این تغییر پذیرش مرحلهٔ صفر و نخستین برش کد 1A را ثبت و کار بعدی و ردیابی را به‌روز می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و طرح Zabbix حفظ شده‌اند. ممیزی امنیت میزبان یا تثبیت سازگاری انجام نشده است.
 
-checkout محلی در commit `41508444ff0b9408154fbe1b458f7e89a5428bf9` بررسی شد. با خروجی UTF-8، `python scripts/check_docs.py` برای ۷۳ فایل Markdown و ۲۳ جفت زبان قبول شد و `git diff --check` در مبنای پاک قبول شد. نمایش مرورگر یا آزمون اجرایی قبول‌شده وجود ندارد. هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه یا سرویس پایش تغییر نکرده است.
+برش 1A با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، Ruff 0.16.8، mypy 1.20.2، pytest 9.1.1 و `uv.lock` تولیدشده آزموده شد. ۱۸ آزمون unit و فرمان‌های Ruff، mypy سخت‌گیرانه، pytest، بررسی lock، نصب پاک قفل‌شده، `uv pip check` و audit وابستگی قبول شدند و audit آسیب‌پذیری شناخته‌شده‌ای گزارش نکرد. بررسی مستندات و `git diff --check` در دروازهٔ نهایی اجرا می‌شوند. آزمون سرویس یا مرورگر انجام نشده و هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه یا سرویس پایش تغییر نکرده است.
 
-نقطهٔ بعد، بازبینی مالک روی معماری مرحلهٔ صفر و برش رد-پیش‌فرض 1A در [کار بعدی](NEXT_TASK.md) است. پذیرش گزارش، مجوز ساخت یا دسترسی نیست. فقط پیش‌نیاز مؤثر روشن و پایش پیش از 1C آماده شود. سیاست قطعی، توکن محدود، منع AI خارجی، رابط و ورود و کلید و گواهی محلی، پشتیبان مستقل و محدودیت خرابی میزبان حفظ شوند. حفاظت مخزن، CI، گزارش خصوصی آسیب‌پذیری و مجوز نرم‌افزاری تنظیم‌شده فرض نشده‌اند.
+نقطهٔ بعد Increment 2 از 1A در [کار بعدی](NEXT_TASK.md) است: bootstrap و recovery هویت محلی، migration و role واقعی PostgreSQL در محیط جدا، run و lease ماندگار، audit محدود، API حداقلی احرازشده و یک نتیجهٔ fixture دوزبانه. پذیرش مرحلهٔ صفر مجوز ساخت یا دسترسی مقصد نیست. سیاست قطعی، credential محدود، منع AI خارجی، دارایی و ورود و کلید و گواهی محلی، پشتیبان مستقل و محدودیت خرابی میزبان حفظ شوند. حفاظت مخزن، CI، گزارش خصوصی آسیب‌پذیری و مجوز نرم‌افزاری تنظیم‌شده فرض نشده‌اند.

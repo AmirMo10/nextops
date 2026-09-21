@@ -28,6 +28,7 @@ backups/
 # Development outputs / خروجی ابزار توسعه
 __pycache__/
 *.py[cod]
+*.egg-info/
 .venv/
 .pytest_cache/
 .mypy_cache/
