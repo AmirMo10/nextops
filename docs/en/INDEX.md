@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INDEX.md) · [Home](../../README.md) · [Start here](START_HERE.md)
 
-**Updated: 2026-09-21. Status: Phase 0 is accepted; tested Stage 1A/1B source foundations and guarded OS-package scripts exist, but no working deployment has been proven.** The active master prompt is English; the original Persian specification remains in the preserved v2 archive.
+**Updated: 2026-09-21. Status: Phase 0 is accepted; the Stage 1A/1B source foundations are tested, all four role servers are package-prepared, and the pinned CPU model has bounded smoke evidence. Product services and production acceptance remain open.** The active master prompt is English; the original Persian specification remains in the preserved v2 archive.
 
 > **Current new-server profile:** three NextOps VMs plus `zabbix-server` (4 vCPU / 16 GiB / 200 GiB) = **4 VMs / 40 vCPU / 184 GiB RAM / 980 GiB virtual disks**. Do not add the earlier small lab VM as well. [START_HERE](START_HERE.md) defines the order and Stage 1A–1E; [ZABBIX_SERVER](ZABBIX_SERVER.md) defines the monitoring VM, LVM and read-only integration.
 
@@ -16,6 +16,7 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 
 | Guide | Contents |
 |---|---|
+| [Project status brief](PROJECT_STATUS_BRIEF.md) | Presentation-ready summary of verified work, remaining delivery gates, and recommended sequence |
 | [Phase 0 report](PHASE_0_REPORT.md) | Repository findings, architecture, gaps, threat summary, resource plan and the approval checkpoint |
 | [Start here](START_HERE.md) | Creation order, four-VM profile, Phase 1A–1E, boundaries and restart dependencies |
 | [Dedicated Zabbix server](ZABBIX_SERVER.md) | 4 vCPU / 16 GiB / 200 GiB, detailed LVM, software, retention, read-only API, self-monitoring and combined budgets |

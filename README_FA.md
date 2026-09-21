@@ -4,9 +4,9 @@
 
 ### هوش مصنوعی مبتنی بر CPU برای پایش و عیب‌یابی مستند زیرساخت
 
-[English](README.md) · [فهرست مستندات](docs/fa/INDEX.md) · [چیدمان سرورها](docs/fa/SERVER_PLAN.md) · [نمودارها](docs/fa/DIAGRAMS.md) · [فناوری‌ها](docs/fa/TECH_STACK.md) · [معماری](docs/fa/ARCHITECTURE.md) · [نقشهٔ راه](docs/fa/ROADMAP.md) · [وضعیت پروژه](docs/PROJECT_STATE.md)
+[English](README.md) · [گزارش وضعیت](docs/fa/PROJECT_STATUS_BRIEF.md) · [فهرست مستندات](docs/fa/INDEX.md) · [چیدمان سرورها](docs/fa/SERVER_PLAN.md) · [نمودارها](docs/fa/DIAGRAMS.md) · [فناوری‌ها](docs/fa/TECH_STACK.md) · [معماری](docs/fa/ARCHITECTURE.md) · [نقشهٔ راه](docs/fa/ROADMAP.md) · [وضعیت پروژه](docs/PROJECT_STATE.md)
 
-> **وضعیت فعلی: مرحلهٔ صفر پذیرفته شده و پایهٔ source مراحل 1A/1B همراه scriptهای محافظت‌شدهٔ package برای هر سرور پیاده شده است.** هنوز bundle آفلاین تأییدشدهٔ package، installer کامل برنامه، UI مرورگر، connector زنده، مدل واردشده یا benchmark سرور وجود ندارد. این مخزن در حال حاضر نسخهٔ تولیدی قابل‌اجرای NextOps نیست.
+> **وضعیت فعلی: مرحلهٔ صفر پذیرفته شده، پایهٔ source مراحل 1A و 1B آزموده شده، هر چهار سرور Ubuntu 24.04 در لایهٔ package آماده‌اند و مدل ثابت محلی روی CPU یک smoke test محدود و احرازهویت‌شده را گذرانده است.** سرویس‌های محصول همچنان متوقف و پیکربندی‌نشده‌اند. release برنامه، پایگاه‌های تولید، مقداردهی Zabbix، connector زنده، ارزیابی کامل مدل، backup و restore و پذیرش با اینترنت قطع‌شده باقی مانده‌اند. این مخزن هنوز استقرار تولیدی NextOps را ارائه نمی‌کند.
 
 ## NextOps قرار است چه کاری انجام دهد؟
 
@@ -99,6 +99,7 @@ cd nextops
 
 | موضوع | راهنمای فارسی | English |
 |---|---|---|
+| گزارش آمادهٔ ارائه از وضعیت پروژه | [گزارش وضعیت](docs/fa/PROJECT_STATUS_BRIEF.md) | [Status brief](docs/en/PROJECT_STATUS_BRIEF.md) |
 | ظرفیت G10 و اولین پاسخ Zabbix | [برنامهٔ سرورها](docs/fa/SERVER_PLAN.md) | [Server plan](docs/en/SERVER_PLAN.md) |
 | کارکرد بدون اینترنت | [الزام آفلاین](docs/fa/OFFLINE_RUNTIME.md) | [Offline runtime](docs/en/OFFLINE_RUNTIME.md) |
 | نمایش معماری | [نمودارها](docs/fa/DIAGRAMS.md) | [Diagram atlas](docs/en/DIAGRAMS.md) |

@@ -81,7 +81,7 @@ Apply the retained project ceiling and every per-datastore capacity check: exist
 
 Use dependency-aware service readiness, not fixed sleeps or an Internet test. The databases precede their dependants; model/gateway can start independently. Zabbix failure must not prevent general local Q&A when its own dependencies are healthy. A host failure affects both systems; independent host-outage detection and backups are separate requirements.
 
-After each increment, update PROJECT_STATE with actual work, created roles, exact versions/test commands/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. Increments 1–3 and the guarded package-layer scripts changed repository source, tests, and documentation only; no package was applied and no host, VM, LVM, model, Zabbix, network, restart or server recovery work was performed.
+After each increment, update PROJECT_STATE with actual work, created roles, exact versions/test commands/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. Increments 1–3 remain repository source/test evidence. Separate authorized server preparation later installed the role package layers, created protected service identities, built the pinned runtime, imported the verified model, and completed the bounded AI smoke test. No product service, production PostgreSQL or Zabbix state, public listener, network change, reboot, backup, restore, or server recovery has been completed.
 
 ## فارسی — صلاحیت‌سنجی 1B روی سرور CPU محلی
 
@@ -156,4 +156,4 @@ LVM پیشنهادی `vg_zabbix`: بیرون LVM یک GiB برای EFI و دو G
 
 شروع سرویس تابع وابستگی باشد، نه تأخیر ثابت یا تست اینترنت. پایگاه پیش از وابسته بالا بیاید و مدل و درگاه بتوانند مستقل شروع شوند. قطع Zabbix مانع سؤال عمومی محلی با وابستگی سالم نشود. خرابی میزبان هر دو سامانه را قطع می‌کند؛ پشتیبان و بررسی قطعی مستقل نیاز جدا هستند.
 
-پس از هر گام، کار واقعی، نقش ساخته‌شده، نسخه و فرمان و نتیجهٔ آزمون، شکست و اجرا‌نشده و مانع و یک گام بعد در وضعیت پروژه ثبت شوند. Incrementهای 1 تا 3 و scriptهای محافظت‌شدهٔ لایهٔ package فقط source و آزمون و مستندات مخزن را تغییر دادند؛ هیچ package روی سرور اعمال نشد و هیچ میزبان، VM، LVM، مدل، Zabbix، شبکه، شروع مجدد یا بازیابی سرور انجام نشد.
+پس از هر گام، کار واقعی، نقش ساخته‌شده، نسخه و فرمان و نتیجهٔ آزمون، شکست و اجرا‌نشده و مانع و یک گام بعد در وضعیت پروژه ثبت شوند. Incrementهای 1 تا 3 همچنان شاهد source و test مخزن هستند. در آماده‌سازی جداگانه و مجاز سرورها، packageهای هر نقش نصب، هویت‌های محافظت‌شده ساخته، runtime ثابت build، مدل تأییدشده وارد و smoke test محدود AI کامل شد. هیچ سرویس محصول، وضعیت تولیدی PostgreSQL یا Zabbix، listener عمومی، تغییر شبکه، reboot، backup، restore یا بازیابی سرور تکمیل نشده است.

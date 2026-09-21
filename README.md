@@ -2,9 +2,9 @@
 
 ### CPU-only AI for evidence-grounded IT operations
 
-[فارسی](README_FA.md) · [Documentation](docs/en/INDEX.md) · [G10 server plan](docs/en/SERVER_PLAN.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project status](docs/PROJECT_STATE.md)
+[فارسی](README_FA.md) · [Status brief](docs/en/PROJECT_STATUS_BRIEF.md) · [Documentation](docs/en/INDEX.md) · [G10 server plan](docs/en/SERVER_PLAN.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project state](docs/PROJECT_STATE.md)
 
-> **Status: Phase 0 accepted; Stage 1A/1B source foundations and guarded per-server OS-package scripts are implemented.** There is still no approved offline package bundle, complete application installer, browser UI, live connector, imported model, or server benchmark. This repository does not currently provide a runnable production NextOps installation.
+> **Status: Phase 0 is accepted; the Stage 1A/1B source foundations are tested, all four Ubuntu 24.04 servers are package-prepared, and the pinned local CPU model has passed a bounded authenticated smoke test.** Product services remain stopped and unconfigured. The application release, production databases, Zabbix initialization, live connector, full model evaluation, backup/restore, and Internet-blocked acceptance remain open. This repository does not yet provide a production NextOps deployment.
 
 ## What NextOps is intended to do
 
@@ -85,6 +85,7 @@ The [engineering master prompt](docs/requirements/NEXTOPS_MASTER_PROMPT.md) is r
 
 | Topic | English | فارسی |
 |---|---|---|
+| Presentation-ready project status | [Status brief](docs/en/PROJECT_STATUS_BRIEF.md) | [گزارش وضعیت](docs/fa/PROJECT_STATUS_BRIEF.md) |
 | G10 capacity and first Zabbix answer | [Server plan](docs/en/SERVER_PLAN.md) | [سرورها و اولین پاسخ Zabbix](docs/fa/SERVER_PLAN.md) |
 | Offline operating contract | [Offline runtime](docs/en/OFFLINE_RUNTIME.md) | [الزام آفلاین](docs/fa/OFFLINE_RUNTIME.md) |
 | Visual architecture | [Diagram atlas](docs/en/DIAGRAMS.md) | [نمودارهای معماری](docs/fa/DIAGRAMS.md) |

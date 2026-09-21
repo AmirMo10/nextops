@@ -2,7 +2,7 @@
 
 [فارسی](../fa/TESTING.md) · [Index](INDEX.md)
 
-**Status: test plan with a verified repository-level subset.** Hosted CI passes 71 unit/API/schema/installer/context cases plus 5 PostgreSQL integration cases. No browser, connector/device, real-model, package-apply, offline-server, restore, or G10 benchmark test has run. Source: master specification sections 10–14 and 21–23.
+**Status: test plan with verified repository, application-host PostgreSQL, and bounded AI smoke evidence.** Hosted CI passes 71 unit/API/schema/installer/context cases plus 5 PostgreSQL integration cases; the application host passed the same 71 non-integration and 5 PostgreSQL 16.15 integration cases. The pinned real model also passed a limited authenticated loopback smoke test. No browser, live connector/device, full model-quality/load, Internet-blocked server, restore, or production acceptance test has run. Source: master specification sections 10–14 and 21–23.
 
 ## Test layers
 

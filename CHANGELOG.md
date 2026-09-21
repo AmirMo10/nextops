@@ -1,5 +1,30 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-21 — Bilingual project status brief / گزارش دوزبانهٔ وضعیت پروژه
+
+### English
+
+Added paired presentation-ready English and native-Persian status briefs plus an editable bilingual
+Word document. The brief distinguishes verified repository work, four-server qualification,
+role-package preparation, and bounded local CPU model smoke evidence from the production service,
+Zabbix, connector, recovery, and Internet-blocked acceptance gates that remain open.
+
+Updated the README, documentation indexes, development and testing summaries, project state, and
+next-task record to remove older statements that predated the authorized server preparation and AI
+smoke test. No server, package, service, database, network, credential, model, or runtime state was
+changed by this documentation update.
+
+### فارسی
+
+گزارش‌های متناظر و آمادهٔ ارائه به فارسی طبیعی و انگلیسی، همراه یک فایل Word دوزبانه و قابل‌ویرایش
+افزوده شدند. گزارش، کار تأییدشدهٔ مخزن، صلاحیت‌سنجی چهار سرور، آماده‌سازی packageهای هر نقش و
+smoke test محدود مدل محلی روی CPU را از سرویس تولید، Zabbix، connector، بازیابی و پذیرش با اینترنت
+قطع‌شده که هنوز باقی مانده‌اند، جدا می‌کند.
+
+README، فهرست‌های مستندات، خلاصه‌های توسعه و آزمون، وضعیت پروژه و رکورد کار بعدی نیز اصلاح شدند تا
+عبارت‌های قدیمیِ پیش از آماده‌سازی مجاز سرورها و smoke test مدل حذف شوند. این تغییر مستندات هیچ
+سرور، package، سرویس، پایگاه، شبکه، credential، مدل یا وضعیت runtime را تغییر نداد.
+
 ## 2026-09-21 — Durable repository context / حافظهٔ ماندگار مخزن
 
 ### English

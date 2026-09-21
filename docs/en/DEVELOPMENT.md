@@ -12,12 +12,13 @@ Read [AGENTS.md](../../AGENTS.md), the master specification, project state and n
 Stage 1A now contains typed contracts and deterministic policy plus a runnable local API,
 PostgreSQL/Alembic schema, local identity, durable runs/leases, append-restricted audit,
 and an explicit bilingual fixture result. Stage 1B adds the authenticated loopback inference
-boundary and bounded scheduler. Four guarded scripts implement only the authenticated offline
-Ubuntu package layer. The repository still has no browser UI, connector, imported model,
-production service definition, offline application release, or deployment acceptance; do not
-treat CI or a package-layer check as a deployed-application pass. Phase 0 architecture was
-accepted on 2026-09-21, while hardware discovery and every infrastructure authorization remain
-separate gates.
+boundary and bounded scheduler. Four guarded scripts implement the authenticated offline Ubuntu
+package layer. All four role servers are now package-prepared, and the pinned runtime and model have
+bounded authenticated loopback smoke evidence. The repository still has no browser UI, live
+connector, production service definition, offline application release, or deployment acceptance;
+do not treat source tests, package preparation, or an AI smoke test as a deployed-application pass.
+Phase 0 architecture was accepted on 2026-09-21, while every further infrastructure operation and
+acceptance gate remains separately controlled.
 
 For the current Python slice, install the generated lock with
 `uv sync --extra dev --frozen`, then run `uv run ruff format --check packages migrations

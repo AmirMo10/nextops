@@ -67,6 +67,7 @@ Markdown file is added, renamed, or removed.
 - `docs/en/OFFLINE_RUNTIME.md` — English mandatory offline-runtime contract.
 - `docs/en/OPERATIONS.md` — English observability, backup, recovery, and rollback design.
 - `docs/en/PHASE_0_REPORT.md` — Dated English Phase 0 evidence and decision report.
+- `docs/en/PROJECT_STATUS_BRIEF.md` — Presentation-ready English summary of verified progress and remaining delivery gates.
 - `docs/en/ROADMAP.md` — English phased roadmap and acceptance gates.
 - `docs/en/SECURITY.md` — English identity, policy, approval, and threat controls.
 - `docs/en/SERVER_PLAN.md` — English G10 VM plan and Zabbix milestone.
@@ -93,6 +94,7 @@ Markdown file is added, renamed, or removed.
 - `docs/fa/OFFLINE_RUNTIME.md` — Persian mandatory offline-runtime contract.
 - `docs/fa/OPERATIONS.md` — Persian observability, backup, recovery, and rollback design.
 - `docs/fa/PHASE_0_REPORT.md` — Dated Persian Phase 0 evidence and decision report.
+- `docs/fa/PROJECT_STATUS_BRIEF.md` — Presentation-ready native-Persian summary of verified progress and remaining delivery gates.
 - `docs/fa/ROADMAP.md` — Persian phased roadmap and acceptance gates.
 - `docs/fa/SECURITY.md` — Persian identity, policy, approval, and threat controls.
 - `docs/fa/SERVER_PLAN.md` — Persian G10 VM plan and Zabbix milestone.
