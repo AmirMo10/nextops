@@ -2,7 +2,7 @@
 
 [فارسی](../fa/ROADMAP.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
 
-**Status: sequence accepted on 2026-09-21; Phase 0 is complete and Stage 1A Increments 1–2 are tested in isolated CI.** No deployed service or complete Phase 1 flow exists. The master specification, mandatory offline contract, owner-supplied hardware evidence and later Zabbix-first clarification govern this plan. Acceptance does not authorize provisioning, host changes or production access.
+**Status: sequence accepted on 2026-09-21; Phase 0, Stage 1A Increments 1–2, and the Stage 1B Increment 3 source foundation are tested in isolated CI.** Guarded OS-package scripts also exist for all four server roles. No deployed service or complete Phase 1 flow exists. The master specification, mandatory offline contract, owner-supplied hardware evidence and later Zabbix-first clarification govern this plan. Acceptance does not authorize provisioning, host changes or production access.
 
 **First delivery remains Phase 1: a new question → authorized read-only Zabbix data → local CPU-generated answer → source/time references and audit, with Internet blocked.** Linux enrichment follows in Phase 2. The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 

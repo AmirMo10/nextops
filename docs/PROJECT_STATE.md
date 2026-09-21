@@ -58,7 +58,7 @@ These records expose rather than hide the deployment blockers: the application s
 | Stage | Required result | Evidence status for this update |
 |---|---|---|
 | 0 | Architecture/gap/threat report and appropriate approvals | Owner accepted architecture/roadmap and ADRs on 2026-09-21; infrastructure preflight/authorization remains separate |
-| 1A | Local identity, policy, database, durable work and audit | Increments 1–2 source-complete for contracts/policy, identity, PostgreSQL, durable runs/leases, audit and API fixture; 44 tests include 5 real-PostgreSQL cases; browser UI and deployment acceptance remain |
+| 1A | Local identity, policy, database, durable work and audit | Increments 1–2 source-complete for contracts/policy, identity, PostgreSQL, durable runs/leases, audit and API fixture; this behavior remains covered by the current 68 non-integration and 5 real-PostgreSQL cases; browser UI and deployment acceptance remain |
 | 1B | New local CPU answers and offline model cold load | Source candidate, authenticated boundary and bounded scheduler implemented/tested; no model import, run, benchmark or offline cold start performed |
 | Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | No VM, installation, account or API call performed here |
 | 1C | Real bounded read-only evidence with correct counts | Live connector tests not run here |

@@ -33,4 +33,4 @@
 
 - [x] Focused tests, full non-integration tests, lint, formatting, types, and documentation checks pass.
 - [x] Security and code-quality review find no unresolved high-risk issue.
-- [ ] The change is committed, pushed, reviewed in a pull request, and merged to `main` only after gates pass.
+- [x] The change is committed, pushed, reviewed in a pull request, and merged to `main` only after gates pass.

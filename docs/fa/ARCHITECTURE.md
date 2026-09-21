@@ -4,7 +4,7 @@
 
 [English](../en/ARCHITECTURE.md) · [فهرست](INDEX.md)
 
-**وضعیت: پیشنهادی.** مبنا: بخش‌های ۲ تا ۸ و ۱۶ تا ۲۰ [مشخصات اصلی](../requirements/NEXTOPS_MASTER_PROMPT.md). سرویس‌های توصیف‌شده در این صفحه هنوز ساخته نشده‌اند.
+**وضعیت: معماری مرحلهٔ صفر پذیرفته شده و بخشی از مرزهای source پیاده و آزموده‌اند.** مبنا: بخش‌های ۲ تا ۸ و ۱۶ تا ۲۰ [مشخصات اصلی](../requirements/NEXTOPS_MASTER_PROMPT.md). پایهٔ app/API، persistence، policy، identity و inference محلی وجود دارد، اما web، gateway، connector و استقرار تولید کاملِ این صفحه هنوز ساخته نشده‌اند.
 
 ## تصمیم اصلی
 
