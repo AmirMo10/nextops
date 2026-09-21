@@ -20,11 +20,16 @@ def test_selected_artifact_manifest_is_human_readable_and_schema_valid() -> None
     )
 
     assert result.returncode == 0, result.stderr
-    assert "selected_not_imported" in result.stdout
+    assert "built_imported_smoke_tested_not_accepted" in result.stdout
     document = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     assert document["model"]["size_bytes"] == 5_027_783_488
     assert document["model"]["sha256"] == (
         "d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785"
     )
-    assert document["runtime"]["binary_sha256"] is None
+    assert document["runtime"]["binary_sha256"] == (
+        "dbe5a5cdd4842fe2d498270c1e1df58344e9052e97214e2ba9c9845443a1b0dc"
+    )
+    assert document["evidence"]["runtime_binary_built"] is True
+    assert document["evidence"]["model_imported"] is True
+    assert document["evidence"]["cpu_only_execution_verified"] is True
     assert document["evidence"]["benchmark_run"] is False

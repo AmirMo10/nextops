@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/Omid-NextAI/nextops/blob/main/deploy/inference/inference-artifact.schema.json",
-  "title": "NextOps local inference evaluation candidate",
-  "description": "Source identity and deployment constraints; validation does not authorize artifact import or prove runtime acceptance.",
+  "title": "NextOps local inference evaluation artifact",
+  "description": "Source identity, observed build/import evidence, and remaining deployment constraints; validation does not prove production acceptance.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -19,9 +19,9 @@
   ],
   "properties": {
     "$schema": {"const": "./inference-artifact.schema.json"},
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "manifest_revision": {"type": "string", "format": "date"},
-    "status": {"const": "selected_not_imported"},
+    "status": {"const": "built_imported_smoke_tested_not_accepted"},
     "runtime": {
       "type": "object",
       "additionalProperties": false,
@@ -33,8 +33,8 @@
         "source_commit": {"const": "b29c606e28a01b1bc8c1351026a0fa6e616bf6c4"},
         "license": {"const": "MIT"},
         "build_target": {"const": "llama-server"},
-        "binary_sha256": {"type": "null"},
-        "build_status": {"const": "pending_authorized_cpu_build"}
+        "binary_sha256": {"const": "dbe5a5cdd4842fe2d498270c1e1df58344e9052e97214e2ba9c9845443a1b0dc"},
+        "build_status": {"const": "built_cpu_native_openblas_promoted"}
       }
     },
     "model": {
@@ -52,7 +52,7 @@
         "sha256": {"const": "d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785"},
         "license": {"const": "Apache-2.0"},
         "native_context_tokens": {"const": 32768},
-        "import_status": {"const": "not_downloaded_not_verified_locally"}
+        "import_status": {"const": "promoted_sha256_verified"}
       }
     },
     "deployment_profile": {
@@ -79,9 +79,9 @@
       "required": ["source_metadata_verified", "runtime_binary_built", "model_imported", "cpu_only_execution_verified", "benchmark_run", "offline_cold_start_verified"],
       "properties": {
         "source_metadata_verified": {"const": true},
-        "runtime_binary_built": {"const": false},
-        "model_imported": {"const": false},
-        "cpu_only_execution_verified": {"const": false},
+        "runtime_binary_built": {"const": true},
+        "model_imported": {"const": true},
+        "cpu_only_execution_verified": {"const": true},
         "benchmark_run": {"const": false},
         "offline_cold_start_verified": {"const": false}
       }
