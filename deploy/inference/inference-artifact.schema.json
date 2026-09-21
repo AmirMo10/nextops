@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Omid-NextAI/nextops/blob/main/deploy/inference/inference-artifact.schema.json",
+  "title": "NextOps local inference evaluation candidate",
+  "description": "Source identity and deployment constraints; validation does not authorize artifact import or prove runtime acceptance.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "manifest_revision",
+    "status",
+    "runtime",
+    "model",
+    "deployment_profile",
+    "evidence",
+    "unresolved_gates",
+    "references"
+  ],
+  "properties": {
+    "$schema": {"const": "./inference-artifact.schema.json"},
+    "schema_version": {"const": "1.0.0"},
+    "manifest_revision": {"type": "string", "format": "date"},
+    "status": {"const": "selected_not_imported"},
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "source_repository", "source_tag", "source_commit", "license", "build_target", "binary_sha256", "build_status"],
+      "properties": {
+        "name": {"const": "llama.cpp"},
+        "source_repository": {"const": "https://github.com/ggml-org/llama.cpp"},
+        "source_tag": {"const": "v0.4.1"},
+        "source_commit": {"const": "b29c606e28a01b1bc8c1351026a0fa6e616bf6c4"},
+        "license": {"const": "MIT"},
+        "build_target": {"const": "llama-server"},
+        "binary_sha256": {"type": "null"},
+        "build_status": {"const": "pending_authorized_cpu_build"}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_id", "source_repository", "source_revision", "artifact_commit", "filename", "quantization", "size_bytes", "sha256", "license", "native_context_tokens", "import_status"],
+      "properties": {
+        "model_id": {"const": "nextops-qwen3-8b-q4-k-m"},
+        "source_repository": {"const": "https://huggingface.co/Qwen/Qwen3-8B-GGUF"},
+        "source_revision": {"const": "7c41481f57cb95916b40956ab2f0b139b296d974"},
+        "artifact_commit": {"const": "6a569868d07d3bd59e8b97fb001bf8c0b254bb20"},
+        "filename": {"const": "Qwen3-8B-Q4_K_M.gguf"},
+        "quantization": {"const": "Q4_K_M"},
+        "size_bytes": {"const": 5027783488},
+        "sha256": {"const": "d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785"},
+        "license": {"const": "Apache-2.0"},
+        "native_context_tokens": {"const": 32768},
+        "import_status": {"const": "not_downloaded_not_verified_locally"}
+      }
+    },
+    "deployment_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bind_host", "cpu_only_required", "runtime_internet_allowed", "configured_context_tokens", "max_output_tokens", "max_active_requests", "max_queued_requests", "disabled_features"],
+      "properties": {
+        "bind_host": {"const": "127.0.0.1"},
+        "cpu_only_required": {"const": true},
+        "runtime_internet_allowed": {"const": false},
+        "configured_context_tokens": {"const": 8192},
+        "max_output_tokens": {"const": 1024},
+        "max_active_requests": {"const": 1},
+        "max_queued_requests": {"const": 2},
+        "disabled_features": {
+          "type": "array",
+          "const": ["accelerator_offload", "agent", "context_shift", "mcp", "remote_model_resolution", "tools", "web_ui"]
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_metadata_verified", "runtime_binary_built", "model_imported", "cpu_only_execution_verified", "benchmark_run", "offline_cold_start_verified"],
+      "properties": {
+        "source_metadata_verified": {"const": true},
+        "runtime_binary_built": {"const": false},
+        "model_imported": {"const": false},
+        "cpu_only_execution_verified": {"const": false},
+        "benchmark_run": {"const": false},
+        "offline_cold_start_verified": {"const": false}
+      }
+    },
+    "unresolved_gates": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 12}
+    },
+    "references": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": {"type": "string", "format": "uri", "pattern": "^https://"}
+    }
+  }
+}

@@ -66,6 +66,8 @@ STATUS_BY_ERROR = {
     ErrorCode.POLICY_DENIED: 403,
     ErrorCode.NOT_FOUND: 404,
     ErrorCode.CONFLICT: 409,
+    ErrorCode.OVERLOADED: 429,
+    ErrorCode.TIMEOUT: 504,
     ErrorCode.DEPENDENCY_UNAVAILABLE: 503,
     ErrorCode.INTERNAL_ERROR: 500,
 }

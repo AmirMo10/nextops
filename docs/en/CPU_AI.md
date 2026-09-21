@@ -25,6 +25,23 @@ The baseline is one dedicated service built from a pinned llama.cpp CPU revision
 
 Compare supported Q4_K_M/Q5_K_M quantizations where available. Verify chat templates, structured-output behavior, tool arguments and Persian quality on the exact model/runtime combination. Do not choose 70B+ solely because weights fit in RAM. Ollama, OpenVINO CPU and vLLM CPU are alternatives to evaluate, not three additional mandatory services.
 
+### Stage 1B repository candidate
+
+The source-level evaluation pair is now recorded in the schema-validated
+[`qwen3-8b-q4-k-m.yaml`](../../deploy/inference/qwen3-8b-q4-k-m.yaml): llama.cpp
+`v0.4.1` at commit `b29c606e28a01b1bc8c1351026a0fa6e616bf6c4`, plus the official
+`Qwen3-8B-Q4_K_M.gguf` at repository revision
+`7c41481f57cb95916b40956ab2f0b139b296d974`. The model source records size
+5,027,783,488 bytes and SHA-256
+`d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785`.
+
+This is candidate selection, not permission to download it and not proof that the file on a server
+matches. The CPU binary checksum, compiler/build flags, guest ISA, local model hash, CPU-only startup
+report, bilingual quality, latency, memory behavior, offline cold start, backup and rollback remain
+required evidence. The repository adapter binds only to IPv4 loopback, authenticates both service
+boundaries, permits one active request plus two queued requests, and does not expose tools, MCP,
+agent mode, Web UI, remote model loading or target credentials.
+
 ## Hardware discovery before tuning
 
 Confirm CPU model, physical/logical cores, sockets, NUMA nodes, effective affinity/cgroup allocation, instruction sets, available RAM, storage and existing workload contention. “G10” and “90 CPU” establish none of these details. Discovery must not install packages or stress the host; see [installation](INSTALL.md).

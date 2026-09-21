@@ -24,6 +24,7 @@ source_records:
   - docs/en/OFFLINE_RUNTIME.md
   - docs/en/SECURITY.md
   - docs/PROJECT_STATE.md
+  - deploy/inference/qwen3-8b-q4-k-m.yaml
 vm:
   hypervisor: VMware ESXi 8.0.3 build 24414501 (owner-supplied host evidence)
   guest_os: Ubuntu Server 24.04 LTS proposed; exact image and maintained patch lock required
@@ -69,25 +70,25 @@ software_dependencies:
     lock_evidence: null
   - id: llama-cpp-cpu-runtime
     kind: inference_runtime
-    version: null
+    version: v0.4.1 source tag at b29c606e28a01b1bc8c1351026a0fa6e616bf6c4
     runtime_location: local
     required: true
-    status: candidate_not_built_pinned_or_tested
-    lock_evidence: null
+    status: source_candidate_pinned_not_built_or_tested
+    lock_evidence: deploy/inference/qwen3-8b-q4-k-m.yaml
   - id: multilingual-generation-model
     kind: model
-    version: null
+    version: Qwen3-8B-Q4_K_M.gguf at repository revision 7c41481f57cb95916b40956ab2f0b139b296d974
     runtime_location: local
     required: true
-    status: 7_to_9b_quantized_candidate_not_selected
-    lock_evidence: null
+    status: evaluation_candidate_selected_not_imported_or_benchmarked
+    lock_evidence: deploy/inference/qwen3-8b-q4-k-m.yaml
   - id: model-tokenizer-template
     kind: model_support_artifacts
-    version: null
+    version: embedded GGUF metadata from the selected source artifact
     runtime_location: local
     required: true
-    status: not_selected_or_verified
-    lock_evidence: null
+    status: source_candidate_selected_not_verified_locally
+    lock_evidence: deploy/inference/qwen3-8b-q4-k-m.yaml
   - id: cpu-runtime-native-libraries
     kind: native_runtime_dependencies
     version: null
@@ -121,28 +122,28 @@ artifacts:
     purpose: Pinned CPU-only inference runtime binary/library set with build revision, compiler, flags,
       linked libraries, and device-startup report
     install_path: /srv/nextops/runtime/llama.cpp/<runtime-id>
-    version: null
+    version: v0.4.1 source candidate; local build identity pending
     sha256: null
-    license_record: null
-    source_record: null
-    status: not_built_or_selected
+    license_record: MIT; official source license linked from the inference manifest
+    source_record: deploy/inference/qwen3-8b-q4-k-m.yaml
+    status: source_selected_not_built_or_verified
   - id: generation-model-gguf
     purpose: Exact quantized multilingual model weights used for production answers
     install_path: /srv/nextops/models/<model-id>/model.gguf
-    version: null
-    sha256: null
-    license_record: null
-    source_record: null
-    status: not_selected_or_imported
+    version: Qwen3-8B-Q4_K_M.gguf
+    sha256: d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785
+    license_record: Apache-2.0; official model repository linked from the inference manifest
+    source_record: deploy/inference/qwen3-8b-q4-k-m.yaml
+    status: source_verified_candidate_not_imported_or_locally_hashed
   - id: model-metadata-and-template
     purpose: Immutable model source revision, quantization, tokenizer/template, context semantics, license,
       and evaluation metadata
-    install_path: /srv/nextops/models/<model-id>/manifest.json
-    version: null
+    install_path: /srv/nextops/models/<model-id>/manifest.yaml
+    version: 1.0.0 repository candidate contract
     sha256: null
-    license_record: null
-    source_record: null
-    status: not_created
+    license_record: Runtime MIT and model Apache-2.0 source records
+    source_record: deploy/inference/qwen3-8b-q4-k-m.yaml
+    status: repository_manifest_created_not_promoted_to_server
   - id: ai-offline-runtime-bundle
     purpose: Complete native libraries or pinned container image needed to cold-start without registries
       or user caches
@@ -658,8 +659,9 @@ acceptance_gates:
     status: not_run
     evidence_reference: null
 known_limitations:
-  - No model, runtime build, quantization, tokenizer/template, license, checksum, service unit, port,
-    or benchmark is selected or implemented.
+  - A source-verified llama.cpp/Qwen evaluation pair is selected in the repository, but no runtime binary
+    is built, no model is imported or locally hashed, and no CPU-only execution, service unit, port,
+    offline cold start, quality result, or benchmark is accepted.
   - The 24-vCPU/128-GiB profile is an experiment budget; it is not a thread count, concurrency promise,
     performance result, or proven one-NUMA-node fit.
   - The 500-GiB disk has no approved partition or artifact-retention layout and must not be formatted

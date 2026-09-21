@@ -30,18 +30,18 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 22 | Topology / توپولوژی | `knowledge` | 3,6 | Provenance/freshness on relationships / منبع و تازگی رابطه | P |
 | 23 | Incident correlation / هم‌بستگی رخداد | `knowledge`, `application` | 2,6 | Time-windowed cross-source evidence / شواهد چندمنبعی زمان‌مند | P |
 | 24 | RCA / تحلیل علت ریشه‌ای | `knowledge`, `application` | 2,6 | Hypotheses versus verified causes / تفکیک فرضیه و علت تأییدشده | P |
-| 25 | LLM abstraction / رابط مدل | `inference` | 1–2 | CPU-only provider contract; no cloud fallback / قرارداد محلی | P |
-| 26 | Offline mode / حالت آفلاین | `deploy/server-dependencies`, `scripts` | 1,2,8 | Per-server local/approved-LAN/provisioning-only dependencies documented; Internet-blocked end-to-end test remains / وابستگی هر سرور مستند؛ آزمون کامل بدون اینترنت باقی است | P |
+| 25 | LLM abstraction / رابط مدل | `packages/nextops/inference` | 1–2 | Authenticated loopback provider contract, fixed model identity and bounded scheduler tested; real CPU model remains / قرارداد احرازهویت‌شده و صف محدود آزموده؛ مدل واقعی باقی است | I |
+| 26 | Offline mode / حالت آفلاین | `deploy/server-dependencies`, `deploy/inference`, `scripts` | 1,2,8 | Per-server dependencies and source-pinned inference candidate validated; Internet-blocked cold start remains / وابستگی سرور و نامزد ثابت معتبر؛ شروع سرد بدون اینترنت باقی است | I |
 | 27 | Memory / حافظه | `knowledge` | 6 | Scoped, fresh conversation/incident memory / حافظهٔ محدود و تازه | P |
 | 28 | Database abstraction / رابط پایگاه داده | `packages/nextops/persistence`, `migrations` | 1 | Baseline, roles and durability tested on real PostgreSQL; production lock/backup and alternatives remain / migration و role آزموده؛ تولید و جایگزین باقی است | I |
-| 29 | API / رابط برنامه | `packages/nextops/api`, `contracts` | 1–2 | Minimal authenticated `/api/v1` identity/run routes and structured errors tested; later domains remain / مسیر حداقلی و خطای ساخت‌یافته آزموده؛ دامنه‌های بعدی باقی است | I |
+| 29 | API / رابط برنامه | `packages/nextops/api`, `packages/nextops/inference`, `contracts` | 1–2 | Authenticated app and inference routes, correlation, safe readiness and structured errors tested; later domains remain / مسیر برنامه و inference و خطای ساخت‌یافته آزموده؛ دامنه‌های بعدی باقی است | I |
 | 30 | UI / رابط کاربری | `apps/web` | 2–8 | Operations views, summaries and accessibility / نماهای عملیات و دسترس‌پذیری | P |
-| 31 | Configuration / پیکربندی | `config`, `deploy/server-dependencies/*.yaml` | 1 | Schema-validated deployer inputs/paths/secret references drafted; runtime parsers and typed external settings remain / ورودی و مسیر و ارجاع محرمانه مستند؛ parser اجرایی باقی است | D |
+| 31 | Configuration / پیکربندی | `packages/nextops/configuration.py`, `packages/nextops/inference/configuration.py`, `deploy/**/*.yaml` | 1 | Typed fail-closed app/inference settings plus schema-validated deployer records; production secrets remain private / تنظیم سخت‌گیر و پروندهٔ معتبر؛ secret تولید خصوصی است | I |
 | 32 | Inventory / موجودی تجهیزات | `packages/nextops/contracts`, `persistence`; future connectors | 1–2 | Immutable scoped target plus persisted fixture and denial tests; real inventory synchronization remains / هدف محدود و fixture ماندگار؛ همگام‌سازی واقعی باقی است | I |
-| 33 | Health checks / بررسی سلامت | `apps`, `connectors` | 1–5 | Honest readiness/capability states / آمادگی و قابلیت واقعی | P |
+| 33 | Health checks / بررسی سلامت | `packages/nextops/api`, `packages/nextops/inference` | 1–5 | App liveness and safe inference readiness states tested; deployed dependency health remains / سلامت برنامه و آمادگی امن inference آزموده؛ استقرار باقی است | I |
 | 34 | Error handling / مدیریت خطا | `packages/nextops/contracts`, `application`, `api` | 1–5 | Typed application/API errors, correlation and dependency failure tested; broader retry/isolation remains / خطا و correlation آزموده؛ retry گسترده باقی است | I |
 | 35 | Observability / مشاهده‌پذیری | `observability` | 1,8 | Metrics/logs and audit distinction / تفکیک متریک و لاگ و ممیزی | P |
-| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 39 unit/API/schema plus 5 real-PostgreSQL cases and CI quality/security gates; browser/model/evals remain / ۳۹ آزمون محلی و ۵ PostgreSQL؛ مدل و مرورگر باقی است | I |
+| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 53 unit/API/schema plus 5 real-PostgreSQL cases and CI quality/security gates; browser/model/evals remain / ۵۳ آزمون محلی و ۵ PostgreSQL؛ مدل و مرورگر باقی است | I |
 | 37 | Docker / کانتینر | `deploy/compose` | 1,8 | Restricted clean install and offline test / نصب محدود و آفلاین | P |
 | 38 | Installation docs / مستندات نصب | `docs/en/INSTALL.md`, `docs/fa/INSTALL.md`, paired `DEPLOYMENT_DOSSIERS.md`, `deploy/server-dependencies` | 0–8 | Four machine-readable handoffs and paired workflow drafted; blocked installers and clean-install commands remain / چهار پرونده و گردش کار آماده؛ نصب‌کننده و فرمان آزموده باقی است | D |
 | 39 | Native Persian docs / مستندات فارسی طبیعی | `docs/fa`, `docs/en` | 0–8 | Paired guides and language review / همتای دو زبان و بازبینی | D |
@@ -55,7 +55,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 47 | Decision workflow / گردش تصمیم | `application` | 1–2 | Bounded persisted state machine / ماشین حالت محدود و ماندگار | P |
 | 48 | Self-verification / بررسی نتیجه | `application`, `connectors` | 2,7 | Fresh postconditions; unknown-outcome reconciliation / نتیجهٔ تازه و رفع ابهام | P |
 | 49 | Phased delivery / تحویل مرحله‌ای | `docs/en/ROADMAP.md`, `docs/fa/ROADMAP.md` | 0–8 | Revised gates, all original scope retained / معیار جدید و حفظ دامنه | D |
-| 50 | Phase completion / پایان مرحله | `docs/PROJECT_STATE.md`, `tests` | 0–8 | Phase 0 and two Stage 1A increments have implementation/test/document evidence; deployment and later phases remain / مرحلهٔ صفر و دو برش 1A شاهد دارند؛ استقرار و مراحل بعدی باقی است | I |
+| 50 | Phase completion / پایان مرحله | `docs/PROJECT_STATE.md`, `tests` | 0–8 | Phase 0, two Stage 1A increments and the Stage 1B repository foundation have evidence; server qualification and later phases remain / مرحلهٔ صفر، دو برش 1A و پایهٔ 1B شاهد دارند؛ سرور و مراحل بعدی باقی است | I |
 | 51 | First architecture report / گزارش معماری نخست | `docs/en/PHASE_0_REPORT.md`, `docs/fa/PHASE_0_REPORT.md` | 0 | Owner accepted on 2026-09-21; infrastructure authorization remains separate / پذیرش مالک؛ مجوز زیرساخت جداست | A |
 
 ## Explicit revisions / اصلاحات صریح

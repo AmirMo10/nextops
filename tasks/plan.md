@@ -29,34 +29,34 @@ open a listener on infrastructure, or claim offline/model acceptance in this inc
 
 ### Slice 1: candidate artifact contract
 
-- [ ] Add human-readable YAML manifest plus JSON Schema for the selected evaluation pair.
-- [ ] Validate immutable source revisions, license, model size/checksum, offline-only paths,
+- [x] Add human-readable YAML manifest plus JSON Schema for the selected evaluation pair.
+- [x] Validate immutable source revisions, license, model size/checksum, offline-only paths,
   and unresolved CPU binary checksum.
-- [ ] Update the AI deployment dossier without claiming import, install, or benchmark.
+- [x] Update the AI deployment dossier without claiming import, install, or benchmark.
 
 ### Slice 2: strict inference boundary
 
-- [ ] Add immutable request/result/readiness contracts and an `LLMProvider` protocol.
-- [ ] Reject oversized prompts, excessive output/context limits, unknown fields, and
+- [x] Add immutable request/result/readiness contracts and an `LLMProvider` protocol.
+- [x] Reject oversized prompts, excessive output/context limits, unknown fields, and
   client-supplied system/tool/provider settings.
-- [ ] Add failing tests first, then implement the contracts.
+- [x] Add failing tests first, then implement the contracts.
 
 ### Slice 3: bounded service and llama.cpp adapter
 
-- [ ] Implement one-active-request scheduling, bounded queue admission, queue timeout,
+- [x] Implement one-active-request scheduling, bounded queue admission, queue timeout,
   provider timeout, cancellation cleanup, and explicit overload/dependency errors.
-- [ ] Implement a loopback-only OpenAI-compatible llama.cpp adapter with proxy bypass,
+- [x] Implement a loopback-only OpenAI-compatible llama.cpp adapter with proxy bypass,
   API-key authentication, fixed model identity, non-thinking prompt mode, and strict
   response parsing.
-- [ ] Add an authenticated FastAPI surface for liveness, safe readiness, and generation.
+- [x] Add an authenticated FastAPI surface for liveness, safe readiness, and generation.
 
 ### Slice 4: verification and handoff
 
-- [ ] Test accepted, unauthenticated, overloaded, timed-out, cancelled, malformed-provider,
+- [x] Test accepted, unauthenticated, overloaded, timed-out, cancelled, malformed-provider,
   wrong-model, and degraded-readiness behavior without network/model dependencies.
-- [ ] Run format/lint, strict types, unit/API tests, document/dossier/artifact validation,
+- [x] Run format/lint, strict types, unit/API tests, document/dossier/artifact validation,
   build, dependency audit, and secret review.
-- [ ] Update paired docs, traceability, state and next task with exact pass/fail/not-run
+- [x] Update paired docs, traceability, state and next task with exact pass/fail/not-run
   evidence; publish a PR but do not merge unreviewed work.
 
 ## Acceptance boundary
@@ -65,4 +65,3 @@ This increment can prove contracts, scheduling and adapter behavior with determi
 fakes. It cannot prove CPU-only execution, Persian/English quality, cold-start latency,
 offline startup, memory/NUMA fit, service TLS, backup/restore, or server readiness without
 the separately authorized AI VM, imported artifacts and benchmark window.
-

@@ -1,26 +1,27 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-21 — Stage 1A Increment 2 is implemented and isolated-CI tested; Stage 1B local CPU service is next.
+Updated: 2026-09-21 — Stage 1B source boundary is implemented and locally tested; authorized server qualification is next.
 
-## English — start Stage 1B with the bounded local CPU service
+## English — qualify Stage 1B on the local CPU server
 
 Read the [active master prompt](requirements/NEXTOPS_MASTER_PROMPT.md) with the new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md), [Zabbix guide](en/ZABBIX_SERVER.md), [per-server deployer guide](en/DEPLOYMENT_DOSSIERS.md), [allocation record](requirements/ZABBIX_SERVER_PLAN.json), [START_HERE](en/START_HERE.md), [PROJECT_STATE](PROJECT_STATE.md), [ROADMAP](en/ROADMAP.md), [SERVER_PLAN](en/SERVER_PLAN.md), [STORAGE_PLAN](STORAGE_PLAN.md), [OFFLINE_RUNTIME](en/OFFLINE_RUNTIME.md), [ESXI_BASELINE](en/ESXI_BASELINE.md) and [hardware evidence](requirements/HARDWARE_BASELINE.json). Original detail remains in the [unchanged v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md); all 51 sections and eleven integrations remain in scope.
 
 The new amendment supersedes the old small `zabbix-lab` fallback and combined totals in active-prompt v3.0 section 18 and older guide examples. It does not change the three initial NextOps core VMs or authorize provisioning. Inspect actual Git state, work already done and approval/test evidence before resuming; do not overwrite work or restart completed discovery indefinitely.
 
-### Current checkpoint: Stage 1B Increment 3
+### Current checkpoint: Stage 1B server qualification
 
-The owner accepted the paired [Phase 0 report](en/PHASE_0_REPORT.md), [Persian report](fa/PHASE_0_REPORT.md), ADRs 0001–0006, trust boundaries, and Stage 1A–1E roadmap on 2026-09-21. Stage 1A Increments 1–2 now provide the locked Python project, typed boundary contracts, deterministic denial policy, local identity, PostgreSQL state, durable runs/leases, append-restricted audit, authenticated API, and explicit bilingual fixture result. The isolated gate runs 39 unit/API/schema cases and 5 real-PostgreSQL cases. It is source and CI evidence, not server deployment acceptance.
+The owner accepted the paired [Phase 0 report](en/PHASE_0_REPORT.md), [Persian report](fa/PHASE_0_REPORT.md), ADRs 0001–0006, trust boundaries, and Stage 1A–1E roadmap on 2026-09-21. Stage 1A Increments 1–2 provide the locked Python project, typed boundary contracts, deterministic denial policy, local identity, PostgreSQL state, durable runs/leases, append-restricted audit, authenticated API, and explicit bilingual fixture result. Stage 1B Increment 3 now provides the source-pinned evaluation candidate, `LLMProvider` boundary, authenticated loopback adapter and one-active/two-queued scheduler. The configured gate runs 53 unit/API/schema cases and 5 real-PostgreSQL cases. This is source/test evidence, not server or model acceptance.
 
-The next bounded change is Increment 3: select one reviewed CPU runtime/model combination, record exact artifact version/license/checksum/size, implement the `LLMProvider` contract behind an authenticated internal service, enforce request/concurrency/token/time/memory limits, and measure fresh Persian and English generation from cold local artifacts. No cloud fallback, target credential, management route, or Zabbix completion claim is allowed.
+The next bounded change requires explicit infrastructure authorization: perform read-only private preflight, create or verify the proposed AI guest, build and hash llama.cpp from the pinned source, import and locally hash the pinned Qwen file through controlled staging, then measure fresh Persian and English generation from cold local artifacts. Preserve the repository profile initially—loopback provider, CPU-only/zero offload, one active request, queue depth two, 8K configured context and 1024-token output ceiling. No cloud fallback, target credential, management route, tool/agent/MCP mode, or Zabbix completion claim is allowed.
 
 The four schema-validated YAML files under `deploy/server-dependencies` remain the public deployer handoff. Start with the paired [server-start checklist](en/SERVER_START_CHECKLIST.md): perform only authorized private preflight now; provision `nextops-app` first and `nextops-ai` second only after explicit infrastructure authorization. Do not install the application yet because offline releases, production service units, reverse proxy, backup/restore, and the production PostgreSQL patch are not accepted. Environment-specific values belong in an approved private deployment record keyed by `required_inputs`, never in these public files.
 
-Acceptance evidence for Increment 3:
+Acceptance evidence for server qualification:
 
-- one runtime and one quantized model are chosen from reviewed local artifacts, with license, checksum, size, source, tokenizer/template identity, and compatibility recorded;
-- the inference service authenticates its caller, accepts a strict bounded request, returns schema-validated output, and has no infrastructure credential or Internet dependency;
-- one active generation request and a bounded queue protect login/audit capacity; timeout, cancellation, overload, malformed output, and worker-restart states are explicit;
+- the authorized local runtime build records compiler, build flags, linked libraries, binary SHA-256, guest ISA and CPU-only/zero-offload startup evidence;
+- the imported model matches the pinned filename, size and SHA-256 and is promoted only after staging verification;
+- the inference service authenticates both boundaries, remains on loopback, and exposes no target credential, raw error, model path or Internet dependency;
+- one active generation request and a queue of two preserve app capacity; timeout, cancellation, overload, malformed output and worker-restart states remain explicit;
 - fresh Persian and English prompts run CPU-only from a cold local start while Internet is blocked, with latency, memory, CPU/thread settings, prompt/output token counts, and quality observations recorded;
 - Ruff, strict mypy, pytest, documentation checks, frozen install, dependency audit, secret scan, and artifact-integrity checks pass with exact results recorded.
 
@@ -36,7 +37,7 @@ Check available CPU/RAM, VM load/reservations, outstanding thin-disk commitments
 
 For the new Zabbix path, prepare a separate monitoring VM; when an appropriate authorized installation already exists, inspect and reuse it instead of duplicating it. Confirm frontend base path/version, read-only host-group scope, protected token delivery, self-monitoring items, required monitored guests and sample questions. Do not put private details or tokens into the repository.
 
-The active-prompt section 26 report is accepted and the first two local Stage 1A increments are complete in source/CI. Before any infrastructure operation, use only authorized read-only discovery to close the facts that affect that operation. Code approval does not imply VM creation, host installation, model download, target access, patch, stress test, network change or reboot.
+The active-prompt section 26 report, two Stage 1A increments and the Stage 1B repository foundation are complete in source/tests. Before any infrastructure operation, use only authorized read-only discovery to close the facts that affect that operation. Code approval does not imply VM creation, host installation, model download, target access, patch, stress test, network change or reboot.
 
 ### Selected starting profile after authorization
 
@@ -76,27 +77,28 @@ Apply the retained project ceiling and every per-datastore capacity check: exist
 
 Use dependency-aware service readiness, not fixed sleeps or an Internet test. The databases precede their dependants; model/gateway can start independently. Zabbix failure must not prevent general local Q&A when its own dependencies are healthy. A host failure affects both systems; independent host-outage detection and backups are separate requirements.
 
-After each increment, update PROJECT_STATE with actual work, created roles, exact versions/test commands/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. Increments 1–2 changed repository code and isolated CI only; no host, VM, LVM, model, Zabbix, network, restart or server recovery work was performed.
+After each increment, update PROJECT_STATE with actual work, created roles, exact versions/test commands/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. Increments 1–3 changed repository code/tests only; no host, VM, LVM, model, Zabbix, network, restart or server recovery work was performed.
 
-## فارسی — شروع 1B با سرویس محدود CPU محلی
+## فارسی — صلاحیت‌سنجی 1B روی سرور CPU محلی
 
 [پرامپت فعال](requirements/NEXTOPS_MASTER_PROMPT.md)، [اصلاحیهٔ تازهٔ چیدمان](requirements/DEPLOYMENT_UPDATE.md)، [راهنمای Zabbix](fa/ZABBIX_SERVER.md)، [راهنمای پرونده‌های استقرار](fa/DEPLOYMENT_DOSSIERS.md)، [رکورد تخصیص](requirements/ZABBIX_SERVER_PLAN.json)، [شروع کار](fa/START_HERE.md)، [وضعیت پروژه](PROJECT_STATE.md)، [نقشهٔ راه](fa/ROADMAP.md)، [سرورها](fa/SERVER_PLAN.md)، [ذخیره‌سازی](STORAGE_PLAN.md)، [آفلاین](fa/OFFLINE_RUNTIME.md)، [ESXi](fa/ESXI_BASELINE.md) و [شاهد سخت‌افزار](requirements/HARDWARE_BASELINE.json) خوانده شوند. جزئیات اولیه در [بایگانی ثابت نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) باقی است؛ ۵۱ بخش و یازده اتصال حذف نمی‌شوند.
 
 اصلاحیه فقط نمونهٔ آزمایشگاهی کوچک و مجموع منابع وابسته به آن را در بخش ۱۸ پرامپت ۳.۰ و مثال‌های قدیمی جایگزین می‌کند؛ تعداد سه ماشین اولیهٔ خود NextOps و شروط مجوز تغییر نمی‌کنند. پیش از ادامه، Git، کار موجود، تأییدها و نتیجهٔ آزمون بررسی شوند؛ کار بازنویسی یا شناسایی تکمیل‌شده بی‌دلیل تکرار نشود.
 
-### نقطهٔ فعلی: Increment 3 و Stage 1B
+### نقطهٔ فعلی: صلاحیت‌سنجی سرور Stage 1B
 
-مالک در ۲۱ سپتامبر ۲۰۲۶ [گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md)، ADRهای 0001 تا 0006، مرزهای اعتماد و نقشهٔ 1A تا 1E را پذیرفت. Incrementهای 1 و 2 از 1A اکنون پروژهٔ Python قفل‌شده، قرارداد و سیاست، هویت محلی، PostgreSQL، run/lease ماندگار، audit محدود، API احرازهویت‌شده و نتیجهٔ fixture دوزبانه دارند. دروازهٔ جدا ۳۹ آزمون unit/API/schema و ۵ آزمون PostgreSQL واقعی دارد؛ این شاهد کد و CI است، نه پذیرش استقرار سرور.
+مالک در ۲۱ سپتامبر ۲۰۲۶ [گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md)، ADRهای 0001 تا 0006، مرزهای اعتماد و نقشهٔ 1A تا 1E را پذیرفت. Incrementهای 1 و 2 از 1A پروژهٔ Python قفل‌شده، قرارداد و سیاست، هویت محلی، PostgreSQL، run/lease ماندگار، audit محدود، API احرازهویت‌شده و نتیجهٔ fixture دوزبانه دارند. Increment 3 از 1B نیز نامزد منبع ثابت، مرز `LLMProvider`، adapter احرازهویت‌شدهٔ loopback و scheduler با یک درخواست فعال و دو مورد در صف دارد. دروازه برای ۵۳ آزمون unit/API/schema و ۵ آزمون PostgreSQL واقعی تنظیم شده است؛ این شاهد source و test است، نه پذیرش سرور یا مدل.
 
-تغییر محدود بعدی Increment 3 است: یک ترکیب runtime/model بازبینی‌شده برای CPU انتخاب و نسخه، مجوز، checksum و اندازهٔ آن ثبت شود؛ قرارداد `LLMProvider` پشت سرویس داخلی احرازهویت‌شده پیاده شود؛ حد درخواست، هم‌زمانی، token، زمان و حافظه اعمال و تولید تازهٔ فارسی و انگلیسی از artifact سرد محلی اندازه‌گیری شود. fallback ابری، credential مقصد، مسیر مدیریت و ادعای تکمیل Zabbix ممنوع است.
+تغییر محدود بعدی مجوز صریح زیرساخت می‌خواهد: preflight خصوصی و فقط‌خواندنی انجام، مهمان AI پیشنهادی ساخته یا بررسی، llama.cpp از منبع ثابت build و hash، فایل ثابت Qwen از staging کنترل‌شده وارد و محلی hash شود؛ سپس تولید تازهٔ فارسی و انگلیسی از artifact سرد اندازه‌گیری شود. profile مخزن در شروع حفظ شود: provider روی loopback، اجرای CPU-only و zero-offload، یک درخواست فعال، صف دو موردی، context برابر 8K و سقف خروجی 1024 token. fallback ابری، credential مقصد، مسیر مدیریت، tools/agent/MCP و ادعای تکمیل Zabbix ممنوع است.
 
 چهار فایل YAML معتبرشده با schema قرارداد عمومی تحویل‌اند. کار سرور از [چک‌لیست شروع فارسی](fa/SERVER_START_CHECKLIST.md) آغاز شود: اکنون فقط preflight خصوصی و مجاز؛ ساخت `nextops-app` در گام اول و `nextops-ai` در گام دوم فقط پس از مجوز صریح زیرساخت. برنامه هنوز نصب نشود، چون release آفلاین، unit تولید، reverse proxy، backup/restore و patch تولید PostgreSQL پذیرفته نشده‌اند. مقدار واقعی محیط در رکورد خصوصی بر اساس `required_inputs` بماند.
 
-شاهد پذیرش Increment 3:
+شاهد پذیرش صلاحیت‌سنجی سرور:
 
-- یک runtime و مدل quantized از artifact محلی بازبینی‌شده با مجوز، checksum، اندازه، منبع، tokenizer/template و سازگاری ثبت شود؛
-- سرویس inference هویت سرویس را بررسی، ورودی محدود و دارای نوع را بپذیرد، خروجی schema-valid بدهد و credential زیرساخت یا وابستگی اینترنت نداشته باشد؛
-- یک generation فعال و صف محدود ظرفیت login/audit را حفظ کند و timeout، لغو، overload، خروجی خراب و restart حالت صریح داشته باشند؛
+- build محلیِ مجاز runtime، compiler، flag، کتابخانهٔ پیوندی، SHA-256 فایل اجرایی، ISA مهمان و شاهد CPU-only/zero-offload را ثبت کند؛
+- مدل واردشده با نام، اندازه و SHA-256 ثابت برابر باشد و فقط پس از بررسی staging ارتقا یابد؛
+- سرویس inference هر دو مرز را احرازهویت کند، روی loopback بماند و credential مقصد، خطای خام، مسیر مدل یا وابستگی اینترنت را منتشر نکند؛
+- یک generation فعال و صف دو موردی ظرفیت برنامه را حفظ کند و timeout، لغو، overload، خروجی خراب و restart حالت صریح داشته باشند؛
 - prompt تازهٔ فارسی و انگلیسی در CPU، از cold start محلی و با اینترنت قطع اجرا و latency، حافظه، CPU/thread، token و مشاهدهٔ کیفیت ثبت شود؛
 - Ruff، mypy سخت‌گیرانه، pytest، سند، نصب قفل‌شده، audit وابستگی، اسکن secret و یکپارچگی artifact با نتیجهٔ دقیق قبول شوند.
 
@@ -112,7 +114,7 @@ CPU/RAM آزاد، بار و رزرو ماشین‌ها، رشد تعهدشده�
 
 برای مسیر جدید، ماشین پایش مستقل آماده شود؛ اگر Zabbix مناسب و مجاز موجود است، ابتدا بررسی و همان استفاده شود. مسیر پایه و نسخهٔ API، گروه‌های میزبان، روش امن توکن، خودپایشی، مهمان‌های هدف و سؤال نمونه معلوم شوند. جزئیات خصوصی در مخزن نباشند.
 
-گزارش بخش ۲۶ پذیرفته و دو برش محلی 1A در source/CI کامل شده‌اند. پیش از هر عملیات زیرساخت، فقط با شناسایی مجاز و فقط‌خواندنی واقعیت مؤثر همان عملیات روشن شود. مجوز کد به معنی ساخت VM، نصب روی میزبان، دانلود مدل، دسترسی مقصد، وصله، فشار، شبکه یا reboot نیست.
+گزارش بخش ۲۶، دو برش 1A و پایهٔ مخزنی 1B در source/test کامل شده‌اند. پیش از هر عملیات زیرساخت، فقط با شناسایی مجاز و فقط‌خواندنی واقعیت مؤثر همان عملیات روشن شود. مجوز کد به معنی ساخت VM، نصب روی میزبان، دانلود مدل، دسترسی مقصد، وصله، فشار، شبکه یا reboot نیست.
 
 ### چیدمان منتخب پس از مجوز
 
@@ -146,4 +148,4 @@ LVM پیشنهادی `vg_zabbix`: بیرون LVM یک GiB برای EFI و دو G
 
 شروع سرویس تابع وابستگی باشد، نه تأخیر ثابت یا تست اینترنت. پایگاه پیش از وابسته بالا بیاید و مدل و درگاه بتوانند مستقل شروع شوند. قطع Zabbix مانع سؤال عمومی محلی با وابستگی سالم نشود. خرابی میزبان هر دو سامانه را قطع می‌کند؛ پشتیبان و بررسی قطعی مستقل نیاز جدا هستند.
 
-پس از هر گام، کار واقعی، نقش ساخته‌شده، نسخه و فرمان و نتیجهٔ آزمون، شکست و اجرا‌نشده و مانع و یک گام بعد در وضعیت پروژه ثبت شوند. Incrementهای 1 و 2 فقط مخزن و CI جدا را تغییر دادند؛ هیچ میزبان، VM، LVM، مدل، Zabbix، شبکه، شروع مجدد یا بازیابی سرور انجام نشد.
+پس از هر گام، کار واقعی، نقش ساخته‌شده، نسخه و فرمان و نتیجهٔ آزمون، شکست و اجرا‌نشده و مانع و یک گام بعد در وضعیت پروژه ثبت شوند. Incrementهای 1 تا 3 فقط مخزن و آزمون را تغییر دادند؛ هیچ میزبان، VM، LVM، مدل، Zabbix، شبکه، شروع مجدد یا بازیابی سرور انجام نشد.
