@@ -10,7 +10,7 @@ from hashlib import sha256
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import delete, select, update
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
@@ -673,7 +673,9 @@ class DurableAppService:
         """Extend a live lease only for the holder of its opaque token."""
 
         now = self._now()
-        expires_at = now + timedelta(seconds=self._settings.lease_ttl_seconds)
+        extended_expiry = func.greatest(RunLease.expires_at, now) + timedelta(
+            seconds=self._settings.lease_ttl_seconds
+        )
         try:
             with self._session_factory() as session, session.begin():
                 statement = (
@@ -684,7 +686,7 @@ class DurableAppService:
                         RunLease.lease_token_sha256 == hash_opaque_token(grant.lease_token),
                         RunLease.expires_at > now,
                     )
-                    .values(heartbeat_at=now, expires_at=expires_at)
+                    .values(heartbeat_at=now, expires_at=extended_expiry)
                     .returning(RunLease.generation, RunLease.acquired_at, RunLease.expires_at)
                 )
                 row = session.execute(statement).one_or_none()
