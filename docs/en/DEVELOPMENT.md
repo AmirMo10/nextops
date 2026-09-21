@@ -8,7 +8,9 @@
 
 Read [AGENTS.md](../../AGENTS.md), the master specification, project state and next task. Inspect Git status, instructions, tracked files, manifests, locks, tests, migrations and deployment definitions. Preserve dirty changes and existing implementations. Review scripts before running them in an isolated environment without production credentials. Do not use destructive reset/clean, overwrite work or rewrite history.
 
-Current repository content is documentation. Do not manufacture a baseline application test pass when no application exists. Hardware discovery and approval of the architecture remain Phase 0 work.
+Application work has begun with the tested Stage 1A typed-contract and deterministic-policy slice. It is not yet a runnable API, UI, database, connector, or AI service; do not treat its unit pass as a deployed application pass. Phase 0 architecture was accepted on 2026-09-21, while hardware discovery and every infrastructure authorization remain separate gates.
+
+For the current Python slice, install the generated lock with `uv sync --extra dev --frozen`, then run `uv run --extra dev ruff check packages tests`, `uv run --extra dev mypy packages tests`, and `uv run --extra dev pytest`. Regenerate `uv.lock` only with reviewed dependency changes; run `uv audit --frozen` before release work.
 
 ## Module discipline
 

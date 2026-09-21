@@ -1,8 +1,8 @@
 # Architecture decision records / سوابق تصمیم معماری
 
-All records below are **proposed** and require Phase 0 owner review. They organize decisions already described in the supplied master prompt; publication is not approval or implementation.
+All records below were **accepted by the owner on 2026-09-21** with the Phase 0 architecture and roadmap. Acceptance establishes the design direction; it is not infrastructure authorization or proof that later application stages are implemented.
 
-همهٔ تصمیم‌های زیر **پیشنهادی** هستند و به بازبینی مالک در مرحلهٔ صفر نیاز دارند. این فایل‌ها تصمیم‌های مطرح‌شده در پرامپت را مرتب می‌کنند؛ انتشار به معنای تأیید یا پیاده‌سازی نیست.
+همهٔ تصمیم‌های زیر در **۲۱ سپتامبر ۲۰۲۶ به تأیید مالک رسیدند** و معماری و نقشهٔ راه مرحلهٔ صفر را تثبیت می‌کنند. این پذیرش، مجوز زیرساخت یا شاهد پیاده‌سازی مرحله‌های بعد نیست.
 
 | Record | Subject / موضوع |
 |---|---|

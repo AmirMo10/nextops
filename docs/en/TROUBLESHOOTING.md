@@ -6,7 +6,7 @@
 
 | Symptom | Safe investigation | Do not do |
 |---|---|---|
-| No application starts after clone | Check project state: this is currently documentation only | Invent an installer or report nonexistent services as failed |
+| No application starts after clone | Check project state: only the local contract/policy test slice exists; no service entrypoint is implemented | Invent an installer or report nonexistent services as failed |
 | Slow model responses | Separate queue delay, prompt time and generation time; inspect effective CPUs, NUMA placement, thread pools, context and contention | Increase every worker to 90 threads or choose a larger model because RAM is free |
 | Model unavailable | Validate local artifact path/checksum, CPU build, model/template compatibility and resource cap | Fall back to an external AI API or download during offline runtime |
 | Permission denied | Check actor, target/environment scope, named tool and current policy; use an authorized administrator for changes | Disable authorization or give the model admin credentials |

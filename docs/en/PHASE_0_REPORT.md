@@ -2,7 +2,9 @@
 
 [فارسی](../fa/PHASE_0_REPORT.md) · [Start here](START_HERE.md) · [Project state](../PROJECT_STATE.md) · [Next task](../NEXT_TASK.md) · [Threat model](../requirements/nextops-threat-model.md)
 
-Status: proposed for owner acceptance. Updated: 2026-09-20. Scope: repository and supplied-evidence review only. No VM, package, model, network, Zabbix, ESXi, storage, restart, or production change was performed.
+Status: accepted by the owner on 2026-09-21. Scope: repository and supplied-evidence review only. Acceptance is not infrastructure authorization; no VM, model, network, Zabbix, ESXi, storage, restart, or production change was performed.
+
+Acceptance record: the owner approved the four-VM logical architecture, trust boundaries, ADRs 0001–0006, Stage 1A–1E roadmap, and the local denial-first Stage 1A contract increment. The initial deployment remains one organization at small scale, designed for measured future growth, with a dedicated Zabbix server. Provisioning, target access, and operational changes still require separate authorization.
 
 ## 1. Executive architecture recommendation
 
@@ -15,7 +17,7 @@ The owner confirmed these Phase 0 context assumptions:
 - a dedicated `zabbix-server` rather than the older small lab fallback;
 - internal LAN/VPN use is assumed for this report; public ingress is not approved.
 
-The immediate implementation order after architecture and provisioning approval is Stage 1A `nextops-app`, then Stage 1B `nextops-ai`, then Stage 1C `nextops-connectors-ro`. The Zabbix VM may be prepared beside 1A/1B but must be ready before live Stage 1C reads. No target credential crosses into the model or browser.
+The implementation order is Stage 1A `nextops-app`, then Stage 1B `nextops-ai`, then Stage 1C `nextops-connectors-ro`. Local Stage 1A code may proceed under this approval; VM preparation still requires separate authorization. The Zabbix VM may be prepared beside 1A/1B after that authorization but must be ready before live Stage 1C reads. No target credential crosses into the model or browser.
 
 ## 2. Repository findings and preserved components
 
@@ -103,7 +105,7 @@ All 51 original sections and eleven integration families remain in scope through
 7. One G10 is one failure domain; same-host replicas, snapshots, and backup staging are not host-loss recovery.
 8. The dedicated `zabbix-server` profile supersedes the older optional small lab for the selected new-server path.
 
-Phase 0 documentation can be complete while facts remain explicitly blocked. Phase 0 exits only when the owner accepts this architecture/roadmap and separately authorizes the next implementation/provisioning boundary.
+Phase 0 exited on the owner's 2026-09-21 architecture/roadmap acceptance. Missing private facts and infrastructure authorization remain explicit gates for provisioning and live integration; they do not block the approved local Stage 1A contract work.
 
 ## 5. Logical architecture and enforced trust boundaries
 
@@ -419,9 +421,9 @@ Before production, choose an encrypted off-host or controlled offline-media back
 
 ## 16. Prioritized implementation increments with acceptance tests
 
-These increments begin only after owner acceptance of Phase 0 and the applicable provisioning authorization.
+Phase 0 owner acceptance was recorded on 2026-09-21. Local code increments may proceed; any increment that touches infrastructure still waits for its applicable authorization.
 
-### Increment 1 — Stage 1A contract and deny-by-default foundation
+### Increment 1 — Stage 1A contract and deny-by-default foundation — implemented locally
 
 - Add pinned Python project/lock, explicit package roots, domain/contracts/policy modules, and focused tests.
 - Define organization/environment, actor scope, immutable target, investigation request, evidence metadata, policy decision, typed error, correlation/idempotency IDs, and risk classes.
@@ -463,7 +465,7 @@ Acceptance: ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 produce recorded outc
 
 | Item | Status and impact |
 |---|---|
-| Architecture/ADR acceptance | Pending owner review; blocks implementation beyond planning |
+| Architecture/ADR acceptance | Accepted by the owner on 2026-09-21; no longer blocks local Stage 1A work |
 | Provisioning/install/network authorization | Not granted by Phase 0; blocks VM and guest changes |
 | Current host capacity/topology/compatibility | Missing changing/private evidence; blocks safe VM placement and optimized runtime selection |
 | DS-C commitments/health/latency | Missing; blocks allocation despite arithmetic headroom |
@@ -476,17 +478,17 @@ Acceptance: ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 produce recorded outc
 | Repository identity mismatch in current docs | Later owner direction establishes `Omid-NextAI/nextops`; needs a versioned canonical-doc correction while preserving historical records |
 | Future multi-organization expansion | Explicitly deferred; must trigger a new isolation/migration threat review before a second organization |
 
-Decisions requested with this report:
+Decisions recorded for this report:
 
-1. Accept or revise the four-VM logical architecture, trust boundaries, and Stage 1A–1E roadmap.
-2. Accept the smallest Stage 1A code increment below; this does not itself authorize provisioning.
-3. Separately authorize the exact infrastructure discovery/provisioning window when the private checklist and recovery path are ready.
+1. The four-VM logical architecture, trust boundaries, and Stage 1A–1E roadmap are accepted.
+2. The smallest Stage 1A code increment below is accepted and implemented locally; this does not authorize provisioning.
+3. Exact infrastructure discovery/provisioning still requires separate authorization when the private checklist and recovery path are ready.
 
-## 18. Smallest proposed first implementation change
+## 18. Accepted first implementation change and result
 
-After Phase 0 acceptance, start locally with a denial-first typed contract slice for `nextops-app`; do not begin with the model or a live Zabbix token.
+The accepted first slice starts locally with denial-first typed contracts for `nextops-app`; it does not begin with the model or a live Zabbix token.
 
-Proposed files:
+Implemented roots:
 
 ```text
 pyproject.toml
@@ -494,9 +496,7 @@ uv.lock
 packages/nextops/domain/
 packages/nextops/contracts/
 packages/nextops/policy/
-tests/unit/domain/
-tests/unit/contracts/
-tests/unit/policy/
+tests/unit/
 ```
 
 The slice defines only identity/scope, immutable target, read-only investigation request, policy decision, evidence metadata, typed errors, risk class, correlation/idempotency IDs, and deny-by-default behavior. It has no operational credential, connector call, arbitrary command/SQL, model invocation, database migration, VM change, or public endpoint.
@@ -511,4 +511,6 @@ Acceptance gate:
 - unit tests demonstrate that model-supplied text cannot alter policy;
 - `PROJECT_STATE.md`, `NEXT_TASK.md`, traceability, and paired documentation updated with actual results.
 
-Owner acceptance of this report closes the Phase 0 architecture checkpoint. It does not mark any application stage implemented and does not authorize infrastructure access.
+Result recorded on 2026-09-21: a Python 3.12 project and generated `uv.lock` now define immutable identity/target/request/evidence/error contracts and deterministic policy. The authenticated actor context is supplied separately from untrusted request/model intent. Eighteen unit cases pass, including unknown organization/environment/target/action, missing or malformed scope, all four mutation risk classes, contradictory decisions, frozen targets, aware evidence timestamps, and rejection of request-supplied actor/risk fields. `ruff check`, strict `mypy`, `pytest`, `uv lock --check`, a clean `uv sync --extra dev --frozen`, `uv pip check`, and `uv audit --frozen` passed; the audit reported no known vulnerabilities after upgrading locked setuptools to 83.0.0.
+
+This closes Phase 0 and completes only Stage 1A Increment 1. It creates no connector, credential, database migration, AI path, network listener, VM, or public endpoint and does not authorize infrastructure access. Increment 2—the durable local app slice—is next.

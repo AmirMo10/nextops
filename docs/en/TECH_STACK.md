@@ -2,7 +2,7 @@
 
 [فارسی](../fa/TECH_STACK.md) · [Index](INDEX.md) · [Diagram atlas](DIAGRAMS.md) · [CPU evaluation](CPU_AI.md)
 
-> **Recommendation, not an installed dependency manifest.** The existing [master specification](../requirements/NEXTOPS_MASTER_PROMPT.md), sections 6–10, supplies the architectural baseline. The choices below make that baseline more concrete for implementation review. The prompt remains unchanged. No runtime versions, models or performance results have been validated on the G10.
+> **Architecture recommendation with one implemented foundation slice.** Python 3.12, `uv`, Pydantic, Ruff, mypy and pytest are now declared and locked for Stage 1A contracts/policy. The remaining API, database, frontend, connector, inference and deployment choices below are not installed product services. No model or performance result has been validated on the G10.
 
 ## Recommended starting combination
 
@@ -12,7 +12,7 @@ Build a modular application, not a service per library. The API and worker share
 
 ## 1. Core stack and ownership
 
-All entries are proposed. “Core” means part of the initial implementation target, not already installed. Linked documentation establishes library capabilities, not measured suitability for this server.
+Except for the locked Python contract/quality tooling noted above, entries remain proposed. “Core” means part of the initial implementation target, not a deployed service. Linked documentation establishes library capabilities, not measured suitability for this server.
 
 | Layer | Suggested choice | Purpose in NextOps | Important constraint |
 |---|---|---|---|
@@ -31,7 +31,7 @@ All entries are proposed. “Core” means part of the initial implementation ta
 | Evidence storage | Restricted local filesystem + PostgreSQL metadata | Content hashes, provenance and permission-scoped retrieval | Redact before model exposure; controlled retention and off-host recovery. |
 | Quality tooling | Ruff, mypy, pytest, HTTPX; Vitest and Playwright | Formatting/types, backend contracts and browser tests [11] | Simulator tests are not device validation; document failed/skipped/unrun tests. |
 
-The original baseline already selected Python/FastAPI, PostgreSQL, React/Vite, local CPU inference and MCP. `uv`, the UI component choices, frontend query library and concrete quality tools are implementation suggestions; they do not silently replace existing functioning code.
+The original baseline selected Python/FastAPI, PostgreSQL, React/Vite, local CPU inference and MCP. Stage 1A now adopts `uv`, Pydantic, Ruff, mypy and pytest for the local contract/policy slice; FastAPI and the remaining UI, database, MCP and inference dependencies still require their own reviewed increments.
 
 ## 2. Visual and interaction stack
 

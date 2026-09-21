@@ -1,25 +1,26 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-20 — Phase 0 report drafted; owner architecture acceptance is the current checkpoint.
+Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 1 is implemented and the durable app slice is next.
 
-## English — review Phase 0, then authorize the smallest Stage 1A slice
+## English — continue Stage 1A with the durable local app slice
 
 Read the [active master prompt](requirements/NEXTOPS_MASTER_PROMPT.md) with the new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md), [Zabbix guide](en/ZABBIX_SERVER.md), [allocation record](requirements/ZABBIX_SERVER_PLAN.json), [START_HERE](en/START_HERE.md), [PROJECT_STATE](PROJECT_STATE.md), [ROADMAP](en/ROADMAP.md), [SERVER_PLAN](en/SERVER_PLAN.md), [STORAGE_PLAN](STORAGE_PLAN.md), [OFFLINE_RUNTIME](en/OFFLINE_RUNTIME.md), [ESXI_BASELINE](en/ESXI_BASELINE.md) and [hardware evidence](requirements/HARDWARE_BASELINE.json). Original detail remains in the [unchanged v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md); all 51 sections and eleven integrations remain in scope.
 
 The new amendment supersedes the old small `zabbix-lab` fallback and combined totals in active-prompt v3.0 section 18 and older guide examples. It does not change the three initial NextOps core VMs or authorize provisioning. Inspect actual Git state, work already done and approval/test evidence before resuming; do not overwrite work or restart completed discovery indefinitely.
 
-### Current checkpoint: owner review
+### Current checkpoint: Stage 1A Increment 2
 
-Review the paired [Phase 0 report](en/PHASE_0_REPORT.md) and [Persian report](fa/PHASE_0_REPORT.md), plus the repository-grounded [threat model](requirements/nextops-threat-model.md). The owner has confirmed one organization initially, small initial scale with future growth, and the dedicated `zabbix-server` path.
+The owner accepted the paired [Phase 0 report](en/PHASE_0_REPORT.md), [Persian report](fa/PHASE_0_REPORT.md), ADRs 0001–0006, trust boundaries, and Stage 1A–1E roadmap on 2026-09-21. Stage 1A Increment 1 now provides the locked Python project, typed boundary contracts, and deterministic denial policy with 18 passing unit cases. It has no live service, database, connector, credential, or AI path.
 
-The one next decision is to accept or revise the proposed four-VM architecture, trust boundaries, Stage 1A–1E sequence, and the denial-first typed contract slice in report section 18. Acceptance closes the architecture checkpoint only; it does not authorize VM creation, installation, network changes, model downloads, credentials, or production access.
+The next bounded change is Increment 2: define the local identity bootstrap/recovery flow, add PostgreSQL migrations and least-privilege roles for organization/environment/target/run/audit state, persist idempotent run creation and worker leases, expose the minimal authenticated versioned API, and return one bilingual fixture-backed result. Build and test this locally before any target credential or model integration.
 
-Acceptance evidence for Phase 0:
+Acceptance evidence for Increment 2:
 
-- the owner explicitly accepts or revises the architecture/roadmap and proposed first code slice;
-- unavailable host/Zabbix/scale/recovery facts remain recorded as private preflight blockers rather than invented observations;
-- ADRs 0001–0006 remain proposed until that acceptance is recorded;
-- implementation starts only from the accepted Stage 1A checkpoint, with provisioning separately authorized.
+- authenticated actor context is derived server-side and revoked or cross-scope access is denied;
+- migrations, database constraints, restricted roles, audit append behavior, idempotency, leases, restart recovery, and rollback/recovery are tested against real isolated PostgreSQL;
+- audit/database failure returns an explicit failed or degraded state rather than unlogged success;
+- a minimal Persian/English fixture result shows source, time, scope, partial/stale state, typed errors, and audit reference;
+- Ruff, strict mypy, pytest, documentation checks, frozen install, dependency audit, and secret review pass with exact results recorded.
 
 ### Already supplied
 
@@ -33,7 +34,7 @@ Check available CPU/RAM, VM load/reservations, outstanding thin-disk commitments
 
 For the new Zabbix path, prepare a separate monitoring VM; when an appropriate authorized installation already exists, inspect and reuse it instead of duplicating it. Confirm frontend base path/version, read-only host-group scope, protected token delivery, self-monitoring items, required monitored guests and sample questions. Do not put private details or tokens into the repository.
 
-The active-prompt section 26 report is now drafted. Before any infrastructure operation, use only authorized read-only discovery to close the facts that affect that operation. No installation, model download, target access, patch, stress test, network change or reboot is implied by documentation publication. Resume the next unfinished authorized stage only after acceptance and the applicable authorization are evidenced.
+The active-prompt section 26 report is accepted and the first local contract increment is complete. Before any infrastructure operation, use only authorized read-only discovery to close the facts that affect that operation. Stage 1A code approval does not imply VM creation, host installation, model download, target access, patch, stress test, network change or reboot.
 
 ### Selected starting profile after authorization
 
@@ -73,26 +74,27 @@ Apply the retained project ceiling and every per-datastore capacity check: exist
 
 Use dependency-aware service readiness, not fixed sleeps or an Internet test. The databases precede their dependants; model/gateway can start independently. Zabbix failure must not prevent general local Q&A when its own dependencies are healthy. A host failure affects both systems; independent host-outage detection and backups are separate requirements.
 
-After each stage, update PROJECT_STATE with actual work, created roles, exact versions/test commands/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. This update is documentation only; no host, VM, LVM, model, Zabbix, network, restart or recovery work has been performed here.
+After each increment, update PROJECT_STATE with actual work, created roles, exact versions/test commands/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. Increment 1 changed local repository code only; no host, VM, LVM, model, Zabbix, network, restart or recovery work was performed.
 
-## فارسی — بازبینی مرحلهٔ صفر و سپس برش کوچک 1A
+## فارسی — ادامهٔ 1A با برش ماندگار app محلی
 
 [پرامپت فعال](requirements/NEXTOPS_MASTER_PROMPT.md)، [اصلاحیهٔ تازهٔ چیدمان](requirements/DEPLOYMENT_UPDATE.md)، [راهنمای Zabbix](fa/ZABBIX_SERVER.md)، [رکورد تخصیص](requirements/ZABBIX_SERVER_PLAN.json)، [شروع کار](fa/START_HERE.md)، [وضعیت پروژه](PROJECT_STATE.md)، [نقشهٔ راه](fa/ROADMAP.md)، [سرورها](fa/SERVER_PLAN.md)، [ذخیره‌سازی](STORAGE_PLAN.md)، [آفلاین](fa/OFFLINE_RUNTIME.md)، [ESXi](fa/ESXI_BASELINE.md) و [شاهد سخت‌افزار](requirements/HARDWARE_BASELINE.json) خوانده شوند. جزئیات اولیه در [بایگانی ثابت نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) باقی است؛ ۵۱ بخش و یازده اتصال حذف نمی‌شوند.
 
 اصلاحیه فقط نمونهٔ آزمایشگاهی کوچک و مجموع منابع وابسته به آن را در بخش ۱۸ پرامپت ۳.۰ و مثال‌های قدیمی جایگزین می‌کند؛ تعداد سه ماشین اولیهٔ خود NextOps و شروط مجوز تغییر نمی‌کنند. پیش از ادامه، Git، کار موجود، تأییدها و نتیجهٔ آزمون بررسی شوند؛ کار بازنویسی یا شناسایی تکمیل‌شده بی‌دلیل تکرار نشود.
 
-### نقطهٔ فعلی: بازبینی مالک
+### نقطهٔ فعلی: Increment 2 از 1A
 
-[گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md) و [مدل تهدید](requirements/nextops-threat-model.md) بازبینی شوند. مالک تک‌سازمانی بودن فعلی، مقیاس کوچک اولیه با رشد آینده و مسیر `zabbix-server` مستقل را تأیید کرده است.
+مالک در ۲۱ سپتامبر ۲۰۲۶ [گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md)، ADRهای 0001 تا 0006، مرزهای اعتماد و نقشهٔ 1A تا 1E را پذیرفت. Increment 1 از 1A اکنون پروژهٔ Python قفل‌شده، قراردادهای مرزی دارای نوع و سیاست قطعی رد پیش‌فرض را با ۱۸ آزمون قبول‌شده دارد. هنوز سرویس زنده، پایگاه، connector، credential یا مسیر AI وجود ندارد.
 
-تنها تصمیم بعدی، پذیرش یا اصلاح معماری چهارماشینی، مرزهای اعتماد، ترتیب 1A تا 1E و برش قرارداد دارای نوع با رد پیش‌فرض در بخش ۱۸ گزارش است. پذیرش فقط checkpoint معماری را می‌بندد؛ مجوز ساخت VM، نصب، شبکه، دانلود مدل، credential یا دسترسی عملیاتی نیست.
+تغییر محدود بعدی Increment 2 است: طراحی bootstrap و recovery هویت محلی، migration و role محدود PostgreSQL برای سازمان، محیط، هدف، run و audit، ساخت idempotent run و lease ماندگار، API نسخه‌دار و احرازهویت‌شدهٔ حداقلی و یک نتیجهٔ دوزبانه با fixture. این مسیر ابتدا محلی و بدون credential مقصد یا مدل ساخته و آزموده شود.
 
-شاهد پذیرش مرحلهٔ صفر:
+شاهد پذیرش Increment 2:
 
-- مالک معماری، roadmap و نخستین برش کد را صریحاً می‌پذیرد یا اصلاح می‌کند؛
-- واقعیت‌های غایب میزبان، Zabbix، مقیاس و بازیابی به‌عنوان مانع خصوصی باقی می‌مانند و ساخته نمی‌شوند؛
-- ADRهای 0001 تا 0006 تا ثبت پذیرش همچنان پیشنهادی‌اند؛
-- implementation فقط از 1A پذیرفته‌شده و با مجوز جداگانهٔ ساخت آغاز می‌شود.
+- Actor احرازشده در سرور ساخته و دسترسی لغوشده یا خارج از دامنه رد شود؛
+- migration، قید، role محدود، append ممیزی، idempotency، lease، بازیابی پس از restart و rollback/recovery با PostgreSQL جدا و واقعی آزموده شوند؛
+- خرابی ممیزی یا پایگاه به وضعیت شکست یا کاهش‌یافتهٔ صریح برسد، نه موفقیت ثبت‌نشده؛
+- نتیجهٔ fixture فارسی و انگلیسی منبع، زمان، دامنه، partial/stale، خطای دارای نوع و ارجاع audit را نشان دهد؛
+- Ruff، mypy سخت‌گیرانه، pytest، بررسی مستندات، نصب قفل‌شده، audit وابستگی و بررسی رمز با نتیجهٔ دقیق قبول شوند.
 
 ### اطلاعات موجود
 
@@ -106,7 +108,7 @@ CPU/RAM آزاد، بار و رزرو ماشین‌ها، رشد تعهدشده�
 
 برای مسیر جدید، ماشین پایش مستقل آماده شود؛ اگر Zabbix مناسب و مجاز موجود است، ابتدا بررسی و همان استفاده شود. مسیر پایه و نسخهٔ API، گروه‌های میزبان، روش امن توکن، خودپایشی، مهمان‌های هدف و سؤال نمونه معلوم شوند. جزئیات خصوصی در مخزن نباشند.
 
-گزارش بخش ۲۶ اکنون آماده است. پیش از هر عملیات زیرساخت، فقط با شناسایی مجاز و فقط‌خواندنی واقعیت مؤثر همان عملیات روشن شود. انتشار مستندات مجوز نصب، دانلود، دسترسی مقصد، وصله، فشار، شبکه یا reboot نیست. فقط پس از پذیرش و ثبت مجوز مربوط، گام ناتمام بعدی ادامه یابد.
+گزارش بخش ۲۶ پذیرفته و نخستین برش قرارداد محلی کامل شده است. پیش از هر عملیات زیرساخت، فقط با شناسایی مجاز و فقط‌خواندنی واقعیت مؤثر همان عملیات روشن شود. مجوز کد 1A به معنی ساخت VM، نصب روی میزبان، دانلود مدل، دسترسی مقصد، وصله، فشار، شبکه یا reboot نیست.
 
 ### چیدمان منتخب پس از مجوز
 
@@ -140,4 +142,4 @@ LVM پیشنهادی `vg_zabbix`: بیرون LVM یک GiB برای EFI و دو G
 
 شروع سرویس تابع وابستگی باشد، نه تأخیر ثابت یا تست اینترنت. پایگاه پیش از وابسته بالا بیاید و مدل و درگاه بتوانند مستقل شروع شوند. قطع Zabbix مانع سؤال عمومی محلی با وابستگی سالم نشود. خرابی میزبان هر دو سامانه را قطع می‌کند؛ پشتیبان و بررسی قطعی مستقل نیاز جدا هستند.
 
-پس از هر گام، کار واقعی، نقش ساخته‌شده، نسخه و فرمان و نتیجهٔ آزمون، شکست و اجرا‌نشده و مانع و یک گام بعد در وضعیت پروژه ثبت شوند. این تغییر فقط مستندات است؛ هیچ میزبان، VM، LVM، مدل، Zabbix، شبکه، شروع مجدد یا بازیابی در این کار انجام نشده است.
+پس از هر گام، کار واقعی، نقش ساخته‌شده، نسخه و فرمان و نتیجهٔ آزمون، شکست و اجرا‌نشده و مانع و یک گام بعد در وضعیت پروژه ثبت شوند. Increment 1 فقط کد مخزن محلی را تغییر داد؛ هیچ میزبان، VM، LVM، مدل، Zabbix، شبکه، شروع مجدد یا بازیابی انجام نشد.
