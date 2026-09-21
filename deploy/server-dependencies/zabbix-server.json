@@ -1,0 +1,667 @@
+{
+  "$schema": "./server-dependency.schema.json",
+  "schema_version": "1.0.0",
+  "manifest_revision": "2026-09-21",
+  "server_id": "zabbix-server",
+  "evidence_status": "planning_contract_not_deployed",
+  "purpose": "Provide the dedicated local Zabbix monitoring dependency, its separate PostgreSQL database, Nginx/PHP frontend/API, and Agent 2 before Stage 1C live reads, without sharing credentials or database state with NextOps.",
+  "authorization": {
+    "documentation_authorized": true,
+    "provisioning_authorized": false,
+    "operational_access_authorized": false,
+    "destructive_actions_authorized": false,
+    "notes": "The owner selected and authorized documentation of the dedicated Zabbix profile. VM creation, disk partitioning, package installation, database initialization, network changes, monitoring-agent deployment, reader creation, and target access remain separately gated."
+  },
+  "source_records": [
+    "docs/requirements/HARDWARE_BASELINE.json",
+    "docs/requirements/ZABBIX_SERVER_PLAN.json",
+    "docs/requirements/DEPLOYMENT_UPDATE.md",
+    "docs/en/ZABBIX_SERVER.md",
+    "docs/en/SERVER_PLAN.md",
+    "docs/STORAGE_PLAN.md",
+    "docs/en/OFFLINE_RUNTIME.md",
+    "docs/PROJECT_STATE.md"
+  ],
+  "vm": {
+    "hypervisor": "VMware ESXi 8.0.3 build 24414501 (owner-supplied host evidence)",
+    "guest_os": "Ubuntu Server 24.04 LTS proposed; exact image and maintained patch lock required",
+    "vcpu": 4,
+    "ram_gib": 16,
+    "disk_gib": 200,
+    "firmware": "UEFI for a new installation; retain a reviewed existing guest boot mode rather than converting blindly",
+    "cpu_hot_add": false,
+    "proposed_datastore_alias": "DS-C",
+    "placement_status": "Dedicated new-server profile proposal; reuse a suitable authorized existing Zabbix instead of creating a duplicate.",
+    "deployment_order": "Prepare during the approved Stage 1A/1B window and finish server/API/reader readiness before Stage 1C live integration",
+    "preflight_requirements": [
+      "First verify that a suitable authorized local Zabbix does not already exist; do not create both this server and the older small lab.",
+      "Refresh ESXi/DS-C capacity, storage health/latency, thin commitments, snapshot/consolidation space, VM compatibility, and swap placement.",
+      "Confirm the disk is a new empty 200-GiB guest disk before any partitioning; preserve ESXi and never format from its management shell.",
+      "Collect actual monitored hosts/items/value rates/intervals/value types/retention and growth assumptions before accepting database capacity.",
+      "Confirm approved local network, DNS/time/PKI, administrative recovery, independent backup, and monitored-agent paths."
+    ]
+  },
+  "service_accounts": [
+    {
+      "id": "zabbix",
+      "scope": "Zabbix server engine and its own database schema only",
+      "login": false,
+      "privilege": "non-root service identity; database role limited to the Zabbix database and schema",
+      "status": "planned_not_created"
+    },
+    {
+      "id": "postgres",
+      "scope": "local Zabbix PostgreSQL engine only; not the NextOps database",
+      "login": false,
+      "privilege": "database service identity with separate administrative/backup access paths",
+      "status": "planned_not_created"
+    },
+    {
+      "id": "www-data",
+      "scope": "Nginx/PHP-FPM Zabbix frontend/API only",
+      "login": false,
+      "privilege": "read required frontend files and communicate only with the configured local services",
+      "status": "planned_not_created"
+    },
+    {
+      "id": "zabbix-agent",
+      "scope": "Zabbix Agent 2 guest monitoring with an explicitly reviewed item/command surface",
+      "login": false,
+      "privilege": "non-root except narrowly reviewed capabilities; unrestricted remote commands forbidden",
+      "status": "planned_not_created"
+    },
+    {
+      "id": "nextops-reader",
+      "scope": "Zabbix application identity limited to approved host groups and a non-empty read-method allowlist",
+      "login": false,
+      "privilege": "read-only resource permissions and custom API role; token consumed only by nextops-zabbix-ro runner",
+      "status": "example_identity_not_created"
+    }
+  ],
+  "software_dependencies": [
+    {
+      "id": "ubuntu-server",
+      "kind": "guest_os",
+      "version": "24.04 LTS maintained patch (exact image pending)",
+      "runtime_location": "local",
+      "required": true,
+      "status": "proposed_not_installed",
+      "lock_evidence": null
+    },
+    {
+      "id": "zabbix-server",
+      "kind": "monitoring_server",
+      "version": "7.0 LTS maintained patch (exact package lock pending)",
+      "runtime_location": "local",
+      "required": true,
+      "status": "proposed_not_installed",
+      "lock_evidence": null
+    },
+    {
+      "id": "postgresql",
+      "kind": "database",
+      "version": "16 maintained patch (exact package lock pending)",
+      "runtime_location": "local",
+      "required": true,
+      "status": "proposed_not_installed",
+      "lock_evidence": null
+    },
+    {
+      "id": "nginx",
+      "kind": "reverse_proxy",
+      "version": null,
+      "runtime_location": "local",
+      "required": true,
+      "status": "proposed_not_locked",
+      "lock_evidence": null
+    },
+    {
+      "id": "php-fpm-zabbix-extensions",
+      "kind": "frontend_runtime",
+      "version": null,
+      "runtime_location": "local",
+      "required": true,
+      "status": "compatible_versions_not_locked",
+      "lock_evidence": null
+    },
+    {
+      "id": "zabbix-agent2",
+      "kind": "guest_monitoring_agent",
+      "version": "match reviewed Zabbix 7.0 package set",
+      "runtime_location": "local",
+      "required": true,
+      "status": "proposed_not_installed",
+      "lock_evidence": null
+    },
+    {
+      "id": "local-dns-time-pki",
+      "kind": "infrastructure_service",
+      "version": null,
+      "runtime_location": "approved_lan",
+      "required": true,
+      "status": "private_input_not_verified",
+      "lock_evidence": null
+    },
+    {
+      "id": "independent-backup-target",
+      "kind": "recovery_service",
+      "version": null,
+      "runtime_location": "approved_lan",
+      "required": true,
+      "status": "production_gate_not_selected",
+      "lock_evidence": null
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "zabbix-offline-package-repository",
+      "purpose": "Exact signed Zabbix 7.0 LTS, PostgreSQL 16, Nginx, PHP-FPM/extensions, Agent 2, and transitive package set for Ubuntu",
+      "install_path": "/srv/zabbix/artifacts/packages",
+      "version": null,
+      "sha256": null,
+      "license_record": null,
+      "source_record": null,
+      "status": "not_prepared_or_locked"
+    },
+    {
+      "id": "zabbix-database-schema",
+      "purpose": "Version-matched PostgreSQL schema/data assets supplied by the exact Zabbix package set",
+      "install_path": "/srv/zabbix/artifacts/schema",
+      "version": null,
+      "sha256": null,
+      "license_record": null,
+      "source_record": null,
+      "status": "not_prepared_or_verified"
+    },
+    {
+      "id": "zabbix-template-set",
+      "purpose": "Version-matched server-health and approved guest templates with import/source metadata",
+      "install_path": "/srv/zabbix/artifacts/templates",
+      "version": null,
+      "sha256": null,
+      "license_record": null,
+      "source_record": null,
+      "status": "not_selected_or_imported"
+    },
+    {
+      "id": "zabbix-tls-public-chain",
+      "purpose": "Public trust chain and frontend certificate material; private key delivered separately",
+      "install_path": "/etc/zabbix/tls",
+      "version": null,
+      "sha256": null,
+      "license_record": "not_applicable",
+      "source_record": null,
+      "status": "private_pki_input_missing"
+    },
+    {
+      "id": "zabbix-release-and-license-manifest",
+      "purpose": "Package versions, repository signatures, checksums, licenses, configuration schema, and rollback compatibility record",
+      "install_path": "/srv/zabbix/artifacts/manifest.json",
+      "version": null,
+      "sha256": null,
+      "license_record": null,
+      "source_record": null,
+      "status": "not_created"
+    }
+  ],
+  "configuration_files": [
+    {
+      "id": "filesystem-table",
+      "path": "/etc/fstab",
+      "owner": "root:root",
+      "mode": "0644",
+      "contains_secret_values": false,
+      "status": "not_generated_or_tested",
+      "required_settings": [
+        "UUID-based required mounts for /var, /var/log, and /var/lib/postgresql",
+        "swap LV entry",
+        "mount failure must prevent PostgreSQL/Zabbix startup rather than use underlying directories"
+      ]
+    },
+    {
+      "id": "postgresql-server-config",
+      "path": "/etc/postgresql/16/main/postgresql.conf",
+      "owner": "postgres:postgres",
+      "mode": "0640",
+      "contains_secret_values": false,
+      "status": "package_path_and_tuning_not_verified",
+      "required_settings": [
+        "local-only listen/socket policy",
+        "data/WAL/checkpoint/autovacuum/logging settings based on measured workload",
+        "timezone UTC and compatible encoding/collation",
+        "backup/archive policy if selected"
+      ]
+    },
+    {
+      "id": "postgresql-access-config",
+      "path": "/etc/postgresql/16/main/pg_hba.conf",
+      "owner": "postgres:postgres",
+      "mode": "0640",
+      "contains_secret_values": false,
+      "status": "package_path_and_roles_not_verified",
+      "required_settings": [
+        "local Zabbix database role only",
+        "separate approved administrative and backup access",
+        "no network access for NextOps, AI, connector, or general clients"
+      ]
+    },
+    {
+      "id": "zabbix-server-config",
+      "path": "/etc/zabbix/zabbix_server.conf",
+      "owner": "root:zabbix",
+      "mode": "0640",
+      "contains_secret_values": false,
+      "status": "package_path_and_secure_database_credential_delivery_not_verified",
+      "required_settings": [
+        "local PostgreSQL database/schema/user and protected credential reference/delivery",
+        "bounded caches/pollers/workers after measurement rather than copied defaults",
+        "timeouts/logging and required external script restrictions",
+        "no remote AI or NextOps database settings"
+      ]
+    },
+    {
+      "id": "zabbix-agent2-config",
+      "path": "/etc/zabbix/zabbix_agent2.conf",
+      "owner": "root:zabbix",
+      "mode": "0640",
+      "contains_secret_values": false,
+      "status": "monitoring_mode_and_server_identity_not_selected",
+      "required_settings": [
+        "approved active/passive server identity and TLS mode",
+        "hostname/metadata contract",
+        "explicitly reviewed plugins/items",
+        "no unrestricted remote command execution"
+      ]
+    },
+    {
+      "id": "zabbix-nginx-site",
+      "path": "/etc/nginx/sites-available/zabbix.conf",
+      "owner": "root:root",
+      "mode": "0644",
+      "contains_secret_values": false,
+      "status": "not_written_or_tested",
+      "required_settings": [
+        "approved server name, frontend base path, and TLS certificate paths",
+        "compatible PHP-FPM socket",
+        "security headers, body/rate/time limits, and no public exposure",
+        "api_jsonrpc.php remains reachable only on the approved local route"
+      ]
+    },
+    {
+      "id": "zabbix-php-fpm-pool",
+      "path": "/etc/php/<php-version>/fpm/pool.d/zabbix.conf",
+      "owner": "root:root",
+      "mode": "0644",
+      "contains_secret_values": false,
+      "status": "compatible_php_version_and_package_path_missing",
+      "required_settings": [
+        "dedicated pool identity/socket and bounded workers",
+        "version-compatible Zabbix PHP settings and timezone",
+        "restricted environment and filesystem access"
+      ]
+    }
+  ],
+  "secret_references": [
+    {
+      "id": "zabbix-postgres-password-ref",
+      "consumer": "zabbix server process only",
+      "reference_only": true,
+      "delivery_requirement": "Use a Zabbix-supported protected local delivery pattern with restrictive ownership; do not commit or expose it to NextOps/model/browser/logs",
+      "rotation_requirement": "Test database credential rotation and service recovery without using a shared superuser",
+      "status": "mechanism_and_roles_not_selected"
+    },
+    {
+      "id": "zabbix-admin-bootstrap-ref",
+      "consumer": "authorized Zabbix administrator bootstrap/recovery only",
+      "reference_only": true,
+      "delivery_requirement": "No documented/default production password; use an approved protected bootstrap and break-glass recovery path",
+      "rotation_requirement": "Force/verify unique credentials, revoke bootstrap material, and audit recovery use",
+      "status": "identity_bootstrap_not_defined"
+    },
+    {
+      "id": "zabbix-frontend-tls-private-key-ref",
+      "consumer": "nginx",
+      "reference_only": true,
+      "delivery_requirement": "Restricted private-key path or approved local key service with offline startup/recovery",
+      "rotation_requirement": "Define offline renewal, revocation, rollback, and expiry alerting",
+      "status": "private_pki_input_missing"
+    },
+    {
+      "id": "nextops-reader-token-ref",
+      "consumer": "nextops-zabbix-ro runner on nextops-connectors-ro, not a service on this VM",
+      "reference_only": true,
+      "delivery_requirement": "Created after custom role/host-group/method tests and delivered directly to the protected runner; never written into these public configs",
+      "rotation_requirement": "Expiry, rotation, revocation, and failed-token behavior are tested and audited",
+      "status": "reader_role_identity_and_token_not_created"
+    },
+    {
+      "id": "zabbix-agent-tls-key-ref",
+      "consumer": "zabbix-agent2 if certificate/PSK mode is approved",
+      "reference_only": true,
+      "delivery_requirement": "Per-boundary protected key material; never a shared unrestricted fleet secret",
+      "rotation_requirement": "Document monitored-host rollout, overlap, revocation, and offline recovery",
+      "status": "monitoring_transport_not_selected"
+    }
+  ],
+  "network": {
+    "runtime_internet_required": false,
+    "public_exposure_allowed": false,
+    "management_interface": "Authorized local administrator route only; Zabbix frontend/API is internal and PostgreSQL remains local to this VM.",
+    "rules": [
+      {
+        "id": "authorized-zabbix-frontend",
+        "direction": "inbound",
+        "source": "approved local administrators and nextops-zabbix-ro runner",
+        "destination": "Zabbix Nginx frontend/API",
+        "protocol": "tcp",
+        "port": 443,
+        "tls": "trusted local certificate and hostname validation required",
+        "decision": "allow_planned",
+        "status": "source_ranges_dns_base_path_and_certificate_missing"
+      },
+      {
+        "id": "admin-ssh",
+        "direction": "inbound",
+        "source": "approved administrator network",
+        "destination": "zabbix-server guest",
+        "protocol": "tcp",
+        "port": 22,
+        "tls": "SSH host-key validation required",
+        "decision": "allow_planned",
+        "status": "private_admin_path_and_recovery_not_verified"
+      },
+      {
+        "id": "passive-agent-checks",
+        "direction": "outbound",
+        "source": "Zabbix server",
+        "destination": "approved monitored guests running Agent 2",
+        "protocol": "tcp",
+        "port": 10050,
+        "tls": "authenticated/encrypted monitoring transport required",
+        "decision": "allow_planned",
+        "status": "conditional_on_approved_passive_monitoring_mode"
+      },
+      {
+        "id": "active-agent-submissions",
+        "direction": "inbound",
+        "source": "approved monitored guests running Agent 2",
+        "destination": "Zabbix server trapper",
+        "protocol": "tcp",
+        "port": 10051,
+        "tls": "authenticated/encrypted monitoring transport required",
+        "decision": "allow_planned",
+        "status": "conditional_on_approved_active_monitoring_mode"
+      },
+      {
+        "id": "postgresql-network",
+        "direction": "inbound",
+        "source": "all network clients including NextOps",
+        "destination": "Zabbix PostgreSQL",
+        "protocol": "tcp",
+        "port": 5432,
+        "tls": "not_applicable_when_local_socket_only",
+        "decision": "deny_required",
+        "status": "database_must_remain_local_unless_a_new_review_approves_otherwise"
+      },
+      {
+        "id": "runtime-internet",
+        "direction": "outbound",
+        "source": "Zabbix server services",
+        "destination": "Internet, public package repositories, SaaS monitoring, and external identity",
+        "protocol": "any",
+        "port": "any",
+        "tls": "not_applicable",
+        "decision": "deny_required",
+        "status": "must_be_enforced_and_tested_after_offline_artifact_import"
+      },
+      {
+        "id": "approved-local-infrastructure",
+        "direction": "outbound",
+        "source": "zabbix-server guest",
+        "destination": "approved local DNS, time, certificate, monitoring, and backup services",
+        "protocol": "deployment_specific",
+        "port": null,
+        "tls": "certificate/host validation required where applicable",
+        "decision": "allow_planned",
+        "status": "private_endpoints_and_ports_missing"
+      }
+    ],
+    "unresolved": [
+      "Private IP, DNS, VLAN, routing, firewall source ranges, frontend base path, and administrator recovery route",
+      "Active versus passive Agent 2 design, monitored hosts, server/proxy identities, encryption mode, and exact allowed checks",
+      "Local DNS/time/CA, certificate lifecycle, monitoring, and independent backup endpoints",
+      "Evidence that the frontend/API is internal, PostgreSQL is local-only, and runtime Internet is blocked"
+    ]
+  },
+  "storage": {
+    "total_disk_gib": 200,
+    "layout_status": "Approved engineering proposal for one new empty UEFI guest disk; exact extents/alignment/filesystem labels and destructive execution remain unapproved.",
+    "mounts": [
+      {"path": "/boot/efi", "purpose": "EFI System Partition outside LVM", "size_gib": 1, "filesystem": "FAT32_ESP", "owner": "root:root", "mode": null, "status": "proposed_not_created"},
+      {"path": "/boot", "purpose": "Kernel and boot files outside LVM", "size_gib": 2, "filesystem": "ext4", "owner": "root:root", "mode": "0755", "status": "proposed_not_created"},
+      {"path": "/", "purpose": "vg_zabbix/lv_root for OS and installed software", "size_gib": 32, "filesystem": "ext4", "owner": "root:root", "mode": "0755", "status": "proposed_not_created"},
+      {"path": "/var", "purpose": "vg_zabbix/lv_var for variable system data and package caches", "size_gib": 16, "filesystem": "ext4", "owner": "root:root", "mode": "0755", "status": "proposed_not_created"},
+      {"path": "/var/log", "purpose": "vg_zabbix/lv_log for system and service logs", "size_gib": 8, "filesystem": "ext4", "owner": "root:root", "mode": "0755", "status": "proposed_not_created"},
+      {"path": "/var/lib/postgresql", "purpose": "vg_zabbix/lv_pg for the dedicated Zabbix PostgreSQL data, indexes, and WAL", "size_gib": 112, "filesystem": "ext4", "owner": "postgres:postgres", "mode": "0700", "status": "proposed_not_created_mount_must_precede_database_initialization"},
+      {"path": null, "purpose": "vg_zabbix/lv_swap guest swap inside the 200-GiB VMDK", "size_gib": 4, "filesystem": "swap", "owner": null, "mode": null, "status": "proposed_not_created"},
+      {"path": null, "purpose": "Unallocated vg_zabbix extents reserved for reviewed future LV growth; not a filesystem or datastore credit", "size_gib": 25, "filesystem": "unallocated_lvm_extents", "owner": null, "mode": null, "status": "approximate_after_alignment_and_lvm_metadata"}
+    ],
+    "capacity_rules": [
+      "Create LVM only on the reviewed new empty guest disk; no partitioning/formatting command is included because the actual device identity is unknown.",
+      "Mount /var/lib/postgresql and verify its source before database initialization; missing mount must block PostgreSQL rather than write into the underlying directory.",
+      "Initial retention proposal is 7 days detailed history and 90 days numeric trends, subject to item/template overrides, actual growth, WAL, and restore margin.",
+      "The approximately 25-GiB free VG amount is not a logical volume and may be smaller after metadata/alignment; it is not reclaimable datastore free space.",
+      "Guest swap is already included in the 200-GiB VMDK; provisional ESXi swap is a separate datastore planning allowance.",
+      "Retain the 3-TB project ceiling and approximately 900-GiB DS-C free-space target; refresh capacity and reconcile existing VMs at the change window."
+    ],
+    "destructive_commands_included": false
+  },
+  "service_order": [
+    {"order": 1, "service": "required filesystems, time, DNS, trust, and protected key access", "readiness": "All expected UUID-backed mounts, especially /var/lib/postgresql, are present with correct ownership; time and local trust are healthy."},
+    {"order": 2, "service": "PostgreSQL 16 for Zabbix", "readiness": "Local-only database/schema/role initialize on the dedicated mount; consistency, backup, and space checks pass."},
+    {"order": 3, "service": "Zabbix server", "readiness": "Version-matched schema and engine start; queue/cache/process/internal health become observable and no unsupported upgrade is pending."},
+    {"order": 4, "service": "PHP-FPM and Nginx Zabbix frontend/API", "readiness": "Trusted local HTTPS, local admin login, discovered base path, and bounded api_jsonrpc.php access pass."},
+    {"order": 5, "service": "Zabbix Agent 2 and server-health template", "readiness": "Approved encrypted agent path and fresh self-monitoring items distinguish engine health from API reachability."},
+    {"order": 6, "service": "nextops-reader identity and token", "readiness": "Custom role/host-group/method scope and out-of-scope/write denials pass before token delivery directly to the isolated NextOps runner."},
+    {"order": 7, "service": "backup/restore and local low-space monitoring", "readiness": "Independent versioned backup and isolated restore pass; database/WAL/log/free-space growth and backup age are monitored."}
+  ],
+  "commands": [
+    {
+      "id": "guest-preflight",
+      "phase": "preflight",
+      "shell": "bash",
+      "run_as": "authorized operator",
+      "mode": "read_only",
+      "requires_authorization": true,
+      "requires_inputs": ["authorization.read_only_guest_discovery"],
+      "command": "cat /etc/os-release && uname -r && systemd-detect-virt && lscpu && free -h",
+      "purpose": "Confirm actual guest baseline and resources without changing them.",
+      "expected_result": "Approved Ubuntu/VMware baseline, 4 vCPUs, and 16 GiB are captured in private change evidence.",
+      "failure_rule": "Stop if guest identity/resources/compatibility differ or support is unresolved."
+    },
+    {
+      "id": "disk-and-mount-preflight",
+      "phase": "preflight",
+      "shell": "bash",
+      "run_as": "authorized operator",
+      "mode": "read_only",
+      "requires_authorization": true,
+      "requires_inputs": ["authorization.read_only_guest_discovery"],
+      "command": "lsblk -o NAME,TYPE,SIZE,FSTYPE,MOUNTPOINTS,UUID,ROTA && findmnt && df -hT",
+      "purpose": "Identify actual guest disks/filesystems and verify mounts/free space without partitioning.",
+      "expected_result": "A new empty 200-GiB target disk is separately proven before installation, or an installed system's reviewed layout is documented without reformatting.",
+      "failure_rule": "Stop on any ambiguous device, existing filesystem/data, size mismatch, missing mount, or insufficient capacity."
+    },
+    {
+      "id": "postgresql-mount-proof",
+      "phase": "pre_database_start",
+      "shell": "bash",
+      "run_as": "authorized operator",
+      "mode": "read_only",
+      "requires_authorization": true,
+      "requires_inputs": ["authorization.read_only_guest_discovery"],
+      "command": "findmnt --target /var/lib/postgresql && findmnt --target /var/lib/postgresql -o SOURCE,FSTYPE,SIZE,AVAIL,OPTIONS",
+      "purpose": "Prove the database directory is the intended dedicated filesystem before initialization/start.",
+      "expected_result": "Source is the approved lv_pg filesystem with expected type, capacity, options, ownership, and free-space margin.",
+      "failure_rule": "Do not initialize or start PostgreSQL if the mount is absent, wrong, read-only unexpectedly, or low on space."
+    },
+    {
+      "id": "time-and-listener-preflight",
+      "phase": "preflight",
+      "shell": "bash",
+      "run_as": "authorized operator",
+      "mode": "read_only",
+      "requires_authorization": true,
+      "requires_inputs": ["authorization.read_only_guest_discovery"],
+      "command": "timedatectl status && sudo ss -lntup",
+      "purpose": "Verify trusted local time and detect port conflicts before installation.",
+      "expected_result": "Approved time source is healthy and HTTPS/agent/server/database ports have no unexplained conflicts.",
+      "failure_rule": "Stop if time is untrusted, a listener conflicts, PostgreSQL is network-exposed unexpectedly, or private output cannot be protected."
+    },
+    {
+      "id": "package-bundle-integrity-check",
+      "phase": "artifact_import",
+      "shell": "bash",
+      "run_as": "authorized package import operator",
+      "mode": "guarded_template",
+      "requires_authorization": true,
+      "requires_inputs": ["artifact.zabbix_bundle_dir", "artifact.zabbix_package_lock"],
+      "command": "test -n \"${ZABBIX_BUNDLE_DIR:-}\" && cd -- \"$ZABBIX_BUNDLE_DIR\" && sha256sum -c SHA256SUMS",
+      "purpose": "Verify packages, repository metadata/signatures, schema, templates, checksums, and licenses before installation.",
+      "expected_result": "Every approved file verifies and exact package/repository/schema/template versions are recorded.",
+      "failure_rule": "Fail closed on missing, extra, mismatched, unsigned, or unlicensed artifacts; do not fetch replacements during runtime."
+    },
+    {
+      "id": "partition-and-create-lvm",
+      "phase": "storage_provisioning",
+      "shell": "bash",
+      "run_as": "authorized storage operator",
+      "mode": "blocked",
+      "requires_authorization": true,
+      "requires_inputs": ["authorization.destructive_storage", "storage.zabbix_device_identity", "storage.zabbix_layout_lock", "recovery.zabbix_prechange_backup"],
+      "command": null,
+      "purpose": "Create the UEFI/boot partitions, LVM PV/VG/LVs, filesystems, swap, and durable mount entries on the exact new empty guest disk.",
+      "expected_result": "The reviewed layout exists with approximately 25 GiB free VG extents and all mounts survive a tested offline reboot.",
+      "failure_rule": "Blocked because the actual device is unknown and destructive storage authority is absent. Never derive or guess a disk path from this public file."
+    },
+    {
+      "id": "install-zabbix-stack",
+      "phase": "install",
+      "shell": "bash",
+      "run_as": "authorized deployment operator",
+      "mode": "blocked",
+      "requires_authorization": true,
+      "requires_inputs": ["authorization.provisioning", "artifact.zabbix_package_lock", "storage.zabbix_mount_evidence", "deployment.zabbix_install_runbook"],
+      "command": null,
+      "purpose": "Install the exact offline package set, initialize PostgreSQL/schema, configure services/TLS/retention, and create the administrator recovery path.",
+      "expected_result": "Reproducible native/systemd installation with local-only database, trusted internal HTTPS, and no default credentials or Internet dependency.",
+      "failure_rule": "Blocked until exact packages/repositories/checksums, secure credential delivery, and a clean lab install/rollback runbook are reviewed."
+    },
+    {
+      "id": "service-status-and-versions",
+      "phase": "verification",
+      "shell": "bash",
+      "run_as": "authorized operator",
+      "mode": "guarded_template",
+      "requires_authorization": true,
+      "requires_inputs": ["deployment.zabbix_install_evidence"],
+      "command": "systemctl --no-pager --full status postgresql zabbix-server nginx php*-fpm zabbix-agent2; zabbix_server --version; psql --version; nginx -v",
+      "purpose": "Capture local service state and exact installed component versions after an authorized install.",
+      "expected_result": "Expected pinned services are active in dependency order and versions match the package lock; sensitive config is not printed.",
+      "failure_rule": "Stop acceptance on inactive/failed/unexpected versions; do not mask a failed service with a successful frontend response."
+    },
+    {
+      "id": "api-reader-and-self-monitoring-validation",
+      "phase": "qualification",
+      "shell": "bash",
+      "run_as": "authorized operator through reviewed client/connector",
+      "mode": "blocked",
+      "requires_authorization": true,
+      "requires_inputs": ["authorization.zabbix_read_access", "target.zabbix_contract", "secrets.nextops_reader_delivery", "acceptance.zabbix_cases"],
+      "command": null,
+      "purpose": "Validate version probe, scoped authenticated reads, write/out-of-scope denials, current-problem semantics, and fresh server-health items.",
+      "expected_result": "API reachability, monitored-estate state, and monitoring-engine health are each evidenced and kept distinct.",
+      "failure_rule": "Blocked until the reader role/token and connector exist; never treat apiinfo.version, an empty result, or a dashboard as full health."
+    },
+    {
+      "id": "backup-restore-and-rollback",
+      "phase": "recovery",
+      "shell": "bash",
+      "run_as": "authorized recovery operator in an isolated restore target",
+      "mode": "blocked",
+      "requires_authorization": true,
+      "requires_inputs": ["recovery.zabbix_backup_contract", "recovery.zabbix_restore_target", "recovery.zabbix_last_known_good"],
+      "command": null,
+      "purpose": "Create a consistent database/config/artifact backup, restore it offline to an isolated target, and prove a compatible package/config rollback.",
+      "expected_result": "Restored services, admin recovery, self-monitoring, scoped reader, history/trends, and checksums pass within approved RPO/RTO.",
+      "failure_rule": "Blocked until exact backup/restore/package compatibility commands pass in a lab; never overwrite the only production copy for a restore test."
+    }
+  ],
+  "observability": [
+    {"signal": "Zabbix API authenticated availability and exact frontend/server/API version", "source": "bounded local API/readiness checks", "required_before_acceptance": true, "status": "not_configured"},
+    {"signal": "Zabbix server uptime, process/cache/queue health, unsupported items, and stale/missing internal metrics", "source": "version-matched Zabbix server-health template/internal items", "required_before_acceptance": true, "status": "not_configured"},
+    {"signal": "enabled/disabled hosts, agent availability, active problems, maintenance/suppression, item freshness, and collection gaps", "source": "scoped Zabbix data", "required_before_acceptance": true, "status": "not_collected"},
+    {"signal": "PostgreSQL size/WAL/checkpoint/autovacuum/locks/connections/latency and backup age", "source": "local database monitoring", "required_before_acceptance": true, "status": "not_configured"},
+    {"signal": "filesystem/LV/VG/datastore headroom, log growth, low-space thresholds, CPU/memory pressure, and service restarts", "source": "guest plus authorized host monitoring", "required_before_acceptance": true, "status": "not_configured"},
+    {"signal": "TLS expiry, authentication/authorization failures, reader token expiry, and out-of-scope/write denials", "source": "local frontend/API and audit monitoring", "required_before_acceptance": true, "status": "not_configured"}
+  ],
+  "backup_and_rollback": {
+    "backup_scope": [
+      "consistent Zabbix PostgreSQL database/schema/roles and version metadata",
+      "Zabbix server, Agent 2, Nginx, PHP-FPM, PostgreSQL access, mount, retention, and housekeeping configuration without secret values",
+      "package repository/signature/checksum/license/schema/template manifests and last-known-good package set",
+      "protected administrator/database/TLS/agent/reader recovery or rotation records through their approved mechanisms",
+      "custom templates, host/group/user/role/token metadata as supported, and versioned acceptance evidence"
+    ],
+    "off_host_required": true,
+    "restore_test_required": true,
+    "rollback_trigger": [
+      "database mount, schema initialization/upgrade, or package compatibility failure",
+      "frontend/API, self-monitoring, reader scope, or write-denial regression",
+      "data corruption, WAL/database/log/free-space pressure, or backup failure",
+      "offline startup, local login, certificate, or administrator recovery failure",
+      "unexpected network/database exposure or credential leak"
+    ],
+    "rollback_procedure_status": "not_implemented; exact version-compatible package/config/database backup, restore, and rollback runbook must pass in an isolated lab"
+  },
+  "required_inputs": [
+    {"id": "authorization.provisioning", "classification": "authorization", "required_before": "any VM, guest, package, account, or network change", "status": "pending_authorization", "description": "Approved change ticket/window with exact VM, disk, network, packages, accounts, operations, and rollback authority.", "validation": "Match the approved operation digest and recheck immediately before execution."},
+    {"id": "authorization.read_only_guest_discovery", "classification": "authorization", "required_before": "running guest preflight commands", "status": "pending_authorization", "description": "Authorization for read-only discovery on the actual Zabbix guest.", "validation": "Record target identity, operator, timestamp, commands, and sanitized private output reference."},
+    {"id": "authorization.destructive_storage", "classification": "authorization", "required_before": "partitioning, LVM, filesystem, swap, or fstab changes", "status": "pending_authorization", "description": "Exact destructive-operation approval bound to the proven new empty guest disk and reviewed recovery state.", "validation": "Re-resolve the disk immediately before execution, verify it is the approved non-system empty disk, and require a second operator/check per organization policy."},
+    {"id": "authorization.zabbix_read_access", "classification": "authorization", "required_before": "reader/API qualification", "status": "pending_authorization", "description": "Exact endpoint, host groups, methods, operator, and test window authorized for read-only validation.", "validation": "Role and runner recheck scope; no documentation or VM approval is treated as target-access approval."},
+    {"id": "vm.zabbix_capacity_compatibility", "classification": "runtime_evidence", "required_before": "VM creation", "status": "not_run", "description": "Current ESXi compatibility/capacity/contention, storage health/latency/free space, thin commitments, and swap placement.", "validation": "Private change-window evidence reconciles 4 vCPU/16 GiB/200 GiB and the 4-VM 40-vCPU/184-GiB/980-GiB combined profile."},
+    {"id": "storage.zabbix_device_identity", "classification": "private", "required_before": "any destructive storage operation", "status": "missing", "description": "Stable actual guest disk identity plus evidence it is the approved new empty 200-GiB non-system disk.", "validation": "Resolve symlinks/device mapping, compare size/serial/controller evidence privately, confirm no partitions/filesystems/mounts/data, and never store the real identifier in this public file."},
+    {"id": "storage.zabbix_layout_lock", "classification": "deployment_decision", "required_before": "partitioning", "status": "missing", "description": "Installer/device-specific partition table, alignment, PV/VG/LV names/extents, filesystems, labels/UUIDs, mount options, ownership, swap, and boot/recovery procedure.", "validation": "Lab install plus reboot/mount-failure tests reproduce the accepted size plan without formatting the wrong disk."},
+    {"id": "storage.zabbix_mount_evidence", "classification": "runtime_evidence", "required_before": "database initialization", "status": "not_run", "description": "Actual findmnt/lsblk/ownership/free-space evidence for every required filesystem, especially /var/lib/postgresql.", "validation": "Sources and sizes match the layout lock; missing or wrong mount makes PostgreSQL fail closed."},
+    {"id": "artifact.zabbix_package_lock", "classification": "artifact_lock", "required_before": "installation", "status": "missing", "description": "Exact Ubuntu image/patch, Zabbix 7.0 LTS patch, PostgreSQL 16 patch, Nginx, PHP-FPM/extensions, Agent 2, repositories/signatures, transitive packages, schema/templates, checksums, and licenses.", "validation": "Complete signed/checksummed offline repository, clean lab install/upgrade/rollback, and compatibility matrix pass."},
+    {"id": "artifact.zabbix_bundle_dir", "classification": "private", "required_before": "artifact verification", "status": "missing", "description": "Absolute staging path under an approved package-import root.", "validation": "Path resolves under the approved root; ownership/signatures/checksums verify and no credentials/private inventory are bundled."},
+    {"id": "deployment.zabbix_install_runbook", "classification": "deployment_decision", "required_before": "installation", "status": "missing", "description": "Reviewed exact native-package commands for offline repository setup, database role/schema initialization, secure credential delivery, Nginx/PHP, Agent 2, systemd dependencies, retention, and rollback.", "validation": "Clean isolated install and uninstall/rollback tests pass against the exact package lock and storage layout."},
+    {"id": "deployment.zabbix_install_evidence", "classification": "runtime_evidence", "required_before": "post-install version/status command", "status": "not_run", "description": "Change record proving the authorized package/install phase completed on the intended VM.", "validation": "Contains target/release/change IDs and sanitized outputs without credentials."},
+    {"id": "deployment.zabbix_workload", "classification": "deployment_decision", "required_before": "retention/capacity acceptance", "status": "missing", "description": "Monitored host/item counts, item types, intervals, new-values rate, event/log volume, unsupported items, desired history/trend exceptions, growth, and latency targets.", "validation": "Observed database/WAL/index growth and queue/write latency under representative sustained load fit thresholds with restore/free-space margin."},
+    {"id": "network.zabbix_boundaries", "classification": "deployment_decision", "required_before": "firewall/listener/TLS configuration", "status": "missing", "description": "Private address/name/base path, browser/connector/admin source ranges, active/passive agent mode, monitored hosts, TLS identities, DNS/time/CA/backup flows, and default-deny rules.", "validation": "Only approved HTTPS/admin/agent/support flows succeed; database/public Internet/unapproved agent commands and sources fail."},
+    {"id": "target.zabbix_contract", "classification": "private", "required_before": "reader creation and API qualification", "status": "missing", "description": "Actual frontend/API/server versions, base path, host groups, user/role/method/field scope, pagination/limits, current-problem semantics, and self-monitoring items.", "validation": "Authenticated reads and out-of-scope/write denials pass; API, estate, and engine health remain distinct."},
+    {"id": "secrets.nextops_reader_delivery", "classification": "deployment_decision", "required_before": "token creation/delivery", "status": "missing", "description": "Dedicated reader identity/custom role/token, protected runner-only delivery, expiry/rotation/revocation, redaction, and recovery.", "validation": "Token inheritance/permissions are tested; only nextops-zabbix-ro obtains the value and revoked/expired behavior is explicit."},
+    {"id": "acceptance.zabbix_cases", "classification": "deployment_decision", "required_before": "qualification", "status": "missing", "description": "Versioned server/API/estate/self-monitoring, permission, retention, offline, failure, low-space, load, backup, restore, and ZBX-01 through ZBX-08 cases.", "validation": "Human-approved expected results and durations; actual production/lab/fixture evidence is labeled and retained."},
+    {"id": "recovery.zabbix_prechange_backup", "classification": "runtime_evidence", "required_before": "destructive storage or upgrade operations", "status": "not_run", "description": "Verified recoverable state appropriate to whether the target is a new empty VM or an existing installation.", "validation": "For an existing system, independent backup/restore evidence exists; for a new VM, source installation/image/config state and rebuild path are recorded."},
+    {"id": "recovery.zabbix_backup_contract", "classification": "deployment_decision", "required_before": "production acceptance", "status": "missing", "description": "Consistent PostgreSQL/config/artifact/identity backup method, independent destination, encryption/recovery, schedule, retention, RPO/RTO, and low-space behavior.", "validation": "Isolated offline restore recovers login, DB, frontend/API, self-monitoring, scoped reader, history/trends, and checksums."},
+    {"id": "recovery.zabbix_restore_target", "classification": "private", "required_before": "restore test", "status": "missing", "description": "Approved isolated non-production restore target with sufficient capacity and no collision with production identities/routes.", "validation": "Target is explicitly identified and isolated; restore cannot overwrite the only production copy or contact managed devices unexpectedly."},
+    {"id": "recovery.zabbix_last_known_good", "classification": "artifact_lock", "required_before": "promotion/upgrade", "status": "missing", "description": "Compatible prior package/schema/config/template set and database restore point.", "validation": "Checksums/signatures verify and the set has passed a lab rollback/restore with the exact upgrade path."}
+  ],
+  "acceptance_gates": [
+    {"id": "ZBX-SRV-01", "description": "Approved VM resources, new-disk LVM/mount layout, time/DNS/TLS, package versions, and dependency-ordered services match the private deployment record.", "status": "not_run", "evidence_reference": null},
+    {"id": "ZBX-SRV-02", "description": "PostgreSQL uses the dedicated required mount, remains local-only, and passes consistency, growth, backup, restore, restart, and low-space tests.", "status": "not_run", "evidence_reference": null},
+    {"id": "ZBX-SRV-03", "description": "Frontend/API uses trusted internal HTTPS; local admin recovery works; exact versions/base path are known; public/Internet/database exposure is denied.", "status": "not_run", "evidence_reference": null},
+    {"id": "ZBX-SRV-04", "description": "Fresh self-monitoring distinguishes API availability, monitored-estate state, and engine queue/cache/process health; missing/stale data is not labeled healthy.", "status": "not_run", "evidence_reference": null},
+    {"id": "ZBX-SRV-05", "description": "Dedicated NextOps reader is limited to approved host groups/read methods; write, script, acknowledgement/closure, configuration, and out-of-scope access are denied.", "status": "not_run", "evidence_reference": null},
+    {"id": "ZBX-SRV-06", "description": "Seven-day history/ninety-day numeric-trend proposal is reconciled with effective item/template settings and measured database/WAL/index growth, retention exceptions, and restore margin.", "status": "not_run", "evidence_reference": null},
+    {"id": "ZBX-SRV-07", "description": "Cold start, local admin login, monitoring collection, scoped API reads, backup, and isolated restore work with Internet blocked and approved LAN retained.", "status": "not_run", "evidence_reference": null},
+    {"id": "ZBX-SRV-08", "description": "ZBX-01 through ZBX-08 and applicable OFF-01 through OFF-10 have actual labeled evidence before the first milestone is called complete.", "status": "not_run", "evidence_reference": null}
+  ],
+  "known_limitations": [
+    "No VM, disk layout, package repository, Zabbix/PostgreSQL/frontend/agent service, reader identity, token, monitoring target, or backup exists by evidence in this repository.",
+    "Exact maintained package patches, repository signatures, PHP compatibility, frontend base path, monitored workload, retention exceptions, and performance limits are unresolved.",
+    "The LVM sizes are a proposal for a new empty 200-GiB guest disk; no destructive command is safe until the actual disk identity and authorization are proven.",
+    "The dedicated Zabbix server and all NextOps VMs share one G10 failure domain; this is not host-level high availability.",
+    "If a suitable authorized Zabbix installation already exists, it should be inspected and reused rather than duplicating or overwriting it."
+  ]
+}
