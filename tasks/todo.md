@@ -4,11 +4,11 @@
 
 **Acceptance criteria:**
 
-- [ ] Strict contracts cover identity, sessions, runs, leases, audit, and bilingual result
+- [x] Strict contracts cover identity, sessions, runs, leases, audit, and bilingual result
   provenance without accepting client-supplied actor context.
-- [ ] SQLAlchemy metadata and an Alembic baseline define all required tables, foreign
+- [x] SQLAlchemy metadata and an Alembic baseline define all required tables, foreign
   keys, scoped uniqueness, checks, indexes, and append-only audit behavior.
-- [ ] PostgreSQL roles separate migration, application, and read-only support access.
+- [x] PostgreSQL roles separate migration, application, and read-only support access.
 
 **Verification:** red/green unit tests plus Alembic metadata inspection.
 

@@ -31,12 +31,12 @@ result. No target credential, connector, model, VM, network, or host mutation is
 
 ### Slice 1: contracts and migration
 
-- [ ] Add strict identity, session, run, lease, audit, and result contracts.
-- [ ] Add SQLAlchemy mappings for organization, environment, target, identity, session,
+- [x] Add strict identity, session, run, lease, audit, and result contracts.
+- [x] Add SQLAlchemy mappings for organization, environment, target, identity, session,
   run, and audit state.
-- [ ] Add an Alembic baseline with constraints, indexes, append-only audit protections,
+- [x] Add an Alembic baseline with constraints, indexes, append-only audit protections,
   and least-privilege PostgreSQL role/grant definitions.
-- [ ] Add failing contract/schema tests first, then make them pass.
+- [x] Add failing contract/schema tests first, then make them pass.
 
 ### Slice 2: durable services
 
