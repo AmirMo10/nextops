@@ -194,6 +194,7 @@ def test_cross_environment_target_is_denied_and_audited(
             display_name="Other",
         )
         session.add(second_environment)
+        session.flush()
         second_identity = Identity(
             id=uuid4(),
             organization_id=bootstrap.organization_id,

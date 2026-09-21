@@ -29,6 +29,7 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 | [Security](SECURITY.md) | Identity, credentials, policy, approvals and threat model |
 | [Installation](INSTALL.md) | Current repository setup and future guest deployment gates |
 | [Per-server deployment dossiers](DEPLOYMENT_DOSSIERS.md) | Four schema-validated machine-readable handoffs, commands, blockers, required private inputs, evidence and rollback |
+| [Server start checklist](SERVER_START_CHECKLIST.md) | First private preflight, provisioning order, guest evidence and explicit installation holds |
 | [Configuration](CONFIGURATION.md) | Settings, inventory, models and credential references |
 | [MCP](MCP.md) | Protocol, gateway and execution contracts |
 | [Integrations](INTEGRATIONS.md) | Eleven families, scope, limitations and compatibility status |

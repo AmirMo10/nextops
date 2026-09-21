@@ -2,6 +2,9 @@
 
 [فارسی](../fa/DEPLOYMENT_DOSSIERS.md) · [Index](INDEX.md) · [Server plan](SERVER_PLAN.md) · [Storage gate](../STORAGE_PLAN.md)
 
+For the exact first actions, provisioning order, read-only guest commands, and installation
+holds, use the [server start checklist](SERVER_START_CHECKLIST.md) before opening a change.
+
 **Status: deployer handoff contract, not an installer or deployment authorization.** The four human-readable YAML files under [`deploy/server-dependencies`](../../deploy/server-dependencies) collect the known sizing, proposed boundaries, dependencies, configuration paths, command templates, evidence requirements, and unresolved deployment inputs for the accepted initial profile. All runtime acceptance gates remain `not_run`.
 
 ## Files and ownership

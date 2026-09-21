@@ -115,6 +115,7 @@ class DurableAppService:
                         display_name=request.organization_name,
                     )
                 )
+                session.flush()
                 session.add(
                     Environment(
                         id=environment_id,
@@ -123,6 +124,7 @@ class DurableAppService:
                         display_name=request.environment_name,
                     )
                 )
+                session.flush()
                 identity = Identity(
                     id=identity_id,
                     organization_id=organization_id,
@@ -145,6 +147,7 @@ class DurableAppService:
                         enabled=True,
                     )
                 )
+                session.flush()
                 session.add(
                     SessionModel(
                         id=uuid4(),
@@ -155,9 +158,9 @@ class DurableAppService:
                         expires_at=expires_at,
                     )
                 )
-                # Establish every referenced scope row before inserting its audit record.
-                # Both flushes remain inside the same transaction, so audit failure still
-                # rolls the complete bootstrap back.
+                # Establish every referenced row in foreign-key order before audit.
+                # Every flush remains in this transaction, so any failure still rolls
+                # the complete bootstrap back.
                 session.flush()
                 self._add_audit(
                     session,

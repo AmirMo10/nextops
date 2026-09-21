@@ -109,7 +109,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install pinned open-source scanner
-        run: go install github.com/gitleaks/gitleaks/v8@v8.30.1
+        run: go install github.com/zricethezav/gitleaks/v8@v8.30.1
 
       - name: Scan committed content
         run: gitleaks git --redact --no-banner --verbose
