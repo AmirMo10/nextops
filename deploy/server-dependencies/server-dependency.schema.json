@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Omid-NextAI/nextops/blob/main/deploy/server-dependencies/server-dependency.schema.json",
+  "title": "NextOps server deployment dependency dossier",
+  "description": "Planning and deployment-handoff contract. Validation does not authorize or prove a deployment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "manifest_revision",
+    "server_id",
+    "evidence_status",
+    "purpose",
+    "authorization",
+    "source_records",
+    "vm",
+    "service_accounts",
+    "software_dependencies",
+    "artifacts",
+    "configuration_files",
+    "secret_references",
+    "network",
+    "storage",
+    "service_order",
+    "commands",
+    "observability",
+    "backup_and_rollback",
+    "required_inputs",
+    "acceptance_gates",
+    "known_limitations"
+  ],
+  "properties": {
+    "$schema": {"type": "string", "const": "./server-dependency.schema.json"},
+    "schema_version": {"type": "string", "const": "1.0.0"},
+    "manifest_revision": {"type": "string", "format": "date"},
+    "server_id": {
+      "type": "string",
+      "enum": ["nextops-app", "nextops-ai", "nextops-connectors-ro", "zabbix-server"]
+    },
+    "evidence_status": {"type": "string", "const": "planning_contract_not_deployed"},
+    "purpose": {"type": "string", "minLength": 20},
+    "authorization": {"$ref": "#/$defs/authorization"},
+    "source_records": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 3}
+    },
+    "vm": {"$ref": "#/$defs/vm"},
+    "service_accounts": {"type": "array", "items": {"$ref": "#/$defs/service_account"}},
+    "software_dependencies": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dependency"}},
+    "artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/artifact"}},
+    "configuration_files": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/config_file"}},
+    "secret_references": {"type": "array", "items": {"$ref": "#/$defs/secret_reference"}},
+    "network": {"$ref": "#/$defs/network"},
+    "storage": {"$ref": "#/$defs/storage"},
+    "service_order": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "object", "required": ["order", "service", "readiness"], "additionalProperties": false, "properties": {"order": {"type": "integer", "minimum": 1}, "service": {"type": "string"}, "readiness": {"type": "string"}}}
+    },
+    "commands": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/command"}},
+    "observability": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/observability_item"}},
+    "backup_and_rollback": {"$ref": "#/$defs/backup_and_rollback"},
+    "required_inputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/required_input"}},
+    "acceptance_gates": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/acceptance_gate"}},
+    "known_limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 10}}
+  },
+  "$defs": {
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documentation_authorized", "provisioning_authorized", "operational_access_authorized", "destructive_actions_authorized", "notes"],
+      "properties": {
+        "documentation_authorized": {"type": "boolean", "const": true},
+        "provisioning_authorized": {"type": "boolean", "const": false},
+        "operational_access_authorized": {"type": "boolean", "const": false},
+        "destructive_actions_authorized": {"type": "boolean", "const": false},
+        "notes": {"type": "string", "minLength": 20}
+      }
+    },
+    "vm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hypervisor", "guest_os", "vcpu", "ram_gib", "disk_gib", "firmware", "cpu_hot_add", "proposed_datastore_alias", "placement_status", "deployment_order", "preflight_requirements"],
+      "properties": {
+        "hypervisor": {"type": "string"},
+        "guest_os": {"type": "string"},
+        "vcpu": {"type": "integer", "minimum": 1},
+        "ram_gib": {"type": "integer", "minimum": 1},
+        "disk_gib": {"type": "integer", "minimum": 1},
+        "firmware": {"type": ["string", "null"]},
+        "cpu_hot_add": {"type": ["boolean", "null"]},
+        "proposed_datastore_alias": {"type": "string", "const": "DS-C"},
+        "placement_status": {"type": "string"},
+        "deployment_order": {"type": "string"},
+        "preflight_requirements": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    },
+    "service_account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "scope", "login", "privilege", "status"],
+      "properties": {
+        "id": {"type": "string"},
+        "scope": {"type": "string"},
+        "login": {"type": "boolean"},
+        "privilege": {"type": "string"},
+        "status": {"type": "string"}
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "version", "runtime_location", "required", "status", "lock_evidence"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"type": "string"},
+        "version": {"type": ["string", "null"]},
+        "runtime_location": {"type": "string", "enum": ["local", "approved_lan", "provisioning_only"]},
+        "required": {"type": "boolean"},
+        "status": {"type": "string"},
+        "lock_evidence": {"type": ["string", "null"]}
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "purpose", "install_path", "version", "sha256", "license_record", "source_record", "status"],
+      "properties": {
+        "id": {"type": "string"},
+        "purpose": {"type": "string"},
+        "install_path": {"type": ["string", "null"]},
+        "version": {"type": ["string", "null"]},
+        "sha256": {"type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$"},
+        "license_record": {"type": ["string", "null"]},
+        "source_record": {"type": ["string", "null"]},
+        "status": {"type": "string"}
+      }
+    },
+    "config_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "owner", "mode", "contains_secret_values", "status", "required_settings"],
+      "properties": {
+        "id": {"type": "string"},
+        "path": {"type": "string", "pattern": "^/"},
+        "owner": {"type": ["string", "null"]},
+        "mode": {"type": ["string", "null"], "pattern": "^[0-7]{4}$"},
+        "contains_secret_values": {"type": "boolean", "const": false},
+        "status": {"type": "string"},
+        "required_settings": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "secret_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "consumer", "reference_only", "delivery_requirement", "rotation_requirement", "status"],
+      "properties": {
+        "id": {"type": "string"},
+        "consumer": {"type": "string"},
+        "reference_only": {"type": "boolean", "const": true},
+        "delivery_requirement": {"type": "string"},
+        "rotation_requirement": {"type": "string"},
+        "status": {"type": "string"}
+      }
+    },
+    "network_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "direction", "source", "destination", "protocol", "port", "tls", "decision", "status"],
+      "properties": {
+        "id": {"type": "string"},
+        "direction": {"type": "string", "enum": ["inbound", "outbound"]},
+        "source": {"type": "string"},
+        "destination": {"type": "string"},
+        "protocol": {"type": "string"},
+        "port": {"type": ["integer", "string", "null"]},
+        "tls": {"type": "string"},
+        "decision": {"type": "string", "enum": ["allow_planned", "deny_required"]},
+        "status": {"type": "string"}
+      }
+    },
+    "network": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime_internet_required", "public_exposure_allowed", "management_interface", "rules", "unresolved"],
+      "properties": {
+        "runtime_internet_required": {"type": "boolean", "const": false},
+        "public_exposure_allowed": {"type": "boolean", "const": false},
+        "management_interface": {"type": "string"},
+        "rules": {"type": "array", "items": {"$ref": "#/$defs/network_rule"}},
+        "unresolved": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "mount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "purpose", "size_gib", "filesystem", "owner", "mode", "status"],
+      "properties": {
+        "path": {"type": ["string", "null"]},
+        "purpose": {"type": "string"},
+        "size_gib": {"type": ["number", "null"], "minimum": 0},
+        "filesystem": {"type": ["string", "null"]},
+        "owner": {"type": ["string", "null"]},
+        "mode": {"type": ["string", "null"]},
+        "status": {"type": "string"}
+      }
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total_disk_gib", "layout_status", "mounts", "capacity_rules", "destructive_commands_included"],
+      "properties": {
+        "total_disk_gib": {"type": "number", "minimum": 1},
+        "layout_status": {"type": "string"},
+        "mounts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/mount"}},
+        "capacity_rules": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "destructive_commands_included": {"type": "boolean", "const": false}
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "phase", "shell", "run_as", "mode", "requires_authorization", "requires_inputs", "command", "purpose", "expected_result", "failure_rule"],
+      "properties": {
+        "id": {"type": "string"},
+        "phase": {"type": "string"},
+        "shell": {"type": "string"},
+        "run_as": {"type": "string"},
+        "mode": {"type": "string", "enum": ["read_only", "guarded_template", "blocked"]},
+        "requires_authorization": {"type": "boolean"},
+        "requires_inputs": {"type": "array", "items": {"type": "string"}},
+        "command": {"type": ["string", "null"]},
+        "purpose": {"type": "string"},
+        "expected_result": {"type": "string"},
+        "failure_rule": {"type": "string"}
+      }
+    },
+    "observability_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal", "source", "required_before_acceptance", "status"],
+      "properties": {
+        "signal": {"type": "string"},
+        "source": {"type": "string"},
+        "required_before_acceptance": {"type": "boolean"},
+        "status": {"type": "string"}
+      }
+    },
+    "backup_and_rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backup_scope", "off_host_required", "restore_test_required", "rollback_trigger", "rollback_procedure_status"],
+      "properties": {
+        "backup_scope": {"type": "array", "items": {"type": "string"}},
+        "off_host_required": {"type": "boolean", "const": true},
+        "restore_test_required": {"type": "boolean", "const": true},
+        "rollback_trigger": {"type": "array", "items": {"type": "string"}},
+        "rollback_procedure_status": {"type": "string"}
+      }
+    },
+    "required_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "classification", "required_before", "status", "description", "validation"],
+      "properties": {
+        "id": {"type": "string"},
+        "classification": {"type": "string", "enum": ["private", "deployment_decision", "runtime_evidence", "artifact_lock", "authorization"]},
+        "required_before": {"type": "string"},
+        "status": {"type": "string", "enum": ["missing", "pending_authorization", "not_run"]},
+        "description": {"type": "string"},
+        "validation": {"type": "string"}
+      }
+    },
+    "acceptance_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "status", "evidence_reference"],
+      "properties": {
+        "id": {"type": "string"},
+        "description": {"type": "string"},
+        "status": {"type": "string", "const": "not_run"},
+        "evidence_reference": {"type": "null"}
+      }
+    }
+  }
+}

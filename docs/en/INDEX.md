@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INDEX.md) · [Home](../../README.md) · [Start here](START_HERE.md)
 
-**Updated: 2026-09-20. Status: proposed design and documentation, not proof of a working deployment.** The active master prompt is English; the original Persian specification remains in the preserved v2 archive.
+**Updated: 2026-09-21. Status: proposed design and documentation, not proof of a working deployment.** The active master prompt is English; the original Persian specification remains in the preserved v2 archive.
 
 > **Current new-server profile:** three NextOps VMs plus `zabbix-server` (4 vCPU / 16 GiB / 200 GiB) = **4 VMs / 40 vCPU / 184 GiB RAM / 980 GiB virtual disks**. Do not add the earlier small lab VM as well. [START_HERE](START_HERE.md) defines the order and Stage 1A–1E; [ZABBIX_SERVER](ZABBIX_SERVER.md) defines the monitoring VM, LVM and read-only integration.
 
@@ -28,6 +28,7 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 | [CPU-only AI](CPU_AI.md) | Models, evaluation, thread/concurrency and resource limits |
 | [Security](SECURITY.md) | Identity, credentials, policy, approvals and threat model |
 | [Installation](INSTALL.md) | Current repository setup and future guest deployment gates |
+| [Per-server deployment dossiers](DEPLOYMENT_DOSSIERS.md) | Four schema-validated machine-readable handoffs, commands, blockers, required private inputs, evidence and rollback |
 | [Configuration](CONFIGURATION.md) | Settings, inventory, models and credential references |
 | [MCP](MCP.md) | Protocol, gateway and execution contracts |
 | [Integrations](INTEGRATIONS.md) | Eleven families, scope, limitations and compatibility status |
