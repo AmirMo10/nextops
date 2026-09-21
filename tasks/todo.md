@@ -1,42 +1,81 @@
-# Tasks: per-server deployment dependency dossiers
+# Tasks: Stage 1A Increment 2 durable local app
 
-## Task 1: define the dossier contract
-
-**Acceptance criteria:**
-
-- [x] A versioned JSON Schema requires the deployer-facing top-level sections.
-- [x] The specification defines commands, boundaries, verification, and success criteria.
-
-**Verification:** parse the schema with `python -m json.tool` and inspect required fields.
-
-**Dependencies:** none.
-
-**Files:** `docs/requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md`, `deploy/server-dependencies/server-dependency.schema.json`.
-
-## Task 2: add the four server dossiers
+## Task 1: define durable contracts and schema
 
 **Acceptance criteria:**
 
-- [x] Each approved server has one self-contained YAML file.
-- [x] Known values match the accepted plans and all missing/private values are explicit.
-- [x] Commands are classified and no usable secret is present.
+- [ ] Strict contracts cover identity, sessions, runs, leases, audit, and bilingual result
+  provenance without accepting client-supplied actor context.
+- [ ] SQLAlchemy metadata and an Alembic baseline define all required tables, foreign
+  keys, scoped uniqueness, checks, indexes, and append-only audit behavior.
+- [ ] PostgreSQL roles separate migration, application, and read-only support access.
 
-**Verification:** parse all four files, validate them against the schema, and reconcile resource/LVM values.
+**Verification:** red/green unit tests plus Alembic metadata inspection.
+
+**Files:** `packages/nextops/contracts`, `packages/nextops/persistence`, `migrations`,
+`tests/unit`.
+
+## Task 2: implement durable identity and run services
+
+**Acceptance criteria:**
+
+- [ ] Bootstrap is one-time; recovery rotates credentials and revokes prior sessions.
+- [ ] Password and bearer-token storage is non-reversible and comparison is constant-time.
+- [ ] Revoked/expired/cross-scope actors are denied.
+- [ ] Run creation is idempotent for identical intent and conflicts for changed intent.
+- [ ] Worker leases are atomic, renewable by their owner, and recoverable after expiry.
+- [ ] Required audit failure prevents an operation from reporting success.
+
+**Verification:** service tests followed by real PostgreSQL transaction/concurrency tests.
 
 **Dependencies:** Task 1.
 
-**Files:** four YAML files under `deploy/server-dependencies/`.
+**Files:** `packages/nextops/application`, `packages/nextops/security`, `tests/unit`,
+`tests/integration`.
 
-## Task 3: publish the deployer handoff
+## Task 3: expose the minimal authenticated API
 
 **Acceptance criteria:**
 
-- [x] Paired English/Persian guides explain execution order, gates, rollback, and evidence.
-- [x] Index, traceability, project state, and next-task references are current.
-- [x] Repository quality and secret-review gates pass.
+- [ ] All stateful endpoints are versioned under `/api/v1` and use structured errors.
+- [ ] Actor context comes from an opaque authenticated session, never the request body.
+- [ ] A fixture-backed run result supports `en` and `fa` and labels source, time, scope,
+  partial/stale state, typed errors, and audit reference.
 
-**Verification:** run the commands in the specification and review the staged diff.
+**Verification:** ASGI API tests for happy, denied, invalid, replay, and degraded paths.
 
 **Dependencies:** Task 2.
 
-**Files:** paired guides plus focused repository-control updates.
+**Files:** `packages/nextops/api`, `tests/api`.
+
+## Task 4: prove PostgreSQL and recovery behavior
+
+**Acceptance criteria:**
+
+- [ ] Baseline upgrade and downgrade work on isolated PostgreSQL.
+- [ ] Constraints, restricted grants, append-only audit, idempotency, leases, restart
+  recovery, and transaction rollback are exercised against PostgreSQL.
+- [ ] No skipped database test is counted as acceptance evidence.
+
+**Verification:** container-backed PostgreSQL integration suite and recorded exact output.
+
+**Dependencies:** Tasks 1–3.
+
+**Files:** `tests/integration`, test configuration, project-state evidence.
+
+## Task 5: publish the server-start handoff
+
+**Acceptance criteria:**
+
+- [ ] Paired English/Persian checklists state what the operator can collect now, what
+  needs a separate provisioning approval, and what must wait for application release.
+- [ ] Project state, traceability, indexes, next task, and deployment dossier match only
+  tested implementation.
+- [ ] Full quality, lock, audit, documentation, and secret-review gates pass before merge.
+
+**Verification:** documentation checker, repository diff review, dependency audit, and
+reviewable branch/PR checks.
+
+**Dependencies:** Tasks 1–4.
+
+**Files:** paired docs, repository-control records, `deploy/server-dependencies/nextops-app.yaml`.
