@@ -1,49 +1,36 @@
-# Tasks: Stage 1B Increment 3 local CPU inference foundation
+# Tasks: guarded per-server package installers
 
-## Task 1: lock the evaluation candidate metadata
-
-**Acceptance criteria:**
-
-- [x] YAML manifest is human-readable and validates against a versioned JSON Schema.
-- [x] llama.cpp source tag/commit/license and Qwen repository revision/file/size/SHA-256/
-  license are exact.
-- [x] Binary checksum, build flags, guest ISA and benchmark evidence remain explicit
-  blockers rather than guessed values.
-
-**Files:** `deploy/inference`, validator/tests, `deploy/server-dependencies/nextops-ai.yaml`.
-
-## Task 2: define and implement the provider boundary
+## Task 1: specify the installer safety contract
 
 **Acceptance criteria:**
 
-- [x] Strict request/result/readiness contracts forbid extra fields and bound prompt,
-  output, sampling and timing values.
-- [x] `LLMProvider` is runtime-neutral and exposes generation plus safe readiness.
-- [x] Client requests cannot supply system prompts, tools, URLs, model IDs or credentials.
+- [x] Exactly one executable entry script exists for each approved server role.
+- [x] Every role declares its minimum direct Ubuntu package set.
+- [x] Package locks require exact Debian versions and include every declared package.
+- [x] The complete offline bundle is authenticated by an operator-approved SHA-256.
 
-**Files:** `packages/nextops/inference`, `tests/unit`.
-
-## Task 3: enforce bounded authenticated execution
+## Task 2: implement offline, idempotent package installation
 
 **Acceptance criteria:**
 
-- [x] One active request and queue depth two are enforced atomically.
-- [x] Overload, queue timeout, provider timeout, cancellation and malformed output have
-  explicit safe outcomes and release capacity.
-- [x] llama.cpp transport is loopback-only, ignores environment proxies, authenticates,
-  calls a fixed model, and validates the response.
-- [x] Only the configured app service secret can call generation; readiness discloses no
-  path, key, prompt or raw provider error.
+- [x] Check mode performs no package or service changes.
+- [x] Apply mode requires root, Ubuntu 24.04, VMware, an authorization marker, and a change ID.
+- [x] APT can read only the authenticated local repository and rejects unlisted package changes.
+- [x] Package-managed service starts and automatic PostgreSQL main-cluster creation are blocked.
+- [x] A repeated run converges on the same exact package versions.
 
-**Files:** inference scheduler/provider/API/configuration and unit/API tests.
-
-## Task 4: publish truthful evidence
+## Task 3: give the deployer a usable handoff
 
 **Acceptance criteria:**
 
-- [x] All repository quality/security gates pass and no secret/model binary is committed.
-- [x] English/Persian docs and project state distinguish candidate selection/source tests
-  from not-run runtime/server acceptance.
-- [x] PR records remaining inputs for authorized model import, CPU build and benchmark.
+- [x] English and Persian installation docs explain bundle layout, check/apply commands, and holds.
+- [x] Every server dossier points to its installer without claiming that deployment occurred.
+- [x] CI validates Python, wrapper syntax, executable modes, and repository layout.
 
-**Files:** CI, paired docs, project state, traceability and PR.
+## Task 4: verify and deliver
+
+**Acceptance criteria:**
+
+- [x] Focused tests, full non-integration tests, lint, formatting, types, and documentation checks pass.
+- [x] Security and code-quality review find no unresolved high-risk issue.
+- [ ] The change is committed, pushed, reviewed in a pull request, and merged to `main` only after gates pass.

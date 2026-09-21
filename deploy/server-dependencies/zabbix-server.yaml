@@ -26,6 +26,7 @@ source_records:
   - docs/STORAGE_PLAN.md
   - docs/en/OFFLINE_RUNTIME.md
   - docs/PROJECT_STATE.md
+  - deploy/installers/install-zabbix-server.sh
 vm:
   hypervisor: VMware ESXi 8.0.3 build 24414501 (owner-supplied host evidence)
   guest_os: Ubuntu Server 24.04 LTS proposed; exact image and maintained patch lock required
@@ -561,6 +562,27 @@ commands:
       survive a tested offline reboot.
     failure_rule: Blocked because the actual device is unknown and destructive storage authority is absent.
       Never derive or guess a disk path from this public file.
+  - id: install-exact-os-packages
+    phase: package_install
+    shell: bash
+    run_as: authorized deployment operator through sudo
+    mode: guarded_template
+    requires_authorization: true
+    requires_inputs:
+      - authorization.provisioning
+      - artifact.zabbix_package_lock
+      - storage.zabbix_mount_evidence
+    command: test -n "${NEXTOPS_PACKAGE_BUNDLE_DIR:-}" && test -n "${NEXTOPS_PACKAGE_MANIFEST_SHA256:-}"
+      && test -n "${NEXTOPS_CHANGE_ID:-}" && sudo env NEXTOPS_PROVISIONING_AUTHORIZED=YES
+      ./deploy/installers/install-zabbix-server.sh --apply --bundle-dir "$NEXTOPS_PACKAGE_BUNDLE_DIR"
+      --bundle-manifest-sha256 "$NEXTOPS_PACKAGE_MANIFEST_SHA256" --change-id "$NEXTOPS_CHANGE_ID"
+    purpose: Install only the authenticated exact Zabbix/PostgreSQL/Nginx/PHP package layer after the
+      intended storage mounts are proven.
+    expected_result: Every locked OS package and transitive dependency is installed at its exact version
+      from the signed offline repository; services remain stopped and no PostgreSQL cluster/schema exists.
+    failure_rule: Stop on missing storage evidence, any missing/unlisted/mismatched artifact, signature
+      failure, package removal, unsafe bundle permissions, wrong guest baseline, or authorization mismatch.
+      Database/schema initialization and service configuration remain blocked.
   - id: install-zabbix-stack
     phase: install
     shell: bash

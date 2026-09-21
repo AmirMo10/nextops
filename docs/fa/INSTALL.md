@@ -4,7 +4,7 @@
 
 [English](../en/INSTALL.md) · [فهرست](INDEX.md)
 
-**آنچه اکنون قابل انجام است: دریافت مخزن، مطالعهٔ مستندات، اجرای API منبع 1A و آزمون قرارداد و migration پایگاه در محیط توسعهٔ جدا.** اکنون پروژهٔ Python قفل‌شده، entrypoint FastAPI، migration پایهٔ Alembic و سرویس ماندگار وجود دارند، اما installer تولید، release آفلاین، reverse proxy، UI مرورگر، Compose، connector، سرویس AI، بستهٔ backup/restore یا واحد systemd تأییدشده وجود ندارد. مراحل آماده‌سازی میزبان در این صفحه چک‌لیست آینده‌اند، نه مجوز یا دستور محصول مستقر.
+**آنچه اکنون قابل انجام است: دریافت مخزن، مطالعهٔ مستندات، اجرای API منبع 1A، آزمون قرارداد و migration پایگاه در محیط توسعهٔ جدا، و اعتبارسنجی بستهٔ آفلاینِ بسته‌های سیستم‌عامل برای هر سرور.** اکنون چهار script برای لایهٔ package، پروژهٔ Python قفل‌شده، entrypoint FastAPI، migration پایهٔ Alembic و سرویس ماندگار وجود دارند؛ اما bundle تأییدشدهٔ package، installer کامل برنامهٔ تولید، release آفلاین، تنظیم reverse proxy، UI مرورگر، Compose، سرویس connector، سرویس AI مستقر، بستهٔ backup/restore یا واحد systemd وجود ندارد. مراحل آماده‌سازی میزبان در این صفحه چک‌لیست آینده‌اند، نه مجوز یا شاهد استقرار محصول.
 
 ## شروع کار با مخزن
 
@@ -15,15 +15,41 @@ git clone https://github.com/Omid-NextAI/nextops.git
 cd nextops
 git status --short
 uv sync --extra dev --frozen
-uv run ruff format --check packages migrations tests scripts
-uv run ruff check packages migrations tests scripts
-uv run mypy packages tests
+uv run ruff format --check packages migrations tests scripts deploy/installers
+uv run ruff check packages migrations tests scripts deploy/installers
+uv run mypy packages tests deploy/installers
 uv run pytest -m "not integration"
 ```
 
 <div dir="rtl">
 
 پیش از تغییر میزبان، مشخصات اصلی، معماری، امنیت، برنامهٔ CPU و کار بعدی را بخوانید. اتصال مدیریتی به سرور باید معتبر و مورد تأیید مالک باشد. کلید SSH و رمز عبور را در issue یا مخزن قرار ندهید.
+
+## script بسته‌ها برای هر سرور
+
+scriptهای مسیر [`deploy/installers`](../../deploy/installers) فقط لایهٔ دقیق بسته‌های Ubuntu را برای
+`nextops-app`، `nextops-ai`، `nextops-connectors-ro` و `zabbix-server` پوشش می‌دهند. پیش از استفاده
+[راهنمای installer](../../deploy/installers/README.md) را بخوانید. هر script به repository محلی و امضاشدهٔ
+APT، lock دقیق شامل همهٔ وابستگی‌های غیرمستقیم، و SHA-256 جداگانه و تأییدشدهٔ manifest نیاز دارد.
+
+ابتدا اعتبارسنجی بدون تغییر را روی guest متناظر اجرا کنید:
+
+</div>
+
+```bash
+./deploy/installers/install-nextops-app.sh \
+  --check \
+  --bundle-dir /srv/nextops/import/nextops-app \
+  --bundle-manifest-sha256 "$APP_BUNDLE_MANIFEST_SHA256"
+```
+
+<div dir="rtl">
+
+اجرای `--apply` یک تغییر جدا و نیازمند تأیید است. مالکیت root و نبود اجازهٔ نوشتن برای group/other روی
+bundle، Ubuntu 24.04 روی VMware، مقدار `NEXTOPS_PROVISIONING_AUTHORIZED=YES` و `--change-id` الزامی‌اند.
+script فقط lock دقیق و معتبر package را نصب می‌کند، راه‌اندازی خودکار سرویس را می‌بندد و از ساخت خودکار
+cluster در PostgreSQL جلوگیری می‌کند. این مرحله محصول را پیکربندی یا اجرا نمی‌کند. چون هنوز bundle واقعی
+و lock تولیدی package در مخزن نیست، نصب package تا ساخت و تأیید آن artifactها مسدود می‌ماند.
 
 ## شناسایی فقط‌خواندنی میزبان
 

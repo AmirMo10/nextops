@@ -82,7 +82,7 @@ python scripts/check_docs.py
 
 ### `nextops-app`
 
-پیش از نصب توقف کنید. اکنون API در سطح source، migration و role گروهی PostgreSQL و رفتار worker با fixture وجود دارد، اما release آفلاین تأییدشده، UI مرورگر، تحویل login role تولید، reverse proxy، installer، Compose، systemd unit و backup/restore آزموده وجود ندارد. فرمان CI را runbook تولید نکنید و برای جبران environment variable ساختگی یا PostgreSQL شبکه‌ای نسازید.
+پیش از نصب برنامه توقف کنید. اکنون API در سطح source، migration و role گروهی PostgreSQL، رفتار worker با fixture و scriptهای محافظت‌شده برای لایهٔ package آفلاین و معتبر وجود دارد؛ اما bundle تأییدشدهٔ package، installer/release کامل تولید، UI مرورگر، تحویل login role تولید، reverse proxy، Compose، systemd unit و backup/restore آزموده وجود ندارد. موفقیت نصب package را استقرار محصول ندانید، فرمان CI را runbook تولید نکنید و برای جبران environment variable ساختگی یا PostgreSQL شبکه‌ای نسازید.
 
 ### `nextops-ai`
 

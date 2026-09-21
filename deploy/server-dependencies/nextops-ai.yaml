@@ -25,6 +25,7 @@ source_records:
   - docs/en/SECURITY.md
   - docs/PROJECT_STATE.md
   - deploy/inference/qwen3-8b-q4-k-m.yaml
+  - deploy/installers/install-nextops-ai.sh
 vm:
   hypervisor: VMware ESXi 8.0.3 build 24414501 (owner-supplied host evidence)
   guest_os: Ubuntu Server 24.04 LTS proposed; exact image and maintained patch lock required
@@ -417,6 +418,26 @@ commands:
       proves they resolve only to approved local files.
     failure_rule: Stop on an unexpected accelerator/cloud/helper dependency, missing inventory entry,
       or artifact outside the verified bundle.
+  - id: install-exact-os-packages
+    phase: package_install
+    shell: bash
+    run_as: authorized deployment operator through sudo
+    mode: guarded_template
+    requires_authorization: true
+    requires_inputs:
+      - authorization.provisioning
+      - artifact.ai_package_bundle
+    command: test -n "${NEXTOPS_PACKAGE_BUNDLE_DIR:-}" && test -n "${NEXTOPS_PACKAGE_MANIFEST_SHA256:-}"
+      && test -n "${NEXTOPS_CHANGE_ID:-}" && sudo env NEXTOPS_PROVISIONING_AUTHORIZED=YES
+      ./deploy/installers/install-nextops-ai.sh --apply --bundle-dir "$NEXTOPS_PACKAGE_BUNDLE_DIR"
+      --bundle-manifest-sha256 "$NEXTOPS_PACKAGE_MANIFEST_SHA256" --change-id "$NEXTOPS_CHANGE_ID"
+    purpose: Install only the authenticated exact CPU build/runtime package layer without building,
+      importing, configuring, or starting the inference service.
+    expected_result: Every locked compiler/OpenBLAS support package and transitive dependency is installed
+      at its exact version from the signed offline repository; no service is started.
+    failure_rule: Stop on any missing/unlisted/mismatched artifact, repository signature failure, package
+      removal, unsafe bundle permissions, wrong guest baseline, or authorization mismatch. Do not substitute
+      CUDA/ROCm packages or fetch/build the model.
   - id: install-inference-runtime
     phase: install
     shell: bash
@@ -552,6 +573,14 @@ required_inputs:
       writable paths, and restart behavior.
     validation: Clean offline install and cold start pass with no container socket, registry pull, or
       interactive-user cache.
+  - id: artifact.ai_package_bundle
+    classification: artifact_lock
+    required_before: OS package installation
+    status: missing
+    description: Root-owned role-specific signed local APT repository, complete exact packages.lock,
+      all-file manifest, separately delivered manifest digest, and license/source inventory.
+    validation: The guarded nextops-ai script passes check mode and a clean Ubuntu 24.04 VMware apply
+      without Internet, unlisted package changes, service starts, or accelerator packages.
   - id: artifact.ai_runtime_model_lock
     classification: artifact_lock
     required_before: model import or installation

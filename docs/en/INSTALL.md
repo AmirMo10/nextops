@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INSTALL.md) · [Index](INDEX.md)
 
-**Current capability: clone, review documentation, run the Stage 1A source API, and test its contracts and PostgreSQL migration in an isolated development environment.** The repository has a locked Python project, FastAPI entrypoint, Alembic baseline, and durable service code, but no approved production installer, offline release, reverse proxy, browser UI, Compose stack, connector, AI service, backup/restore bundle, or systemd unit. Host preparation steps below remain an implementation checklist, not authorization or commands for a deployed product.
+**Current capability: clone, review documentation, run the Stage 1A source API, test its contracts and PostgreSQL migration in an isolated development environment, and validate a guarded per-server offline OS-package bundle.** The repository has four package-layer scripts, a locked Python project, FastAPI entrypoint, Alembic baseline, and durable service code, but no approved package bundle, complete production application installer, offline release, reverse proxy configuration, browser UI, Compose stack, connector service, deployed AI service, backup/restore bundle, or systemd unit. Host preparation steps below remain an implementation checklist, not authorization or proof of a deployed product.
 
 ## Available now
 
@@ -11,13 +11,36 @@ git clone https://github.com/Omid-NextAI/nextops.git
 cd nextops
 git status --short
 uv sync --extra dev --frozen
-uv run ruff format --check packages migrations tests scripts
-uv run ruff check packages migrations tests scripts
-uv run mypy packages tests
+uv run ruff format --check packages migrations tests scripts deploy/installers
+uv run ruff check packages migrations tests scripts deploy/installers
+uv run mypy packages tests deploy/installers
 uv run pytest -m "not integration"
 ```
 
 Read the master specification, architecture, security, CPU plan and next task before changing the host. Use an authenticated administrative connection approved by the owner; do not post SSH keys or passwords in GitHub issues.
+
+## Per-server package scripts
+
+The scripts under [`deploy/installers`](../../deploy/installers) cover only the exact Ubuntu package layer
+for `nextops-app`, `nextops-ai`, `nextops-connectors-ro`, and `zabbix-server`. Read the
+[installer handoff](../../deploy/installers/README.md) before use. Each script consumes a complete signed
+local APT repository, an exact lock including transitive packages, and a separately approved SHA-256 for
+the bundle manifest.
+
+Start with non-mutating validation on the matching guest:
+
+```bash
+./deploy/installers/install-nextops-app.sh \
+  --check \
+  --bundle-dir /srv/nextops/import/nextops-app \
+  --bundle-manifest-sha256 "$APP_BUNDLE_MANIFEST_SHA256"
+```
+
+Apply is a separate approved change. It requires root ownership/non-writable permissions on the bundle,
+Ubuntu 24.04 on VMware, `NEXTOPS_PROVISIONING_AUTHORIZED=YES`, and `--change-id`. It installs only the
+authenticated exact package lock, blocks automatic service start, and prevents automatic PostgreSQL
+cluster creation. It does not configure or start the product. No real bundle or production package lock
+is committed yet, so package installation remains blocked until those artifacts are built and approved.
 
 ## Read-only host inventory
 

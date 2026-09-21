@@ -4,7 +4,7 @@
 
 [فارسی](README_FA.md) · [Documentation](docs/en/INDEX.md) · [G10 server plan](docs/en/SERVER_PLAN.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project status](docs/PROJECT_STATE.md)
 
-> **Status: documentation and architecture baseline.** The application, connectors, deployment services, and benchmarks are not implemented or validated yet. This repository does not currently provide a runnable NextOps installation.
+> **Status: Phase 0 accepted; Stage 1A/1B source foundations and guarded per-server OS-package scripts are implemented.** There is still no approved offline package bundle, complete application installer, browser UI, live connector, imported model, or server benchmark. This repository does not currently provide a runnable production NextOps installation.
 
 ## What NextOps is intended to do
 
@@ -17,8 +17,8 @@ The first operational milestone is now **Phase 1: a new Persian/English question
 | Requirement | Project baseline |
 |---|---|
 | Repository | GitHub monorepo |
-| Initial host | One existing G10 running ESXi according to owner-supplied output; version/build and free capacity still unknown |
-| Reported resources | 4 CPU packages, 112 physical cores, 224 logical threads, 4 NUMA nodes; 1,442,743,631,872 bytes RAM (1,343.66 GiB); disk capacity remains unverified |
+| Initial host | One existing G10 running ESXi 8.0.3 build 24414501 according to owner-supplied output; current free CPU/RAM and contention remain unverified |
+| Reported resources | 4 CPU packages, 112 physical cores, 224 logical threads, 4 NUMA nodes; 1,442,743,631,872 bytes RAM (1,343.66 GiB); supplied VMFS figures are point-in-time capacity, not storage-health evidence |
 | AI execution | Local CPUs only; no GPU, external inference, or cloud fallback |
 | Offline operation | No Internet dependency after provisioning, including fresh login and cold start; authorized management-LAN access remains necessary for live evidence |
 | Languages | Native Persian with RTL support; English with LTR support |
@@ -26,7 +26,7 @@ The first operational milestone is now **Phase 1: a new Persian/English question
 
 The owner's ESXi output replaces the earlier approximately 90 CPU / 1 TB estimate; see the [sanitized evidence record](docs/requirements/HARDWARE_BASELINE.json). These are reported host totals, not a direct inspection or available-capacity measurement. The average is 28 cores per NUMA node, but actual per-node CPU/memory distribution is not yet verified. Preserve ESXi; Ubuntu is the proposed guest OS, and application containers/systemd services belong inside the VMs.
 
-**Proposed VM plan:** three NextOps VMs for Phase 1–2, four after recommended database separation, and five when controlled remediation is enabled. Existing Zabbix is not duplicated; a missing instance adds one optional lab VM. Revised initial proposal: **36 vCPU and 168 GiB RAM** in total, including a **24-vCPU / 128-GiB AI VM** for a topology-aware benchmark baseline. This is not a measured minimum, confirmed single-node placement or capacity guarantee. See the [per-phase allocations and Zabbix acceptance gates](docs/en/SERVER_PLAN.md) and the [mandatory offline contract](docs/en/OFFLINE_RUNTIME.md).
+**Proposed VM plan:** three NextOps VMs for Phase 1–2, plus the dedicated Zabbix prerequisite when no suitable authorized instance exists; later profiles add database separation and controlled remediation. Do not duplicate an existing suitable Zabbix. The initial four-VM proposal is **40 vCPU, 184 GiB RAM, and 980 GiB disk**, including a **24-vCPU / 128-GiB AI VM** for a topology-aware benchmark baseline. This is not a measured minimum, confirmed single-node placement or capacity guarantee. See the [per-phase allocations and Zabbix acceptance gates](docs/en/SERVER_PLAN.md) and the [mandatory offline contract](docs/en/OFFLINE_RUNTIME.md).
 
 ## Proposed architecture
 
@@ -77,7 +77,7 @@ git clone https://github.com/Omid-NextAI/nextops.git
 cd nextops
 ```
 
-Read the [documentation index](docs/en/INDEX.md), [current state](docs/PROJECT_STATE.md), and [next task](docs/NEXT_TASK.md). The [installation guide](docs/en/INSTALL.md) distinguishes today's repository setup from the future deployment procedure; there is no fabricated installer or compose command.
+Read the [documentation index](docs/en/INDEX.md), [current state](docs/PROJECT_STATE.md), and [next task](docs/NEXT_TASK.md). The [installation guide](docs/en/INSTALL.md) distinguishes today's repository setup from future product deployment. The four [package-layer scripts](deploy/installers/README.md) are real, tested, offline and guarded; they do not replace the still-missing complete application installer or Compose/systemd service definitions.
 
 The [engineering master prompt](docs/requirements/NEXTOPS_MASTER_PROMPT.md) is retained as supplied, without a new translation. Its original Persian appendix is historical source material. Human-facing documentation is maintained in matching English and Persian guides. The revised roadmap explicitly records the owner's later Zabbix-first milestone requirement.
 
