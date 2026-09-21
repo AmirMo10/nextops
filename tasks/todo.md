@@ -41,9 +41,9 @@
 
 **Acceptance criteria:**
 
-- [x] All locally available repository quality/security gates pass and no secret/model binary is committed; PostgreSQL and secret-scan jobs remain for hosted CI.
+- [x] All repository quality/security gates pass and no secret/model binary is committed.
 - [x] English/Persian docs and project state distinguish candidate selection/source tests
   from not-run runtime/server acceptance.
-- [ ] PR records remaining inputs for authorized model import, CPU build and benchmark.
+- [x] PR records remaining inputs for authorized model import, CPU build and benchmark.
 
 **Files:** CI, paired docs, project state, traceability and PR.
