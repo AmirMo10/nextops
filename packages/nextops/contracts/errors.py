@@ -14,6 +14,8 @@ class ErrorCode(StrEnum):
     POLICY_DENIED = "policy_denied"
     NOT_FOUND = "not_found"
     CONFLICT = "conflict"
+    OVERLOADED = "overloaded"
+    TIMEOUT = "timeout"
     DEPENDENCY_UNAVAILABLE = "dependency_unavailable"
     INTERNAL_ERROR = "internal_error"
 

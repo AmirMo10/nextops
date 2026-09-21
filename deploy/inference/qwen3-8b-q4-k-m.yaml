@@ -1,0 +1,65 @@
+# Source-verified evaluation candidate. This file is not import or deployment approval.
+# Runtime binary identity and all measured acceptance evidence intentionally remain unresolved.
+---
+$schema: ./inference-artifact.schema.json
+schema_version: 1.0.0
+manifest_revision: '2026-09-21'
+status: selected_not_imported
+runtime:
+  name: llama.cpp
+  source_repository: https://github.com/ggml-org/llama.cpp
+  source_tag: v0.4.1
+  source_commit: b29c606e28a01b1bc8c1351026a0fa6e616bf6c4
+  license: MIT
+  build_target: llama-server
+  binary_sha256: null
+  build_status: pending_authorized_cpu_build
+model:
+  model_id: nextops-qwen3-8b-q4-k-m
+  source_repository: https://huggingface.co/Qwen/Qwen3-8B-GGUF
+  source_revision: 7c41481f57cb95916b40956ab2f0b139b296d974
+  artifact_commit: 6a569868d07d3bd59e8b97fb001bf8c0b254bb20
+  filename: Qwen3-8B-Q4_K_M.gguf
+  quantization: Q4_K_M
+  size_bytes: 5027783488
+  sha256: d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785
+  license: Apache-2.0
+  native_context_tokens: 32768
+  import_status: not_downloaded_not_verified_locally
+deployment_profile:
+  bind_host: 127.0.0.1
+  cpu_only_required: true
+  runtime_internet_allowed: false
+  configured_context_tokens: 8192
+  max_output_tokens: 1024
+  max_active_requests: 1
+  max_queued_requests: 2
+  disabled_features:
+    - accelerator_offload
+    - agent
+    - context_shift
+    - mcp
+    - remote_model_resolution
+    - tools
+    - web_ui
+evidence:
+  source_metadata_verified: true
+  runtime_binary_built: false
+  model_imported: false
+  cpu_only_execution_verified: false
+  benchmark_run: false
+  offline_cold_start_verified: false
+unresolved_gates:
+  - Record guest-visible CPU ISA and approved compiler toolchain.
+  - Record reviewed CPU-only build flags and the resulting binary SHA-256.
+  - Import the model through an authorized staging path and verify its SHA-256 locally.
+  - Approve exact thread, affinity, batch, context, timeout, and memory settings from measurement.
+  - Pass Persian and English quality, latency, saturation, cancellation, and resource benchmarks.
+  - Prove an Internet-blocked cold start, backup restore, and last-known-good rollback.
+references:
+  - https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
+  - https://github.com/ggml-org/llama.cpp/blob/master/docs/release.md
+  - https://github.com/ggml-org/llama.cpp/blob/v0.4.1/LICENSE
+  - https://github.com/QwenLM/Qwen3/blob/main/docs/source/run_locally/llama.cpp.md
+  - https://huggingface.co/Qwen/Qwen3-8B-GGUF
+  - https://huggingface.co/Qwen/Qwen3-8B-GGUF/blob/main/Qwen3-8B-Q4_K_M.gguf
