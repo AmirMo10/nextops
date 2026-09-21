@@ -529,7 +529,7 @@
       "command": "test -n \"${ZABBIX_BUNDLE_DIR:-}\" && cd -- \"$ZABBIX_BUNDLE_DIR\" && sha256sum -c SHA256SUMS",
       "purpose": "Verify packages, repository metadata/signatures, schema, templates, checksums, and licenses before installation.",
       "expected_result": "Every approved file verifies and exact package/repository/schema/template versions are recorded.",
-      "failure_rule": "Fail closed on missing, extra, mismatched, unsigned, or unlicensed artifacts; do not fetch replacements during runtime."
+      "failure_rule": "Fail closed on missing or mismatched listed artifacts; separately compare repository signatures and the bundle inventory/licenses with the approved lock and reject unlisted, unsigned, or unlicensed files. Do not fetch replacements during runtime."
     },
     {
       "id": "partition-and-create-lvm",
@@ -565,7 +565,7 @@
       "mode": "guarded_template",
       "requires_authorization": true,
       "requires_inputs": ["deployment.zabbix_install_evidence"],
-      "command": "systemctl --no-pager --full status postgresql zabbix-server nginx php*-fpm zabbix-agent2; zabbix_server --version; psql --version; nginx -v",
+      "command": "systemctl --no-pager --full status postgresql zabbix-server nginx 'php*-fpm' zabbix-agent2; zabbix_server --version; psql --version; nginx -v",
       "purpose": "Capture local service state and exact installed component versions after an authorized install.",
       "expected_result": "Expected pinned services are active in dependency order and versions match the package lock; sensitive config is not printed.",
       "failure_rule": "Stop acceptance on inactive/failed/unexpected versions; do not mask a failed service with a successful frontend response."

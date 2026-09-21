@@ -4,8 +4,8 @@
 
 **Acceptance criteria:**
 
-- [ ] A versioned JSON Schema requires the deployer-facing top-level sections.
-- [ ] The specification defines commands, boundaries, verification, and success criteria.
+- [x] A versioned JSON Schema requires the deployer-facing top-level sections.
+- [x] The specification defines commands, boundaries, verification, and success criteria.
 
 **Verification:** parse the schema with `python -m json.tool` and inspect required fields.
 
@@ -17,9 +17,9 @@
 
 **Acceptance criteria:**
 
-- [ ] Each approved server has one self-contained JSON file.
-- [ ] Known values match the accepted plans and all missing/private values are explicit.
-- [ ] Commands are classified and no usable secret is present.
+- [x] Each approved server has one self-contained JSON file.
+- [x] Known values match the accepted plans and all missing/private values are explicit.
+- [x] Commands are classified and no usable secret is present.
 
 **Verification:** parse all four files, validate them against the schema, and reconcile resource/LVM values.
 
@@ -31,9 +31,9 @@
 
 **Acceptance criteria:**
 
-- [ ] Paired English/Persian guides explain execution order, gates, rollback, and evidence.
-- [ ] Index, traceability, project state, and next-task references are current.
-- [ ] Repository quality and secret-review gates pass.
+- [x] Paired English/Persian guides explain execution order, gates, rollback, and evidence.
+- [x] Index, traceability, project state, and next-task references are current.
+- [x] Repository quality and secret-review gates pass.
 
 **Verification:** run the commands in the specification and review the staged diff.
 

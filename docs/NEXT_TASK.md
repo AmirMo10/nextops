@@ -4,7 +4,7 @@ Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 1 is implemented an
 
 ## English — continue Stage 1A with the durable local app slice
 
-Read the [active master prompt](requirements/NEXTOPS_MASTER_PROMPT.md) with the new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md), [Zabbix guide](en/ZABBIX_SERVER.md), [allocation record](requirements/ZABBIX_SERVER_PLAN.json), [START_HERE](en/START_HERE.md), [PROJECT_STATE](PROJECT_STATE.md), [ROADMAP](en/ROADMAP.md), [SERVER_PLAN](en/SERVER_PLAN.md), [STORAGE_PLAN](STORAGE_PLAN.md), [OFFLINE_RUNTIME](en/OFFLINE_RUNTIME.md), [ESXI_BASELINE](en/ESXI_BASELINE.md) and [hardware evidence](requirements/HARDWARE_BASELINE.json). Original detail remains in the [unchanged v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md); all 51 sections and eleven integrations remain in scope.
+Read the [active master prompt](requirements/NEXTOPS_MASTER_PROMPT.md) with the new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md), [Zabbix guide](en/ZABBIX_SERVER.md), [per-server deployer guide](en/DEPLOYMENT_DOSSIERS.md), [allocation record](requirements/ZABBIX_SERVER_PLAN.json), [START_HERE](en/START_HERE.md), [PROJECT_STATE](PROJECT_STATE.md), [ROADMAP](en/ROADMAP.md), [SERVER_PLAN](en/SERVER_PLAN.md), [STORAGE_PLAN](STORAGE_PLAN.md), [OFFLINE_RUNTIME](en/OFFLINE_RUNTIME.md), [ESXI_BASELINE](en/ESXI_BASELINE.md) and [hardware evidence](requirements/HARDWARE_BASELINE.json). Original detail remains in the [unchanged v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md); all 51 sections and eleven integrations remain in scope.
 
 The new amendment supersedes the old small `zabbix-lab` fallback and combined totals in active-prompt v3.0 section 18 and older guide examples. It does not change the three initial NextOps core VMs or authorize provisioning. Inspect actual Git state, work already done and approval/test evidence before resuming; do not overwrite work or restart completed discovery indefinitely.
 
@@ -13,6 +13,8 @@ The new amendment supersedes the old small `zabbix-lab` fallback and combined to
 The owner accepted the paired [Phase 0 report](en/PHASE_0_REPORT.md), [Persian report](fa/PHASE_0_REPORT.md), ADRs 0001–0006, trust boundaries, and Stage 1A–1E roadmap on 2026-09-21. Stage 1A Increment 1 now provides the locked Python project, typed boundary contracts, and deterministic denial policy with 18 passing unit cases. It has no live service, database, connector, credential, or AI path.
 
 The next bounded change is Increment 2: define the local identity bootstrap/recovery flow, add PostgreSQL migrations and least-privilege roles for organization/environment/target/run/audit state, persist idempotent run creation and worker leases, expose the minimal authenticated versioned API, and return one bilingual fixture-backed result. Build and test this locally before any target credential or model integration.
+
+The four schema-validated files under `deploy/server-dependencies` are now the public deployer handoff for the selected servers. They do not make Increment 2 or any VM deployable. Increment 2 should replace the app dossier's currently blocked installer/readiness entries only after actual migrations, roles, runtime dependencies, service definitions, clean offline install, backup, and rollback procedures exist and are tested. Environment-specific values belong in an approved private deployment record keyed by `required_inputs`, never in these public files.
 
 Acceptance evidence for Increment 2:
 
@@ -78,7 +80,7 @@ After each increment, update PROJECT_STATE with actual work, created roles, exac
 
 ## فارسی — ادامهٔ 1A با برش ماندگار app محلی
 
-[پرامپت فعال](requirements/NEXTOPS_MASTER_PROMPT.md)، [اصلاحیهٔ تازهٔ چیدمان](requirements/DEPLOYMENT_UPDATE.md)، [راهنمای Zabbix](fa/ZABBIX_SERVER.md)، [رکورد تخصیص](requirements/ZABBIX_SERVER_PLAN.json)، [شروع کار](fa/START_HERE.md)، [وضعیت پروژه](PROJECT_STATE.md)، [نقشهٔ راه](fa/ROADMAP.md)، [سرورها](fa/SERVER_PLAN.md)، [ذخیره‌سازی](STORAGE_PLAN.md)، [آفلاین](fa/OFFLINE_RUNTIME.md)، [ESXi](fa/ESXI_BASELINE.md) و [شاهد سخت‌افزار](requirements/HARDWARE_BASELINE.json) خوانده شوند. جزئیات اولیه در [بایگانی ثابت نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) باقی است؛ ۵۱ بخش و یازده اتصال حذف نمی‌شوند.
+[پرامپت فعال](requirements/NEXTOPS_MASTER_PROMPT.md)، [اصلاحیهٔ تازهٔ چیدمان](requirements/DEPLOYMENT_UPDATE.md)، [راهنمای Zabbix](fa/ZABBIX_SERVER.md)، [راهنمای پرونده‌های استقرار](fa/DEPLOYMENT_DOSSIERS.md)، [رکورد تخصیص](requirements/ZABBIX_SERVER_PLAN.json)، [شروع کار](fa/START_HERE.md)، [وضعیت پروژه](PROJECT_STATE.md)، [نقشهٔ راه](fa/ROADMAP.md)، [سرورها](fa/SERVER_PLAN.md)، [ذخیره‌سازی](STORAGE_PLAN.md)، [آفلاین](fa/OFFLINE_RUNTIME.md)، [ESXi](fa/ESXI_BASELINE.md) و [شاهد سخت‌افزار](requirements/HARDWARE_BASELINE.json) خوانده شوند. جزئیات اولیه در [بایگانی ثابت نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) باقی است؛ ۵۱ بخش و یازده اتصال حذف نمی‌شوند.
 
 اصلاحیه فقط نمونهٔ آزمایشگاهی کوچک و مجموع منابع وابسته به آن را در بخش ۱۸ پرامپت ۳.۰ و مثال‌های قدیمی جایگزین می‌کند؛ تعداد سه ماشین اولیهٔ خود NextOps و شروط مجوز تغییر نمی‌کنند. پیش از ادامه، Git، کار موجود، تأییدها و نتیجهٔ آزمون بررسی شوند؛ کار بازنویسی یا شناسایی تکمیل‌شده بی‌دلیل تکرار نشود.
 
@@ -87,6 +89,8 @@ After each increment, update PROJECT_STATE with actual work, created roles, exac
 مالک در ۲۱ سپتامبر ۲۰۲۶ [گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md)، ADRهای 0001 تا 0006، مرزهای اعتماد و نقشهٔ 1A تا 1E را پذیرفت. Increment 1 از 1A اکنون پروژهٔ Python قفل‌شده، قراردادهای مرزی دارای نوع و سیاست قطعی رد پیش‌فرض را با ۱۸ آزمون قبول‌شده دارد. هنوز سرویس زنده، پایگاه، connector، credential یا مسیر AI وجود ندارد.
 
 تغییر محدود بعدی Increment 2 است: طراحی bootstrap و recovery هویت محلی، migration و role محدود PostgreSQL برای سازمان، محیط، هدف، run و audit، ساخت idempotent run و lease ماندگار، API نسخه‌دار و احرازهویت‌شدهٔ حداقلی و یک نتیجهٔ دوزبانه با fixture. این مسیر ابتدا محلی و بدون credential مقصد یا مدل ساخته و آزموده شود.
+
+چهار فایل معتبرشده با schema در `deploy/server-dependencies` اکنون قرارداد عمومی تحویل به مسئول استقرارند؛ اما Increment 2 یا هیچ VM را آمادهٔ نصب نمی‌کنند. ورودی مسدود app فقط پس از وجود و آزمون migration، role، dependency، service definition، نصب پاک آفلاین، backup و rollback واقعی جایگزین شود. مقدار محیط واقعی در رکورد خصوصی و بر اساس شناسهٔ `required_inputs` قرار می‌گیرد، نه در فایل عمومی.
 
 شاهد پذیرش Increment 2:
 

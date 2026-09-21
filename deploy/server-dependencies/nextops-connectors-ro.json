@@ -481,7 +481,7 @@
       "command": "test -n \"${NEXTOPS_CONNECTOR_BUNDLE_DIR:-}\" && cd -- \"$NEXTOPS_CONNECTOR_BUNDLE_DIR\" && sha256sum -c SHA256SUMS",
       "purpose": "Verify gateway/runner code, dependencies, schemas, manifests, fixtures, licenses, and checksums.",
       "expected_result": "Every approved file verifies and the exact release/manifest/protocol versions are recorded.",
-      "failure_rule": "Fail closed on missing, extra, mismatched, or unlicensed artifacts; do not download replacements at runtime."
+      "failure_rule": "Fail closed on missing or mismatched listed artifacts; separately compare the bundle inventory/licenses with the approved lock and reject unlisted or unlicensed files. Do not download replacements at runtime."
     },
     {
       "id": "zabbix-tls-probe",

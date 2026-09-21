@@ -440,7 +440,7 @@
       "command": "test -n \"${NEXTOPS_AI_BUNDLE_DIR:-}\" && cd -- \"$NEXTOPS_AI_BUNDLE_DIR\" && sha256sum -c SHA256SUMS",
       "purpose": "Verify runtime, weights, tokenizer/template, metadata, and supporting libraries before promotion.",
       "expected_result": "Every approved file verifies and exact source revision, license, quantization, build flags, and checksum evidence are recorded.",
-      "failure_rule": "Fail closed on missing, extra, or mismatched artifacts; do not resolve a model name or download at startup."
+      "failure_rule": "Fail closed on missing or mismatched listed artifacts; separately compare the bundle inventory with the approved lock and reject unlisted files. Do not resolve a model name or download at startup."
     },
     {
       "id": "inspect-runtime-linkage",
@@ -450,10 +450,10 @@
       "mode": "guarded_template",
       "requires_authorization": true,
       "requires_inputs": ["artifact.ai_runtime_binary"],
-      "command": "test -n \"${NEXTOPS_INFERENCE_BINARY:-}\" && test -x \"$NEXTOPS_INFERENCE_BINARY\" && ldd \"$NEXTOPS_INFERENCE_BINARY\"",
-      "purpose": "Record native library dependencies so the offline bundle is complete.",
-      "expected_result": "All libraries resolve to approved local files and no accelerator/cloud helper is required.",
-      "failure_rule": "Stop on unresolved, unapproved, user-cache, or accelerator-only dependencies."
+      "command": "test -n \"${NEXTOPS_INFERENCE_BINARY:-}\" && test -x \"$NEXTOPS_INFERENCE_BINARY\" && readelf -d \"$NEXTOPS_INFERENCE_BINARY\"",
+      "purpose": "Inspect native dependency declarations without using ldd or executing an untrusted artifact.",
+      "expected_result": "NEEDED entries match the approved dependency inventory; a later isolated clean start proves they resolve only to approved local files.",
+      "failure_rule": "Stop on an unexpected accelerator/cloud/helper dependency, missing inventory entry, or artifact outside the verified bundle."
     },
     {
       "id": "install-inference-runtime",

@@ -1,6 +1,6 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 1 implemented and tested locally. This is not a deployment report.
+Updated: 2026-09-21 — Phase 0 accepted; Stage 1A Increment 1 implemented and tested locally; per-server deployment dossiers added. This is not a deployment report.
 
 ## English
 
@@ -41,6 +41,14 @@ The first combined profile is **40 vCPU / 184 GiB RAM / 980 GiB VMDKs**, plus pr
 
 The [new English guide](en/ZABBIX_SERVER.md) and [Persian guide](fa/ZABBIX_SERVER.md) document the proposed native Zabbix 7.0 LTS / PostgreSQL 16 / Nginx / PHP-FPM / Agent 2 stack, full `vg_zabbix` LVM layout, 7-day history / 90-day numeric-trend starting policy, read-only API identity, self-monitoring, offline acceptance and single-host recovery limits. Exact packages, retention settings and VM/LVM configuration are not installed or tested by these documents. Machine-readable proposed values are in [ZABBIX_SERVER_PLAN.json](requirements/ZABBIX_SERVER_PLAN.json), separate from the supplied hardware evidence.
 
+### Per-server deployer dossiers
+
+The versioned [deployment-dossier specification](requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md), shared [JSON Schema](../deploy/server-dependencies/server-dependency.schema.json), and four server instances now provide one handoff record for `nextops-app`, `nextops-ai`, `nextops-connectors-ro`, and `zabbix-server`. The paired [English](en/DEPLOYMENT_DOSSIERS.md) and [Persian](fa/DEPLOYMENT_DOSSIERS.md) guides define how a deployer resolves private inputs without committing them.
+
+Each dossier includes authorization state, source records, VM sizing, service identities, software/artifact locks, configuration paths, reference-only secrets, network/storage boundaries, dependency order, read-only or guarded command templates, explicit blocked commands, observability, backup/rollback, required private inputs, acceptance gates, and known limitations. Exact known resources reconcile to 40 vCPU / 184 GiB RAM / 980 GiB VMDKs, and the Zabbix mount/LVM entries reconcile to the 200-GiB proposal. PowerShell 7 `Test-Json` validation passed all four instances against schema 1.0.0; Python JSON parsing and cross-file invariant checks also passed.
+
+These records expose rather than hide the deployment blockers: no application/gateway/connector installer or service definitions exist; the model/runtime/package locks are unresolved; app/AI/connector disk layouts are not designed; the actual Zabbix disk and private networks/endpoints/credentials are unknown; and all runtime acceptance evidence remains `not_run`. No VM, disk, package, account, route, token, certificate, database, model, service, backup, restore, or target was changed or accessed while creating them.
+
 ### Milestones and actual evidence status
 
 | Stage | Required result | Evidence status for this update |
@@ -57,7 +65,7 @@ The user may perform provisioning independently; verify their actual state befor
 
 ### Scope of this publication and next action
 
-This change records Phase 0 acceptance and adds the first Stage 1A code increment while preserving the source requirements, archived prompt, diagrams and proposed Zabbix profile. It is not a host vulnerability audit, compatibility lock, or provisioning record.
+This state records Phase 0 acceptance, the first Stage 1A code increment, and the schema-validated per-server deployer handoff while preserving the source requirements, archived prompt, diagrams and proposed Zabbix profile. It is not a host vulnerability audit, compatibility lock, or provisioning record.
 
 The Stage 1A slice uses Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, Ruff 0.16.8, mypy 1.20.2, pytest 9.1.1, and a generated `uv.lock`. Eighteen unit cases pass. `ruff check packages tests`, strict `mypy packages tests`, `pytest`, `uv lock --check`, a clean `uv sync --extra dev --frozen`, `uv pip check`, and `uv audit --frozen` passed; the audit reported no known vulnerabilities. Documentation validation and `git diff --check` are part of the final repository gate. No browser/runtime service test passed, and no VM, disk, network, ESXi patch, model, database or monitoring service was modified.
 
@@ -95,6 +103,14 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است.
 
 راهنمای [فارسی](fa/ZABBIX_SERVER.md) و [انگلیسی](en/ZABBIX_SERVER.md) نرم‌افزار پیشنهادی Zabbix 7.0 LTS، PostgreSQL 16، Nginx، PHP-FPM و Agent 2، چیدمان کامل `vg_zabbix`، پیشنهاد history هفت‌روزه و trends عددی نودروزه، هویت API محدود، خودپایشی، پذیرش آفلاین و خطر تک‌میزبان را ثبت می‌کنند. بستهٔ دقیق، تنظیم نگهداری و VM/LVM از طریق این مستندات نصب یا آزموده نشده‌اند. اعداد پیشنهادی در [رکورد Zabbix](requirements/ZABBIX_SERVER_PLAN.json) جدا از شاهد سخت‌افزار آمده‌اند.
 
+### پروندهٔ هر سرور برای مسئول استقرار
+
+[مشخصات پرونده](requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md)، [JSON Schema مشترک](../deploy/server-dependencies/server-dependency.schema.json) و چهار فایل مربوط به `nextops-app`، `nextops-ai`، `nextops-connectors-ro` و `zabbix-server` اکنون تحویل ماشین‌خوان هر سرور را فراهم می‌کنند. راهنمای [فارسی](fa/DEPLOYMENT_DOSSIERS.md) و [انگلیسی](en/DEPLOYMENT_DOSSIERS.md) روش تکمیل ورودی خصوصی بدون commit آن را شرح می‌دهند.
+
+هر پرونده وضعیت مجوز، منبع، منابع VM، هویت سرویس، قفل نرم‌افزار و artifact، مسیر تنظیمات، secret reference، مرز شبکه و storage، ترتیب سرویس، فرمان فقط‌خواندنی یا الگوی محافظت‌شده، فرمان مسدود، مشاهده‌پذیری، backup و rollback، ورودی لازم، دروازهٔ پذیرش و محدودیت را دارد. مقدارهای معلوم با مجموع ۴۰ vCPU، حافظهٔ ۱۸۴ GiB و دیسک ۹۸۰ GiB سازگارند و mountهای Zabbix با طرح ۲۰۰ GiB تطبیق دارند. هر چهار فایل با `Test-Json` در PowerShell 7 و schema نسخهٔ ۱.۰.۰ قبول شدند؛ parse با Python و کنترل invariant بین فایل‌ها نیز قبول شد.
+
+این پرونده‌ها مانع را پنهان نمی‌کنند: installer و service definition برای برنامه و gateway و connector وجود ندارد؛ قفل مدل و runtime و package حل نشده؛ layout دیسک app و AI و connector طراحی نشده؛ دیسک واقعی زبیکس و شبکه و endpoint و credential خصوصی معلوم نیست؛ و همهٔ شاهدهای اجرایی `not_run` هستند. هنگام ساخت پرونده‌ها هیچ VM، دیسک، بسته، حساب، route، token، گواهی، پایگاه، مدل، سرویس، backup، restore یا مقصدی تغییر یا استفاده نشد.
+
 ### گام‌ها و وضعیت شواهد
 
 معماری، نقشه و ADRهای مرحلهٔ صفر پذیرفته شده‌اند؛ بررسی خصوصی تازهٔ میزبان، مجوز دسترسی و ظرفیت همچنان پیش از زیرساخت لازم‌اند. Increment 1 از 1A پیاده و آزموده شده، اما هویت ماندگار، پایگاه، audit و API/UI آن باقی است. مدل و سنجش 1B اجرا نشده؛ VM، نصب، حساب یا API مربوط به پیش‌نیاز Zabbix انجام نشده؛ اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E آزموده نشده‌اند.
@@ -103,7 +119,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS مهمان پیشنهادی است.
 
 ### دامنهٔ انتشار و کار بعدی
 
-این تغییر پذیرش مرحلهٔ صفر و نخستین برش کد 1A را ثبت و کار بعدی و ردیابی را به‌روز می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و طرح Zabbix حفظ شده‌اند. ممیزی امنیت میزبان یا تثبیت سازگاری انجام نشده است.
+این وضعیت پذیرش مرحلهٔ صفر، نخستین برش کد 1A و پروندهٔ معتبرشدهٔ تحویل هر سرور را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و طرح Zabbix حفظ شده‌اند. ممیزی امنیت میزبان، تثبیت سازگاری یا استقرار انجام نشده است.
 
 برش 1A با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، Ruff 0.16.8، mypy 1.20.2، pytest 9.1.1 و `uv.lock` تولیدشده آزموده شد. ۱۸ آزمون unit و فرمان‌های Ruff، mypy سخت‌گیرانه، pytest، بررسی lock، نصب پاک قفل‌شده، `uv pip check` و audit وابستگی قبول شدند و audit آسیب‌پذیری شناخته‌شده‌ای گزارش نکرد. بررسی مستندات و `git diff --check` در دروازهٔ نهایی اجرا می‌شوند. آزمون سرویس یا مرورگر انجام نشده و هیچ VM، دیسک، شبکه، وصلهٔ ESXi، مدل، پایگاه یا سرویس پایش تغییر نکرده است.
 

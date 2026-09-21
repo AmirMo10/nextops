@@ -536,7 +536,7 @@
       "phase": "build_validation",
       "shell": "bash",
       "run_as": "developer in an isolated checkout without operational credentials",
-      "mode": "read_only",
+      "mode": "guarded_template",
       "requires_authorization": false,
       "requires_inputs": [],
       "command": "uv sync --extra dev --frozen && uv run --extra dev ruff check packages tests && uv run --extra dev mypy packages tests && uv run --extra dev pytest",
@@ -555,7 +555,7 @@
       "command": "test -n \"${NEXTOPS_RELEASE_DIR:-}\" && cd -- \"$NEXTOPS_RELEASE_DIR\" && sha256sum -c SHA256SUMS",
       "purpose": "Verify every imported release artifact against the approved checksum manifest.",
       "expected_result": "All expected files verify and the release ID, signer/authenticity evidence, licenses, and checksums are recorded.",
-      "failure_rule": "Fail closed on a missing, extra, or mismatched artifact; never download a replacement during runtime startup."
+      "failure_rule": "Fail closed on a missing or mismatched listed artifact; separately compare the bundle inventory with the approved lock and reject unlisted files. Never download a replacement during runtime startup."
     },
     {
       "id": "install-application",

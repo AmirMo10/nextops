@@ -15,34 +15,34 @@ Add a versioned deployment-dossier contract, one self-contained JSON instance fo
 
 ### Phase 1: contract
 
-- [ ] Define the dossier specification and JSON Schema.
-- [ ] Validate the schema as JSON and review its required fields.
+- [x] Define the dossier specification and JSON Schema.
+- [x] Validate the schema as JSON and review its required fields.
 
 ### Checkpoint: contract
 
-- [ ] Schema parses and represents commands, blockers, and secret references without executable secrets.
+- [x] Schema parses and represents commands, blockers, and secret references without executable secrets.
 
 ### Phase 2: server instances
 
-- [ ] Add the `nextops-app` and `nextops-ai` dossiers.
-- [ ] Add the `nextops-connectors-ro` and `zabbix-server` dossiers.
-- [ ] Reconcile resource and storage values with the accepted records.
+- [x] Add the `nextops-app` and `nextops-ai` dossiers.
+- [x] Add the `nextops-connectors-ro` and `zabbix-server` dossiers.
+- [x] Reconcile resource and storage values with the accepted records.
 
 ### Checkpoint: instances
 
-- [ ] All four files parse and contain the required sections.
-- [ ] Known totals and Zabbix LVM values match source records.
+- [x] All four files parse and contain the required sections.
+- [x] Known totals and Zabbix LVM values match source records.
 
 ### Phase 3: handoff and repository state
 
-- [ ] Add paired English/Persian deployer guidance and index links.
-- [ ] Update traceability, project state, and the next-task handoff.
-- [ ] Run documentation, implementation, lock, diff, and secret-review gates.
+- [x] Add paired English/Persian deployer guidance and index links.
+- [x] Update traceability, project state, and the next-task handoff.
+- [x] Run documentation, implementation, lock, diff, and secret-review gates.
 
 ### Checkpoint: complete
 
-- [ ] Acceptance criteria in the dossier specification are met.
-- [ ] No infrastructure operation was performed or claimed.
+- [x] Acceptance criteria in the dossier specification are met.
+- [x] No infrastructure operation was performed or claimed.
 - [ ] Changes are committed and published for review.
 
 ## Risks and mitigations
