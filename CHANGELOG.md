@@ -14,6 +14,11 @@ next-task record to remove older statements that predated the authorized server 
 smoke test. No server, package, service, database, network, credential, model, or runtime state was
 changed by this documentation update.
 
+Revised the Persian brief and the Persian half of the Word document as native executive prose.
+Translation-heavy wording and unnecessary English operational terms were replaced with consistent
+formal Persian while product names, code identifiers, measured results, and acceptance boundaries
+were preserved.
+
 ### فارسی
 
 گزارش‌های متناظر و آمادهٔ ارائه به فارسی طبیعی و انگلیسی، همراه یک فایل Word دوزبانه و قابل‌ویرایش
@@ -24,6 +29,11 @@ smoke test محدود مدل محلی روی CPU را از سرویس تولید
 README، فهرست‌های مستندات، خلاصه‌های توسعه و آزمون، وضعیت پروژه و رکورد کار بعدی نیز اصلاح شدند تا
 عبارت‌های قدیمیِ پیش از آماده‌سازی مجاز سرورها و smoke test مدل حذف شوند. این تغییر مستندات هیچ
 سرور، package، سرویس، پایگاه، شبکه، credential، مدل یا وضعیت runtime را تغییر نداد.
+
+متن گزارش فارسی و بخش فارسی فایل Word نیز از نو و با نثر رسمیِ مناسب ارائهٔ مدیریتی ویرایش شد.
+عبارت‌های ترجمه‌وار و واژه‌های انگلیسیِ غیرضروری با معادل‌های یکدست فارسی جایگزین شدند؛ در عین حال،
+نام محصولات، شناسه‌های فنی، نتایج اندازه‌گیری‌شده و مرز میان آزمون مقدماتی و پذیرش عملیاتی بدون
+تغییر باقی ماندند.
 
 ## 2026-09-21 — Durable repository context / حافظهٔ ماندگار مخزن
 
