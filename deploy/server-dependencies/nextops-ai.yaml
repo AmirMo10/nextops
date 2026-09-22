@@ -13,19 +13,22 @@ authorization:
   provisioning_authorized: false
   operational_access_authorized: false
   destructive_actions_authorized: false
-  notes: The owner authorized this deployment dossier and accepted the CPU-local architecture. VM creation,
-    model acquisition, benchmarking, network changes, installation, and service startup remain separately
-    gated.
+  notes: The owner accepted the CPU-local architecture, authorized the completed connected package/runtime/model
+    preparation, and requested progression into Stage 1B. The reviewed native systemd profile now exists in
+    source; installation, service startup, benchmarking, network changes, recovery, and promotion remain
+    subject to the unresolved gates and private change record.
 source_records:
   - docs/requirements/HARDWARE_BASELINE.json
   - docs/en/SERVER_PLAN.md
   - docs/en/CPU_AI.md
+  - docs/en/AI_SYSTEMD.md
   - docs/en/TECH_STACK.md
   - docs/en/OFFLINE_RUNTIME.md
   - docs/en/SECURITY.md
   - docs/PROJECT_STATE.md
   - deploy/inference/qwen3-8b-q4-k-m.yaml
   - deploy/installers/install-nextops-ai.sh
+  - deploy/systemd/README.md
 vm:
   hypervisor: VMware ESXi 8.0.3 build 24414501 (owner-supplied host evidence)
   guest_os: Ubuntu Server 24.04 LTS proposed; exact image and maintained patch lock required
@@ -49,12 +52,12 @@ vm:
     - Define measurable Persian/English quality, latency, resource, queue, and failure targets before
       benchmarking.
 service_accounts:
-  - id: nextops-inference
+  - id: nextops-ai
     scope: one local CPU generation service and its verified model artifacts
     login: false
     privilege: non-root; read-only model/runtime paths, bounded writable cache/log paths, no target credentials
       or management-LAN access
-    status: planned_not_created
+    status: observed_created_non_login_identity
   - id: nextops-model-import
     scope: controlled provisioning-time artifact verification and promotion only
     login: false
@@ -74,36 +77,36 @@ software_dependencies:
     version: v0.4.1 source tag at b29c606e28a01b1bc8c1351026a0fa6e616bf6c4
     runtime_location: local
     required: true
-    status: source_candidate_pinned_not_built_or_tested
+    status: built_cpu_native_openblas_promoted_and_smoke_tested
     lock_evidence: deploy/inference/qwen3-8b-q4-k-m.yaml
   - id: multilingual-generation-model
     kind: model
     version: Qwen3-8B-Q4_K_M.gguf at repository revision 7c41481f57cb95916b40956ab2f0b139b296d974
     runtime_location: local
     required: true
-    status: evaluation_candidate_selected_not_imported_or_benchmarked
+    status: imported_sha256_verified_and_smoke_tested_not_benchmarked
     lock_evidence: deploy/inference/qwen3-8b-q4-k-m.yaml
   - id: model-tokenizer-template
     kind: model_support_artifacts
     version: embedded GGUF metadata from the selected source artifact
     runtime_location: local
     required: true
-    status: source_candidate_selected_not_verified_locally
+    status: embedded_metadata_used_in_verified_import_not_fully_acceptance_tested
     lock_evidence: deploy/inference/qwen3-8b-q4-k-m.yaml
   - id: cpu-runtime-native-libraries
     kind: native_runtime_dependencies
     version: null
     runtime_location: local
     required: true
-    status: depends_on_reviewed_build_flags_and_guest_isa
-    lock_evidence: null
+    status: observed_openblas_openmp_cpu_build_complete_library_manifest_pending
+    lock_evidence: deploy/inference/qwen3-8b-q4-k-m.yaml
   - id: systemd-or-restricted-container-runtime
     kind: service_manager
     version: null
     runtime_location: local
     required: true
-    status: deployment_mode_not_selected
-    lock_evidence: null
+    status: native_systemd_source_profile_implemented_not_installed
+    lock_evidence: deploy/systemd/README.md
   - id: local-dns-time-pki
     kind: infrastructure_service
     version: null
@@ -123,11 +126,11 @@ artifacts:
     purpose: Pinned CPU-only inference runtime binary/library set with build revision, compiler, flags,
       linked libraries, and device-startup report
     install_path: /srv/nextops/runtime/llama.cpp/<runtime-id>
-    version: v0.4.1 source candidate; local build identity pending
-    sha256: null
+    version: v0.4.1 at b29c606e28a01b1bc8c1351026a0fa6e616bf6c4
+    sha256: dbe5a5cdd4842fe2d498270c1e1df58344e9052e97214e2ba9c9845443a1b0dc
     license_record: MIT; official source license linked from the inference manifest
     source_record: deploy/inference/qwen3-8b-q4-k-m.yaml
-    status: source_selected_not_built_or_verified
+    status: built_promoted_and_smoke_tested_complete_library_manifest_pending
   - id: generation-model-gguf
     purpose: Exact quantized multilingual model weights used for production answers
     install_path: /srv/nextops/models/<model-id>/model.gguf
@@ -135,7 +138,7 @@ artifacts:
     sha256: d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785
     license_record: Apache-2.0; official model repository linked from the inference manifest
     source_record: deploy/inference/qwen3-8b-q4-k-m.yaml
-    status: source_verified_candidate_not_imported_or_locally_hashed
+    status: imported_promoted_and_sha256_verified_smoke_tested_not_accepted
   - id: model-metadata-and-template
     purpose: Immutable model source revision, quantization, tokenizer/template, context semantics, license,
       and evaluation metadata
@@ -144,7 +147,7 @@ artifacts:
     sha256: null
     license_record: Runtime MIT and model Apache-2.0 source records
     source_record: deploy/inference/qwen3-8b-q4-k-m.yaml
-    status: repository_manifest_created_not_promoted_to_server
+    status: repository_manifest_and_import_evidence_recorded_full_release_manifest_pending
   - id: ai-offline-runtime-bundle
     purpose: Complete native libraries or pinned container image needed to cold-start without registries
       or user caches
@@ -166,7 +169,7 @@ artifacts:
 configuration_files:
   - id: model-registry
     path: /etc/nextops/models.yaml
-    owner: root:nextops-inference
+    owner: root:nextops-ai
     mode: '0640'
     contains_secret_values: false
     status: planned_no_runtime_parser_or_example_file_yet
@@ -178,7 +181,7 @@ configuration_files:
       - explicit no-external-provider setting
   - id: resource-profile
     path: /etc/nextops/resource-profiles.yaml
-    owner: root:nextops-inference
+    owner: root:nextops-ai
     mode: '0640'
     contains_secret_values: false
     status: planned_unvalidated_until_benchmark
@@ -190,10 +193,10 @@ configuration_files:
       - measured cold/warm benchmark record ID
   - id: inference-service-config
     path: /etc/nextops/inference.yaml
-    owner: root:nextops-inference
+    owner: root:nextops-ai
     mode: '0640'
     contains_secret_values: false
-    status: service_contract_not_implemented
+    status: native_systemd_and_environment_source_profile_implemented_not_installed
     required_settings:
       - internal bind address and port
       - authenticated client identity/audience
@@ -202,14 +205,14 @@ configuration_files:
       - request size, rate, concurrency, cancellation, and health semantics
 secret_references:
   - id: inference-service-auth-ref
-    consumer: nextops-inference
+    consumer: nextops-ai
     reference_only: true
     delivery_requirement: Audience-bound internal service credential accepted only from nextops-app; never
       a target credential or user session token
     rotation_requirement: Support audited overlap and revocation without opening an unauthenticated listener
-    status: internal_auth_design_not_implemented
+    status: two_distinct_systemd_credentials_implemented_in_source_not_delivered
   - id: inference-tls-private-key-ref
-    consumer: nextops-inference
+    consumer: nextops-ai
     reference_only: true
     delivery_requirement: Restricted private-key path or approved local key service with offline startup/recovery
     rotation_requirement: Define offline renewal, revocation, rollback, and expiry alerting
@@ -286,35 +289,35 @@ storage:
       purpose: Versioned verified model weights, tokenizer/template, and manifests
       size_gib: null
       filesystem: null
-      owner: root:nextops-inference
+      owner: root:nextops-ai
       mode: '0750'
       status: model_set_and_growth_budget_missing
     - path: /srv/nextops/runtime
       purpose: Pinned CPU runtime releases and one last-known-good rollback build
       size_gib: null
       filesystem: null
-      owner: root:nextops-inference
+      owner: root:nextops-ai
       mode: '0750'
       status: runtime_lock_missing
     - path: /etc/nextops
       purpose: Model registry, inference settings, resource profiles, and secret references
       size_gib: null
       filesystem: null
-      owner: root:nextops-inference
+      owner: root:nextops-ai
       mode: '0750'
-      status: planned_not_created
+      status: observed_created_protected_path
     - path: /var/lib/nextops/inference
       purpose: Bounded local runtime state/cache; not an untracked model download cache
       size_gib: null
       filesystem: null
-      owner: nextops-inference:nextops-inference
+      owner: nextops-ai:nextops-ai
       mode: '0750'
       status: cache_policy_and_limit_missing
     - path: /var/log/nextops
       purpose: Sanitized inference service and performance logs without prompt, evidence, or secret content
       size_gib: null
       filesystem: null
-      owner: nextops-inference:nextops-inference
+      owner: nextops-ai:nextops-ai
       mode: '0750'
       status: retention_and_rotation_missing
   capacity_rules:
@@ -333,7 +336,7 @@ service_order:
     service: model/runtime/config mounts and protected key access
     readiness: Expected durable paths are mounted read-only where possible; every required checksum verifies.
   - order: 2
-    service: nextops-inference
+    service: nextops-llama then nextops-ai
     readiness: Exact runtime/model IDs load on CPU with zero offload, bounded resources, authenticated
       internal listener, and no network download.
   - order: 3
@@ -367,8 +370,8 @@ commands:
     requires_authorization: true
     requires_inputs:
       - authorization.read_only_guest_discovery
-    command: systemctl show --property=AllowedCPUs,AllowedMemoryNodes nextops-inference.service 2>/dev/null
-      || true; cat /proc/self/status | sed -n '/Cpus_allowed_list/p;/Mems_allowed_list/p'
+    command: systemctl show --property=AllowedCPUs,AllowedMemoryNodes nextops-llama.service nextops-ai.service
+      2>/dev/null || true; cat /proc/self/status | sed -n '/Cpus_allowed_list/p;/Mems_allowed_list/p'
     purpose: Inspect effective CPU/memory-node constraints without changing affinity.
     expected_result: Effective limits match the approved resource profile or are explicitly recorded as
       not yet configured.
@@ -569,8 +572,9 @@ required_inputs:
     classification: deployment_decision
     required_before: artifact packaging
     status: missing
-    description: Choose native systemd or restricted container deployment and document CPU/memory limits,
-      writable paths, and restart behavior.
+    description: Native systemd is selected in source with separate llama.cpp and authenticated API units,
+      file-backed credentials, loopback-only cgroup network policy, CPU/memory/task limits, writable paths,
+      and restart behavior.
     validation: Clean offline install and cold start pass with no container socket, registry pull, or
       interactive-user cache.
   - id: artifact.ai_package_bundle
@@ -622,8 +626,9 @@ required_inputs:
     classification: deployment_decision
     required_before: service start
     status: missing
-    description: Exact runtime flags for model path, context, batch, threads, slots, queue, timeouts,
-      CPU-only/zero-offload, binding, and logging.
+    description: The source profile fixes model alias/path convention, 8K context, 16 generation and batch
+      threads, one slot, bounded batches/timeouts, zero GPU layers, loopback binding, disabled Web UI/slots,
+      cgroup resource limits, and journal logging. Target support and measurements remain required.
     validation: Flags are supported by the pinned revision, captured in audit/readiness, and reproduce
       the accepted benchmark.
   - id: deployment.ai_resource_profile
@@ -688,9 +693,10 @@ acceptance_gates:
     status: not_run
     evidence_reference: null
 known_limitations:
-  - A source-verified llama.cpp/Qwen evaluation pair is selected in the repository, but no runtime binary
-    is built, no model is imported or locally hashed, and no CPU-only execution, service unit, port,
-    offline cold start, quality result, or benchmark is accepted.
+  - The pinned llama.cpp runtime and Qwen model were built/imported, hash-verified, and CPU smoke-tested.
+    The native systemd units, two credential boundary, loopback ports, and initial resource profile now exist
+    in source but are not installed or target-verified; offline cold start, quality, load, rollback, restore,
+    and full benchmark acceptance remain open.
   - The 24-vCPU/128-GiB profile is an experiment budget; it is not a thread count, concurrency promise,
     performance result, or proven one-NUMA-node fit.
   - The 500-GiB disk has no approved partition or artifact-retention layout and must not be formatted

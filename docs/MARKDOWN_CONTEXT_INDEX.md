@@ -44,6 +44,7 @@ Markdown file is added, renamed, or removed.
 - `CHANGELOG.md` — Versioned repository change history.
 - `CONTRIBUTING.md` — Contribution, review, and verification requirements.
 - `deploy/installers/README.md` — Offline OS-package bundle and installer operator guide.
+- `deploy/systemd/README.md` — Native Stage 1B systemd source profile, installed layout, and deployment gates.
 - `docs/adr/0001-modular-single-host.md` — ADR for the modular core and initial single-host topology.
 - `docs/adr/0002-local-cpu-only.md` — ADR for mandatory local CPU-only AI.
 - `docs/adr/0003-security-before-execution.md` — ADR for policy and safety before execution.
@@ -54,6 +55,7 @@ Markdown file is added, renamed, or removed.
 - `docs/en/ARCHITECTURE.md` — English architecture and repository boundaries.
 - `docs/en/CONFIGURATION.md` — English configuration contracts and current implemented subset.
 - `docs/en/CPU_AI.md` — English local CPU inference and capacity plan.
+- `docs/en/AI_SYSTEMD.md` — English Stage 1B native systemd service profile and installation hold.
 - `docs/en/DATA_API.md` — English durable data, workflow, evidence, and API contracts.
 - `docs/en/DEPLOYMENT_DOSSIERS.md` — English per-server dossier workflow.
 - `docs/en/DEVELOPMENT.md` — English development, CI, GitHub, and release workflow.
@@ -81,6 +83,7 @@ Markdown file is added, renamed, or removed.
 - `docs/fa/ARCHITECTURE.md` — Persian architecture and repository boundaries.
 - `docs/fa/CONFIGURATION.md` — Persian configuration contracts and current implemented subset.
 - `docs/fa/CPU_AI.md` — Persian local CPU inference and capacity plan.
+- `docs/fa/AI_SYSTEMD.md` — Persian Stage 1B native systemd service profile and installation hold.
 - `docs/fa/DATA_API.md` — Persian durable data, workflow, evidence, and API contracts.
 - `docs/fa/DEPLOYMENT_DOSSIERS.md` — Persian per-server dossier workflow.
 - `docs/fa/DEVELOPMENT.md` — Persian development, CI, GitHub, and release workflow.

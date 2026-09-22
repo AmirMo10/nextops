@@ -85,7 +85,7 @@ A successful parse or schema check proves structure only. It does not verify pri
 
 ### `nextops-app`
 
-Stop before application installation. The repository now has a source-level API, PostgreSQL baseline/group roles, durable fixture worker behavior, and guarded scripts for an authenticated offline OS-package layer. It has no approved package bundle, complete production installer/release, browser UI, production login-role delivery, reverse proxy, Compose stack, systemd units, or tested backup/restore procedure. Do not treat a successful package-layer run as product deployment, turn CI commands into a production runbook, invent environment variables, or expose PostgreSQL to compensate.
+Stop before application installation. The repository now has a source-level API, PostgreSQL baseline/group roles, durable fixture worker behavior, guarded scripts for an authenticated offline OS-package layer, and a source-level AI systemd profile. It has no approved package bundle, complete production installer/release, browser UI, production login-role delivery, reverse proxy, Compose stack, deployed application units, or tested backup/restore procedure. The AI units are not installation evidence. Do not treat a successful package-layer run as product deployment, turn CI commands into a production runbook, invent environment variables, or expose PostgreSQL to compensate.
 
 ### `nextops-ai`
 

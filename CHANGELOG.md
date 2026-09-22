@@ -1,5 +1,49 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-21 — Stage 1B native service profile / پروفایل بومی سرویس مرحلهٔ 1B
+
+### English
+
+Added hardened, separate native systemd units for the pinned llama.cpp runtime and authenticated
+NextOps inference API. Both services bind only to loopback, use file-backed systemd credentials,
+clear proxy inheritance, enforce explicit CPU/memory/task limits, restrict cgroup network access,
+and run under the existing non-login `nextops-ai` identity. The inference configuration now accepts
+either direct development secrets or protected credential files and rejects ambiguous, linked,
+world-accessible, oversized, multiline, or whitespace-padded secret material.
+
+Added a versioned Persian/English Stage 1B evaluation corpus and a loopback-only qualification
+runner that checks unauthenticated denial, readiness, bounded bilingual cases, and an optional load
+probe without claiming acceptance automatically. Added unit tests and paired English/Persian
+operator guidance; updated the deployment dossier, project state, next-task record, indexes, and
+installation summaries.
+
+Focused tests, lint, strict typing, artifact/dossier/document validation, and target-side Ubuntu
+24.04 systemd syntax and security review pass. No live service was installed or started. A fresh
+AI-guest preflight found pending security updates, while the deployment account lacks the narrowly
+authorized privilege needed for protected installation and service control; both remain explicit
+gates before live evaluation.
+
+### فارسی
+
+برای محیط ثابت llama.cpp و API احرازهویت‌شدهٔ پردازش مدل NextOps، دو واحد جدا و سخت‌سازی‌شدهٔ
+systemd افزوده شد. هر دو سرویس فقط روی رابط محلی گوش می‌دهند، اعتبارنامه را از فایل محافظت‌شدهٔ
+systemd می‌خوانند، تنظیمات proxy را به ارث نمی‌برند، سقف روشن CPU و حافظه و فرایند دارند، دسترسی
+شبکه‌ای آن‌ها در سطح cgroup محدود است و با هویت بدون ورود `nextops-ai` اجرا می‌شوند. پیکربندی
+پردازش مدل اکنون در محیط توسعه مقدار مستقیم یا در سرویس فایل اعتبارنامه را می‌پذیرد و منبع مبهم،
+پیوند نمادین، فایل قابل‌خواندن برای همگان، مقدار بیش‌ازحد بزرگ، چندخطی یا دارای فاصلهٔ اضافی را رد
+می‌کند.
+
+مجموعهٔ نسخه‌دار سنجش فارسی و انگلیسی برای مرحلهٔ 1B و یک اجراکنندهٔ فقط محلی افزوده شد. این
+اجراکننده رد درخواست بدون احراز هویت، آمادگی، موارد محدود دوزبانه و در صورت انتخاب، آزمون بار را
+می‌سنجد؛ اما نتیجه را خودکار «پذیرفته‌شده» اعلام نمی‌کند. آزمون‌های واحد، راهنمای متناظر فارسی و
+انگلیسی و رکوردهای تحویل، وضعیت پروژه، کار بعدی، فهرست‌ها و خلاصه‌های نصب نیز به‌روز شدند.
+
+آزمون‌های متمرکز، تحلیل ایستا، بررسی نوع‌ها، اعتبارسنجی artifact و پرونده و مستندات، و بازبینی نحو
+و سخت‌سازی systemd روی Ubuntu 24.04 موفق بوده‌اند. هیچ سرویس زنده‌ای نصب یا راه‌اندازی نشد.
+پیش‌بررسی تازهٔ مهمان هوش مصنوعی چند به‌روزرسانی امنیتی معوق را نشان داد و حساب استقرار نیز مجوز
+محدود لازم برای نصب در مسیرهای محافظت‌شده و کنترل سرویس را ندارد؛ هر دو مورد پیش از ارزیابی زنده
+دروازهٔ صریح باقی می‌مانند.
+
 ## 2026-09-21 — Bilingual project status brief / گزارش دوزبانهٔ وضعیت پروژه
 
 ### English

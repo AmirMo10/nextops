@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import os
+import stat
+from pathlib import Path
 from typing import Literal, Self
 from urllib.parse import urlsplit
 
@@ -46,14 +48,79 @@ class LlamaCppSettings(BaseModel):
 
     @classmethod
     def from_environment(cls) -> LlamaCppSettings:
-        """Load secrets and the provider origin without secret-bearing defaults."""
+        """Load deployment settings without requiring secrets in process environment values."""
 
         return cls(
             base_url=os.environ.get("NEXTOPS_LLAMA_BASE_URL", ""),
-            provider_api_key=os.environ.get("NEXTOPS_LLAMA_API_KEY", ""),
-            service_auth_secret=os.environ.get("NEXTOPS_INFERENCE_SERVICE_SECRET", ""),
+            provider_api_key=_deployment_secret(
+                value_variable="NEXTOPS_LLAMA_API_KEY",
+                file_variable="NEXTOPS_LLAMA_API_KEY_FILE",
+                credential_name="llama-api-key",
+            ),
+            service_auth_secret=_deployment_secret(
+                value_variable="NEXTOPS_INFERENCE_SERVICE_SECRET",
+                file_variable="NEXTOPS_INFERENCE_SERVICE_SECRET_FILE",
+                credential_name="inference-service-secret",
+            ),
             request_timeout_seconds=float(
                 os.environ.get("NEXTOPS_INFERENCE_TIMEOUT_SECONDS", "120")
             ),
             queue_timeout_seconds=float(os.environ.get("NEXTOPS_QUEUE_TIMEOUT_SECONDS", "5")),
         )
+
+
+def _deployment_secret(
+    *,
+    value_variable: str,
+    file_variable: str,
+    credential_name: str,
+) -> str:
+    direct_value = os.environ.get(value_variable)
+    explicit_path = os.environ.get(file_variable)
+    credentials_directory = os.environ.get("CREDENTIALS_DIRECTORY")
+
+    if direct_value is not None and (explicit_path or credentials_directory):
+        raise ValueError(
+            f"{value_variable} cannot be combined with file-backed deployment credentials"
+        )
+    if direct_value is not None:
+        return direct_value
+
+    if explicit_path:
+        return _read_secret_file(Path(explicit_path), file_variable)
+    if credentials_directory:
+        return _read_secret_file(
+            Path(credentials_directory) / credential_name,
+            "CREDENTIALS_DIRECTORY",
+        )
+    return ""
+
+
+def _read_secret_file(path: Path, source: str) -> str:
+    if not path.is_absolute():
+        raise ValueError(f"{source} must resolve to an absolute path")
+
+    try:
+        metadata = path.lstat()
+    except OSError as error:
+        raise ValueError(f"unable to read the credential referenced by {source}") from error
+    if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
+        raise ValueError(f"{source} must reference a regular file, not a symlink")
+    if os.name == "posix" and (metadata.st_mode & stat.S_IROTH or metadata.st_mode & stat.S_IWOTH):
+        raise ValueError(f"the credential referenced by {source} must not be world-accessible")
+    if metadata.st_size > 4_096:
+        raise ValueError(f"the credential referenced by {source} exceeds 4096 bytes")
+
+    try:
+        value = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        raise ValueError(f"unable to read the credential referenced by {source}") from error
+    normalized = value.removesuffix("\n").removesuffix("\r")
+    if (
+        not normalized
+        or normalized != normalized.strip()
+        or "\n" in normalized
+        or "\r" in normalized
+    ):
+        raise ValueError(f"the credential referenced by {source} must contain one non-empty line")
+    return normalized

@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INSTALL.md) · [Index](INDEX.md)
 
-**Current capability: clone, review documentation, run the Stage 1A source API, test its contracts and PostgreSQL migration in an isolated development environment, and validate a guarded per-server offline OS-package bundle.** The repository has four package-layer scripts, a locked Python project, FastAPI entrypoint, Alembic baseline, and durable service code, but no approved package bundle, complete production application installer, offline release, reverse proxy configuration, browser UI, Compose stack, connector service, deployed AI service, backup/restore bundle, or systemd unit. Host preparation steps below remain an implementation checklist, not authorization or proof of a deployed product.
+**Current capability: clone, review documentation, run the Stage 1A source API, test its contracts and PostgreSQL migration in an isolated development environment, validate a guarded per-server offline OS-package bundle, and inspect the Stage 1B AI systemd source profile.** The repository has four package-layer scripts, a locked Python project, FastAPI entrypoint, Alembic baseline, durable service code, and hardened source units for the AI runtime/API. It still has no approved package bundle, complete production application installer, offline release, reverse proxy configuration, browser UI, Compose stack, connector service, deployed AI service, or tested backup/restore bundle. Host preparation steps below remain an implementation checklist, not authorization or proof of a deployed product.
 
 ## Available now
 

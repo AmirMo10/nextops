@@ -91,7 +91,7 @@ cd nextops
 
 <div dir="rtl">
 
-سپس [فهرست مستندات](docs/fa/INDEX.md)، [وضعیت فعلی](docs/PROJECT_STATE.md) و [کار بعدی](docs/NEXT_TASK.md) را بخوانید. [راهنمای نصب](docs/fa/INSTALL.md) بین آماده‌سازی فعلی مخزن و استقرار آیندهٔ محصول تمایز می‌گذارد. چهار [script لایهٔ package](deploy/installers/README.md) واقعی، آزموده، آفلاین و محافظت‌شده‌اند؛ اما جای installer کامل برنامه یا service definitionهای Compose/systemd را نمی‌گیرند.
+سپس [فهرست مستندات](docs/fa/INDEX.md)، [وضعیت فعلی](docs/PROJECT_STATE.md) و [کار بعدی](docs/NEXT_TASK.md) را بخوانید. [راهنمای نصب](docs/fa/INSTALL.md) میان آماده‌سازی فعلی مخزن و استقرار آیندهٔ محصول تفکیک روشنی برقرار می‌کند. چهار [اسکریپت لایهٔ بسته‌ها](deploy/installers/README.md) واقعی، آزموده، آفلاین و محافظت‌شده‌اند. اکنون برای نقش هوش مصنوعی نیز پروفایل مبدأ و سخت‌سازی‌شدهٔ systemd وجود دارد؛ بااین‌حال این پروفایل هنوز مستقر و پذیرفته نشده و نصب‌کننده یا تعریف کامل سرویس برنامه نیز آماده نیست.
 
 [پرامپت اصلی توسعه](docs/requirements/NEXTOPS_MASTER_PROMPT.md) بدون تهیهٔ ترجمهٔ جدید نگه داشته می‌شود. پیوست فارسی موجود در آن، متن اولیهٔ نیازمندی‌هاست. راهنماهای انسانی در دو پوشهٔ فارسی و انگلیسی به‌صورت متناظر نگهداری می‌شوند. نقشهٔ راه بازنگری‌شده، اولویت تازهٔ مالک برای پاسخ Zabbix در اولین مرحله را صریح ثبت می‌کند.
 
@@ -106,6 +106,7 @@ cd nextops
 | انتخاب فناوری | [فناوری‌های پیشنهادی](docs/fa/TECH_STACK.md) | [Suggested stack](docs/en/TECH_STACK.md) |
 | طراحی سامانه | [معماری](docs/fa/ARCHITECTURE.md) | [Architecture](docs/en/ARCHITECTURE.md) |
 | پردازش مدل و سنجش کارایی | [هوش مصنوعی روی CPU](docs/fa/CPU_AI.md) | [CPU-only AI](docs/en/CPU_AI.md) |
+| پروفایل بومی سرویس مرحلهٔ 1B | [پروفایل systemd](docs/fa/AI_SYSTEMD.md) | [systemd profile](docs/en/AI_SYSTEMD.md) |
 | امنیت و تأیید عملیات | [امنیت](docs/fa/SECURITY.md) | [Security](docs/en/SECURITY.md) |
 | نصب و تنظیمات | [نصب](docs/fa/INSTALL.md) · [پیکربندی](docs/fa/CONFIGURATION.md) | [Install](docs/en/INSTALL.md) · [Configuration](docs/en/CONFIGURATION.md) |
 | اتصال‌ها | [MCP](docs/fa/MCP.md) · [سامانه‌ها](docs/fa/INTEGRATIONS.md) | [MCP](docs/en/MCP.md) · [Integrations](docs/en/INTEGRATIONS.md) |

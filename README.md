@@ -77,7 +77,7 @@ git clone https://github.com/Omid-NextAI/nextops.git
 cd nextops
 ```
 
-Read the [documentation index](docs/en/INDEX.md), [current state](docs/PROJECT_STATE.md), and [next task](docs/NEXT_TASK.md). The [installation guide](docs/en/INSTALL.md) distinguishes today's repository setup from future product deployment. The four [package-layer scripts](deploy/installers/README.md) are real, tested, offline and guarded; they do not replace the still-missing complete application installer or Compose/systemd service definitions.
+Read the [documentation index](docs/en/INDEX.md), [current state](docs/PROJECT_STATE.md), and [next task](docs/NEXT_TASK.md). The [installation guide](docs/en/INSTALL.md) distinguishes today's repository setup from future product deployment. The four [package-layer scripts](deploy/installers/README.md) are real, tested, offline and guarded. A hardened native systemd source profile now exists for the AI role, but neither it nor a complete application installer or service profile has been deployed or accepted.
 
 The [engineering master prompt](docs/requirements/NEXTOPS_MASTER_PROMPT.md) is retained as supplied, without a new translation. Its original Persian appendix is historical source material. Human-facing documentation is maintained in matching English and Persian guides. The revised roadmap explicitly records the owner's later Zabbix-first milestone requirement.
 
@@ -92,6 +92,7 @@ The [engineering master prompt](docs/requirements/NEXTOPS_MASTER_PROMPT.md) is r
 | Technology decisions | [Suggested stack](docs/en/TECH_STACK.md) | [فناوری‌های پیشنهادی](docs/fa/TECH_STACK.md) |
 | System design | [Architecture](docs/en/ARCHITECTURE.md) | [معماری](docs/fa/ARCHITECTURE.md) |
 | CPU inference and benchmarks | [CPU-only AI](docs/en/CPU_AI.md) | [هوش مصنوعی روی CPU](docs/fa/CPU_AI.md) |
+| Stage 1B native service profile | [systemd profile](docs/en/AI_SYSTEMD.md) | [پروفایل systemd](docs/fa/AI_SYSTEMD.md) |
 | Security and approvals | [Security](docs/en/SECURITY.md) | [امنیت و تأیید عملیات](docs/fa/SECURITY.md) |
 | Installation and configuration | [Install](docs/en/INSTALL.md) · [Configuration](docs/en/CONFIGURATION.md) | [نصب](docs/fa/INSTALL.md) · [پیکربندی](docs/fa/CONFIGURATION.md) |
 | MCP and integrations | [MCP](docs/en/MCP.md) · [Integrations](docs/en/INTEGRATIONS.md) | [پروتکل MCP](docs/fa/MCP.md) · [اتصال به سامانه‌ها](docs/fa/INTEGRATIONS.md) |

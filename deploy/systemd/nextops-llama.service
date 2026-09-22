@@ -1,0 +1,93 @@
+[Unit]
+Description=NextOps pinned local CPU model runtime
+Documentation=https://github.com/Omid-NextAI/nextops
+After=local-fs.target
+Before=nextops-ai.service
+ConditionFileIsExecutable=/srv/nextops/runtime/llama.cpp/current/bin/llama-server
+ConditionPathIsReadWrite=/var/lib/nextops/inference
+ConditionPathExists=/srv/nextops/models/current/Qwen3-8B-Q4_K_M.gguf
+
+[Service]
+Type=simple
+User=nextops-ai
+Group=nextops-ai
+UMask=0027
+LoadCredential=llama-api-key:/etc/nextops/credentials/llama-api-key
+Environment=HOME=/var/lib/nextops/inference
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=OMP_NUM_THREADS=16
+Environment=HTTP_PROXY=
+Environment=HTTPS_PROXY=
+Environment=ALL_PROXY=
+Environment=NO_PROXY=127.0.0.1,localhost
+ExecStart=/srv/nextops/runtime/llama.cpp/current/bin/llama-server \
+    --model /srv/nextops/models/current/Qwen3-8B-Q4_K_M.gguf \
+    --alias nextops-qwen3-8b-q4-k-m \
+    --host 127.0.0.1 \
+    --port 8080 \
+    --api-key-file %d/llama-api-key \
+    --threads 16 \
+    --threads-batch 16 \
+    --threads-http 2 \
+    --ctx-size 8192 \
+    --batch-size 512 \
+    --ubatch-size 128 \
+    --parallel 1 \
+    --gpu-layers 0 \
+    --flash-attn off \
+    --no-context-shift \
+    --no-webui \
+    --no-slots \
+    --metrics
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=45s
+KillSignal=SIGTERM
+KillMode=mixed
+LimitCORE=0
+LimitNOFILE=4096
+Nice=5
+CPUAccounting=yes
+MemoryAccounting=yes
+TasksAccounting=yes
+CPUQuota=1800%
+MemoryHigh=88G
+MemoryMax=96G
+TasksMax=128
+RuntimeDirectory=nextops-llama
+RuntimeDirectoryMode=0750
+StateDirectory=nextops/inference
+StateDirectoryMode=0750
+LogsDirectory=nextops
+LogsDirectoryMode=0750
+ReadOnlyPaths=/srv/nextops/runtime /srv/nextops/models /etc/nextops
+ReadWritePaths=/var/lib/nextops/inference /var/log/nextops
+CapabilityBoundingSet=
+AmbientCapabilities=
+NoNewPrivileges=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectClock=yes
+ProtectControlGroups=yes
+ProtectHome=yes
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectProc=invisible
+ProtectSystem=strict
+RestrictAddressFamilies=AF_UNIX AF_INET
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+IPAddressDeny=any
+IPAddressAllow=localhost
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nextops-llama
+
+[Install]
+WantedBy=multi-user.target

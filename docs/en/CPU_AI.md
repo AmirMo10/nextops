@@ -2,7 +2,7 @@
 
 [فارسی](../fa/CPU_AI.md) · [Index](INDEX.md)
 
-**Status: evaluation plan, not benchmark results.** Source: master specification sections 2, 9–10 and 21. No G10 access, model download, inference run or throughput measurement has been performed for this documentation baseline.
+**Status: bounded runtime/model smoke evidence and a repository-tested native service profile; full benchmark and deployment acceptance are not complete.** Source: master specification sections 2, 9–10 and 21. The pinned runtime/model pair has run on the qualified AI guest, but sustained throughput, production service behavior, rollback, restore, and Internet-blocked acceptance remain unmeasured.
 
 ## Non-negotiable execution boundary
 
@@ -35,12 +35,13 @@ The source-level evaluation pair is now recorded in the schema-validated
 5,027,783,488 bytes and SHA-256
 `d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785`.
 
-This is candidate selection, not permission to download it and not proof that the file on a server
-matches. The CPU binary checksum, compiler/build flags, guest ISA, local model hash, CPU-only startup
-report, bilingual quality, latency, memory behavior, offline cold start, backup and rollback remain
-required evidence. The repository adapter binds only to IPv4 loopback, authenticates both service
-boundaries, permits one active request plus two queued requests, and does not expose tools, MCP,
-agent mode, Web UI, remote model loading or target credentials.
+The pinned runtime was built with the recorded compiler/flags and OpenBLAS/OpenMP, promoted with its
+binary SHA-256, and the model matched its expected filename, size, and SHA-256 before and after
+promotion. A bounded authenticated CPU-only loopback smoke test succeeded. The repository now also
+contains the paired hardened native units documented in [AI_SYSTEMD](AI_SYSTEMD.md), two file-backed
+credential boundaries, fixed loopback origins, one llama.cpp slot, and the one-active/two-queued API
+scheduler. These are source and smoke-test results, not full bilingual quality, latency, memory,
+failure, offline cold-start, backup, restore, rollback, or production acceptance.
 
 ## Hardware discovery before tuning
 
