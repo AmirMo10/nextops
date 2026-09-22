@@ -36,9 +36,16 @@ class LoopbackMonitoringGateway:
         }
 
     async def summary(self) -> MonitoringSummary:
-        raw = await self._transport.get_json(
-            "/api/v1/zabbix/summary", self._headers, self._timeout_seconds
-        )
+        try:
+            raw = await self._transport.get_json(
+                "/api/v1/zabbix/summary", self._headers, self._timeout_seconds
+            )
+        except ApplicationError as error:
+            raise ApplicationError(
+                error.code,
+                "connector.summary_unavailable",
+                retryable=error.retryable,
+            ) from error
         try:
             return MonitoringSummary.model_validate(raw)
         except ValidationError as error:
