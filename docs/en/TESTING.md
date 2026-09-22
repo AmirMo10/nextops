@@ -3,14 +3,37 @@
 [فارسی](../fa/TESTING.md) · [Index](INDEX.md)
 
 **Status: active test plan with repository, isolated PostgreSQL, live connector and bounded local-AI
-evidence.** Ruff, strict mypy, 103 non-integration cases and six PostgreSQL integration cases pass.
-Authenticated browser-path, live read-only Zabbix, durable investigation, revoked-token,
-unreachable-API, recovery, explicit four-guest WAN isolation and serial clean-reboot checks have run
-on the controlled environment. The reboot work exposed and corrected explicit PostgreSQL-cluster
-ordering defects in the Zabbix and application units; all four guests then passed reboot recovery
-while direct Internet access remained blocked. Sustained load, independent restore and production
-acceptance have not run. Source: master
-specification sections 10–14 and 21–23.
+evidence.** Authenticated browser-path, live read-only Zabbix, durable investigation, revoked-token,
+unreachable-API, recovery, four-guest WAN isolation and serial clean-reboot checks have run in the
+controlled environment. Change `stage1-completion-20260922-01` additionally passed a fresh
+WAN-denied browser, application/runtime/model rollback, cancellation and dependency recovery,
+missing/corrupt artifact handling, an isolated low-space staging case, five-minute bounded load and
+logical isolated restores of both PostgreSQL 16 databases. Independent off-datastore backup,
+WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
+21–23.
+
+## Stage 1 controlled completion qualification
+
+The [dated completion report](STAGE_1_COMPLETION_REPORT.md) is the evidence summary. Its browser
+harness uses a fresh Edge context, normal TLS verification and a local deny proxy that bypasses only
+the private application origin. Application traffic addressed no Internet host; 21 Edge background
+requests were blocked. Login, both text directions, general and monitoring modes, provenance,
+durable identifiers, logout and a new-tab login requirement passed.
+
+The application rolled back from `13a3369` to `fde27bd` and forward again. Hash-matched protected
+runtime/model copies were selected through the stable links, generated through the actual NextOps
+inference API, and then restored to the original paths. Live cancellation released capacity;
+provider loss produced a sanitized retryable application `503`; missing and corrupt temporary model
+targets failed closed; and an isolated 64 MiB artifact-copy target returned `ENOSPC` without changing
+the serving model.
+
+The five-minute two-client profile completed 99 requests with 98 successes and one bounded timeout.
+Total latency p50/p95/max was 6.095/6.114/8.520 seconds, peak measured service memory was
+4,885,475,328 bytes, and the scheduler maximum was one active and one queued request. TTFT is not
+observable through the non-streaming API. Both checksummed logical dumps restored into temporary,
+socket-only PostgreSQL 16.15 clusters; schema, application audit protection, Zabbix configuration and
+history counts were verified before complete cleanup. This proves logical restore mechanics, not
+independent disaster recovery or PITR.
 
 ## Stage 1E failure qualification
 
@@ -66,8 +89,8 @@ the API. Every accepted reboot loaded the temporary WAN-deny policy before norma
 returned to `running` with zero failed units, passed its role-specific services, fresh login,
 bilingual model-only Q&A and/or eight fresh monitoring metrics, then removed all temporary policy
 files and restored direct HTTPS. A final durable investigation passed after the application reboot.
-The server/API portion of clean offline-reboot acceptance now passes; the independently isolated
-fresh-browser subcase remains open.
+The server/API portion of clean offline-reboot acceptance passed at this checkpoint. The later
+`stage1-completion-20260922-01` campaign closed the fresh-browser subcase recorded above.
 
 ## Test layers
 

@@ -2,12 +2,12 @@
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
 release_identifier: nextops-controlled-2026-09-22
-observed_at: '2026-09-22'
+observed_at: '2026-09-23'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: bbb1f9a20d1e5d0b546f34cb43d365b2369530ad
+  inspected_baseline_commit: b25280d96c92db0cfffa55b7d31f047060d0d7a8
 components:
   application:
     release: nextops-0.1.0-13a3369
@@ -81,22 +81,32 @@ acceptance_gates:
       - docs/PROJECT_STATE.md
       - docs/en/TESTING.md
   - id: isolated_fresh_browser_offline
+    status: passed
+    evidence:
+      - docs/en/STAGE_1_COMPLETION_REPORT.md
+      - scripts/stage1_browser_acceptance.py
+  - id: artifact_rollback
+    status: passed
+    evidence:
+      - docs/en/STAGE_1_COMPLETION_REPORT.md
+  - id: live_failure_recovery
+    status: passed
+    evidence:
+      - docs/en/STAGE_1_COMPLETION_REPORT.md
+  - id: sustained_load
+    status: passed
+    evidence:
+      - docs/en/STAGE_1_COMPLETION_REPORT.md
+  - id: independent_backup
     status: partial
     evidence:
-      - docs/PROJECT_STATE.md
-      - docs/en/TESTING.md
-  - id: sustained_load
-    status: not_run
-    evidence:
-      - docs/PROJECT_STATE.md
-  - id: independent_backup
-    status: not_run
-    evidence:
-      - docs/en/OPERATIONS.md
+      - docs/en/STAGE_1_COMPLETION_REPORT.md
+      - docs/en/BACKUP_RESTORE_SPEC.md
   - id: isolated_restore
-    status: not_run
+    status: partial
     evidence:
-      - docs/en/OPERATIONS.md
+      - docs/en/STAGE_1_COMPLETION_REPORT.md
+      - docs/en/BACKUP_RESTORE_SPEC.md
   - id: production_acceptance
     status: not_run
     evidence:

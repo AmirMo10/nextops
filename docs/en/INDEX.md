@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INDEX.md) · [Home](../../README.md) · [Start here](START_HERE.md)
 
-**Updated: 2026-09-22. Status: the controlled bilingual application, local CPU model, read-only connector, PostgreSQL state, and Zabbix path are deployed across four guests.** Scoped end-to-end, failure, WAN-isolation, and serial reboot evidence passes for the server/API path. Production acceptance, independent browser isolation, sustained load, backup, and isolated restore remain open. See the [machine-readable release status](../status/current-release.yaml).
+**Updated: 2026-09-23. Status: the controlled bilingual application, local CPU model, read-only connector, PostgreSQL state and Zabbix path are deployed across four guests.** Fresh-browser WAN denial, rollback, failure recovery, bounded load and logical isolated restore pass. Production acceptance, independent backup, WAL/PITR and disaster recovery remain open. See the [machine-readable release status](../status/current-release.yaml).
 
 > **Current new-server profile:** three NextOps VMs plus `zabbix-server` (4 vCPU / 16 GiB / 200 GiB) = **4 VMs / 40 vCPU / 184 GiB RAM / 980 GiB virtual disks**. Do not add the earlier small lab VM as well. [START_HERE](START_HERE.md) defines the order and Stage 1A–1E; [ZABBIX_SERVER](ZABBIX_SERVER.md) defines the monitoring VM, LVM and read-only integration.
 
@@ -42,6 +42,7 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 | [UI](UI.md) | Bilingual console, design system, approvals and accessibility |
 | [Development](DEVELOPMENT.md) | Module ownership, GitHub, CI and delivery discipline |
 | [Testing](TESTING.md) | Security, integration, offline, language and model evaluations |
+| [Stage 1 completion report](STAGE_1_COMPLETION_REPORT.md) | Dated browser, rollback, failure, load and isolated-restore evidence plus the remaining backup boundary |
 | [Operations](OPERATIONS.md) | Local monitoring, backup/restore, failures and release rollback |
 | [Troubleshooting](TROUBLESHOOTING.md) | Safe diagnostics and unknown outcomes |
 | [Roadmap](ROADMAP.md) | Phases 0–8 and five work packages ending in the offline Zabbix answer |

@@ -2,7 +2,7 @@
 
 [فارسی](../fa/OFFLINE_RUNTIME.md) · [Index](INDEX.md) · [Technology stack](TECH_STACK.md) · [CPU-only AI](CPU_AI.md)
 
-**Requirement confirmed by the owner: 2026-09-20. Current status: partial controlled acceptance, not production acceptance.** Four-guest WAN isolation, new server/API requests, and serial clean reboots passed; the independently isolated fresh-browser case, complete cold-start matrix, sustained load, backup, and isolated restore remain open. See the [release manifest](../status/current-release.yaml) and [test evidence](TESTING.md).
+**Requirement confirmed by the owner: 2026-09-20. Current status: controlled Stage 1 acceptance, not production acceptance.** Four-guest WAN isolation, a fresh WAN-denied browser, server/API requests, serial clean reboots, artifact rollback, failure recovery, sustained bounded load and logical isolated restore passed. Independent backup, WAL/PITR and disaster recovery remain open. See the [release manifest](../status/current-release.yaml), [test evidence](TESTING.md) and [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
 
 ## 1. The operating contract
 

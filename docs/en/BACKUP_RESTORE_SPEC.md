@@ -2,8 +2,12 @@
 
 [فارسی](../fa/BACKUP_RESTORE_SPEC.md) · [Specification workflow](SPECIFICATION_WORKFLOW.md) · [Operations](OPERATIONS.md)
 
-**Status: proposed and not run.** This specification selects evaluation boundaries; it does not
-install backup software, authorize access to a backup destination, or claim a successful restore.
+**Status: logical restore mechanics exercised; independent recovery not implemented.** On
+2026-09-23, checksummed custom-format dumps of both PostgreSQL 16 databases restored successfully
+into separate socket-only temporary clusters and were verified and removed. This does not satisfy
+the independent-backup gate: no destination independent of the serving guests, DS-C/G10 and its
+host has been verified; pgBackRest/WAL, PITR, restic artifact recovery, retention and key recovery
+remain unimplemented. See the [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
 
 ## Problem statement
 

@@ -4,7 +4,7 @@
 
 [فارسی](README_FA.md) · [Release status](docs/status/current-release.yaml) · [Status brief](docs/en/PROJECT_STATUS_BRIEF.md) · [Documentation](docs/en/INDEX.md) · [G10 server plan](docs/en/SERVER_PLAN.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project state](docs/PROJECT_STATE.md)
 
-> **Status: a controlled bilingual user-testing path is live across four Ubuntu 24.04 guests.** The authenticated private-TLS panel, PostgreSQL-backed identity and durable investigation/audit, pinned local CPU model, least-privilege read-only connector, and Zabbix 7.0.30 path have passed scoped English/Persian, failure, four-guest WAN-isolation, and serial clean-reboot checks. This is not production acceptance: an independently WAN-isolated fresh browser, sustained load, independent backup, isolated restore, and disaster recovery remain open. The machine-readable [release status](docs/status/current-release.yaml) is the current sanitized capability/gate summary.
+> **Status: the controlled bilingual Stage 1 path is live across four Ubuntu 24.04 guests.** The private-TLS panel, PostgreSQL-backed identity and audit, pinned CPU-only model, least-privilege connector and Zabbix 7.0.30 path have passed fresh-browser WAN denial, serial reboots, application/runtime/model rollback, scoped failure recovery, five-minute bounded load and logical isolated restore. This is not production acceptance: independent off-datastore backup, WAL/PITR, certificate lifecycle and disaster-recovery sign-off remain open. See the [release status](docs/status/current-release.yaml) and [Stage 1 report](docs/en/STAGE_1_COMPLETION_REPORT.md).
 
 ## What NextOps is intended to do
 

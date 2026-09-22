@@ -2,7 +2,7 @@
 
 [فارسی](../fa/OPERATIONS.md) · [Index](INDEX.md)
 
-**Status: the controlled application, databases, AI, connector, proxy, and Zabbix services are installed; no independent backup job or accepted restore procedure exists.** Scoped restart and serial reboot recovery have passed, but backup, isolated restore, and disaster recovery remain `not_run`. The [backup/restore specification](BACKUP_RESTORE_SPEC.md) defines the next recovery increment.
+**Status: the controlled services are installed and logical isolated restore has passed; no independent backup job or disaster-recovery procedure exists.** Restart, rollback, failure recovery, bounded load and socket-only restores of both PostgreSQL 16 databases passed. Independent storage, WAL/PITR, artifact recovery and disaster recovery remain open. See the [backup specification](BACKUP_RESTORE_SPEC.md) and [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
 
 ## Environments and service boundaries
 

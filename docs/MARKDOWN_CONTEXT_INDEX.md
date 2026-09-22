@@ -81,6 +81,7 @@ Markdown file is added, renamed, or removed.
 - `docs/en/ROADMAP.md` — English phased roadmap and acceptance gates.
 - `docs/en/SECURITY.md` — English identity, policy, approval, and threat controls.
 - `docs/en/SPECIFICATION_WORKFLOW.md` — English brownfield specification workflow and source-of-truth boundaries.
+- `docs/en/STAGE_1_COMPLETION_REPORT.md` — Dated English controlled Stage 1 qualification and recovery evidence.
 - `docs/en/SERVER_PLAN.md` — English G10 VM plan and Zabbix milestone.
 - `docs/en/SERVER_START_CHECKLIST.md` — English first-server and package-bundle checklist.
 - `docs/en/START_HERE.md` — English onboarding and first milestone.
@@ -112,6 +113,7 @@ Markdown file is added, renamed, or removed.
 - `docs/fa/ROADMAP.md` — Persian phased roadmap and acceptance gates.
 - `docs/fa/SECURITY.md` — Persian identity, policy, approval, and threat controls.
 - `docs/fa/SPECIFICATION_WORKFLOW.md` — Persian brownfield specification workflow and source-of-truth boundaries.
+- `docs/fa/STAGE_1_COMPLETION_REPORT.md` — Dated Persian controlled Stage 1 qualification and recovery evidence.
 - `docs/fa/SERVER_PLAN.md` — Persian G10 VM plan and Zabbix milestone.
 - `docs/fa/SERVER_START_CHECKLIST.md` — Persian first-server and package-bundle checklist.
 - `docs/fa/START_HERE.md` — Persian onboarding and first milestone.

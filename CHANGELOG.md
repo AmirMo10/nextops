@@ -4,6 +4,19 @@
 
 ### English
 
+Completed the executable controlled Stage 1 qualification under change
+`stage1-completion-20260922-01`: a fresh WAN-denied Edge workflow, application and runtime/model
+rollback, cancellation and dependency recovery, fail-closed missing/corrupt model behavior, an
+isolated low-space staging failure, a five-minute bounded load profile, and socket-only logical
+restores of the NextOps and Zabbix PostgreSQL 16 databases. All temporary restore and failure-test
+resources were removed, and all four guests ended `running` with zero failed units.
+
+Locked Playwright 1.63 as a development-only dependency and added the reproducible private-origin
+browser harness. The release manifest and paired English/Persian reports now mark browser, rollback,
+failure recovery, sustained load and isolated logical restore as passed. Independent backup remains
+partial and production acceptance remains not run: no verified destination survives loss of the
+serving guest, DS-C/G10 and host, and WAL/PITR/restic recovery still requires implementation.
+
 Added a schema-validated, non-secret release/status manifest and cross-checks against the pinned
 llama.cpp/model artifact identity. Introduced a brownfield specification workflow, a bounded
 backup/restore specification, a tool-adoption plan and three project workflows for change planning,
@@ -17,14 +30,26 @@ evidence. Historical records remain intact. CI now tests PostgreSQL 16.15, match
 remain minimal, and strict typing now includes operational scripts. The inference artifact records
 the accepted offline cold-start result without promoting production readiness.
 
-Local validation passes Ruff format/lint, strict mypy over 65 files, 103 non-integration tests,
-documentation validation for 102 Markdown files and 31 bilingual guide pairs, release/deployment/
+Local validation passes Ruff format/lint, strict mypy over 59 source files, 103 non-integration tests,
+documentation validation for 104 Markdown files and 32 bilingual guide pairs, release/deployment/
 inference/installer validators, package build, locked-dependency audit, Gitleaks and pedantic
 Zizmor 1.29.0 with no findings. The six
 PostgreSQL integration tests retain prior isolated-database evidence but were not rerun in this
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+همهٔ دروازه‌های اجراییِ صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ ۱ با شناسهٔ
+`stage1-completion-20260922-01` تکمیل شدند: مرورگر تازه با WAN مسدود، بازگشت برنامه و محیط
+اجرا/مدل، بازیابی پس از لغو و قطع وابستگی، توقف امن مدل مفقود یا خراب، شکست ایزولهٔ آماده‌سازی در
+کمبود فضا، بار محدود پنج‌دقیقه‌ای و بازیابی منطقی و فقط‌سوکتی پایگاه‌های PostgreSQL 16 برنامه و
+Zabbix. همهٔ منابع موقت آزمون حذف شدند و هر چهار مهمان در پایان `running` و بدون واحد خراب بودند.
+
+Playwright 1.63 به‌عنوان وابستگی صرفاً توسعه‌ای قفل و ابزار بازتولیدپذیر مرورگر با مبدأ خصوصی افزوده
+شد. مانیفست انتشار و گزارش‌های همتای فارسی و انگلیسی، مرورگر، بازگشت، بازیابی خطا، بار پایدار و
+بازیابی منطقی جدا را موفق ثبت می‌کنند. پشتیبان مستقل همچنان ناقص و پذیرش تولید اجرا‌نشده است؛
+مقصدی که از بین‌رفتن مهمان سرویس‌دهنده، DS-C/G10 و میزبان را تاب بیاورد تأیید نشده و بازیابی
+WAL/PITR/restic هنوز باید اجرا شود.
 
 یک مانیفست پالایش‌شده و بدون اطلاعات محرمانه برای وضعیت انتشار، همراه schema و تطبیق هویت فایل
 مدل و محیط اجرای تثبیت‌شدهٔ llama.cpp افزوده شد. گردش‌کار مشخصات برای سامانهٔ موجود، مشخصات محدود
@@ -38,8 +63,8 @@ image تثبیت‌شده بر اساس digest می‌آزماید؛ اعتبا�
 است و نوع‌سنجی سخت‌گیرانه scriptهای عملیاتی را نیز پوشش می‌دهد. فایل هویت هوش مصنوعی، نتیجهٔ پذیرفتهٔ
 شروع سرد آفلاین را بدون ادعای آمادگی تولید ثبت می‌کند.
 
-در محیط محلی، قالب و lint با Ruff، نوع‌سنجی سخت‌گیرانهٔ ۶۵ فایل، ۱۰۳ آزمون غیر‌یکپارچه، اعتبارسنجی
-۱۰۲ فایل Markdown و ۳۱ جفت راهنمای دوزبانه، اعتبارسنج‌های انتشار، استقرار، هوش مصنوعی و نصب، ساخت
+در محیط محلی، قالب و lint با Ruff، نوع‌سنجی سخت‌گیرانهٔ ۵۹ فایل منبع، ۱۰۳ آزمون غیر‌یکپارچه، اعتبارسنجی
+۱۰۴ فایل Markdown و ۳۲ جفت راهنمای دوزبانه، اعتبارسنج‌های انتشار، استقرار، هوش مصنوعی و نصب، ساخت
 بسته، ممیزی وابستگی‌های قفل‌شده، Gitleaks و Zizmor 1.29.0 در حالت سخت‌گیرانه موفق‌اند. شش آزمون
 PostgreSQL شواهد موفق پیشین روی پایگاه جدا
 دارند، اما در این نشست Windows به‌دلیل نبود سرور محلی و محیط کانتینری سالم دوباره اجرا نشدند.

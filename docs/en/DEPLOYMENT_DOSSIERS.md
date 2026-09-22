@@ -5,7 +5,7 @@
 For the exact first actions, provisioning order, read-only guest commands, and installation
 holds, use the [server start checklist](SERVER_START_CHECKLIST.md) before opening a change.
 
-**Status: deployer handoff contract with guarded OS-package installers, not a complete product installer or deployment authorization.** The four human-readable YAML files under [`deploy/server-dependencies`](../../deploy/server-dependencies) collect the known sizing, proposed boundaries, dependencies, configuration paths, command templates, evidence requirements, and unresolved deployment inputs for the accepted initial profile. The matching scripts under [`deploy/installers`](../../deploy/installers) cover only the authenticated offline package layer. All runtime acceptance gates remain `not_run`.
+**Status: deployer handoff contract with guarded OS-package installers, not a complete product installer or deployment authorization.** The four YAML dossiers retain the accepted sizing, boundaries, dependencies, paths, command templates and private-input references. The matching scripts cover only the authenticated offline package layer. A separate controlled deployment now has passed the runtime gates recorded in the [release status](../status/current-release.yaml); those observations do not turn these package installers into complete product installers.
 
 ## Files and ownership
 
@@ -85,7 +85,7 @@ A successful parse or schema check proves structure only. It does not verify pri
 
 ### `nextops-app`
 
-Stop before application installation. The repository now has a source-level API, PostgreSQL baseline/group roles, durable fixture worker behavior, guarded scripts for an authenticated offline OS-package layer, and a source-level AI systemd profile. It has no approved package bundle, complete production installer/release, browser UI, production login-role delivery, reverse proxy, Compose stack, deployed application units, or tested backup/restore procedure. The AI units are not installation evidence. Do not treat a successful package-layer run as product deployment, turn CI commands into a production runbook, invent environment variables, or expose PostgreSQL to compensate.
+Stop before using these dossiers as an application installer. The repository has the source API/UI, PostgreSQL roles, durable workflow, guarded OS-package layer and AI systemd profile; a separately qualified controlled deployment also exists. These dossiers still do not contain the complete production bundle, private credential delivery, reverse-proxy environment, independent backup/WAL/PITR procedure or production authorization. Do not treat a successful package-layer run as product deployment, turn CI commands into a production runbook, invent environment variables or expose PostgreSQL to compensate.
 
 ### `nextops-ai`
 

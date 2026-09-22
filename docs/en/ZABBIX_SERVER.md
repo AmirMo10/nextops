@@ -2,15 +2,15 @@
 
 [فارسی](../fa/ZABBIX_SERVER.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [Allocation record](../requirements/ZABBIX_SERVER_PLAN.json)
 
-**Updated: 2026-09-22. Status: the original deployment design below is now implemented for controlled
+**Updated: 2026-09-23. Status: the original deployment design below is implemented for controlled
 user testing, but production acceptance remains open.** Zabbix 7.0.30 and the scoped reader are live.
 The Zabbix guest plus the application, AI and connector guests are monitored in the one approved
 host group. The three NextOps guests use Agent 2 active checks with distinct PSKs, no passive
 listener or remote-command permission, and a source-restricted trapper path. The reader still has
 only `host.get`, `item.get` and `problem.get`; it saw exactly four approved hosts, fresh items for
 each newly added host, and denied both an unlisted read and a mutation. Scoped failure, server/API
-WAN-block and serial clean-reboot checks pass. Independent browser isolation, backup and
-isolated-restore acceptance remain open. The sections below retain the original design
+WAN-block, fresh-browser, serial reboot and logical isolated-restore checks pass. Independent
+backup, WAL/PITR and disaster-recovery acceptance remain open. The sections below retain the design
 and capacity rationale; current evidence in [PROJECT_STATE](../PROJECT_STATE.md) supersedes their
 earlier not-deployed wording.
 
@@ -138,10 +138,10 @@ The checkpoint order remains 1A local identity/policy/durable state/audit; 1B ac
 | Server readiness | Passed for the dedicated mount, services, local login, monitoring items and scoped authenticated API reads |
 | Evidence correctness | Passed for the captured bounded summary; engine health, estate state and API availability remain distinct |
 | Access controls | Passed for the reader allowlist, host scope, revoked token and injected monitoring text |
-| Offline answer | Server/API path passed with all four guests WAN-blocked; an independently isolated browser remains open |
+| Offline answer | The server/API path and a fresh WAN-denied browser passed |
 | Offline restart | Passed serially for Zabbix, connector, AI and application after correcting explicit database-cluster dependencies |
 | Failure behavior | Passed for Zabbix API outage, revoked token and stale/partial/missing data; general local Q&A remained available |
-| Recovery and capacity | Independent restore, low-space and sustained resource/latency acceptance remain open |
+| Recovery and capacity | Isolated low-space, five-minute load and logical restore passed; independent backup/PITR remain open |
 
 These supplement, not replace, ZBX-01–ZBX-08 and applicable OFF-01–OFF-10. Use the natural questions "Is Zabbix collecting data correctly? What active problems and stale measurements do we have?" and their Persian equivalents. Zabbix's sampling continues independently of chat requests; the assistant reads evidence on demand.
 

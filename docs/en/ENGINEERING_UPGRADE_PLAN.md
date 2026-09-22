@@ -18,7 +18,7 @@ remain authoritative.
 | Diátaxis | **Migrate incrementally** | Add tutorials, how-to guides, reference, and explanation navigation without moving every existing file or erasing historical structure. |
 | Documentation quality | **Pilot** | Add project Vale rules first for English terminology/readiness claims; Persian requires custom rules and human review. Keep `check_docs.py` as the offline local-link/parity gate. Pilot Lychee as a separate Internet-dependent external-link maintenance job. |
 | PostgreSQL/file recovery | **Next implementation candidate** | Evaluate pgBackRest (MIT) for each PostgreSQL cluster and restic (BSD-2-Clause) for permitted non-database files. The accepted outcome is isolated restoration, not backup command success. See `BACKUP_RESTORE_SPEC.md`. |
-| Browser/accessibility | **Next implementation candidate** | Add Playwright and axe-core for login/logout, authorization, session expiry, both languages/directions, evidence states, dependency failures, and recovery. Provision browser binaries offline; automated accessibility does not replace manual review. |
+| Browser/accessibility | **Playwright adopted; accessibility expansion pending** | Playwright 1.63 is locked for the fresh private-origin WAN-denied workflow. Add axe-core, server-side logout/revocation, expiry and broader accessibility cases. Provision browser binaries offline; automation does not replace manual review. |
 | Failure/load/API/property tests | **Pilot behind specifications** | Use Toxiproxy only in isolated tests; Locust for bounded queue/load metrics; Schemathesis for OpenAPI shape; Hypothesis only for named invariants. None replaces authorization, real WAN isolation, or restoration. |
 | AI evaluation | **Preserve deterministic Python first** | Extend the existing local Python corpus/harness. Adopt promptfoo only after proving local-only execution and no remote provider/telemetry path. |
 | Supply-chain evidence | **Pilot** | Evaluate Syft for release SBOMs, Trivy only for filesystem/artifact coverage it adds, and Cosign with pre-provisioned offline verification trust. Do not add containers solely for scanning. |
@@ -52,10 +52,11 @@ remain authoritative.
    strategy, and Zizmor findings fixed. Hosted CI results remain revision-specific.
 2. **Recovery:** ADR and isolated pgBackRest/restic lab; full/WAL/file backups; independent restore;
    measured RPO/RTO; bilingual operator runbooks.
-3. **Browser and accessibility:** server-side logout/revocation, Playwright/axe coverage, offline
-   browser bundle, and independently WAN-isolated fresh-browser acceptance.
-4. **Failure and capacity:** controlled Toxiproxy faults, cancellation and artifact/low-space cases,
-   Locust workload with agreed bounds, Schemathesis/Hypothesis invariants, and recovery after load.
+3. **Browser and accessibility — fresh-browser path passed:** retain the Playwright WAN-denied
+   harness; add server-side logout/revocation, axe coverage and an offline browser bundle.
+4. **Failure and capacity — core Stage 1 cases passed:** cancellation, dependency/artifact/low-space
+   and five-minute bounded load have evidence; Toxiproxy, Locust and schema/property expansion remain
+   candidates for broader environments.
 5. **Release and documentation supply chain:** Docusaurus offline prototype, local search, Vale,
    external-link maintenance, ASVS traceability, SBOM, vulnerability-data freshness, and offline
    signature verification.
