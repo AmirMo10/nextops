@@ -1,15 +1,13 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-22 — the controlled user-testing path is live and its scoped failure
-qualification is complete. App release `nextops-0.1.0-13a3369` and connector release
-`nextops-0.1.0-3d7d725` mark bounded partial evidence, treat monitoring text as untrusted data,
-preserve partial/stale metadata in durable results and audits, and return connector-specific safe
-failures. Revoked-token, unreachable-API and explicit four-guest WAN-disconnection tests passed;
-fresh login, bilingual general Q&A, local-AI readiness, live monitoring, durable evidence and audit
-continued over the approved LAN while direct IPv4 and IPv6 Internet access was blocked. The first
-VM-reboot case recovered functionally but required a forced reboot after a 30-minute systemd job
-timeout, so the clean-reboot gate failed and the remaining three guests were not rebooted. Sustained
-load, clean VM-reboot acceptance, backup, isolated restore and production acceptance remain open.
+Updated: 2026-09-22 — the controlled user-testing path is live and its scoped failure, WAN-isolation
+and serial clean-reboot qualifications are complete for the server/API path. App release
+`nextops-0.1.0-13a3369` and connector release `nextops-0.1.0-3d7d725` preserve bounded partial/stale
+evidence and safe connector failures. The reboot work found and corrected explicit PostgreSQL-cluster
+ordering defects in the Zabbix and application units; Zabbix, connector, AI and application then
+recovered one at a time with early WAN denial, role-specific health and fresh application evidence.
+The fresh independently isolated browser, sustained load, backup, isolated restore and production
+acceptance remain open.
 
 ## English
 
@@ -89,16 +87,15 @@ retryable `503` responses labeled `connector.summary_unavailable`; the failed ru
 event were durably stored while general model-only Q&A still succeeded. The frontend restarted,
 fresh monitoring recovered and a later live investigation persisted the partial marker and
 independently verified evidence hash in 67.9 seconds. Stopping the Zabbix engine alone did not make
-the PHP API unreachable, an important operational distinction. Ruff, strict mypy, 101
+the PHP API unreachable, an important operational distinction. Ruff, strict mypy, 102
 non-integration tests and six isolated PostgreSQL tests pass.
 
 This is a controlled user-testing slice, not production acceptance. The four approved Phase 1
 guests are now monitored; the wider estate is not. Explicit WAN disconnection passed for the
-server/API path, including fresh bilingual model-only answers and a new evidence-linked live
-investigation while all four guests were blocked from the Internet. A fresh independently isolated
-browser case remains open. The first VM-reboot case restored the complete Zabbix path but only after
-a 30-minute `reboot.target` timeout forced the reboot; the remaining guests were not rebooted.
-Clean VM-reboot acceptance,
+server/API path, including fresh bilingual model-only answers and new evidence-linked live
+investigations. After correcting Zabbix's database shutdown ordering and the application's database
+startup ordering, all four guests passed serial clean reboots under the early WAN-deny policy and
+returned to `running` with zero failed units. A fresh independently isolated browser case,
 certificate-expiry, timeout/cancellation, low-space, sustained load, independent backup/restore and
 disaster-recovery cases remain open. Private addresses, tokens, passwords, host keys and raw
 evidence remain outside Git.
@@ -115,7 +112,7 @@ The paired [Phase 0 report](en/PHASE_0_REPORT.md) and [Persian report](fa/PHASE_
 
 Stage 1A Increments 1 and 2 are implemented in repository source. In addition to the locked Python project, strict contracts and deterministic denial policy, the code now has a local FastAPI surface, Argon2id identity bootstrap/login/recovery, hashed opaque sessions, PostgreSQL/Alembic state, idempotent durable runs, expiring worker leases, append-restricted audit, and an explicit bilingual fixture result. Actor organization, environment, roles and scopes are derived from server-side session state. Four guarded scripts now define the authenticated offline Ubuntu package layer for the initial servers, but no approved package bundle, browser UI, deployable offline application release/service definition, target connector or credential, or production listener exists. The pinned AI runtime/model and its separate source service profile are recorded below.
 
-Stage 1B Increment 3 adds a strict runtime-neutral `LLMProvider` contract, authenticated inference API, loopback-only llama.cpp adapter, one-active/two-queued scheduler, bounded input/output/timeouts, cancellation cleanup, safe readiness, and structured overload/dependency failures. A schema-validated YAML manifest pins llama.cpp `v0.4.1` and the official `Qwen3-8B-Q4_K_M.gguf`. The pinned runtime and model are now installed with the corrected API release on the qualified AI guest. Controlled live quality, bounded load, restart, application-link rollback and explicit WAN-disconnection evidence exists; clean VM reboot, runtime/model rollback, remaining failure cases and isolated restore remain open.
+Stage 1B Increment 3 adds a strict runtime-neutral `LLMProvider` contract, authenticated inference API, loopback-only llama.cpp adapter, one-active/two-queued scheduler, bounded input/output/timeouts, cancellation cleanup, safe readiness, and structured overload/dependency failures. A schema-validated YAML manifest pins llama.cpp `v0.4.1` and the official `Qwen3-8B-Q4_K_M.gguf`. The pinned runtime and model are now installed with the corrected API release on the qualified AI guest. Controlled live quality, bounded load, process restart, application-link rollback, explicit WAN disconnection and a clean VM reboot are evidenced; runtime/model rollback, remaining failure cases and isolated restore remain open.
 
 The native Stage 1B slice supplies separate hardened `nextops-llama` and `nextops-ai` units, two
 `LoadCredential` secrets, loopback-only cgroup networking, read-only release trees, explicit
@@ -140,7 +137,7 @@ On 2026-09-21, authorized read-only SSH preflight reached all four clean replace
 
 After explicit owner authorization for connected preparation, each host used its existing strict proxy chain to refresh signed repositories and install only its role package layer. No broad OS upgrade ran. Exact observed direct versions are PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The official Zabbix 7.0 Ubuntu 24.04 release bootstrap package was pinned by SHA-256 before repository import. Package post-install starts were blocked and, at that preparation checkpoint, all product/database/web services were inactive and disabled, no PostgreSQL cluster existed, and no listener was added. Since then, the application/database/proxy, AI, connector and Zabbix slices have been deliberately configured and activated for controlled testing, followed by the bounded Agent 2 host-coverage change recorded above. Docker was not installed because the selected native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-Protected non-login service identities and role directories now exist. The pinned llama.cpp commit was built on the qualified AI guest with Release, CPU-native, OpenMP and OpenBLAS settings and no GPU linkage; its promoted binary hash is in the inference manifest. The pinned 5,027,783,488-byte Qwen model matched its expected SHA-256 before and after protected-volume promotion. The active immutable API release is `nextops-0.1.0-62de8d6`; `417d888` is the tested application rollback. Two independent qualification runs returned `401` for unauthenticated generation, `200` for readiness, and acceptable Persian/English evidence and safety answers under automated checks and human review. The bounded load probe observed one accepted request with the remaining concurrent requests rejected or timed out according to the scheduler/timeout boundary. A cold process restart restored both services in 109 seconds. Application rollback and forward restoration passed authentication/readiness checks and left `62de8d6` active. Both services are enabled, unprivileged, CPU-only, and limited to `127.0.0.1:8080` and `127.0.0.1:8090`; `systemd-analyze security` reports `2.7 OK` for each. Raw evidence, credentials, addresses and host keys remain outside Git. Runtime/model rollback, live cancellation and corrupt-artifact cases, clean VM reboot, dependency-license approval, independent backup/restore and production performance thresholds remain open. Explicit WAN-disconnection observation passed for the server/API path; independent browser isolation is still incomplete. The general application release, PostgreSQL/Zabbix initialization, reverse proxy/TLS and end-to-end acceptance remain separate gates.
+Protected non-login service identities and role directories now exist. The pinned llama.cpp commit was built on the qualified AI guest with Release, CPU-native, OpenMP and OpenBLAS settings and no GPU linkage; its promoted binary hash is in the inference manifest. The pinned 5,027,783,488-byte Qwen model matched its expected SHA-256 before and after protected-volume promotion. The active immutable API release is `nextops-0.1.0-62de8d6`; `417d888` is the tested application rollback. Two independent qualification runs returned `401` for unauthenticated generation, `200` for readiness, and acceptable Persian/English evidence and safety answers under automated checks and human review. The bounded load probe observed one accepted request with the remaining concurrent requests rejected or timed out according to the scheduler/timeout boundary. A cold process restart restored both services in 109 seconds. Application rollback and forward restoration passed authentication/readiness checks and left `62de8d6` active. Both services are enabled, unprivileged, CPU-only, and limited to `127.0.0.1:8080` and `127.0.0.1:8090`; `systemd-analyze security` reports `2.7 OK` for each. Raw evidence, credentials, addresses and host keys remain outside Git. Runtime/model rollback, live cancellation and corrupt-artifact cases, dependency-license approval, independent backup/restore and production performance thresholds remain open. Explicit WAN-disconnection and clean VM-reboot observations passed for the server/API path; independent browser isolation is still incomplete. The general application release, PostgreSQL/Zabbix initialization, reverse proxy/TLS and end-to-end acceptance remain separate gates.
 
 ### Current proposed deployment
 
@@ -170,8 +167,8 @@ Each role now has an executable entry script under `deploy/installers`. A shared
 These records expose rather than hide the deployment blockers. The controlled application,
 PostgreSQL, private reverse proxy/UI, AI, connector, Zabbix state and four-host monitoring coverage
 now exist, but a reproducible complete production installer and tested backup/restore bundle do not.
-Dependency-license approval, the remaining failure matrix, runtime/model rollback, clean
-VM-reboot acceptance, independent browser isolation, independent restore and production performance targets remain
+Dependency-license approval, the remaining failure matrix, runtime/model rollback,
+independent browser isolation, independent restore and production performance targets remain
 unresolved. Private configuration, certificates and target credentials exist only in their
 protected deployment locations; no independent backup or isolated restore evidence exists, and
 complete server/production acceptance remains open.
@@ -186,11 +183,11 @@ Three repository-scoped Codex skills under `.agents/skills` now route general pr
 |---|---|---|
 | 0 | Architecture/gap/threat report and appropriate approvals | Owner accepted architecture/roadmap and ADRs on 2026-09-21; the clean replacement guests passed read-only qualification, while ESXi/storage refresh and operation-specific authorization remain separate |
 | 1A | Local identity, policy, database, durable work and audit | Authenticated app, PostgreSQL migration, private TLS panel and session path are live for controlled testing; durable live-investigation and audit linkage now uses the existing scoped run model |
-| 1B | New local CPU answers and offline model cold load | The pinned runtime/model and corrected API release are installed behind hardened loopback-only units; authentication, bilingual quality, bounded load, cold process restart, application rollback/restoration and four-guest WAN isolation passed. Clean VM reboot, remaining failure/cancellation tests, runtime/model rollback, independent restore and production targets remain open |
+| 1B | New local CPU answers and offline model cold load | The pinned runtime/model and corrected API release are installed behind hardened loopback-only units; authentication, bilingual quality, bounded load, cold process restart, clean VM reboot, application rollback/restoration and four-guest WAN isolation passed. Remaining failure/cancellation tests, runtime/model rollback, independent restore and production targets remain open |
 | Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | Zabbix 7.0.30, PostgreSQL, TLS frontend/API and the scoped reader are active; the server plus app, AI and connector are monitored by PSK-authenticated active Agent 2 paths, and the API allowlist/host-scope denials pass |
 | 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; the reader sees all four approved Phase 1 hosts with fresh items, while the full failure matrix remains |
 | 1D | New evidence-linked Zabbix answer with audit | English/Persian grounded answers pass; every started live investigation now has a durable scoped run, bounded evidence snapshot/hash, model result, safe failure outcome and append-only audit linkage verified in isolated PostgreSQL and the live path |
-| 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh login, bilingual general Q&A, live evidence and audit passed while all four guests were WAN-blocked; revocation, failure and recovery cases pass. The first reboot restored Zabbix but failed the clean-shutdown/latency gate after a 30-minute forced timeout; remaining reboots, isolated-browser proof and sustained capacity remain open |
+| 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh login, bilingual general Q&A, live evidence and audit passed while all four guests were WAN-blocked; revocation, failure and recovery cases pass. After correcting explicit database-cluster ordering, all four guests passed the serial clean-reboot matrix. Isolated-browser proof and sustained capacity remain open |
 
 The user may perform provisioning independently; verify their actual state before claiming a VM either exists or does not exist. A screenshot of VM settings is not proof of an accepted application workflow. Resume from the next evidenced, authorized incomplete stage rather than resetting progress.
 
@@ -198,11 +195,11 @@ The user may perform provisioning independently; verify their actual state befor
 
 This state records Phase 0 acceptance, the deployed controlled Stage 1A application slice, the qualified Stage 1B AI slice, the live Stage 1C read-only connector and the durable evidence-linked Stage 1D user-test path. It preserves the source requirements, archived prompt, diagrams and per-server handoff. It is not a host vulnerability audit, production acceptance, independent recovery proof or complete provisioning record.
 
-The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`. Ruff, strict mypy over 58 files, 101 non-integration tests and all six tests against a temporary isolated PostgreSQL 16.15 database pass. The temporary database, login role, credential and SSH tunnel were removed after validation. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier validation, dependency and license review, broader reliability testing and recovery evidence remain merge or production gates. Visual bilingual login review, programmatic live end-to-end testing and four-guest WAN isolation ran. Full browser workflow automation, clean VM-reboot acceptance, independent backup and isolated restore did not.
+The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`. Ruff, strict mypy over 58 files, 102 non-integration tests and all six tests against a temporary isolated PostgreSQL 16.15 database pass. The temporary database, login role, credential and SSH tunnel were removed after validation. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier validation, dependency and license review, broader reliability testing and recovery evidence remain merge or production gates. Visual bilingual login review, programmatic live end-to-end testing, four-guest WAN isolation and the serial clean-reboot matrix ran. Full browser workflow automation, independent backup and isolated restore did not.
 
-The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is review and correction of the reboot harness,
-then a clean Zabbix reboot before the remaining guest-reboot matrix. Runtime/model/application
-rollback, independent backup and isolated restore follow.
+The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is runtime/model/application rollback from verified
+local artifacts, followed by independent backup and isolated restore. The independently WAN-isolated
+fresh-browser subcase and remaining reliability/capacity cases also remain open.
 Production promotion remains gated on those results, retention/backup decisions, sustained resource
 measurements and operational sign-off.
 
@@ -280,18 +277,18 @@ PostgreSQL در پایگاه موقت و جداگانه موفق بودند. آ�
 ناموفق و رویداد ممیزی آن ماندگار شد و هم‌زمان پاسخ‌گویی عمومی و بدون شاهد مدل محلی ادامه یافت.
 پس از بازگشت رابط، دریافت دادهٔ تازه برقرار شد و بررسی زندهٔ بعدی، نشان ناقص‌بودن و هش مستقلِ
 تأییدشدهٔ شاهد را طی ۶۷٫۹ ثانیه حفظ کرد. توقف موتور Zabbix به‌تنهایی API مبتنی بر PHP را قطع نکرد؛
-این تفاوت برای عملیات مهم است. Ruff، mypy سخت‌گیرانه، ۱۰۱ آزمون غیر‌یکپارچه و شش آزمون PostgreSQL
+این تفاوت برای عملیات مهم است. Ruff، mypy سخت‌گیرانه، ۱۰۲ آزمون غیر‌یکپارچه و شش آزمون PostgreSQL
 در پایگاه جداگانه موفق‌اند.
 
 این خروجی برای ارزیابی کنترل‌شده است، نه پذیرش تولید. هر چهار مهمان مصوب مرحلهٔ یک پایش می‌شوند،
 اما دامنهٔ گسترده‌تر تجهیزات هنوز وارد نشده است. آزمون صریح قطع WAN در مسیر سرور و API موفق بود:
 هنگامی که دسترسی مستقیم IPv4 و IPv6 هر چهار مهمان به اینترنت بسته بود، ورود تازه، پاسخ عمومی فارسی
-و انگلیسی، آمادگی مدل محلی، دریافت شاهد تازه و پیوند ثبت و ممیزی برقرار ماند. جداسازی مستقل یک مرورگر
-تازه هنوز اجرا نشده است. نخستین آزمون راه‌اندازی مجدد، همهٔ سرویس‌های Zabbix را بازگرداند، اما
-`reboot.target` پس از ۳۰ دقیقه به پایان مهلت رسید و systemd راه‌اندازی مجدد را اجباری کرد؛ بنابراین
-این مورد پذیرفته نیست و سه مهمان دیگر راه‌اندازی مجدد نشدند. پذیرش راه‌اندازی مجدد سالم، انقضای
-گواهی، پایان مهلت یا لغو درخواست، کمبود فضا، بار پایدار، پشتیبان مستقل، بازیابی و سناریوی بحران
-همچنان بازند. نشانی‌ها، توکن‌ها، گذرواژه‌ها، کلیدهای میزبان و شواهد خام بیرون Git مانده‌اند.
+و انگلیسی، آمادگی مدل محلی، دریافت شاهد تازه و پیوند ثبت و ممیزی برقرار ماند. پس از اصلاح ترتیب
+خاموش‌شدن پایگاه Zabbix و ترتیب آغاز پایگاه برنامه، هر چهار مهمان یکی‌یکی و زیر سیاست قطع زودهنگام
+WAN راه‌اندازی مجدد شدند، با وضعیت `running` و صفر واحد خراب بازگشتند و آزمون سلامت نقش خود را
+گذراندند. جداسازی مستقل مرورگر، انقضای گواهی، پایان مهلت یا لغو درخواست، کمبود فضا، بار پایدار،
+پشتیبان مستقل، بازیابی و سناریوی بحران همچنان بازند. نشانی‌ها، توکن‌ها، گذرواژه‌ها، کلیدهای میزبان و
+شواهد خام بیرون Git مانده‌اند.
 
 ### نیازها و سابقهٔ محفوظ
 
@@ -305,7 +302,7 @@ remote بررسی‌شدهٔ مستقیم Git برابر `Omid-NextAI/nextops` �
 
 Incrementهای 1 و 2 از 1A در کد مخزن پیاده شده‌اند. علاوه بر پروژهٔ Python قفل‌شده، قراردادهای سخت‌گیر و سیاست رد قطعی، اکنون FastAPI محلی، bootstrap/login/recovery با Argon2id، session غیرشفافِ hash‌شده، PostgreSQL/Alembic، run ماندگار و idempotent، lease منقضی‌شونده، audit محدود به append و نتیجهٔ fixture دوزبانه وجود دارد. سازمان، محیط، role و scope از session سمت سرور ساخته می‌شوند. چهار اسکریپت محافظت‌شده لایهٔ بسته‌های آفلاین و معتبر Ubuntu را برای سرورهای اولیه تعریف می‌کنند؛ اما بستهٔ تأییدشده، رابط مرورگر، انتشار آفلاین یا تعریف سرویس قابل‌استقرار برنامه، اتصال یا اعتبارنامهٔ مقصد و شنوندهٔ تولید وجود ندارد. محیط اجرا و مدل ثابت هوش مصنوعی و پروفایل مبدأ و مستقل سرویس آن در ادامه ثبت شده‌اند.
 
-Increment 3 از 1B قرارداد مستقل و سخت‌گیر `LLMProvider`، API احرازهویت‌شدهٔ پردازش مدل، رابط فقط‌محلی llama.cpp، صف با یک درخواست فعال و دو درخواست در انتظار، کران ورودی و خروجی و زمان، پاک‌سازی لغو، اعلام آمادگی ایمن و خطاهای ساخت‌یافتهٔ اضافه‌بار و وابستگی را فراهم می‌کند. پروندهٔ YAML معتبرشده، llama.cpp نسخهٔ `v0.4.1` و فایل رسمی `Qwen3-8B-Q4_K_M.gguf` را تثبیت می‌کند. محیط اجرا و مدل ثابت اکنون همراه انتشار اصلاح‌شدهٔ API روی مهمان هوش مصنوعی نصب شده‌اند. کیفیت زندهٔ کنترل‌شده، بار محدود، راه‌اندازی دوبارهٔ فرایندها، بازگشت پیوند انتشار برنامه و قطع صریح WAN شاهد دارند؛ راه‌اندازی مجدد سالم ماشین، بازگشت محیط اجرا و مدل، موارد خطای باقی‌مانده و بازیابی جداگانه همچنان باز است.
+Increment 3 از 1B قرارداد مستقل و سخت‌گیر `LLMProvider`، API احرازهویت‌شدهٔ پردازش مدل، رابط فقط‌محلی llama.cpp، صف با یک درخواست فعال و دو درخواست در انتظار، کران ورودی و خروجی و زمان، پاک‌سازی لغو، اعلام آمادگی ایمن و خطاهای ساخت‌یافتهٔ اضافه‌بار و وابستگی را فراهم می‌کند. پروندهٔ YAML معتبرشده، llama.cpp نسخهٔ `v0.4.1` و فایل رسمی `Qwen3-8B-Q4_K_M.gguf` را تثبیت می‌کند. محیط اجرا و مدل ثابت اکنون همراه انتشار اصلاح‌شدهٔ API روی مهمان هوش مصنوعی نصب شده‌اند. کیفیت زندهٔ کنترل‌شده، بار محدود، راه‌اندازی دوبارهٔ فرایندها، راه‌اندازی مجدد سالم ماشین، بازگشت پیوند انتشار برنامه و قطع صریح WAN شاهد دارند؛ بازگشت محیط اجرا و مدل، موارد خطای باقی‌مانده و بازیابی جداگانه همچنان باز است.
 
 برش بومی 1B دو واحد جدا و سخت‌سازی‌شدهٔ `nextops-llama` و `nextops-ai`، دو اعتبارنامهٔ فایل‌محور، محدودیت شبکه به رابط محلی در سطح cgroup، درخت انتشار فقط‌خواندنی، سقف صریح منابع، بارگذاری سخت‌گیرانهٔ اعتبارنامه و مجموعهٔ نسخه‌دار سنجش فارسی و انگلیسی را فراهم می‌کند و اکنون روی مهمان هوش مصنوعی فعال است. نخستین اجرا، مسیر نادرست کتابخانه‌های مشترک پس از جابه‌جایی و ناکافی بودن بررسی صرفِ باز شدن درگاه را آشکار کرد؛ واحد اصلاح‌شده از مسیر ثابت و محافظت‌شدهٔ کتابخانه‌ها استفاده می‌کند و شروع کنترل‌شده تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌ماند. حساب استقرار بنا بر دستور مالک اکنون مدیریت کامل و بدون گذرواژه دارد؛ ورود مستقیم root از راه SSH همچنان بسته است.
 
@@ -323,7 +320,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 پس از مجوز صریح مالک برای آماده‌سازی متصل، هر میزبان از زنجیرهٔ پراکسی سخت‌گیرانهٔ موجود برای تازه‌سازی مخزن‌های امضاشده و نصب فقط لایهٔ بستهٔ نقش خود استفاده کرد. ارتقای کلی سیستم‌عامل اجرا نشد. نسخه‌های مستقیم مشاهده‌شده عبارت‌اند از PostgreSQL 16.15 و Nginx 1.24 در برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 در هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 در connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 در Zabbix. بستهٔ راه‌انداز رسمی Zabbix 7.0 برای Ubuntu 24.04 پیش از افزودن مخزن با SHA-256 ثابت شد. شروع خودکار پس از نصب مسدود بود و در همان نقطهٔ آماده‌سازی، همهٔ سرویس‌های محصول، پایگاه و وب غیرفعال بودند، خوشهٔ PostgreSQL ساخته نشده بود و درگاه تازه‌ای باز نشد. پس از آن، برش‌های برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix به‌صورت کنترل‌شده تنظیم و فعال شدند و سپس تغییر محدود پوشش چهارمیزبانی Agent 2 اجرا شد. Docker نصب نشد، چون طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-هویت‌های بدون ورود و مسیرهای محافظت‌شدهٔ نقش ساخته شده‌اند. llama.cpp با تنظیم Release، اجرای بومی CPU، OpenMP و OpenBLAS و بدون پیوند GPU ساخته شد و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت پیش و پس از انتقال به فضای محافظت‌شده با SHA-256 موردانتظار برابر بود. انتشار تغییرناپذیر و فعال API، `nextops-0.1.0-62de8d6` است و `417d888` به‌عنوان نسخهٔ آزموده‌شدهٔ بازگشت برنامه نگه‌داری می‌شود. در دو اجرای مستقل، تولید بدون احراز هویت با `401` رد، آمادگی با `200` تأیید و پاسخ‌های فارسی و انگلیسیِ شاهد و ایمنی هم در بررسی خودکار و هم در بازبینی انسانی پذیرفته شدند. آزمون بار محدود، یک درخواست پذیرفته‌شده و مهار درخواست‌های هم‌زمان اضافه را مطابق صف و پایان مهلت ثبت کرد. توقف و شروع سرد فرایندها هر دو سرویس را در ۱۰۹ ثانیه بازگرداند. بازگشت برنامه و سپس بازگرداندن نسخهٔ پذیرفته‌شده نیز موفق بود و در پایان `62de8d6` فعال ماند. هر دو سرویس با هویت بدون امتیاز، فقط روی CPU و فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` اجرا می‌شوند و ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. شواهد خام، اعتبارنامه‌ها، نشانی‌ها و کلیدهای میزبان بیرون Git مانده‌اند. بازگشت محیط اجرا و مدل، لغو زنده و فایل خراب، راه‌اندازی مجدد سالم ماشین، مجوز وابستگی‌ها، پشتیبان مستقل و بازیابی جدا و هدف کارایی تولیدی هنوز باز است. مشاهدهٔ صریح هنگام قطع WAN برای مسیر سرور و API موفق بود؛ جداسازی مستقل مرورگر هنوز کامل نیست. استقرار عمومی برنامه، ایجاد PostgreSQL و Zabbix، reverse proxy/TLS و پذیرش سراسری نیز دروازه‌های جدا هستند.
+هویت‌های بدون ورود و مسیرهای محافظت‌شدهٔ نقش ساخته شده‌اند. llama.cpp با تنظیم Release، اجرای بومی CPU، OpenMP و OpenBLAS و بدون پیوند GPU ساخته شد و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت پیش و پس از انتقال به فضای محافظت‌شده با SHA-256 موردانتظار برابر بود. انتشار تغییرناپذیر و فعال API، `nextops-0.1.0-62de8d6` است و `417d888` به‌عنوان نسخهٔ آزموده‌شدهٔ بازگشت برنامه نگه‌داری می‌شود. در دو اجرای مستقل، تولید بدون احراز هویت با `401` رد، آمادگی با `200` تأیید و پاسخ‌های فارسی و انگلیسیِ شاهد و ایمنی هم در بررسی خودکار و هم در بازبینی انسانی پذیرفته شدند. آزمون بار محدود، یک درخواست پذیرفته‌شده و مهار درخواست‌های هم‌زمان اضافه را مطابق صف و پایان مهلت ثبت کرد. توقف و شروع سرد فرایندها هر دو سرویس را در ۱۰۹ ثانیه بازگرداند. بازگشت برنامه و سپس بازگرداندن نسخهٔ پذیرفته‌شده نیز موفق بود و در پایان `62de8d6` فعال ماند. هر دو سرویس با هویت بدون امتیاز، فقط روی CPU و فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` اجرا می‌شوند و ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. شواهد خام، اعتبارنامه‌ها، نشانی‌ها و کلیدهای میزبان بیرون Git مانده‌اند. بازگشت محیط اجرا و مدل، لغو زنده و فایل خراب، مجوز وابستگی‌ها، پشتیبان مستقل و بازیابی جدا و هدف کارایی تولیدی هنوز باز است. راه‌اندازی مجدد سالم ماشین و مشاهدهٔ صریح هنگام قطع WAN برای مسیر سرور و API موفق بود؛ جداسازی مستقل مرورگر هنوز کامل نیست. استقرار عمومی برنامه، ایجاد PostgreSQL و Zabbix، reverse proxy/TLS و پذیرش سراسری نیز دروازه‌های جدا هستند.
 
 ### چیدمان فعلیِ پیشنهادی
 
@@ -346,7 +343,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 این پرونده‌ها مانع را پنهان نمی‌کنند. برنامهٔ کنترل‌شده، PostgreSQL، پراکسی خصوصی و رابط کاربری،
 هوش مصنوعی، اتصال، وضعیت Zabbix و پوشش پایش چهار میزبان اکنون وجود دارند؛ اما نصب‌کنندهٔ کامل و
 تکرارپذیر تولید و بستهٔ آزمودهٔ پشتیبان‌گیری و بازیابی هنوز آماده نیست. تأیید مجوز وابستگی‌ها،
-باقی ماتریس پایداری، بازگشت محیط اجرا و مدل، پذیرش راه‌اندازی مجدد سالم ماشین و جداسازی مستقل مرورگر، بازیابی مستقل
+باقی ماتریس پایداری، بازگشت محیط اجرا و مدل، جداسازی مستقل مرورگر، بازیابی مستقل
 و هدف کارایی تولیدی همچنان بازند. تنظیم خصوصی، گواهی و اعتبارنامهٔ مقصد فقط در محل محافظت‌شدهٔ
 استقرار هستند؛ شاهد پشتیبان مستقل یا بازیابی جدا وجود ندارد و پذیرش کامل سرور و تولید تکمیل نشده
 است.
@@ -357,7 +354,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 ### گام‌ها و وضعیت شواهد
 
-معماری و ADRهای مرحلهٔ صفر پذیرفته شده‌اند و چهار مهمان جایگزین از صلاحیت‌سنجی عبور کرده‌اند. برش کنترل‌شدهٔ 1A اکنون با برنامه، PostgreSQL، TLS و پنل دوزبانه فعال است؛ 1B مدل محلی پذیرفته‌شده را فراهم می‌کند؛ پیش‌نیاز Zabbix و مسیر فقط‌خواندنی 1C نیز فعال و آزموده شده‌اند. مسیر 1D پاسخ فارسی و انگلیسی اکنون شاهد محدود، اجرای ماندگار و ممیزی پیوندخورده دارد و به‌صورت زنده آزموده شده است. گام خطای 1E برای دادهٔ قدیمی و ناقص، قطع API، لغو توکن، متن بدساخت و تزریق دستور کامل شده است. قطع صریح WAN برای مسیر سرور و API موفق بود. نخستین راه‌اندازی مجدد، Zabbix را بازگرداند اما به‌علت پایان مهلت ۳۰ دقیقه‌ای، پذیرش نشد و ادامهٔ ماتریس متوقف شد. راه‌اندازی مجدد سالم، جداسازی مرورگر، بار پایدار، بازیابی مستقل و پذیرش کامل 1E همچنان باز هستند.
+معماری و ADRهای مرحلهٔ صفر پذیرفته شده‌اند و چهار مهمان جایگزین از صلاحیت‌سنجی عبور کرده‌اند. برش کنترل‌شدهٔ 1A اکنون با برنامه، PostgreSQL، TLS و پنل دوزبانه فعال است؛ 1B مدل محلی پذیرفته‌شده را فراهم می‌کند؛ پیش‌نیاز Zabbix و مسیر فقط‌خواندنی 1C نیز فعال و آزموده شده‌اند. مسیر 1D پاسخ فارسی و انگلیسی اکنون شاهد محدود، اجرای ماندگار و ممیزی پیوندخورده دارد و به‌صورت زنده آزموده شده است. گام خطای 1E برای دادهٔ قدیمی و ناقص، قطع API، لغو توکن، متن بدساخت و تزریق دستور کامل شده است. قطع صریح WAN برای مسیر سرور و API و راه‌اندازی مجدد سالم و ترتیبی هر چهار مهمان موفق بود. جداسازی مرورگر، بار پایدار، بازیابی مستقل و پذیرش کامل 1E همچنان باز هستند.
 
 ممکن است مالک مستقل ماشین ساخته باشد؛ پیش از ادعای وجود یا نبود آن، وضعیت واقعی بررسی شود. تصویر تنظیمات VM به معنای قبولی مسیر برنامه نیست. ادامه از نخستین گام ناتمامِ دارای شاهد و مجوز باشد، نه پاک کردن پیشرفت.
 
@@ -365,6 +362,6 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 این وضعیت پذیرش مرحلهٔ صفر، برش مستقرشدهٔ 1A، هوش مصنوعی صلاحیت‌سنجی‌شدهٔ 1B، اتصال زنده و فقط‌خواندنی 1C و مسیر ماندگار و مستند به شاهد 1D را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و پرونده‌های تحویل حفظ شده‌اند. این رکورد به‌معنای ممیزی امنیت میزبان، پذیرش تولیدی یا اثبات بازیابی مستقل نیست.
 
-برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۸ فایل، ۱۰۱ آزمون غیر‌یکپارچه و هر شش آزمون روی پایگاه موقت و جداگانهٔ PostgreSQL 16.15 موفق بودند. پایگاه، login role، credential و تونل SSH موقت پس از آزمون حذف شدند. شاهد CI به revision خودش وابسته می‌ماند. اعتبارسنجی مستندات و پرونده‌ها، بررسی وابستگی و مجوز، آزمون گسترده‌تر امنیت و شاهد بازیابی همچنان دروازه‌اند. بازبینی دیداری ورود دوزبانه، آزمون سراسری زنده و قطع WAN چهار مهمان انجام شد؛ خودکارسازی کامل مرورگر، پذیرش راه‌اندازی مجدد سالم، پشتیبان مستقل و بازیابی جدا هنوز انجام نشده است.
+برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۸ فایل، ۱۰۲ آزمون غیر‌یکپارچه و هر شش آزمون روی پایگاه موقت و جداگانهٔ PostgreSQL 16.15 موفق بودند. پایگاه، login role، credential و تونل SSH موقت پس از آزمون حذف شدند. شاهد CI به revision خودش وابسته می‌ماند. اعتبارسنجی مستندات و پرونده‌ها، بررسی وابستگی و مجوز، آزمون گسترده‌تر امنیت و شاهد بازیابی همچنان دروازه‌اند. بازبینی دیداری ورود دوزبانه، آزمون سراسری زنده، قطع WAN چهار مهمان و ماتریس راه‌اندازی مجدد سالم و ترتیبی انجام شد؛ خودکارسازی کامل مرورگر، پشتیبان مستقل و بازیابی جدا هنوز انجام نشده است.
 
-نقطهٔ بعد در [کار بعدی](NEXT_TASK.md)، بازبینی و اصلاح ابزار آزمون راه‌اندازی مجدد و سپس یک راه‌اندازی مجدد سالم Zabbix پیش از ادامهٔ ماتریس سه مهمان دیگر است. پس از آن بازگشت انتشار برنامه، محیط اجرا و مدل، پشتیبان مستقل و بازیابی جدا انجام می‌شود. ارتقا به تولید به نتیجهٔ این آزمون‌ها، تصمیم نگهداری و پشتیبان، سنجش پایدار منابع و تأیید عملیات وابسته است.
+نقطهٔ بعد در [کار بعدی](NEXT_TASK.md)، بازگشت کنترل‌شدهٔ انتشار برنامه و محیط اجرا و مدل از فایل‌های محلیِ تأییدشده و سپس پشتیبان مستقل و بازیابی جدا است. زیرآزمون مرورگر تازه و مستقل از WAN و موارد باقی‌ماندهٔ پایداری و ظرفیت نیز بازند. ارتقا به تولید به نتیجهٔ این آزمون‌ها، تصمیم نگهداری و پشتیبان، سنجش پایدار منابع و تأیید عملیات وابسته است.

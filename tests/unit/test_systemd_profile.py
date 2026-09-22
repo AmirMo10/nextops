@@ -75,6 +75,17 @@ def test_app_unit_is_rootless_loopback_only_and_uses_file_backed_credentials() -
     assert "NEXTOPS_INFERENCE_SERVICE_SECRET=" not in environment
     assert "http://127.0.0.1:18090" in environment
     assert "http://127.0.0.1:18100" in environment
+    assert "Requires=postgresql@16-nextops.service" in unit
+    assert "After=network-online.target postgresql@16-nextops.service" in unit
+    assert "postgresql.service" not in unit
+
+
+def test_zabbix_dropin_orders_the_server_around_the_real_database_cluster() -> None:
+    dropin = _unit("zabbix-server.service.d/nextops-postgresql.conf")
+
+    assert "Requires=postgresql@16-zabbix.service" in dropin
+    assert "After=postgresql@16-zabbix.service" in dropin
+    assert "TimeoutStopSec=90s" in dropin
 
 
 def test_ai_tunnel_uses_pinned_host_restricted_key_and_one_local_forward() -> None:

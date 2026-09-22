@@ -1,7 +1,8 @@
 [Unit]
 Description=NextOps authenticated application and user panel
 Documentation=https://github.com/Omid-NextAI/nextops
-After=network-online.target postgresql.service nextops-ai-tunnel.service nextops-connector-tunnel.service
+Requires=postgresql@16-nextops.service
+After=network-online.target postgresql@16-nextops.service nextops-ai-tunnel.service nextops-connector-tunnel.service
 Wants=network-online.target nextops-ai-tunnel.service nextops-connector-tunnel.service
 ConditionFileIsExecutable=/srv/nextops/releases/current/venv/bin/uvicorn
 ConditionPathExists=/etc/nextops/nextops-app.env

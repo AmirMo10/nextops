@@ -3,11 +3,10 @@
 Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04
 guests, and the scoped stale/partial/unreachable/revoked-token/malformed-text/prompt-injection
 qualification is complete. App release `nextops-0.1.0-13a3369` and connector release
-`nextops-0.1.0-3d7d725` are active. Explicit four-guest WAN isolation passed. The first reboot case
-restored Zabbix but exceeded the gate with a 30-minute forced systemd reboot, so the matrix stopped
-before the other guests. The next work is to review the shutdown evidence and corrected test
-harness, obtain one clean Zabbix reboot, then continue the remaining reboot matrix. Rollback,
-independent backup and isolated restore follow; do not rebuild the working slice.
+`nextops-0.1.0-3d7d725` are active. Explicit four-guest WAN isolation and the serial clean-reboot
+matrix passed after correcting real PostgreSQL-cluster dependencies for Zabbix and the application.
+The next work is controlled runtime/model/application rollback from verified local artifacts,
+followed by independent backup and isolated restore. Do not rebuild the working slice.
 
 ## English — harden the live user-testing slice
 
@@ -38,7 +37,10 @@ The next operator must treat the following as completed and preserve it:
 - explicit four-guest WAN isolation with direct IPv4 and IPv6 Internet denied while fresh login,
   English and Persian general answers, local-AI readiness, live Zabbix evidence, durable storage and
   linked audit remained available over the approved LAN; and
-- local quality gates: Ruff, strict mypy, 101 passing non-integration tests and all 6 PostgreSQL
+- serial clean reboots of Zabbix, connector, AI and application with the offline policy loaded before
+  normal networking, explicit database-cluster ordering, role-specific recovery and zero failed
+  units; and
+- local quality gates: Ruff, strict mypy, 102 passing non-integration tests and all 6 PostgreSQL
   integration tests passing against an isolated temporary database.
 
 The immediate implementation sequence is:
@@ -51,11 +53,11 @@ The immediate implementation sequence is:
 3. **Completed with one remaining browser subcase:** all four guests denied direct IPv4 and IPv6
    Internet while local login, bilingual general Q&A and a fresh evidence-linked investigation
    passed. A separately isolated fresh browser process remains open.
-4. **Next:** review the corrected reboot harness and the Zabbix shutdown journal, then obtain one
-   clean Zabbix reboot before rebooting app, AI and connector in dependency order. The earlier Zabbix
-   attempt recovered all services but failed acceptance because `reboot.target` timed out after 30
-   minutes and forced the reboot. Record exact latency and CPU/memory/NUMA observations.
-5. Then run runtime/model/application rollback, independent backup and isolated restore.
+4. **Completed:** correct the Zabbix shutdown dependency, prove one clean Zabbix reboot, then reboot
+   connector, AI and application serially. The application boot exposed and received the equivalent
+   real-cluster startup dependency; its clean retry passed.
+5. **Next:** run controlled runtime/model/application rollback from verified local artifacts, then
+   independent backup and isolated restore. Retain exact latency and CPU/memory/NUMA observations.
 6. Only after those gates pass, review retention, alerting, certificate/token rotation and operator
    runbooks for production promotion.
 
@@ -85,7 +87,7 @@ non-loopback traffic. Application rollback to `417d888` and restoration to `62de
 `401` for unauthenticated generation and `200` for readiness, leaving `62de8d6` active. This is
 controlled Stage 1B qualification, not complete offline or production acceptance.
 
-The four schema-validated YAML files under `deploy/server-dependencies` remain the public deployer handoff. Continue from the actual live state; do not reinstall the accepted AI release or repeat completed discovery. Environment-specific values and evidence stay in the approved private record keyed by `required_inputs`, never in these public files. The next infrastructure work is the general application/PostgreSQL path and the dedicated Zabbix prerequisite, with backup/restore designed before either becomes production data.
+The four schema-validated YAML files under `deploy/server-dependencies` remain the public deployer handoff. Continue from the actual live state; do not reinstall the accepted AI release or repeat completed discovery. Environment-specific values and evidence stay in the approved private record keyed by `required_inputs`, never in these public files. The next infrastructure work is controlled rollback of the deployed application/runtime/model from verified local artifacts, followed by independent backup and isolated restore.
 
 Completed AI evidence:
 
@@ -95,8 +97,8 @@ Completed AI evidence:
 
 Remaining Stage 1B/1E gates:
 
-- clean authorized VM reboots; explicit server/API WAN-disconnection observation passed, while an
-  independently isolated fresh-browser case remains;
+- an independently WAN-isolated fresh-browser workflow; the server/API WAN and clean VM-reboot
+  cases passed;
 - live cancellation, dependency loss, malformed/corrupt/missing artifact, low-space and recovery behavior;
 - runtime/model rollback, not only application-link rollback;
 - sustained load with agreed latency, CPU, memory and NUMA thresholds;
@@ -155,7 +157,7 @@ Apply the retained project ceiling and every per-datastore capacity check: exist
 
 Use dependency-aware service readiness, not fixed sleeps or an Internet test. The databases precede their dependants; model/gateway can start independently. Zabbix failure must not prevent general local Q&A when its own dependencies are healthy. A host failure affects both systems; independent host-outage detection and backups are separate requirements.
 
-After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and four-host Zabbix path is live for user testing. It is not production-accepted: VM-reboot and WAN-block evidence, remaining reliability cases, independent backup, isolated restore and complete server recovery remain open.
+After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and four-host Zabbix path is live for user testing. It is not production-accepted: independent browser isolation, remaining reliability cases, independent backup, isolated restore and complete server recovery remain open.
 
 ## فارسی — سخت‌سازی مسیر زندهٔ ارزیابی کاربران
 
@@ -184,7 +186,9 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 - قطع صریح WAN هر چهار مهمان؛ درحالی‌که دسترسی مستقیم IPv4 و IPv6 به اینترنت بسته بود، ورود تازه،
   پاسخ عمومی فارسی و انگلیسی، آمادگی مدل محلی، شاهد تازهٔ Zabbix، ذخیرهٔ ماندگار و ممیزی پیوندخورده
   روی شبکهٔ داخلی مجاز برقرار ماند؛
-- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۰۱ آزمون غیر‌یکپارچه و هر شش آزمون PostgreSQL در پایگاه
+- راه‌اندازی مجدد سالم و ترتیبی Zabbix، اتصال، هوش مصنوعی و برنامه؛ سیاست آفلاین پیش از شبکهٔ عادی
+  بار شد، ترتیب خوشه‌های واقعی پایگاه صریح بود، سرویس‌های هر نقش بازگشتند و واحد خراب وجود نداشت؛
+- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۰۲ آزمون غیر‌یکپارچه و هر شش آزمون PostgreSQL در پایگاه
   موقت و جداگانه.
 
 ترتیب مستقیم کار بعدی چنین است:
@@ -196,11 +200,11 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 3. **تکمیل شد، با یک زیرآزمون مرورگر باقی‌مانده:** دسترسی مستقیم IPv4 و IPv6 هر چهار مهمان به
    اینترنت بسته شد و ورود محلی، پاسخ عمومی دوزبانه و بررسی تازهٔ مستند به شاهد موفق ماند. جداسازی
    مستقل یک مرورگر تازه هنوز باید اجرا شود.
-4. **گام بعد:** ابزار اصلاح‌شدهٔ آزمون راه‌اندازی مجدد و گزارش خاموش‌شدن Zabbix بازبینی شود؛ سپس
-   یک راه‌اندازی مجدد سالم Zabbix پیش از ادامهٔ ترتیبی برنامه، هوش مصنوعی و اتصال به‌دست آید. تلاش
-   قبلی همهٔ سرویس‌ها را بازگرداند، اما پس از پایان مهلت ۳۰ دقیقه‌ای `reboot.target` به‌اجبار انجام
-   شد و پذیرفته نیست. زمان پاسخ و مصرف CPU، حافظه و NUMA دقیق ثبت شود.
-5. سپس بازگشت برنامه، مدل و محیط اجرا، پشتیبان مستقل و بازیابی جدا اجرا شود.
+4. **تکمیل شد:** وابستگی خاموش‌شدن Zabbix اصلاح و راه‌اندازی مجدد سالم آن ثابت شد؛ سپس اتصال،
+   هوش مصنوعی و برنامه یکی‌یکی راه‌اندازی مجدد شدند. نخستین بوت برنامه وابستگی مشابه خوشهٔ واقعی
+   پایگاه را آشکار کرد؛ اصلاح انجام شد و تکرار سالم آزمون پذیرفته شد.
+5. **گام بعد:** بازگشت کنترل‌شدهٔ انتشار برنامه و محیط اجرا و مدل از فایل‌های محلیِ تأییدشده، سپس
+   پشتیبان مستقل و بازیابی جدا اجرا شود. زمان پاسخ و مصرف CPU، حافظه و NUMA دقیق ثبت شود.
 6. تنها پس از عبور این دروازه‌ها، نگهداری داده، هشدار، چرخش گواهی و توکن و راهنمای بهره‌برداری برای
    ارتقا به تولید بازبینی شود.
 
@@ -240,8 +244,8 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 دروازه‌های باقی‌ماندهٔ 1B و 1E:
 
-- راه‌اندازی مجدد سالم و مجاز ماشین‌ها؛ مشاهدهٔ صریح قطع WAN در مسیر سرور و API موفق بود، اما
-  جداسازی مستقل یک مرورگر تازه هنوز باقی است؛
+- گردش‌کار یک مرورگر تازه با جداسازی مستقل از WAN هنوز باقی است؛ راه‌اندازی مجدد سالم ماشین‌ها و
+  قطع WAN در مسیر سرور و API موفق بود؛
 - لغو زنده، از دست رفتن وابستگی، فایل مفقود یا خراب، کمبود فضا و رفتار بازیابی؛
 - بازگشت محیط اجرا و مدل، نه فقط پیوند انتشار برنامه؛
 - بار پایدار با هدف توافق‌شده برای زمان پاسخ، CPU، حافظه و NUMA؛
@@ -294,4 +298,4 @@ LVM پیشنهادی `vg_zabbix`: بیرون LVM یک GiB برای EFI و دو G
 
 شروع سرویس تابع وابستگی باشد، نه تأخیر ثابت یا تست اینترنت. پایگاه پیش از وابسته بالا بیاید و مدل و درگاه بتوانند مستقل شروع شوند. قطع Zabbix مانع سؤال عمومی محلی با وابستگی سالم نشود. خرابی میزبان هر دو سامانه را قطع می‌کند؛ پشتیبان و بررسی قطعی مستقل نیاز جدا هستند.
 
-پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر برنامه، هوش مصنوعی، اتصال و Zabbix چهارمیزبانی اکنون برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. شاهد قطع WAN برای مسیر سرور و API وجود دارد؛ جداسازی مرورگر و راه‌اندازی مجدد سالم هنوز تکمیل نشده‌اند. موارد پایداریِ باقی‌مانده، پشتیبان مستقل، بازیابی جدا و بازیابی کامل سرور همچنان بازند.
+پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر برنامه، هوش مصنوعی، اتصال و Zabbix چهارمیزبانی اکنون برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. شاهد قطع WAN و راه‌اندازی مجدد سالم برای مسیر سرور و API وجود دارد؛ جداسازی مستقل مرورگر، موارد پایداریِ باقی‌مانده، پشتیبان مستقل، بازیابی جدا و بازیابی کامل سرور همچنان بازند.

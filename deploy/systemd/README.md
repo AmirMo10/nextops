@@ -8,7 +8,9 @@ secrets are delivered outside Git.
 Application-side units:
 
 - `nextops-app.service` runs the authenticated panel/API on loopback and reads database, bootstrap,
-  recovery, AI-service and connector-service credentials through `LoadCredential`.
+  recovery, AI-service and connector-service credentials through `LoadCredential`. It requires the
+  real `postgresql@16-nextops.service` cluster rather than the inert PostgreSQL meta-unit, so the
+  database is available before the API starts after a boot.
 - `nextops-ai-tunnel.service` forwards one app-local port to the AI loopback API using a dedicated
   key, pinned host key and server-side `PermitOpen` restriction.
 - `nextops-connector-tunnel.service` does the same for the connector summary API on a different
@@ -26,6 +28,12 @@ The 2026-09-22 controlled deployment verified all three application-side service
 service active, with the app, AI and connector listeners confined to loopback. The external browser
 entry is private TLS through Nginx. This is user-testing evidence, not proof for another host or a
 production-acceptance claim.
+
+The Zabbix guest additionally uses
+`zabbix-server.service.d/nextops-postgresql.conf` as a drop-in for the vendor unit. It orders Zabbix
+Server after the actual `postgresql@16-zabbix.service` cluster and bounds stop time at 90 seconds.
+Without this drop-in, the vendor unit referenced only the PostgreSQL meta-unit; PostgreSQL could stop
+first and leave Zabbix waiting until systemd forced the reboot.
 
 This directory contains the reviewed source profile used for the first controlled `nextops-ai`
 qualification. On 2026-09-22 the profile was installed on the authorized AI guest and the bounded
@@ -101,6 +109,17 @@ install -o root -g root -m 0644 deploy/systemd/nextops-llama.service /etc/system
 install -o root -g root -m 0644 deploy/systemd/nextops-ai.service /etc/systemd/system/nextops-ai.service
 systemctl daemon-reload
 systemctl enable nextops-llama.service nextops-ai.service
+```
+
+On the Zabbix guest, install the reviewed vendor-unit drop-in without changing the packaged unit:
+
+```bash
+install -d -o root -g root -m 0755 /etc/systemd/system/zabbix-server.service.d
+install -o root -g root -m 0644 \
+  deploy/systemd/zabbix-server.service.d/nextops-postgresql.conf \
+  /etc/systemd/system/zabbix-server.service.d/nextops-postgresql.conf
+systemctl daemon-reload
+systemd-analyze verify zabbix-server.service
 ```
 
 Enabling does not prove readiness. Start only inside the approved change window, wait for the

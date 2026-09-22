@@ -1,5 +1,52 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-22 — Stage 1F WAN and clean reboot qualification / صلاحیت‌سنجی قطع WAN و راه‌اندازی مجدد سالم در مرحلهٔ 1F
+
+### English
+
+Passed explicit WAN isolation across all four controlled Ubuntu 24.04 guests while preserving the
+approved LAN, fresh authentication, bilingual model-only answers, local-AI readiness, eight fresh
+Zabbix measurements, durable investigation storage and audit linkage. The temporary nftables policy
+was guarded by automatic rollback, loaded before normal networking during the reboot checks and was
+removed completely afterward.
+
+The first Zabbix attempts exposed a 30-minute shutdown stall. The journal proved that the vendor
+unit referenced PostgreSQL's inert meta-unit and allowed the real cluster to stop before Zabbix,
+whose stop timeout was infinite. A versioned drop-in now requires and orders around
+`postgresql@16-zabbix.service` and bounds shutdown at 90 seconds. A controlled stop completed in
+under one second, and the accepted reboot stopped Zabbix before PostgreSQL and started it after the
+database was active.
+
+Connector and AI then passed serial clean reboots. The first application reboot exposed the same
+meta-unit class of startup defect: the API started while `postgresql@16-nextops.service` remained
+down. The application unit now requires the real cluster; the clean retry started PostgreSQL before
+the API and passed login, bilingual Q&A, monitoring and a new durable investigation. Final read-only
+preflight found every guest `running`, with zero failed units, no temporary policy residue and direct
+HTTPS restored. Ruff, strict mypy, 102 non-integration tests, documentation validation and deployment
+dossier validation pass. Independent browser isolation, rollback of the runtime/model artifacts,
+backup, isolated restore, sustained load and production acceptance remain open.
+
+### فارسی
+
+قطع صریح WAN روی هر چهار مهمان کنترل‌شدهٔ Ubuntu 24.04 با موفقیت آزموده شد؛ شبکهٔ داخلی مصوب،
+ورود تازه، پاسخ عمومی فارسی و انگلیسی، آمادگی هوش مصنوعی محلی، هشت سنجهٔ تازهٔ Zabbix، ذخیرهٔ
+ماندگار بررسی و پیوند ممیزی برقرار ماند. سیاست موقت nftables زمان‌سنج بازگشت خودکار داشت، در آزمون
+راه‌اندازی مجدد پیش از شبکهٔ عادی بار شد و در پایان بدون باقی‌ماندن فایل یا قاعده حذف شد.
+
+تلاش‌های نخست Zabbix یک توقف ۳۰ دقیقه‌ای در خاموش‌شدن را آشکار کردند. گزارش‌ها ثابت کردند که واحد
+شرکت سازنده به سرویس صوری PostgreSQL اشاره می‌کرد و خوشهٔ واقعی پیش از Zabbix خاموش می‌شد؛ مهلت
+توقف Zabbix نیز نامحدود بود. drop-in نسخه‌دار جدید، `postgresql@16-zabbix.service` را الزام می‌کند،
+ترتیب درست را می‌سازد و مهلت توقف را به ۹۰ ثانیه محدود می‌کند. توقف کنترل‌شده در کمتر از یک ثانیه
+پایان یافت و در راه‌اندازی پذیرفته‌شده، Zabbix پیش از PostgreSQL خاموش و پس از آماده‌شدن پایگاه آغاز شد.
+
+مهمان‌های اتصال و هوش مصنوعی سپس راه‌اندازی مجدد سالم و ترتیبی را گذراندند. نخستین بوت برنامه همان
+ردهٔ نقص سرویس صوری را در آغاز آشکار کرد: API بالا آمد، اما `postgresql@16-nextops.service` خاموش
+ماند. واحد برنامه اکنون خوشهٔ واقعی را الزام می‌کند؛ در تکرار سالم، PostgreSQL پیش از API فعال شد و
+ورود، پاسخ عمومی دوزبانه، پایش و یک بررسی ماندگار تازه موفق بودند. پیش‌بررسی نهایی هر چهار مهمان را
+با وضعیت `running`، صفر واحد خراب، بدون اثر سیاست موقت و با HTTPS مستقیمِ برقرار یافت. Ruff، mypy
+سخت‌گیرانه، ۱۰۲ آزمون غیر‌یکپارچه، اعتبارسنجی مستندات و پرونده‌های استقرار موفق‌اند. جداسازی مستقل
+مرورگر، بازگشت فایل‌های محیط اجرا و مدل، پشتیبان، بازیابی جدا، بار پایدار و پذیرش تولید هنوز بازند.
+
 ## 2026-09-22 — Stage 1E failure qualification / صلاحیت‌سنجی خطا در مرحلهٔ 1E
 
 ### English

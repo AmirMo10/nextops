@@ -3,12 +3,13 @@
 [فارسی](../fa/TESTING.md) · [Index](INDEX.md)
 
 **Status: active test plan with repository, isolated PostgreSQL, live connector and bounded local-AI
-evidence.** Ruff, strict mypy, 101 non-integration cases and six PostgreSQL integration cases pass.
+evidence.** Ruff, strict mypy, 102 non-integration cases and six PostgreSQL integration cases pass.
 Authenticated browser-path, live read-only Zabbix, durable investigation, revoked-token,
-unreachable-API, recovery and explicit four-guest WAN-isolation checks have run on the controlled
-environment. The first VM-reboot case recovered its services but failed clean-reboot acceptance
-after a 30-minute systemd job timeout forced the reboot; the remaining guests were not rebooted.
-Sustained load, independent restore and production acceptance have not run. Source: master
+unreachable-API, recovery, explicit four-guest WAN isolation and serial clean-reboot checks have run
+on the controlled environment. The reboot work exposed and corrected explicit PostgreSQL-cluster
+ordering defects in the Zabbix and application units; all four guests then passed reboot recovery
+while direct Internet access remained blocked. Sustained load, independent restore and production
+acceptance have not run. Source: master
 specification sections 10–14 and 21–23.
 
 ## Stage 1E failure qualification
@@ -31,7 +32,7 @@ The scoped failure increment separates deterministic fixtures from live operatio
   frontend reads the database directly. That observed distinction is retained rather than being
   mislabeled as an outage pass.
 
-These results qualify the named cases only. They do not replace the remaining browser-isolated WAN, reboot,
+These results qualify the named cases only. They do not replace the remaining browser-isolated WAN,
 certificate-expiry, timeout/cancellation, low-space, sustained-load, backup and restore matrix.
 
 ## Stage 1F WAN isolation and reboot qualification
@@ -49,14 +50,24 @@ storage, an independently verified evidence hash and linked audit. This passes t
 portion of OFF-01 and OFF-05. OFF-03 remains partial because the client used a fresh authenticated
 API session rather than a separately WAN-isolated fresh browser process.
 
-The reboot matrix stopped after its first guest. Zabbix eventually restored SSH, PostgreSQL,
-Zabbix Server, PHP-FPM, Nginx, Agent 2 and fresh monitoring, but `reboot.target` made no progress for
-30 minutes and systemd then forced the reboot. The journal also showed SSH child processes remaining
-after `ssh.service` stopped; the temporary early-boot policy lacked an explicit shutdown conflict,
-so the test harness itself cannot be excluded as a contributor. The journal did not identify one
-definitive blocking unit. No app, AI or connector reboot was attempted. All temporary policies and
-unit files were removed, Internet access was restored, and the fleet returned to `running` with zero
-failed units. OFF-05 and clean VM-reboot acceptance remain open.
+The initial Zabbix reboot attempts reached systemd's 30-minute job timeout. A corrected test harness
+reproduced the delay and excluded itself as the cause. The previous-boot journal then showed the
+actual race: the vendor Zabbix unit referenced the inert PostgreSQL meta-unit and had an infinite
+stop timeout, so the real database cluster stopped first and the remaining Zabbix processes could
+not finish. A reviewed drop-in now requires and orders around `postgresql@16-zabbix.service` and
+bounds stop time at 90 seconds. A controlled stop completed in under one second with the database
+still active; the next reboot stopped Zabbix before PostgreSQL and started PostgreSQL before Zabbix.
+
+The connector, AI and application guests were then rebooted serially, never concurrently. Connector
+and AI recovered without correction. The first application boot exposed the same meta-unit defect:
+its PostgreSQL cluster remained down while the API process started. An application drop-in requiring
+`postgresql@16-nextops.service` corrected the dependency, and the retry started the database before
+the API. Every accepted reboot loaded the temporary WAN-deny policy before normal networking,
+returned to `running` with zero failed units, passed its role-specific services, fresh login,
+bilingual model-only Q&A and/or eight fresh monitoring metrics, then removed all temporary policy
+files and restored direct HTTPS. A final durable investigation passed after the application reboot.
+The server/API portion of clean offline-reboot acceptance now passes; the independently isolated
+fresh-browser subcase remains open.
 
 ## Test layers
 

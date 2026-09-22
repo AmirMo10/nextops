@@ -8,8 +8,9 @@ The Zabbix guest plus the application, AI and connector guests are monitored in 
 host group. The three NextOps guests use Agent 2 active checks with distinct PSKs, no passive
 listener or remote-command permission, and a source-restricted trapper path. The reader still has
 only `host.get`, `item.get` and `problem.get`; it saw exactly four approved hosts, fresh items for
-each newly added host, and denied both an unlisted read and a mutation. Failure, WAN-block, reboot,
-backup and isolated-restore acceptance remain open. The sections below retain the original design
+each newly added host, and denied both an unlisted read and a mutation. Scoped failure, server/API
+WAN-block and serial clean-reboot checks pass. Independent browser isolation, backup and
+isolated-restore acceptance remain open. The sections below retain the original design
 and capacity rationale; current evidence in [PROJECT_STATE](../PROJECT_STATE.md) supersedes their
 earlier not-deployed wording.
 
@@ -50,6 +51,15 @@ There are now **three NextOps VMs plus one Zabbix VM: four total** for this prof
 Pin the actual versions, package sources, checksums and compatible templates at provisioning time. This is not a package lockfile or an installation already performed. No major-version upgrade, TimescaleDB deployment, separate Zabbix database VM, proxy fleet or extra AI runtime is required for the first milestone.
 
 Zabbix's PostgreSQL instance belongs only to Zabbix and remains inside this VM initially. NextOps's independent PostgreSQL instance starts inside `nextops-app` and later moves to `nextops-db` according to the roadmap. Do not share database credentials, schemas or an unrestricted PostgreSQL service account between the two products. The AI and connector do not receive either database's credentials.
+
+The deployed Zabbix unit must use the reviewed
+[`nextops-postgresql.conf`](../../deploy/systemd/zabbix-server.service.d/nextops-postgresql.conf)
+drop-in. The vendor unit references the inert `postgresql.service` meta-unit and otherwise has an
+infinite stop timeout. The drop-in requires and orders Zabbix around the actual
+`postgresql@16-zabbix.service` cluster and bounds shutdown at 90 seconds. Validate the merged unit
+with `systemd-analyze verify zabbix-server.service`; on shutdown, confirm Zabbix stops before the
+cluster, and on boot confirm the cluster becomes active before Zabbix starts. Do not edit the vendor
+unit in `/usr/lib/systemd/system`.
 
 ## 3. LVM: one 200-GiB disk, vg_zabbix
 
@@ -123,15 +133,15 @@ Preserve the NextOps creation order: `nextops-app`, `nextops-ai`, then `nextops-
 
 The checkpoint order remains 1A local identity/policy/durable state/audit; 1B actual local CPU answers; 1C real read-only Zabbix evidence; 1D complete evidence-linked answer; 1E offline acceptance. General model output or a working Zabbix dashboard alone is not Phase 1 completion.
 
-| Check | Acceptance evidence; all currently NOT RUN |
+| Check | Current controlled evidence |
 |---|---|
-| Server readiness | Correct dedicated DB mount, services, local login, monitoring items and scoped authenticated API reads |
-| Evidence correctness | Counts match captured API results; engine health, estate state and API availability remain distinct |
-| Access controls | Out-of-scope reads and all mutations denied; token and injected event-name tests pass |
-| Offline answer | New Persian and English questions answered locally with server and browser WAN blocked and approved LAN retained |
-| Offline restart | Fresh login and cold start of Zabbix, database, connector, application and model from durable local artifacts |
-| Failure behavior | Zabbix outage, expired token and stale/missing items reported truthfully; unrelated local Q&A remains available |
-| Recovery and capacity | Approved offline restore/low-space tests and measured resource/latency limits; no live datastore filled deliberately |
+| Server readiness | Passed for the dedicated mount, services, local login, monitoring items and scoped authenticated API reads |
+| Evidence correctness | Passed for the captured bounded summary; engine health, estate state and API availability remain distinct |
+| Access controls | Passed for the reader allowlist, host scope, revoked token and injected monitoring text |
+| Offline answer | Server/API path passed with all four guests WAN-blocked; an independently isolated browser remains open |
+| Offline restart | Passed serially for Zabbix, connector, AI and application after correcting explicit database-cluster dependencies |
+| Failure behavior | Passed for Zabbix API outage, revoked token and stale/partial/missing data; general local Q&A remained available |
+| Recovery and capacity | Independent restore, low-space and sustained resource/latency acceptance remain open |
 
 These supplement, not replace, ZBX-01–ZBX-08 and applicable OFF-01–OFF-10. Use the natural questions "Is Zabbix collecting data correctly? What active problems and stale measurements do we have?" and their Persian equivalents. Zabbix's sampling continues independently of chat requests; the assistant reads evidence on demand.
 
