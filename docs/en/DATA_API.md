@@ -49,6 +49,14 @@ change and append-only audit insert share one transaction. Safe failure code, me
 retryability are stored and audited without raw dependency responses. The API and panel expose the
 run/evidence/audit identifiers, and scoped run retrieval returns the same durable result.
 
+`MonitoringSummary` now carries `is_partial` plus bounded, machine-readable `partial_reasons`.
+Current reasons distinguish a truncated metric selection, a problem page that reached its result
+limit, and absence of usable measurements. The marker and reasons are included in the canonical
+evidence hash, durable result and completion audit. Every source-controlled string remains
+untrusted content: authentication establishes where the observation came from, not permission for
+instructions embedded in a host, metric, value, unit or problem name. Staleness remains a separate
+per-measurement flag because a freshly fetched summary can contain old source values.
+
 ## Persistence model
 
 PostgreSQL is authoritative. Separate business data from the databases NextOps manages. Define stable IDs, foreign keys, unique constraints, indexes, retention and permission rules for each record group.

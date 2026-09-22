@@ -2,7 +2,35 @@
 
 [فارسی](../fa/TESTING.md) · [Index](INDEX.md)
 
-**Status: test plan with verified repository, application-host PostgreSQL, and bounded AI smoke evidence.** Hosted CI passes 71 unit/API/schema/installer/context cases plus 5 PostgreSQL integration cases; the application host passed the same 71 non-integration and 5 PostgreSQL 16.15 integration cases. The pinned real model also passed a limited authenticated loopback smoke test. No browser, live connector/device, full model-quality/load, Internet-blocked server, restore, or production acceptance test has run. Source: master specification sections 10–14 and 21–23.
+**Status: active test plan with repository, isolated PostgreSQL, live connector and bounded local-AI
+evidence.** Ruff, strict mypy, 101 non-integration cases and six PostgreSQL integration cases pass.
+Authenticated browser-path, live read-only Zabbix, durable investigation, revoked-token,
+unreachable-API and recovery checks have run on the controlled four-guest environment. Explicit
+WAN-disconnection, VM reboot, sustained load, independent restore and production acceptance have
+not run. Source: master specification sections 10–14 and 21–23.
+
+## Stage 1E failure qualification
+
+The scoped failure increment separates deterministic fixtures from live operational evidence:
+
+- Isolated connector/API tests cover old measurements, bounded partial results, no usable metrics,
+  malformed over-limit text and monitoring-field prompt injection. Authenticated source identity
+  does not make host, metric, value, unit or problem text an instruction.
+- The live connector marks its eight-item bounded view as partial with
+  `metrics_truncated`; all eight observed measurements were fresh. The marker survives model
+  synthesis, canonical evidence hashing, durable storage, audit details and run retrieval.
+- A disposable token owned by the existing reader identity saw only the four approved hosts,
+  failed immediately after revocation and was deleted. The live connector token remained active.
+- With the Zabbix HTTPS/API frontend briefly stopped, monitoring summary and investigation returned
+  safe retryable `503` responses with `connector.summary_unavailable`. The failed run and matching
+  append-only audit event were stored, while a model-only general question still completed locally.
+  Restart restored fresh monitoring, and no raw dependency response or credential reached the API.
+- Stopping the Zabbix engine alone did not make the PHP JSON-RPC API unreachable because the
+  frontend reads the database directly. That observed distinction is retained rather than being
+  mislabeled as an outage pass.
+
+These results qualify the named cases only. They do not replace the remaining WAN, reboot,
+certificate-expiry, timeout/cancellation, low-space, sustained-load, backup and restore matrix.
 
 ## Test layers
 
@@ -54,7 +82,7 @@ uv run python scripts/check_server_installers.py
 ```
 
 The PostgreSQL integration suite requires an isolated database URL in
-`NEXTOPS_TEST_DATABASE_URL`; hosted CI supplies PostgreSQL and runs the 5 integration cases.
+`NEXTOPS_TEST_DATABASE_URL`; the current suite contains six cases.
 The documentation checker covers local links, paired guide filenames, Persian RTL wrappers and
 required control files. These checks do not contact equipment, apply a package bundle, fetch a
 model, assess natural-language quality, or establish deployment acceptance.

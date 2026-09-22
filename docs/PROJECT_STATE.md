@@ -1,13 +1,20 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-22 — a controlled user-testing path is live across the app, AI, connector and Zabbix guests. Immutable app release `nextops-0.1.0-fde27bd` provides durable live-investigation evidence and audit linkage while general assistance remains model-only. Zabbix 7.0.30 now monitors its own guest plus the approved app, AI and connector guests. The three NextOps guests use exact-version Agent 2, distinct PSKs, outbound active checks only, no passive listener or remote-command permission, and a source-restricted trapper path. The unchanged API reader sees exactly four approved hosts and fresh items for every new host. Full failure, offline, reboot, recovery, scale and production acceptance remain open.
+Updated: 2026-09-22 — the controlled user-testing path is live and its scoped failure
+qualification is complete. App release `nextops-0.1.0-13a3369` and connector release
+`nextops-0.1.0-3d7d725` mark bounded partial evidence, treat monitoring text as untrusted data,
+preserve partial/stale metadata in durable results and audits, and return connector-specific safe
+failures. Revoked-token and unreachable-API tests passed on the live four-guest environment;
+general local Q&A remained available during the monitoring outage and fresh monitoring recovered.
+WAN disconnection, VM reboot, sustained load, backup, isolated restore and production acceptance
+remain open.
 
 ## English
 
 ### Current controlled user-testing checkpoint
 
 The authenticated application and bilingual panel are deployed as immutable release
-`nextops-0.1.0-fde27bd` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
+`nextops-0.1.0-13a3369` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
 application identity and session state on
 its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
 application listener are not exposed through Nginx. The browser receives neither the AI service
@@ -66,11 +73,28 @@ independent evidence-hash verification and audit linkage passed. A direct databa
 successful `live_monitoring` result, two linked audit events, the 64-character hash and a matching
 completion audit ID.
 
+Stage 1E failure qualification promoted connector release `nextops-0.1.0-3d7d725` and app release
+`nextops-0.1.0-13a3369`. `MonitoringSummary` now exposes `is_partial` and typed reasons; the current
+eight-metric live view reports `metrics_truncated` while retaining separate per-measurement stale
+flags. The prompt boundary treats host, metric, value, unit and problem text as untrusted data even
+when the API source is authenticated. Isolated cases passed for stale values, partial/no-usable
+metrics, over-limit malformed text and embedded prompt instructions.
+
+A temporary token owned by the existing reader identity saw the same four approved hosts, was
+denied immediately after revocation and was deleted without changing the live token. During a
+brief Zabbix HTTPS/API frontend outage, monitoring summary and investigation returned safe,
+retryable `503` responses labeled `connector.summary_unavailable`; the failed run and its audit
+event were durably stored while general model-only Q&A still succeeded. The frontend restarted,
+fresh monitoring recovered and a later live investigation persisted the partial marker and
+independently verified evidence hash in 67.9 seconds. Stopping the Zabbix engine alone did not make
+the PHP API unreachable, an important operational distinction. Ruff, strict mypy, 101
+non-integration tests and six isolated PostgreSQL tests pass.
+
 This is a controlled user-testing slice, not production acceptance. The four approved Phase 1
-guests are now monitored; the wider estate is not. WAN-disconnection, VM-reboot, token revocation,
-dependency-loss, stale/partial evidence, sustained load, independent backup/restore and disaster
-recovery cases remain open. Private addresses, tokens, passwords, host keys and raw evidence remain
-outside Git.
+guests are now monitored; the wider estate is not. WAN-disconnection, VM-reboot,
+certificate-expiry, timeout/cancellation, low-space, sustained load, independent backup/restore and
+disaster-recovery cases remain open. Private addresses, tokens, passwords, host keys and raw
+evidence remain outside Git.
 
 ### Requirements and preserved history
 
@@ -167,15 +191,18 @@ The user may perform provisioning independently; verify their actual state befor
 
 This state records Phase 0 acceptance, the deployed controlled Stage 1A application slice, the qualified Stage 1B AI slice, the live Stage 1C read-only connector and the durable evidence-linked Stage 1D user-test path. It preserves the source requirements, archived prompt, diagrams and per-server handoff. It is not a host vulnerability audit, production acceptance, independent recovery proof or complete provisioning record.
 
-The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`. Ruff, strict mypy over 57 files, 95 non-integration tests and all six tests against a temporary isolated PostgreSQL 16.15 database pass. The temporary database, login role, credential and SSH tunnel were removed after validation. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier validation, dependency and license review, broader security/failure testing and recovery evidence remain merge or production gates. Visual bilingual login review and programmatic live end-to-end testing ran; full browser workflow automation, WAN-disconnection/VM-reboot acceptance, independent backup and isolated restore did not.
+The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`. Ruff, strict mypy over 58 files, 101 non-integration tests and all six tests against a temporary isolated PostgreSQL 16.15 database pass. The temporary database, login role, credential and SSH tunnel were removed after validation. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier validation, dependency and license review, broader reliability testing and recovery evidence remain merge or production gates. Visual bilingual login review and programmatic live end-to-end testing ran; full browser workflow automation, WAN-disconnection/VM-reboot acceptance, independent backup and isolated restore did not.
 
-The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-test slice without reinstalling it: exercise stale, partial, unreachable, revoked-token, malformed-text and prompt-injection cases, then run explicit WAN-disconnection, VM-reboot, rollback and independent restore acceptance. Production promotion remains gated on those results, retention/backup decisions, sustained resource measurements and operational sign-off.
+The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is explicit WAN-disconnection and VM-reboot
+acceptance, followed by runtime/model/application rollback, independent backup and isolated restore.
+Production promotion remains gated on those results, retention/backup decisions, sustained resource
+measurements and operational sign-off.
 
 ## فارسی
 
 ### نقطهٔ فعلی برای ارزیابی کنترل‌شدهٔ کاربران
 
-برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-fde27bd` روی مهمان برنامه و پشت TLS خصوصی
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-13a3369` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
 می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
 نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.
@@ -231,10 +258,27 @@ PostgreSQL در پایگاه موقت و جداگانه موفق بودند. آ�
 بررسی مستقیم پایگاه، نتیجهٔ `live_monitoring`، دو رویداد ممیزی پیوندخورده، هش ۶۴ نویسه‌ای و تطبیق
 شناسهٔ ممیزی تکمیل با نتیجهٔ ذخیره‌شده را تأیید کرد.
 
+در صلاحیت‌سنجی خطای مرحلهٔ 1E، انتشار `nextops-0.1.0-3d7d725` برای اتصال‌دهنده و
+`nextops-0.1.0-13a3369` برای برنامه فعال شد. `MonitoringSummary` اکنون با `is_partial` و دلیل‌های
+دارای نوع، ناقص‌بودن شاهد را اعلام می‌کند. نمای زندهٔ هشت‌سنجه‌ای فعلی دلیل `metrics_truncated`
+دارد و در عین حال قدیمی‌بودن هر اندازه‌گیری را جداگانه نگه می‌دارد. در مرز پرامپت نیز نام میزبان،
+سنجه، مقدار، واحد و مسئله، حتی با منبع احرازهویت‌شده، فقط دادهٔ غیرقابل‌اعتمادند. آزمون‌های جداشده
+برای مقدار قدیمی، شاهد ناقص یا بدون سنجهٔ قابل‌استفاده، متن بیش‌ازحد بلند و دستور جاسازی‌شده موفق
+بودند.
+
+یک توکن موقت متعلق به همان هویت خوانشگر، فقط چهار میزبان مصوب را دید؛ بلافاصله پس از لغو از
+دسترسی افتاد و حذف شد، بی‌آنکه توکن فعال تغییر کند. هنگام قطع کوتاه رابط HTTPS و API زبیکس، خلاصه
+و بررسی زنده خطای امن و قابل‌تکرار `503` با کلید `connector.summary_unavailable` برگرداندند. اجرای
+ناموفق و رویداد ممیزی آن ماندگار شد و هم‌زمان پاسخ‌گویی عمومی و بدون شاهد مدل محلی ادامه یافت.
+پس از بازگشت رابط، دریافت دادهٔ تازه برقرار شد و بررسی زندهٔ بعدی، نشان ناقص‌بودن و هش مستقلِ
+تأییدشدهٔ شاهد را طی ۶۷٫۹ ثانیه حفظ کرد. توقف موتور Zabbix به‌تنهایی API مبتنی بر PHP را قطع نکرد؛
+این تفاوت برای عملیات مهم است. Ruff، mypy سخت‌گیرانه، ۱۰۱ آزمون غیر‌یکپارچه و شش آزمون PostgreSQL
+در پایگاه جداگانه موفق‌اند.
+
 این خروجی برای ارزیابی کنترل‌شده است، نه پذیرش تولید. هر چهار مهمان مصوب مرحلهٔ یک پایش می‌شوند،
-اما دامنهٔ گسترده‌تر تجهیزات هنوز وارد نشده است. آزمون قطع WAN، راه‌اندازی مجدد ماشین، لغو توکن، قطع وابستگی، دادهٔ
-قدیمی یا ناقص، بار پایدار، پشتیبان مستقل، بازیابی و سناریوی بحران همچنان بازند. نشانی‌ها، توکن‌ها،
-گذرواژه‌ها، کلیدهای میزبان و شواهد خام بیرون Git مانده‌اند.
+اما دامنهٔ گسترده‌تر تجهیزات هنوز وارد نشده است. قطع WAN، راه‌اندازی مجدد ماشین، انقضای گواهی،
+پایان مهلت یا لغو درخواست، کمبود فضا، بار پایدار، پشتیبان مستقل، بازیابی و سناریوی بحران همچنان
+بازند. نشانی‌ها، توکن‌ها، گذرواژه‌ها، کلیدهای میزبان و شواهد خام بیرون Git مانده‌اند.
 
 ### نیازها و سابقهٔ محفوظ
 
@@ -289,7 +333,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 این پرونده‌ها مانع را پنهان نمی‌کنند. برنامهٔ کنترل‌شده، PostgreSQL، پراکسی خصوصی و رابط کاربری،
 هوش مصنوعی، اتصال، وضعیت Zabbix و پوشش پایش چهار میزبان اکنون وجود دارند؛ اما نصب‌کنندهٔ کامل و
 تکرارپذیر تولید و بستهٔ آزمودهٔ پشتیبان‌گیری و بازیابی هنوز آماده نیست. تأیید مجوز وابستگی‌ها،
-باقی ماتریس خطا، بازگشت محیط اجرا و مدل، آزمون صریح قطع WAN و راه‌اندازی مجدد ماشین، بازیابی مستقل
+باقی ماتریس پایداری، بازگشت محیط اجرا و مدل، آزمون صریح قطع WAN و راه‌اندازی مجدد ماشین، بازیابی مستقل
 و هدف کارایی تولیدی همچنان بازند. تنظیم خصوصی، گواهی و اعتبارنامهٔ مقصد فقط در محل محافظت‌شدهٔ
 استقرار هستند؛ شاهد پشتیبان مستقل یا بازیابی جدا وجود ندارد و پذیرش کامل سرور و تولید تکمیل نشده
 است.
@@ -300,7 +344,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 ### گام‌ها و وضعیت شواهد
 
-معماری و ADRهای مرحلهٔ صفر پذیرفته شده‌اند و چهار مهمان جایگزین از صلاحیت‌سنجی عبور کرده‌اند. برش کنترل‌شدهٔ 1A اکنون با برنامه، PostgreSQL، TLS و پنل دوزبانه فعال است؛ 1B مدل محلی پذیرفته‌شده را فراهم می‌کند؛ پیش‌نیاز Zabbix و مسیر فقط‌خواندنی 1C نیز فعال و آزموده شده‌اند. مسیر 1D پاسخ فارسی و انگلیسی اکنون شاهد محدود، اجرای ماندگار و ممیزی پیوندخورده دارد و به‌صورت زنده آزموده شده است. راه‌اندازی مجدد ماشین، قطع صریح WAN، سناریوهای خطا و لغو، بار پایدار، بازیابی مستقل و پذیرش کامل 1E همچنان باز هستند.
+معماری و ADRهای مرحلهٔ صفر پذیرفته شده‌اند و چهار مهمان جایگزین از صلاحیت‌سنجی عبور کرده‌اند. برش کنترل‌شدهٔ 1A اکنون با برنامه، PostgreSQL، TLS و پنل دوزبانه فعال است؛ 1B مدل محلی پذیرفته‌شده را فراهم می‌کند؛ پیش‌نیاز Zabbix و مسیر فقط‌خواندنی 1C نیز فعال و آزموده شده‌اند. مسیر 1D پاسخ فارسی و انگلیسی اکنون شاهد محدود، اجرای ماندگار و ممیزی پیوندخورده دارد و به‌صورت زنده آزموده شده است. گام خطای 1E برای دادهٔ قدیمی و ناقص، قطع API، لغو توکن، متن بدساخت و تزریق دستور کامل شده است. راه‌اندازی مجدد ماشین، قطع صریح WAN، بار پایدار، بازیابی مستقل و پذیرش کامل 1E همچنان باز هستند.
 
 ممکن است مالک مستقل ماشین ساخته باشد؛ پیش از ادعای وجود یا نبود آن، وضعیت واقعی بررسی شود. تصویر تنظیمات VM به معنای قبولی مسیر برنامه نیست. ادامه از نخستین گام ناتمامِ دارای شاهد و مجوز باشد، نه پاک کردن پیشرفت.
 
@@ -308,6 +352,6 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 این وضعیت پذیرش مرحلهٔ صفر، برش مستقرشدهٔ 1A، هوش مصنوعی صلاحیت‌سنجی‌شدهٔ 1B، اتصال زنده و فقط‌خواندنی 1C و مسیر ماندگار و مستند به شاهد 1D را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و پرونده‌های تحویل حفظ شده‌اند. این رکورد به‌معنای ممیزی امنیت میزبان، پذیرش تولیدی یا اثبات بازیابی مستقل نیست.
 
-برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۷ فایل، ۹۵ آزمون غیر‌یکپارچه و هر شش آزمون روی پایگاه موقت و جداگانهٔ PostgreSQL 16.15 موفق بودند. پایگاه، login role، credential و تونل SSH موقت پس از آزمون حذف شدند. شاهد CI به revision خودش وابسته می‌ماند. اعتبارسنجی مستندات و پرونده‌ها، بررسی وابستگی و مجوز، آزمون گسترده‌تر امنیت و خطا و شاهد بازیابی همچنان دروازه‌اند. بازبینی دیداری ورود دوزبانه و آزمون سراسری زنده انجام شد؛ پذیرش کامل مرورگر، قطع WAN، راه‌اندازی مجدد ماشین، پشتیبان مستقل و بازیابی جدا هنوز اجرا نشده است.
+برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۸ فایل، ۱۰۱ آزمون غیر‌یکپارچه و هر شش آزمون روی پایگاه موقت و جداگانهٔ PostgreSQL 16.15 موفق بودند. پایگاه، login role، credential و تونل SSH موقت پس از آزمون حذف شدند. شاهد CI به revision خودش وابسته می‌ماند. اعتبارسنجی مستندات و پرونده‌ها، بررسی وابستگی و مجوز، آزمون گسترده‌تر امنیت و شاهد بازیابی همچنان دروازه‌اند. بازبینی دیداری ورود دوزبانه و آزمون سراسری زنده انجام شد؛ پذیرش کامل مرورگر، قطع WAN، راه‌اندازی مجدد ماشین، پشتیبان مستقل و بازیابی جدا هنوز اجرا نشده است.
 
-نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) سخت‌سازی همین مسیر سالم است، نه نصب دوبارهٔ آن: دادهٔ قدیمی یا ناقص، قطع مقصد، لغو توکن، متن بدساخت و تزریق در متن رخداد آزموده شود؛ سپس پذیرش قطع WAN، راه‌اندازی مجدد ماشین، بازگشت و بازیابی مستقل انجام گیرد. ارتقا به تولید به نتیجهٔ این آزمون‌ها، تصمیم نگهداری و پشتیبان، سنجش پایدار منابع و تأیید عملیات وابسته است.
+نقطهٔ بعد در [کار بعدی](NEXT_TASK.md)، پذیرش صریح قطع WAN و راه‌اندازی مجدد ماشین است؛ سپس بازگشت انتشار برنامه، محیط اجرا و مدل، پشتیبان مستقل و بازیابی جدا انجام می‌شود. ارتقا به تولید به نتیجهٔ این آزمون‌ها، تصمیم نگهداری و پشتیبان، سنجش پایدار منابع و تأیید عملیات وابسته است.

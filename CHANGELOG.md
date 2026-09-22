@@ -1,5 +1,54 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-22 — Stage 1E failure qualification / صلاحیت‌سنجی خطا در مرحلهٔ 1E
+
+### English
+
+Added explicit partial-evidence metadata to the bounded Zabbix summary: `is_partial` and typed
+`partial_reasons`. The connector now marks bounded metric selection, a full problem-result page and
+the absence of usable measurements. The durable investigation result and append-only audit retain
+the marker, while the bilingual panel displays evidence coverage. Monitoring field content is now
+identified as untrusted data in the model prompt even when it came through an authenticated source;
+embedded instructions are never treated as authority. Malformed source text still becomes a safe,
+typed dependency error.
+
+Promoted connector release `nextops-0.1.0-3d7d725` and app release
+`nextops-0.1.0-13a3369`. A temporary token owned by the existing reader identity inherited the
+same four-host scope, then lost access immediately after revocation and was deleted; the live token
+was unchanged. During a controlled Zabbix API outage, monitoring and investigation returned safe,
+retryable `503` errors labeled `connector.summary_unavailable`, the failed investigation and its
+audit event were persisted, and general model-only Q&A remained available. The frontend recovered,
+fresh monitoring resumed, and a subsequent live investigation preserved partial metadata and its
+independently verified evidence hash in 67.9 seconds.
+
+Stale, partial, malformed-text and prompt-injection cases pass deterministic boundary tests. Ruff,
+strict mypy, 101 non-integration tests and all six isolated PostgreSQL integration tests pass. This
+completes the scoped failure-qualification increment, not WAN-disconnection, VM-reboot, sustained
+load, backup, restore or production acceptance.
+
+### فارسی
+
+در خلاصهٔ محدود Zabbix، وضعیت ناقص‌بودن شاهد با دو فیلد صریح `is_partial` و
+`partial_reasons` ثبت می‌شود. اتصال‌دهنده، محدودشدن فهرست سنجه‌ها، پرشدن صفحهٔ نتایج مسئله‌ها و
+نبود سنجهٔ قابل‌استفاده را مشخص می‌کند. همین وضعیت در نتیجهٔ ماندگار بررسی و ممیزی فقط‌افزودنی
+حفظ می‌شود و پنل دوزبانه نیز میزان پوشش شواهد را نشان می‌دهد. متن فیلدهای پایش، حتی وقتی از منبع
+احرازهویت‌شده آمده باشد، برای مدل «دادهٔ غیرقابل‌اعتماد» است؛ بنابراین دستور جاسازی‌شده در نام
+میزبان، سنجه یا مسئله مرجع تصمیم‌گیری نیست. متن بدساخت نیز فقط به خطای امن و ساخت‌یافتهٔ وابستگی
+تبدیل می‌شود.
+
+انتشار `nextops-0.1.0-3d7d725` برای اتصال‌دهنده و انتشار `nextops-0.1.0-13a3369` برای برنامه فعال
+شد. یک توکن موقت متعلق به همان هویت خوانشگر، دامنهٔ مصوبِ شامل چهار میزبان را به ارث برد؛ پس از لغو
+بلافاصله دسترسی‌اش قطع و سپس حذف شد، بی‌آنکه توکن فعال تغییر کند. هنگام قطع کنترل‌شدهٔ API زبیکس،
+خلاصهٔ پایش و بررسی زنده خطای قابل‌تکرار و امن `503` با کلید `connector.summary_unavailable`
+برگرداندند، اجرای ناموفق و رویداد ممیزی آن ماندگار شد و پاسخ‌گویی عمومی مدل محلی همچنان در دسترس
+بود. پس از بازگشت رابط، دادهٔ تازه دوباره دریافت شد و یک بررسی زندهٔ بعدی، نشان ناقص‌بودن و هش
+مستقلِ تأییدشدهٔ شاهد را طی ۶۷٫۹ ثانیه حفظ کرد.
+
+سناریوهای شاهد قدیمی و ناقص، متن بدساخت و تزریق دستور در آزمون‌های قطعی مرزی موفق‌اند. Ruff،
+mypy سخت‌گیرانه، ۱۰۱ آزمون غیر‌یکپارچه و هر شش آزمون PostgreSQL در پایگاه جداگانه عبور کردند.
+این نتیجه فقط گام مشخص صلاحیت‌سنجی خطا را تکمیل می‌کند؛ قطع WAN، راه‌اندازی مجدد ماشین‌ها، بار
+پایدار، پشتیبان، بازیابی و پذیرش تولید همچنان باز هستند.
+
 ## 2026-09-22 — Four-host Zabbix coverage / پوشش چهارمیزبانی Zabbix
 
 ### English

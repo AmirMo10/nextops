@@ -120,9 +120,7 @@ def test_connector_rejects_malformed_monitoring_text_with_safe_typed_error() -> 
             return await super().call(method, params)
 
     try:
-        __import__("asyncio").run(
-            ZabbixReadClient("Zabbix server", MalformedTransport()).summary()
-        )
+        __import__("asyncio").run(ZabbixReadClient("Zabbix server", MalformedTransport()).summary())
     except ApplicationError as error:
         assert error.code is ErrorCode.DEPENDENCY_UNAVAILABLE
         assert error.message_key == "connector.zabbix_response_invalid"
