@@ -51,14 +51,16 @@ class HttpsZabbixTransport:
             {"jsonrpc": "2.0", "method": method, "params": params, "id": 1},
             separators=(",", ":"),
         ).encode()
+        headers = {
+            "Content-Type": "application/json-rpc",
+            "Accept": "application/json",
+        }
+        if method != "apiinfo.version":
+            headers["Authorization"] = f"Bearer {self._api_token}"
         request = Request(
             self._api_url,
             data=body,
-            headers={
-                "Authorization": f"Bearer {self._api_token}",
-                "Content-Type": "application/json-rpc",
-                "Accept": "application/json",
-            },
+            headers=headers,
             method="POST",
         )
         try:
