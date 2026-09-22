@@ -1,6 +1,6 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. App release `nextops-0.1.0-3d61bf6` makes general assistance the default and live Zabbix monitoring explicit, preventing greetings and general questions from receiving unrelated monitoring status. The private bilingual panel, application PostgreSQL, local CPU model, read-only connector and Zabbix 7.0.30 self-monitoring path passed live English and Persian end-to-end checks. The immediate work is durable evidence/audit linkage, broader approved host coverage and failure/offline/recovery acceptance; do not rebuild the working slice.
+Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. App release `nextops-0.1.0-fde27bd` now persists every started live investigation, bounded evidence snapshot/hash, local-model result, actor, correlation ID and safe failure outcome through the existing durable run and append-only audit model. Live run retrieval, independent evidence-hash verification and audit linkage passed. The immediate work is broader approved host coverage followed by failure/offline/recovery acceptance; do not rebuild the working slice.
 
 ## English — harden the live user-testing slice
 
@@ -15,25 +15,24 @@ The next operator must treat the following as completed and preserve it:
 - the rootless read-only connector and pinned application-to-connector tunnel;
 - explicit answer modes: default model-only general assistance and opt-in evidence-grounded live
   monitoring, with the exact `Hi` test returning a direct greeting and no Zabbix content;
+- durable live-investigation runs with server-derived actor/scope, correlation ID, bounded evidence
+  snapshot and SHA-256 reference, stored model result, safe failures and append-only audit linkage;
 - live retrieval of eight fresh metrics, explicit source/timestamps/staleness and bilingual grounded
   answers through the desktop client; and
 - the 128-token server-side investigation ceiling and localized timeout/overload/dependency states,
   with the reported old 384-token request verified as HTTP 200 after repair; and
-- local quality gates: Ruff, strict mypy and 94 passing tests with 5 PostgreSQL tests skipped in the
-  desktop environment.
+- local quality gates: Ruff, strict mypy, 95 passing non-integration tests and all 6 PostgreSQL
+  integration tests passing against an isolated temporary database.
 
 The immediate implementation sequence is:
 
-1. Persist every `/api/v1/investigate` request, evidence snapshot/reference, model result, actor,
-   correlation ID and failure outcome through the existing durable run and append-restricted audit
-   model. Do not store target credentials or unrestricted raw payloads.
-2. Add approved app, AI and connector hosts to Zabbix with narrowly scoped agent paths; retain the
+1. Add approved app, AI and connector hosts to Zabbix with narrowly scoped agent paths; retain the
    current reader method and host-group boundaries, and verify counts/timestamps after each addition.
-3. Qualify stale, partial, unreachable, revoked-token, malformed-text and prompt-injection cases.
+2. Qualify stale, partial, unreachable, revoked-token, malformed-text and prompt-injection cases.
    General local model use must remain available when Zabbix is unavailable.
-4. Run the explicit WAN-disconnection and VM-reboot matrix, then runtime/model/application rollback,
+3. Run the explicit WAN-disconnection and VM-reboot matrix, then runtime/model/application rollback,
    independent backup and isolated restore. Record exact latency and CPU/memory/NUMA observations.
-5. Only after those gates pass, review retention, alerting, certificate/token rotation and operator
+4. Only after those gates pass, review retention, alerting, certificate/token rotation and operator
    runbooks for production promotion.
 
 The detailed material below preserves design rationale and earlier checkpoints. Where it describes
@@ -131,7 +130,7 @@ Apply the retained project ceiling and every per-datastore capacity check: exist
 
 Use dependency-aware service readiness, not fixed sleeps or an Internet test. The databases precede their dependants; model/gateway can start independently. Zabbix failure must not prevent general local Q&A when its own dependencies are healthy. A host failure affects both systems; independent host-outage detection and backups are separate requirements.
 
-After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and Zabbix path is live for user testing. It is not production-accepted: VM-reboot and WAN-block evidence, durable investigation audit linkage, independent backup, isolated restore, broader monitored-estate coverage and complete server recovery remain open.
+After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and Zabbix path is live for user testing. It is not production-accepted: VM-reboot and WAN-block evidence, independent backup, isolated restore, broader monitored-estate coverage and complete server recovery remain open.
 
 ## فارسی — سخت‌سازی مسیر زندهٔ ارزیابی کاربران
 
@@ -146,24 +145,24 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 - اتصال فقط‌خواندنی با هویت بدون امتیاز و تونل ثابت‌شدهٔ برنامه به اتصال؛
 - دو حالت صریح پاسخ: دستیار عمومیِ پیش‌فرض و بدون شاهد پایشی، و پایش زندهٔ انتخابی و مستند به
   شواهد؛ آزمون دقیق `Hi` پاسخ مستقیم و بدون محتوای Zabbix دریافت کرد؛
+- اجرای ماندگار برای هر بررسی زنده، همراه عامل و دامنهٔ استخراج‌شده در سرور، شناسهٔ هم‌بستگی،
+  خلاصهٔ محدود شاهد و مرجع SHA-256، نتیجهٔ مدل، خطای امن و پیوند ممیزیِ فقط‌افزودنی؛
 - دریافت زندهٔ هشت سنجهٔ تازه، نمایش صریح منبع و زمان و تازگی، و پاسخ مستند فارسی و انگلیسی از
   مسیر رایانهٔ کاربر؛
 - سقف ۱۲۸ توکن در سمت سرور و پیام‌های روشن پایان مهلت، اشباع و قطع وابستگی؛ درخواست قدیمی ۳۸۴
   توکنیِ گزارش‌شده پس از اصلاح با HTTP 200 موفق شد؛
-- عبور Ruff، بررسی سخت‌گیرانهٔ mypy و ۹۴ آزمون؛ پنج آزمون PostgreSQL فقط در محیط رومیزی کنار
-  گذاشته شده‌اند.
+- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۹۵ آزمون غیر‌یکپارچه و هر شش آزمون PostgreSQL در پایگاه
+  موقت و جداگانه.
 
 ترتیب مستقیم کار بعدی چنین است:
 
-1. هر درخواست `/api/v1/investigate`، شاهد یا مرجع آن، نتیجهٔ مدل، کاربر، شناسهٔ هم‌بستگی و نتیجهٔ
-   خطا در مدل run ماندگار و ممیزیِ فقط‌افزودنی ثبت شود. اعتبارنامه یا payload نامحدود ذخیره نشود.
-2. میزبان‌های مصوب برنامه، هوش مصنوعی و اتصال با مسیر عامل محدود به Zabbix افزوده شوند. مرز روش‌ها
+1. میزبان‌های مصوب برنامه، هوش مصنوعی و اتصال با مسیر عامل محدود به Zabbix افزوده شوند. مرز روش‌ها
    و گروه میزبان خوانشگر تغییر نکند و شمار و زمان داده پس از هر افزوده تأیید شود.
-3. حالت‌های دادهٔ قدیمی یا ناقص، مقصد قطع، توکن لغوشده، متن بدساخت و تزریق در متن رخداد آزموده شوند.
+2. حالت‌های دادهٔ قدیمی یا ناقص، مقصد قطع، توکن لغوشده، متن بدساخت و تزریق در متن رخداد آزموده شوند.
    قطع Zabbix نباید پرسش عمومی از مدل محلی را از کار بیندازد.
-4. آزمون صریح قطع WAN و راه‌اندازی مجدد ماشین‌ها، سپس بازگشت برنامه/مدل/محیط اجرا، پشتیبان مستقل و
+3. آزمون صریح قطع WAN و راه‌اندازی مجدد ماشین‌ها، سپس بازگشت برنامه/مدل/محیط اجرا، پشتیبان مستقل و
    بازیابی جدا اجرا شود. زمان پاسخ و مصرف CPU، حافظه و NUMA دقیق ثبت شود.
-5. تنها پس از عبور این دروازه‌ها، نگهداری داده، هشدار، چرخش گواهی و توکن و راهنمای بهره‌برداری برای
+4. تنها پس از عبور این دروازه‌ها، نگهداری داده، هشدار، چرخش گواهی و توکن و راهنمای بهره‌برداری برای
    ارتقا به تولید بازبینی شود.
 
 مطالب تفصیلی بعدی منطق طراحی و نقاط پیشین را حفظ می‌کند. هرجا برنامه، PostgreSQL، Zabbix، اتصال یا
@@ -255,4 +254,4 @@ LVM پیشنهادی `vg_zabbix`: بیرون LVM یک GiB برای EFI و دو G
 
 شروع سرویس تابع وابستگی باشد، نه تأخیر ثابت یا تست اینترنت. پایگاه پیش از وابسته بالا بیاید و مدل و درگاه بتوانند مستقل شروع شوند. قطع Zabbix مانع سؤال عمومی محلی با وابستگی سالم نشود. خرابی میزبان هر دو سامانه را قطع می‌کند؛ پشتیبان و بررسی قطعی مستقل نیاز جدا هستند.
 
-پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر برنامه، هوش مصنوعی، اتصال و Zabbix اکنون برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. پیوند ماندگار بررسی با ممیزی، پوشش میزبان‌های بیشتر، شاهد راه‌اندازی مجدد ماشین و قطع WAN، پشتیبان مستقل، بازیابی جدا و بازیابی کامل سرور همچنان وجود ندارد.
+پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر برنامه، هوش مصنوعی، اتصال و Zabbix اکنون برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. پوشش میزبان‌های بیشتر، شاهد راه‌اندازی مجدد ماشین و قطع WAN، پشتیبان مستقل، بازیابی جدا و بازیابی کامل سرور همچنان وجود ندارد.

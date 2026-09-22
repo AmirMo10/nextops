@@ -2,10 +2,10 @@
 
 [فارسی](../fa/DATA_API.md) · [Index](INDEX.md)
 
-**Status: Stage 1A durable foundation implemented; later workflow/evidence domains remain
-conceptual.** Source: master specification sections 11, 16–17 and 20. The implemented
-subset is deliberately local, single-organization, read-only, and fixture-backed; it has
-no target credential or model path.
+**Status: Stage 1A durable foundation plus the deployed Stage 1D live-investigation linkage.**
+Source: master specification sections 11, 16–17 and 20. The implemented subset is deliberately
+local, single-organization and read-only. General model-only answers remain separate; live Zabbix
+investigations now use the existing durable run and append-only audit model.
 
 ## Implemented Stage 1A subset
 
@@ -27,6 +27,10 @@ The implemented HTTP surface is:
 | `POST /api/v1/login` | local username/password | Returns an opaque expiring bearer token; only its SHA-256 digest is stored |
 | `POST /api/v1/recovery` | protected recovery header | Rotates the admin password/version and revokes every prior session |
 | `GET /api/v1/me` | bearer | Returns actor roles/scopes derived from the database session |
+| `GET /api/v1/assistant/ready` | bearer | Returns bounded local inference readiness without exposing its service credential |
+| `POST /api/v1/assistant/generate` | bearer | Returns a model-only general answer with no monitoring evidence |
+| `GET /api/v1/monitoring/summary` | bearer | Retrieves the current bounded read-only Zabbix summary |
+| `POST /api/v1/investigate` | bearer | Creates a durable scoped run, retrieves bounded evidence, generates locally, then atomically stores the result/evidence hash and completion audit |
 | `POST /api/v1/runs` | bearer plus `Idempotency-Key` | Authorizes and persists one read-only fixture run, leases it, and returns its explicit fixture result |
 | `GET /api/v1/runs/{run_id}` | bearer | Reads only within the actor's server-derived organization/environment scope |
 
@@ -37,10 +41,13 @@ Required state and audit writes share transactions, so audit/database failure ca
 produce reported success. Errors have stable codes, message keys, retryability, details,
 and a correlation ID.
 
-The first result supports Persian or English and includes organization/environment/target
-scope, source method, collection/measurement time, partial/stale flags, typed errors, and
-an audit reference. It is marked as stale fixture data and explicitly says no live
-connection was made.
+The original fixture result remains explicit, stale and non-live. A live investigation creates its
+run before contacting the connector or model. Successful completion stores the bounded
+`MonitoringSummary`, its canonical SHA-256 and `run-evidence:<run_id>` reference, the typed local
+model result, scope identifiers and the matching completion-audit ID in the run result. The state
+change and append-only audit insert share one transaction. Safe failure code, message key and
+retryability are stored and audited without raw dependency responses. The API and panel expose the
+run/evidence/audit identifiers, and scoped run retrieval returns the same durable result.
 
 ## Persistence model
 
@@ -87,8 +94,8 @@ RCA output separates symptoms, collected evidence, possible causes, supporting a
 
 ## Implemented and planned API behavior
 
-The implemented routes above use `/api/v1`. Chat, agents, connectors, devices, incidents,
-evidence, approvals, audit browsing, user/role administration, settings, models, streaming,
+The implemented routes above use `/api/v1`. Agents, connector/device administration, incidents,
+separate evidence and audit browsing, approvals, user/role administration, settings, streaming,
 pagination, cancellation, and alert ingress remain planned rather than implemented.
 Preserve old paths through an explicit compatibility decision if existing code is later
 imported. Liveness/readiness endpoints disclose no sensitive public diagnostics.

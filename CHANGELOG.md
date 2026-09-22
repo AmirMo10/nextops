@@ -1,5 +1,47 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-22 — Durable live-investigation audit / ثبت ماندگار بررسی زنده و ممیزی
+
+### English
+
+Completed the missing Stage 1D durable linkage for `POST /api/v1/investigate`. The application now
+creates a scoped PostgreSQL run before calling the connector or model, records the server-derived
+actor and correlation ID, and atomically stores the bounded Zabbix summary, its canonical SHA-256
+reference, the local-model result and an append-only completion audit event. Safe failure metadata
+is persisted and audited without raw dependency errors, credentials or unrestricted payloads.
+
+The monitoring response and bilingual panel now expose the durable run, evidence reference and
+audit-event identifiers. The authenticated `GET /api/v1/runs/{run_id}` route returns the same stored
+result within the actor's organization/environment scope. General assistant questions remain
+model-only and do not create monitoring evidence.
+
+Immutable app release `nextops-0.1.0-fde27bd` was promoted with `3d61bf6` retained for rollback; no
+schema migration was required. All 95 non-integration tests and six isolated PostgreSQL tests pass.
+Live acceptance returned eight fresh metrics, zero active problems and a 128-token local answer in
+57.2 seconds; run retrieval, independent evidence-hash calculation and audit linkage all passed.
+The production record showed one successful `live_monitoring` result, a 64-character evidence hash,
+two linked audit events and a completion audit ID matching the stored result.
+
+### فارسی
+
+پیوند ماندگارِ باقی‌مانده از مرحلهٔ 1D برای مسیر `POST /api/v1/investigate` تکمیل شد. برنامه پیش
+از فراخوانی اتصال یا مدل، یک اجرای محدود به دامنه در PostgreSQL می‌سازد و عامل استخراج‌شده در سمت
+سرور و شناسهٔ هم‌بستگی را ثبت می‌کند. سپس خلاصهٔ محدود Zabbix، مرجع مبتنی بر SHA-256 محتوای آن،
+پاسخ مدل محلی و رویداد تکمیل در ممیزیِ فقط‌افزودنی، در یک تراکنش ذخیره می‌شوند. در حالت خطا نیز
+فقط اطلاعات امن و ساخت‌یافته ثبت و ممیزی می‌شود؛ خطای خام وابستگی، اعتبارنامه و payload نامحدود
+وارد پایگاه نمی‌شود.
+
+پاسخ پایش و پنل دوزبانه اکنون شناسهٔ اجرای ماندگار، مرجع شاهد و رویداد ممیزی را نشان می‌دهند.
+مسیر احرازهویت‌شدهٔ `GET /api/v1/runs/{run_id}` همان نتیجهٔ ذخیره‌شده را فقط در دامنهٔ سازمان و
+محیط کاربر بازمی‌گرداند. پرسش‌های دستیار عمومی همچنان مستقل و بدون ایجاد شاهد پایشی باقی مانده‌اند.
+
+انتشار تغییرناپذیر `nextops-0.1.0-fde27bd` فعال و `3d61bf6` برای بازگشت نگه‌داری شد؛ این تغییر به
+migration تازه نیاز نداشت. هر ۹۵ آزمون غیر‌یکپارچه و شش آزمون PostgreSQL در پایگاه جداگانه موفق
+بودند. پذیرش زنده هشت سنجهٔ تازه، بدون مسئلهٔ فعال و پاسخ ۱۲۸ توکنی مدل محلی را در ۵۷٫۲ ثانیه
+برگرداند؛ بازیابی اجرای ماندگار، محاسبهٔ مستقل هش شاهد و پیوند ممیزی نیز همگی موفق بودند. رکورد
+عملیاتی یک نتیجهٔ موفق `live_monitoring`، هش ۶۴ نویسه‌ای، دو رویداد ممیزی پیوندخورده و تطبیق شناسهٔ
+ممیزی تکمیل با نتیجهٔ ذخیره‌شده را نشان داد.
+
 ## 2026-09-22 — Relevant answer modes / تفکیک پاسخ عمومی از پایش زنده
 
 ### English

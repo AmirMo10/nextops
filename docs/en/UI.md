@@ -9,9 +9,11 @@ AI and monitoring readiness and a bounded question form with two explicit answer
 assistant is the default: it answers through the local model without retrieving or displaying live
 monitoring evidence. Live monitoring is opt-in: it returns an evidence-grounded answer and a source
 panel showing Zabbix version, host, collection time, measurement time, freshness and active-problem
-count. The result badge always identifies whether live evidence was used. Assets are served locally
-without a CDN. The broader operations console described below—inventory, incident timelines,
-topology, approvals, audit search and settings—remains specification work.
+count. The result badge always identifies whether live evidence was used. A completed monitoring
+answer also shows its durable run, evidence reference and audit-event identifiers; the full evidence
+SHA-256 is available as the evidence-reference tooltip. Assets are served locally without a CDN.
+The broader operations console described below—inventory, incident timelines, topology, approvals,
+audit search and settings—remains specification work.
 
 Live investigations are capped server-side at the qualified 128-token CPU budget; the browser uses
 the same bound. Timeout, overload and local-dependency failures retain safe machine-readable status
