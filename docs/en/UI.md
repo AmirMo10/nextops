@@ -5,10 +5,13 @@
 **Status: specification plus a delivered controlled user-testing subset.** Source: master specification sections 3, 7 and 17 plus original sections 3 and 30.
 
 The deployed subset provides authenticated English/Persian login, genuine RTL/LTR switching,
-AI and monitoring readiness, a bounded question form, evidence-grounded answers and a source panel
-showing Zabbix version, host, collection time, measurement time, freshness and active-problem count.
-Assets are served locally without a CDN. The broader operations console described below—inventory,
-incident timelines, topology, approvals, audit search and settings—remains specification work.
+AI and monitoring readiness and a bounded question form with two explicit answer modes. General
+assistant is the default: it answers through the local model without retrieving or displaying live
+monitoring evidence. Live monitoring is opt-in: it returns an evidence-grounded answer and a source
+panel showing Zabbix version, host, collection time, measurement time, freshness and active-problem
+count. The result badge always identifies whether live evidence was used. Assets are served locally
+without a CDN. The broader operations console described below—inventory, incident timelines,
+topology, approvals, audit search and settings—remains specification work.
 
 Live investigations are capped server-side at the qualified 128-token CPU budget; the browser uses
 the same bound. Timeout, overload and local-dependency failures retain safe machine-readable status

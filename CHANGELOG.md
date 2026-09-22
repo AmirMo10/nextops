@@ -1,5 +1,44 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-22 — Relevant answer modes / تفکیک پاسخ عمومی از پایش زنده
+
+### English
+
+Corrected the semantic routing exposed by the first user test: the panel sent every question,
+including a simple greeting, through the Zabbix investigation path. A successful HTTP response was
+therefore still an unrelated answer.
+
+The panel now has two explicit modes. **General assistant** is the default and sends only the
+question to the local model; it does not retrieve or display live monitoring evidence. **Live
+monitoring** is opt-in and retains the existing evidence-grounded Zabbix workflow. The server uses
+separate prompts and endpoints for these modes, and the result badge states whether live evidence
+was used.
+
+Immutable app release `nextops-0.1.0-3d61bf6` was promoted with `8d31bcb` retained for rollback.
+The exact general-mode request `Hi` returned HTTP 200 and “Hello! How can I assist you today?” in
+14.0 seconds, with no Zabbix, problem or CPU-status content. A Persian greeting likewise returned a
+Persian general answer with no monitoring content. The live monitoring regression still returned
+eight fresh metrics and passed grounded English and Persian checks. Ruff, strict mypy and 94 tests
+pass; five desktop PostgreSQL integration tests remain skipped.
+
+### فارسی
+
+اشکال معنایی آشکارشده در نخستین ارزیابی کاربر برطرف شد: پنل همهٔ پرسش‌ها، حتی یک سلام ساده، را
+به مسیر بررسی Zabbix می‌فرستاد. در نتیجه، موفق بودن درخواست از نظر فنی لزوماً به معنای مرتبط بودن
+پاسخ نبود.
+
+پنل اکنون دو حالت روشن و مستقل دارد. **دستیار عمومی** حالت پیش‌فرض است؛ فقط پرسش کاربر را به مدل
+محلی می‌فرستد و هیچ شاهد زندهٔ پایشی دریافت یا نمایش نمی‌دهد. **پایش زنده** با انتخاب صریح کاربر
+فعال می‌شود و همان مسیر مستند به شواهد Zabbix را حفظ می‌کند. در سمت سرور نیز این دو حالت، مسیر و
+پرامپت جدا دارند و نشان پاسخ به‌روشنی اعلام می‌کند که آیا از دادهٔ زنده استفاده شده است یا نه.
+
+انتشار تغییرناپذیر `nextops-0.1.0-3d61bf6` فعال شد و `8d31bcb` برای بازگشت محفوظ ماند. درخواست
+دقیق `Hi` در حالت عمومی طی ۱۴٫۰ ثانیه با HTTP 200 و پاسخ “Hello! How can I assist you today?”
+برگشت؛ هیچ اشاره‌ای به Zabbix، مسئلهٔ فعال یا وضعیت CPU در آن نبود. سلام فارسی نیز پاسخ عمومی
+فارسی و بدون محتوای پایشی دریافت کرد. آزمون بازگشت مسیر پایش زنده همچنان هشت سنجهٔ تازه برگرداند و
+بررسی مستند انگلیسی و فارسی را گذراند. Ruff، بررسی سخت‌گیرانهٔ mypy و ۹۴ آزمون موفق‌اند؛ پنج آزمون
+یکپارچهٔ PostgreSQL در محیط رومیزی همچنان کنار گذاشته شده‌اند.
+
 ## 2026-09-22 — User-test timeout repair / اصلاح پایان مهلت آزمون کاربر
 
 ### English

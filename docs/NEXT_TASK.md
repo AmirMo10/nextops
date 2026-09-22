@@ -1,6 +1,6 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. The private bilingual panel, application PostgreSQL, local CPU model, read-only connector and Zabbix 7.0.30 self-monitoring path passed live English and Persian end-to-end checks. The first browser timeout is repaired in app release `nextops-0.1.0-8d31bcb`, and the exact reported request passed after deployment. The immediate work is durable evidence/audit linkage, broader approved host coverage and failure/offline/recovery acceptance; do not rebuild the working slice.
+Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. App release `nextops-0.1.0-3d61bf6` makes general assistance the default and live Zabbix monitoring explicit, preventing greetings and general questions from receiving unrelated monitoring status. The private bilingual panel, application PostgreSQL, local CPU model, read-only connector and Zabbix 7.0.30 self-monitoring path passed live English and Persian end-to-end checks. The immediate work is durable evidence/audit linkage, broader approved host coverage and failure/offline/recovery acceptance; do not rebuild the working slice.
 
 ## English — harden the live user-testing slice
 
@@ -13,6 +13,8 @@ The next operator must treat the following as completed and preserve it:
 - Zabbix 7.0.30 with its PostgreSQL database, TLS frontend/API, Agent 2 and self-monitoring;
 - an API-only Zabbix reader restricted to three read methods and one approved host group;
 - the rootless read-only connector and pinned application-to-connector tunnel;
+- explicit answer modes: default model-only general assistance and opt-in evidence-grounded live
+  monitoring, with the exact `Hi` test returning a direct greeting and no Zabbix content;
 - live retrieval of eight fresh metrics, explicit source/timestamps/staleness and bilingual grounded
   answers through the desktop client; and
 - the 128-token server-side investigation ceiling and localized timeout/overload/dependency states,
@@ -142,6 +144,8 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 - Zabbix 7.0.30 با پایگاه PostgreSQL، رابط و API مبتنی بر TLS، Agent 2 و خودپایشی؛
 - خوانشگر مخصوص API با سه روش فقط‌خواندنی و دامنهٔ یک گروه میزبان مصوب؛
 - اتصال فقط‌خواندنی با هویت بدون امتیاز و تونل ثابت‌شدهٔ برنامه به اتصال؛
+- دو حالت صریح پاسخ: دستیار عمومیِ پیش‌فرض و بدون شاهد پایشی، و پایش زندهٔ انتخابی و مستند به
+  شواهد؛ آزمون دقیق `Hi` پاسخ مستقیم و بدون محتوای Zabbix دریافت کرد؛
 - دریافت زندهٔ هشت سنجهٔ تازه، نمایش صریح منبع و زمان و تازگی، و پاسخ مستند فارسی و انگلیسی از
   مسیر رایانهٔ کاربر؛
 - سقف ۱۲۸ توکن در سمت سرور و پیام‌های روشن پایان مهلت، اشباع و قطع وابستگی؛ درخواست قدیمی ۳۸۴

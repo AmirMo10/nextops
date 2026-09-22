@@ -1,14 +1,14 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-22 — a controlled user-testing path is live across the app, AI, connector and Zabbix guests. The protected bilingual panel now retrieves bounded, timestamped Zabbix evidence through a least-privilege reader and uses the local CPU model for English or Persian synthesis. The first browser-reported timeout was repaired in immutable app release `nextops-0.1.0-8d31bcb`; the exact request now passes within the qualified 128-token ceiling. PostgreSQL, TLS/Nginx, both restricted SSH tunnels, the read-only connector, Zabbix 7.0.30 and self-monitoring are active. Programmatic end-to-end tests passed in both languages; full offline, reboot, recovery, scale and production acceptance remain open.
+Updated: 2026-09-22 — a controlled user-testing path is live across the app, AI, connector and Zabbix guests. Immutable app release `nextops-0.1.0-3d61bf6` separates the default general assistant from opt-in live monitoring, so greetings and general questions no longer receive unrelated Zabbix status. The protected bilingual monitoring mode still retrieves bounded, timestamped Zabbix evidence through a least-privilege reader and uses the local CPU model for English or Persian synthesis. PostgreSQL, TLS/Nginx, both restricted SSH tunnels, the read-only connector, Zabbix 7.0.30 and self-monitoring are active. Programmatic end-to-end tests passed in both languages; full offline, reboot, recovery, scale and production acceptance remain open.
 
 ## English
 
 ### Current controlled user-testing checkpoint
 
 The authenticated application and bilingual panel are deployed as immutable release
-`nextops-0.1.0-8d31bcb` on the app
-guest behind private TLS and Nginx. PostgreSQL 16 stores application identity and session state on
+`nextops-0.1.0-3d61bf6` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
+application identity and session state on
 its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
 application listener are not exposed through Nginx. The browser receives neither the AI service
 credential nor the Zabbix token.
@@ -35,6 +35,16 @@ server and panel, preserves safe timeout/overload status across the internal bou
 localized actionable errors. Replaying the exact `hi` request with the old 384-token payload passed
 with HTTP 200, live evidence and 128 output tokens in 61.6 seconds. The previous immutable release
 remains available for rollback.
+
+That replay proved transport recovery but exposed a separate relevance defect: the panel routed
+every question through `/api/v1/investigate`, so even `Hi` produced Zabbix status. Release
+`nextops-0.1.0-3d61bf6` now makes **General assistant** the default and keeps **Live monitoring** as
+an explicit opt-in mode. General questions use `/api/v1/assistant/generate`, receive no monitoring
+evidence and carry a model-only badge; monitoring questions retain the evidence-grounded route and
+panel. The exact default-mode request `Hi` returned “Hello! How can I assist you today?” in 14.0
+seconds with no Zabbix or system-status content. A Persian greeting also returned a Persian general
+answer without monitoring content. The monitoring regression passed with eight fresh metrics and
+grounded English and Persian answers. Release `8d31bcb` remains available for rollback.
 
 This is a controlled user-testing slice, not production acceptance. It currently monitors the
 Zabbix server itself rather than the full estate. The new investigation route returns its exact
@@ -140,7 +150,7 @@ The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-t
 
 ### نقطهٔ فعلی برای ارزیابی کنترل‌شدهٔ کاربران
 
-برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-8d31bcb` روی مهمان برنامه و پشت TLS خصوصی
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-3d61bf6` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
 می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
 نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.
@@ -166,6 +176,16 @@ The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-t
 مهلت و اشباع را در مرز داخلی حفظ می‌کند و پیام خطای روشن و بومی‌شده نشان می‌دهد. بازاجرای همان
 پرسش `hi` با payload قدیمی ۳۸۴ توکنی، در ۶۱٫۶ ثانیه با HTTP 200، شاهد زنده و ۱۲۸ توکن خروجی موفق
 شد. انتشار تغییرناپذیر قبلی نیز برای بازگشت نگه‌داری می‌شود.
+
+این بازآزمایی، ترمیم مسیر فنی را ثابت کرد؛ اما یک اشکال جدا در ارتباط معنایی پاسخ را نیز نشان داد:
+پنل همهٔ پرسش‌ها را به `/api/v1/investigate` می‌فرستاد و به همین دلیل حتی `Hi` با گزارش Zabbix
+پاسخ داده می‌شد. در انتشار `nextops-0.1.0-3d61bf6`، **دستیار عمومی** حالت پیش‌فرض است و **پایش
+زنده** فقط با انتخاب صریح کاربر فعال می‌شود. پرسش عمومی از مسیر `/api/v1/assistant/generate`
+می‌گذرد، هیچ شاهد پایشی دریافت نمی‌کند و با نشان «مدل محلی، بدون شاهد زنده» نمایش داده می‌شود؛
+مسیر پایش همچنان پاسخ را به شواهد Zabbix مستند می‌کند. درخواست دقیق `Hi` در حالت پیش‌فرض طی ۱۴٫۰
+ثانیه پاسخ “Hello! How can I assist you today?” گرفت و هیچ اشاره‌ای به Zabbix یا وضعیت سامانه
+نداشت. سلام فارسی نیز پاسخ عمومی فارسی و بدون محتوای پایشی دریافت کرد. آزمون بازگشت پایش زنده با
+هشت سنجهٔ تازه و پاسخ مستند انگلیسی و فارسی موفق بود. انتشار `8d31bcb` برای بازگشت محفوظ است.
 
 این خروجی برای ارزیابی کنترل‌شده است، نه پذیرش تولید. فعلاً فقط خود سرور Zabbix پایش می‌شود و همهٔ
 تجهیزات وارد دامنه نشده‌اند. مسیر تازه، شاهد دقیق را همراه پاسخ بازمی‌گرداند، اما هنوز run ماندگار
