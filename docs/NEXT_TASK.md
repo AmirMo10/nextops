@@ -1,6 +1,6 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-21 — the four Ubuntu 24.04 guests are qualified and proxy-connected role package preparation is complete; the pinned CPU runtime/model passed a bounded loopback smoke test. Service configuration, application release, Zabbix initialization, offline acceptance, backup, and recovery remain open.
+Updated: 2026-09-21 — the four Ubuntu 24.04 guests are qualified, proxy-connected role package preparation is complete, the pinned CPU runtime/model passed a bounded loopback smoke test, and a relocatable Linux API release candidate was rebuilt and checked offline in staging. Protected promotion, live service configuration, the general application release, Zabbix initialization, offline acceptance, backup, and recovery remain open.
 
 ## English — qualify Stage 1B on the local CPU server
 
@@ -22,13 +22,20 @@ The native source profile for that change now exists: separate hardened `nextops
 `nextops-ai` units, two file-backed systemd credentials, loopback-only cgroup networking, explicit
 resource limits, safe credential-file loading, and a versioned bilingual qualification runner. The
 focused tests and Ubuntu 24.04 unit syntax/security review pass. Live installation has not started.
+A relocatable Python 3.12 API release for source commit `5de76ac` was assembled through the required
+proxy and then rebuilt from cache with network access disabled. It still imported successfully after
+moving to a second staging path, and all 25 installed packages passed compatibility checking. The
+14,209,478-byte archive has SHA-256
+`cf20dada68f2a56eeee7608790fd32c2119ca724ce81ed1cef7ac029f00ca20b`. It remains in the
+unprivileged staging area: promotion, ownership normalization, dependency-license approval, an
+independent artifact copy, service start, and acceptance have not occurred.
 A fresh AI-guest preflight found pending security-package updates, and the SSH deployment account has
 no narrow passwordless authority to install protected files or control these services. Apply the
 reviewed updates through the existing proxy, re-run the guest baseline, then grant only the exact
 approved Stage 1B install/service/evidence commands or execute the reviewed root runbook through the
 private change process. Do not enable unrestricted root SSH or blanket passwordless sudo.
 
-The four schema-validated YAML files under `deploy/server-dependencies` remain the public deployer handoff. Start with the paired [server-start checklist](en/SERVER_START_CHECKLIST.md): validate the clean replacements in order, beginning with `nextops-app` and then `nextops-ai`; do not reuse the old host-key pins. The package-layer scripts may be checked only with an exact authenticated role bundle and may be applied only under the separate authorization gates in their [operator guide](../deploy/installers/README.md). Do not install the application yet because offline releases, production service units, reverse proxy, backup/restore, and the production PostgreSQL patch are not accepted. Environment-specific values belong in an approved private deployment record keyed by `required_inputs`, never in these public files.
+The four schema-validated YAML files under `deploy/server-dependencies` remain the public deployer handoff. Start with the paired [server-start checklist](en/SERVER_START_CHECKLIST.md): validate the clean replacements in order, beginning with `nextops-app` and then `nextops-ai`; do not reuse the old host-key pins. The package-layer scripts may be checked only with an exact authenticated role bundle and may be applied only under the separate authorization gates in their [operator guide](../deploy/installers/README.md). Do not install the application yet because the staged AI release is not accepted and the general offline release, protected service installation, reverse proxy, backup/restore, and production PostgreSQL patch remain open. Environment-specific values belong in an approved private deployment record keyed by `required_inputs`, never in these public files.
 
 Acceptance evidence for server qualification:
 
@@ -112,14 +119,20 @@ After each increment, update PROJECT_STATE with actual work, created roles, exac
 پروفایل بومی این تغییر اکنون در کد منبع موجود است: دو واحد سخت‌سازی‌شدهٔ `nextops-llama` و
 `nextops-ai`، دو اعتبارنامهٔ فایل‌محور systemd، محدودیت شبکه در سطح cgroup و فقط روی رابط محلی، سقف
 صریح منابع، بارگذاری ایمن اعتبارنامه و اجراکنندهٔ نسخه‌دار ارزیابی دوزبانه. آزمون‌های متمرکز و بررسی
-نحو و امنیت واحدها روی Ubuntu 24.04 موفق‌اند، اما نصب زنده آغاز نشده است. پیش‌بررسی تازهٔ مهمان هوش
-مصنوعی چند به‌روزرسانی امنیتی معوق را نشان داد و حساب SSH استقرار نیز مجوز محدود و بدون گذرواژه برای
+نحو و امنیت واحدها روی Ubuntu 24.04 موفق‌اند، اما نصب زنده آغاز نشده است. یک انتشار جابه‌جاشوندهٔ
+Python 3.12 برای API و commit `5de76ac` نیز آماده شد: وابستگی‌ها از مسیر proxy دریافت و سپس بسته با
+شبکهٔ غیرفعال از cache بازسازی شد. پس از انتقال به مسیر آزمایشی دوم، importها همچنان موفق بودند و
+سازگاری هر ۲۵ بستهٔ نصب‌شده تأیید شد. بایگانی ۱۴٬۲۰۹٬۴۷۸ بایتی SHA-256 برابر
+`cf20dada68f2a56eeee7608790fd32c2119ca724ce81ed1cef7ac029f00ca20b` دارد. این نامزد هنوز
+در staging بدون امتیاز ویژه است؛ انتقال به مسیر محافظت‌شده، تنظیم مالکیت، تأیید مجوز وابستگی‌ها،
+نسخهٔ مستقل artifact، شروع سرویس و پذیرش انجام نشده‌اند. پیش‌بررسی تازهٔ مهمان هوش مصنوعی چند
+به‌روزرسانی امنیتی معوق را نشان داد و حساب SSH استقرار نیز مجوز محدود و بدون گذرواژه برای
 نصب فایل‌های محافظت‌شده یا کنترل سرویس‌ها ندارد. به‌روزرسانی‌های بازبینی‌شده از مسیر پراکسی موجود
 اعمال و خط مبنا دوباره بررسی شود؛ سپس فقط فرمان‌های دقیق و مصوب نصب، کنترل سرویس و گردآوری شواهد
 برای مرحلهٔ 1B مجاز شوند یا دستورالعمل root در فرایند خصوصی تغییر اجرا شود. ورود مستقیم root یا
 sudo نامحدود و بدون گذرواژه فعال نشود.
 
-چهار فایل YAML معتبرشده با schema قرارداد عمومی تحویل‌اند. کار سرور از [چک‌لیست شروع فارسی](fa/SERVER_START_CHECKLIST.md) آغاز شود: جایگزین‌های تمیز به‌ترتیب و از `nextops-app` و سپس `nextops-ai` اعتبارسنجی شوند و pin قدیمی کلید میزبان دوباره استفاده نشود. scriptهای لایهٔ package فقط با bundle دقیق و احرازشدهٔ همان role بررسی شوند و اجرای `--apply` نیز تنها با دروازه‌های مجوز جداگانه در [راهنمای مجری](../deploy/installers/README.md) مجاز است. برنامه هنوز نصب نشود، چون release آفلاین، unit تولید، reverse proxy، backup/restore و patch تولید PostgreSQL پذیرفته نشده‌اند. مقدار واقعی محیط در رکورد خصوصی بر اساس `required_inputs` بماند.
+چهار فایل YAML معتبرشده با schema قرارداد عمومی تحویل‌اند. کار سرور از [چک‌لیست شروع فارسی](fa/SERVER_START_CHECKLIST.md) آغاز شود: جایگزین‌های تمیز به‌ترتیب و از `nextops-app` و سپس `nextops-ai` اعتبارسنجی شوند و pin قدیمی کلید میزبان دوباره استفاده نشود. scriptهای لایهٔ package فقط با bundle دقیق و احرازشدهٔ همان role بررسی شوند و اجرای `--apply` نیز تنها با دروازه‌های مجوز جداگانه در [راهنمای مجری](../deploy/installers/README.md) مجاز است. برنامه هنوز نصب نشود، زیرا نامزد انتشار هوش مصنوعی پذیرفته نشده و انتشار عمومی آفلاین، نصب محافظت‌شدهٔ سرویس‌ها، reverse proxy، پشتیبان‌گیری و بازیابی و patch تولید PostgreSQL همچنان باز هستند. مقدار واقعی محیط در رکورد خصوصی بر اساس `required_inputs` بماند.
 
 شاهد پذیرش صلاحیت‌سنجی سرور:
 

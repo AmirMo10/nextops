@@ -23,6 +23,14 @@ AI-guest preflight found pending security updates, while the deployment account 
 authorized privilege needed for protected installation and service control; both remain explicit
 gates before live evaluation.
 
+On the AI guest, a relocatable Python 3.12 API release for source commit `5de76ac` was assembled
+through the required proxy and then rebuilt from the populated cache with networking disabled. It
+passed imports, `uvicorn` execution, compatibility checking for all 25 installed packages, and a
+second-path relocation check. The private staging archive is 14,209,478 bytes with SHA-256
+`cf20dada68f2a56eeee7608790fd32c2119ca724ce81ed1cef7ac029f00ca20b`. It was not promoted,
+installed, or started; ownership normalization, dependency-license approval, an independent copy,
+and service acceptance remain open.
+
 ### فارسی
 
 برای محیط ثابت llama.cpp و API احرازهویت‌شدهٔ پردازش مدل NextOps، دو واحد جدا و سخت‌سازی‌شدهٔ
@@ -43,6 +51,14 @@ systemd می‌خوانند، تنظیمات proxy را به ارث نمی‌ب�
 پیش‌بررسی تازهٔ مهمان هوش مصنوعی چند به‌روزرسانی امنیتی معوق را نشان داد و حساب استقرار نیز مجوز
 محدود لازم برای نصب در مسیرهای محافظت‌شده و کنترل سرویس را ندارد؛ هر دو مورد پیش از ارزیابی زنده
 دروازهٔ صریح باقی می‌مانند.
+
+روی مهمان هوش مصنوعی، یک انتشار جابه‌جاشوندهٔ Python 3.12 برای API و commit مبدأ `5de76ac` از مسیر
+proxy لازم آماده و سپس با شبکهٔ غیرفعال از cache تکمیل‌شده بازسازی شد. importها، اجرای `uvicorn`،
+سازگاری هر ۲۵ بستهٔ نصب‌شده و انتقال به مسیر آزمایشی دوم موفق بودند. بایگانی خصوصی staging با
+اندازهٔ ۱۴٬۲۰۹٬۴۷۸ بایت، SHA-256 برابر
+`cf20dada68f2a56eeee7608790fd32c2119ca724ce81ed1cef7ac029f00ca20b` دارد. این بایگانی به مسیر
+محافظت‌شده منتقل، نصب یا راه‌اندازی نشد؛ تنظیم مالکیت، تأیید مجوز وابستگی‌ها، نسخهٔ مستقل artifact و
+پذیرش سرویس همچنان باز هستند.
 
 ## 2026-09-21 — Bilingual project status brief / گزارش دوزبانهٔ وضعیت پروژه
 

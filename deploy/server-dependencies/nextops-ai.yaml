@@ -148,6 +148,15 @@ artifacts:
     license_record: Runtime MIT and model Apache-2.0 source records
     source_record: deploy/inference/qwen3-8b-q4-k-m.yaml
     status: repository_manifest_and_import_evidence_recorded_full_release_manifest_pending
+  - id: nextops-ai-python-release
+    purpose: Relocatable Linux Python 3.12 environment for the authenticated NextOps inference API,
+      including the locked runtime dependencies and the NextOps wheel
+    install_path: /srv/nextops/releases/nextops-0.1.0-5de76ac
+    version: 0.1.0 from source commit 5de76acb1e90f28f39131bf8af4a5cd05365e628
+    sha256: cf20dada68f2a56eeee7608790fd32c2119ca724ce81ed1cef7ac029f00ca20b
+    license_record: Project license and complete dependency-license approval remain deployment gates
+    source_record: uv.lock
+    status: staged_proxy_filled_offline_rebuilt_relocation_tested_not_promoted_or_accepted
   - id: ai-offline-runtime-bundle
     purpose: Complete native libraries or pinned container image needed to cold-start without registries
       or user caches

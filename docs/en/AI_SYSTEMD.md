@@ -26,6 +26,14 @@ values, oversized files, ambiguous environment-plus-file sources, and world-acce
 files on POSIX. Ordinary environment values remain available only for isolated development/tests;
 the deployment profile does not use them.
 
+For source commit `5de76ac`, a relocatable Linux Python 3.12 API release was assembled through the
+required proxy and then rebuilt from the populated cache with networking disabled. It passed imports,
+`uvicorn` version execution, compatibility checking for all 25 installed packages, and relocation to
+a second staging path. The 14,209,478-byte archive has SHA-256
+`cf20dada68f2a56eeee7608790fd32c2119ca724ce81ed1cef7ac029f00ca20b`. This is staging
+evidence only: the archive is not in the protected release tree, its dependency licenses are not
+approved, no independent copy exists, and no service has executed from it.
+
 ## Installation hold
 
 Do not install or start the units until the current private change record resolves all of the
