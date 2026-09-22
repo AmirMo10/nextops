@@ -234,6 +234,10 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
     assert "محیط کنترل‌شده ارزیابی کاربران" in javascript.text
     assert "max_output_tokens: 128" in javascript.text
     assert "زمان پردازش مدل محلی به پایان رسید" in javascript.text
+    assert 'data-mode="general"' in response.text
+    assert 'data-mode="monitoring"' in response.text
+    assert '"/api/v1/assistant/generate"' in javascript.text
+    assert "بدون افزودن وضعیت Zabbix" in javascript.text
     assert "https://" not in response.text
     assert "https://" not in javascript.text
     assert response.headers["x-frame-options"] == "DENY"
@@ -241,7 +245,8 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
 
 
 def test_assistant_requires_local_session_and_labels_model_only_output() -> None:
-    client = TestClient(create_app(FakeService(), FakeInferenceGateway()))
+    inference = FakeInferenceGateway()
+    client = TestClient(create_app(FakeService(), inference))
 
     unauthenticated = client.post(
         "/api/v1/assistant/generate",
@@ -258,6 +263,10 @@ def test_assistant_requires_local_session_and_labels_model_only_output() -> None
     assert response.json()["evidence_mode"] == "model_only"
     assert response.json()["live_monitoring_data"] is False
     assert response.json()["answer"] == "پاسخ آزمایشی مدل داخلی"
+    assert inference.last_request is not None
+    assert inference.last_request.max_output_tokens == 128
+    assert "Answer the user's question directly" in inference.last_request.question
+    assert "یک پاسخ آزمایشی ارائه کن" in inference.last_request.question
 
 
 def test_assistant_readiness_is_authenticated() -> None:

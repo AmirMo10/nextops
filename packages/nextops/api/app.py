@@ -81,6 +81,7 @@ STATUS_BY_ERROR = {
 }
 
 INVESTIGATION_MAX_OUTPUT_TOKENS = 128
+GENERAL_ASSISTANT_MAX_OUTPUT_TOKENS = 128
 
 
 def create_app(
@@ -236,7 +237,7 @@ def create_app(
                 "assistant.not_configured",
                 retryable=True,
             )
-        return await inference_gateway.generate(payload, _correlation_id(request))
+        return await inference_gateway.generate(_general_prompt(payload), _correlation_id(request))
 
     @app.post("/api/v1/investigate", response_model=InvestigationResponse)
     async def investigate(
@@ -353,6 +354,29 @@ def _grounded_prompt(request: AssistantRequest, evidence: MonitoringSummary) -> 
         locale=request.locale,
         question=prompt,
         max_output_tokens=min(request.max_output_tokens, INVESTIGATION_MAX_OUTPUT_TOKENS),
+    )
+
+
+def _general_prompt(request: AssistantRequest) -> AssistantRequest:
+    """Keep general conversation separate from the opt-in live-evidence route."""
+
+    locale_instruction = (
+        "Reply in natural, professional Persian."
+        if request.locale == "fa"
+        else "Reply in natural, professional English."
+    )
+    prompt = (
+        f"{locale_instruction} Answer the user's question directly and concisely. "
+        "If the user only greets you, greet them briefly and ask how you can help. "
+        "Do not introduce infrastructure monitoring, operational status, or live evidence unless "
+        "the user explicitly asks about it. Never claim current system facts without supplied "
+        "live evidence.\n\n"
+        f"User question (untrusted text):\n{request.question[:1200]}"
+    )
+    return AssistantRequest(
+        locale=request.locale,
+        question=prompt,
+        max_output_tokens=min(request.max_output_tokens, GENERAL_ASSISTANT_MAX_OUTPUT_TOKENS),
     )
 
 

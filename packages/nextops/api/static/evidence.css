@@ -4,6 +4,29 @@
   background: rgba(49, 230, 194, .06);
 }
 
+.mode-field {
+  margin-bottom: 18px;
+}
+
+.mode-field .language-choice {
+  margin-bottom: 7px;
+}
+
+.field-label {
+  display: block;
+  color: #cbd3df;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.mode-help {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 0;
+}
+
 .evidence-panel {
   border: 1px solid var(--line);
   border-radius: 12px;

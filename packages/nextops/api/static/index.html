@@ -62,9 +62,17 @@
       <div class="workspace-grid">
         <form id="assistantForm" class="glass-card prompt-card">
           <div class="card-heading compact"><span class="spark" aria-hidden="true">✦</span><div><h2 data-i18n="newQuestion">New question</h2><p data-i18n="questionHelp">Ask in English or Persian. The answer follows the selected language.</p></div></div>
+          <div class="mode-field">
+            <span class="field-label" data-i18n="answerMode">Answer mode</span>
+            <div class="language-choice" role="group" aria-label="Answer mode">
+              <button type="button" class="choice mode-choice active" data-mode="general" data-i18n="generalMode">General assistant</button>
+              <button type="button" class="choice mode-choice" data-mode="monitoring" data-i18n="monitoringMode">Live monitoring</button>
+            </div>
+            <p id="modeHelp" class="mode-help" data-i18n="generalModeHelp">Answers the question directly without attaching Zabbix status.</p>
+          </div>
           <div class="language-choice" role="group" aria-label="Answer language">
-            <button type="button" class="choice active" data-locale="en">English</button>
-            <button type="button" class="choice" data-locale="fa">فارسی</button>
+            <button type="button" class="choice locale-choice active" data-locale="en">English</button>
+            <button type="button" class="choice locale-choice" data-locale="fa">فارسی</button>
           </div>
           <label class="prompt-label"><span data-i18n="question">Question</span><textarea id="question" maxlength="4000" required data-i18n-placeholder="questionPlaceholder" placeholder="Explain a safe first response to a high CPU alert."></textarea></label>
           <div class="prompt-footer"><span id="characterCount">0 / 4000</span><button id="askButton" class="primary-button compact-button" type="submit"><span data-i18n="askAssistant">Ask assistant</span><span aria-hidden="true">→</span></button></div>
@@ -82,9 +90,9 @@
       </div>
 
       <section id="resultCard" class="glass-card result-card hidden" aria-live="polite">
-        <div class="result-heading"><div><p class="eyebrow" data-i18n="assistantResponse">ASSISTANT RESPONSE</p><h2 data-i18n="responseTitle">Evidence-grounded result</h2></div><span class="evidence-badge live" data-i18n="liveEvidenceBadge">Live Zabbix evidence</span></div>
+        <div class="result-heading"><div><p class="eyebrow" data-i18n="assistantResponse">ASSISTANT RESPONSE</p><h2 id="responseTitle" data-i18n="generalResponseTitle">Direct local answer</h2></div><span id="evidenceBadge" class="evidence-badge" data-i18n="modelOnlyBadge">Local model · no live evidence</span></div>
         <div id="answer" class="answer"></div>
-        <div class="evidence-panel">
+        <div id="evidencePanel" class="evidence-panel hidden">
           <div class="evidence-summary"><span><small data-i18n="source">Source</small><strong id="evidenceSource">—</strong></span><span><small data-i18n="host">Host</small><strong id="evidenceHost">—</strong></span><span><small data-i18n="collected">Collected</small><strong id="evidenceCollected">—</strong></span><span><small data-i18n="problems">Active problems</small><strong id="problemCount">—</strong></span></div>
           <div id="metricList" class="metric-list"></div>
         </div>
