@@ -8,7 +8,10 @@ Use the repository skill `nextops-project-context` for every NextOps task. It ma
 artifacts—not chat history—the source of durable memory. Use `nextops-server-operations` for server,
 storage, package, deployment, recovery, ESXi, AI-host, connector-host, or Zabbix operations. Use
 `nextops-bilingual-documentation` whenever Markdown, requirements, traceability, an ADR, or a public
-guide changes.
+guide changes. Use `nextops-change-planner` before substantial bounded changes,
+`nextops-acceptance-reviewer` for evidence-based release review, and `nextops-doc-reviewer` for
+documentation drift and language parity. These workflows are development aids, never authorization
+or security boundaries.
 
 The complete project-owned Markdown inventory and task router is
 [MARKDOWN_CONTEXT_INDEX](docs/MARKDOWN_CONTEXT_INDEX.md). Use it to select relevant documents; do not
@@ -34,9 +37,21 @@ Already supplied by the owner: ESXi 8.0.3 build 24414501; 4 CPU packages, 112 ph
 
 Guest-visible ISA, actual node distribution, available CPU/RAM, existing VM load/reservations, VM hardware level and storage backing health/performance remain to be checked. Per-node arithmetic averages are not observations; logical threads are not physical cores. Preserve ESXi and use Ubuntu only as a reviewed guest proposal. Never install NextOps in the ESXi management shell. Version-specific topology guidance requires its documented prerequisites and saved-configuration verification. Do not pin guessed nodes, universally assume Hot Add disables vNUMA, or upgrade host/firmware without approval.
 
-Create only the initial three NextOps VMs after authorization: app first (8 vCPU/32 GiB RAM/200 GiB disk), AI second (24/128/500), read-only connectors third (4/8/80). Total 36 vCPU/168 GiB RAM/780 GiB virtual disks. The AI budget is an experiment, not a benchmark optimum or a fixed thread count. An existing LAN Zabbix is reused; an optional lab VM is counted separately. Four VMs are recommended after database separation; five only when the separately approved write executor is enabled. Do not create a VM per connector or treat one-host replicas as HA.
+The four controlled Phase 1 guests already exist: app (8 vCPU/32 GiB RAM/200 GiB disk), AI
+(24/128/500), read-only connectors (4/8/80), and dedicated Zabbix (4/16/200). The inclusive profile
+is 40 vCPU/184 GiB RAM/980 GiB virtual disks. Do not recreate them or repeat completed discovery.
+The AI budget is an experiment, not a benchmark optimum or fixed thread count. A future separate
+NextOps database guest and later write executor require their own justified phase and authorization.
+Do not create a VM per connector or treat one-host replicas as HA.
 
-Retain the owner's 3 TB project ceiling. DS-C is the proposed initial datastore, with supplied 3576.75 GiB total/3166.87 GiB free. Protect the proposed 25% free-space target: exactly 894.1875 GiB, conservatively about 900. Initial VMDKs plus provisional ESXi swap are 948 GiB, before other overhead/growth. Check real swap placement, outstanding thin-disk commitments, snapshots, maintenance/restore space and external artifact staging. Avoid double counting. Recheck capacity at the actual change window. Do not allocate DS-A/DS-B or system volumes, shrink disks, remove evidence or alter memory reservations to fit a spreadsheet. Keep real datastore names/UUIDs/paths and credentials out of this public repository; use only sanitized evidence aliases.
+Retain the owner's 3 TB project ceiling. DS-C is the selected initial datastore, with the supplied
+snapshot of 3576.75 GiB total/3166.87 GiB free. Protect the proposed 25% free-space target: exactly
+894.1875 GiB, conservatively about 900. The four current VMDKs plus provisional ESXi swap total
+1164 GiB before other overhead and growth. Check real swap placement, outstanding thin-disk
+commitments, snapshots, maintenance/restore space, and external artifact staging. Avoid double
+counting and recheck capacity at each change window. Do not allocate DS-A/DS-B or system volumes,
+shrink disks, remove evidence, or alter memory reservations to fit a spreadsheet. Keep real
+datastore names/UUIDs/paths and credentials out of this public repository; use sanitized aliases.
 
 ### Engineering and safety
 
@@ -48,7 +63,12 @@ Preserve scoped roles, trusted risk policy, exact-operation approvals, atomic si
 
 Keep typed domain/application boundaries independent of framework I/O. Test real boundaries; distinguish fixtures, simulations, lab verification and production validation. Update paired human-facing Persian/English guides, traceability, project state and the next unfinished task. Do not remove future integrations simply because they are not part of the first answer. Retain independent backups, offline restore gates and single-host limitations.
 
-Complete the remaining Phase 0 review and obtain the applicable approval before provisioning or platform implementation. If an approved checkpoint is already evidenced, resume the next unfinished authorized stage rather than restarting discovery. Documentation authorization is not permission for installs, model downloads, network changes, stress tests, patches, reboots, production access or mutations. Resolve routine code issues independently; ask only for a real missing decision or authorization. Never fabricate parallel agents or asynchronous continuation.
+Continue from the first unfinished checkpoint in `docs/NEXT_TASK.md`; do not restart Phase 0 or
+rebuild an evidenced capability. Obtain the applicable authorization before any new infrastructure
+operation. Documentation authorization is not permission for installs, model downloads, network
+changes, stress tests, patches, reboots, production access, or mutations. Resolve routine code
+issues independently; ask only for a real missing decision or authorization. Never fabricate
+parallel agents or asynchronous continuation.
 
 ## فارسی
 
@@ -58,7 +78,9 @@ Complete the remaining Phase 0 review and obtain the applicable approval before 
 نگه‌داری‌شده، نه حافظهٔ گفتگو، منبع وضعیت باشند. برای کار سرور، storage، package، deployment،
 recovery، ESXi، میزبان AI یا connector و Zabbix از `nextops-server-operations` و برای تغییر
 Markdown، نیازمندی، traceability، ADR یا راهنمای عمومی از `nextops-bilingual-documentation` استفاده
-شود.
+شود. پیش از تغییر مهم از `nextops-change-planner`، برای بازبینی شاهد پذیرش از
+`nextops-acceptance-reviewer` و برای ناسازگاری وضعیت و برابری زبانی از `nextops-doc-reviewer`
+استفاده شود. این گردش‌کارها ابزار توسعه‌اند و مجوز یا مرز امنیتی محسوب نمی‌شوند.
 
 فهرست کامل Markdownهای متعلق به پروژه و مسیر انتخاب سند در
 [MARKDOWN_CONTEXT_INDEX](docs/MARKDOWN_CONTEXT_INDEX.md) است. سندهای مرتبط با کار انتخاب شوند و همهٔ
@@ -84,9 +106,20 @@ Markdown، نیازمندی، traceability، ADR یا راهنمای عمومی 
 
 ISA قابل‌مشاهده در مهمان، نگاشت واقعی گره‌ها، CPU/RAM آزاد، بار و رزرو موجود، سطح سخت‌افزار VM و سلامت و کارایی ذخیره‌سازی هنوز بررسی می‌خواهند. میانگین حسابی مشاهدهٔ واقعی نیست و رشتهٔ منطقی هستهٔ فیزیکی نیست. ESXi حفظ شود؛ Ubuntu مهمان پیشنهادی است. NextOps داخل پوستهٔ مدیریتی ESXi نصب نشود. تنظیم توپولوژی به پیش‌نیازهای مستند و کنترل مقدار ذخیره‌شده نیاز دارد؛ گره حدسی پین، رفتار Hot Add تعمیم یا میزبان بی‌اجازه ارتقا داده نشود.
 
-پس از مجوز، فقط سه ماشین اولیه ساخته شوند: برنامه با ۸ vCPU و ۳۲ GiB حافظه و ۲۰۰ GiB دیسک؛ AI با ۲۴ و ۱۲۸ و ۵۰۰؛ اتصال فقط‌خواندنی با ۴ و ۸ و ۸۰. مجموع ۳۶ vCPU، حافظهٔ ۱۶۸ GiB و دیسک ۷۸۰ GiB است. منابع AI مبنای آزمایش‌اند، نه مقدار بهینه یا تعداد رشتهٔ الزامی. Zabbix موجود دوباره ساخته نشود و آزمایشگاه اختیاری جدا حساب شود. ماشین چهارم برای جداسازی پیشنهادی پایگاه و پنجم فقط برای اجرای تغییرِ دارای مجوز است. یک ماشین برای هر اتصال یا ادعای HA روی یک میزبان مجاز نیست.
+چهار مهمان کنترل‌شدهٔ مرحلهٔ یک اکنون وجود دارند: برنامه با ۸ vCPU، حافظهٔ ۳۲ GiB و دیسک ۲۰۰
+GiB؛ هوش مصنوعی با ۲۴/۱۲۸/۵۰۰؛ اتصال فقط‌خواندنی با ۴/۸/۸۰؛ و Zabbix مستقل با
+۴/۱۶/۲۰۰. جمع شامل پایش ۴۰ vCPU، حافظهٔ ۱۸۴ GiB و دیسک ۹۸۰ GiB است. این مهمان‌ها دوباره
+ساخته و شناسایی تکمیل‌شده تکرار نشوند. منابع AI مبنای آزمایش‌اند، نه مقدار بهینه یا تعداد رشتهٔ
+الزامی. مهمان مستقل پایگاه NextOps و اجراکنندهٔ تغییر در آینده به مرحله، توجیه و مجوز جدا نیاز
+دارند. ساخت یک ماشین برای هر اتصال یا ادعای HA روی یک میزبان مجاز نیست.
 
-سقف سه‌ترابایتی پروژه حفظ شود. محل اولیهٔ پیشنهادی DS-C است؛ ظرفیت ارسالی ۳۵۷۶٫۷۵ GiB و فضای آزاد ۳۱۶۶٫۸۷ GiB. حاشیهٔ پیشنهادی ۲۵ درصد، دقیقاً ۸۹۴٫۱۸۷۵ GiB و محافظه‌کارانه حدود ۹۰۰ است. دیسک و سهم موقت swap اولیه ۹۴۸ GiB، پیش از سایر سربارها و رشد است. محل واقعی swap، تعهد thin، snapshot، فضای نگهداری و بازیابی و فایل‌های بیرون از دیسک مهمان بررسی و دوباره‌شماری نشوند. ظرفیت هنگام تغییر واقعی تازه‌سازی شود. DS-A و DS-B و حجم‌های سیستم تخصیص نگیرند؛ دیسک، شواهد یا رزرو حافظه صرفاً برای جا شدن بودجه تغییر نکنند. نام واقعی، UUID، مسیر و اطلاعات ورود در مخزن عمومی منتشر نشوند.
+سقف سه‌ترابایتی پروژه حفظ شود. محل اولیهٔ منتخب DS-C است؛ تصویر ارسالی ظرفیت ۳۵۷۶٫۷۵ GiB و
+فضای آزاد ۳۱۶۶٫۸۷ GiB را نشان می‌دهد. حاشیهٔ پیشنهادی ۲۵ درصد، دقیقاً ۸۹۴٫۱۸۷۵ GiB و
+محافظه‌کارانه حدود ۹۰۰ است. چهار دیسک فعلی به‌همراه سهم موقت swap میزبان ۱۱۶۴ GiB است؛ سایر
+سربارها و رشد جدا محاسبه شوند. محل واقعی swap، تعهد thin، snapshot، فضای نگهداری و بازیابی و
+فایل‌های بیرون از دیسک مهمان بررسی و دوباره‌شماری نشوند. ظرفیت در پنجرهٔ هر تغییر تازه‌سازی شود.
+DS-A و DS-B و حجم‌های سیستم تخصیص نگیرند؛ دیسک، شواهد یا رزرو حافظه صرفاً برای جا شدن بودجه
+تغییر نکنند. نام واقعی، UUID، مسیر و اطلاعات ورود در مخزن عمومی منتشر نشوند.
 
 ### مهندسی و ایمنی
 
@@ -98,4 +131,7 @@ ISA قابل‌مشاهده در مهمان، نگاشت واقعی گره‌ه�
 
 مرز دامنه و کاربرد دارای نوع و جدا از ورودی‌وخروجی باشد. آزمون در مرز واقعی انجام و دادهٔ ساختگی، شبیه‌سازی، آزمایشگاه و محیط عملیاتی تفکیک شوند. راهنمای انسانی فارسی و انگلیسی، ردیابی، وضعیت و گام بعد به‌روز بمانند. اتصال‌های آینده به دلیل نبودن در اولین خروجی حذف نشوند. پشتیبان مستقل، بازیابی آفلاین و محدودیت تک‌میزبان باقی بمانند.
 
-مرحلهٔ صفرِ باقی‌مانده و مجوز لازم پیش از ساخت و پیاده‌سازی تکمیل شوند. اگر گامی واقعاً تکمیل و تأیید شده، از نخستین گام ناتمامِ دارای مجوز ادامه دهید و شناسایی را از ابتدا تکرار نکنید. مجوز مستندسازی اجازهٔ نصب، دانلود مدل، تغییر شبکه، آزمون فشار، وصله، راه‌اندازی دوباره یا دسترسی و تغییر عملیاتی نیست. خطای عادی کد مستقل حل شود و فقط تصمیم یا مجوز واقعاً غایب پرسیده شود. عامل موازی یا ادامهٔ کار پس‌زمینه ابداع نشود.
+از نخستین گام ناتمام در `docs/NEXT_TASK.md` ادامه دهید و مرحلهٔ صفر یا قابلیت دارای شاهد را از نو
+نسازید. هر عملیات تازهٔ زیرساخت به مجوز مربوط نیاز دارد. مجوز مستندسازی اجازهٔ نصب، دانلود مدل،
+تغییر شبکه، آزمون فشار، وصله، راه‌اندازی دوباره یا دسترسی و تغییر عملیاتی نیست. خطای عادی کد مستقل
+حل شود و فقط تصمیم یا مجوز واقعاً غایب پرسیده شود. عامل موازی یا ادامهٔ کار پس‌زمینه ابداع نشود.

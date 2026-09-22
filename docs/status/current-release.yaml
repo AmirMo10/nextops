@@ -1,0 +1,103 @@
+---
+$schema: ./release-status.schema.json
+schema_version: 1.0.0
+release_identifier: nextops-controlled-2026-09-22
+observed_at: '2026-09-22'
+deployment_status: controlled_user_testing_not_production_accepted
+repository:
+  remote: Omid-NextAI/nextops
+  branch: main
+  inspected_baseline_commit: bbb1f9a20d1e5d0b546f34cb43d365b2369530ad
+components:
+  application:
+    release: nextops-0.1.0-13a3369
+    source_commit: 13a3369
+  connector:
+    release: nextops-0.1.0-3d7d725
+    source_commit: 3d7d725
+  inference_api:
+    release: nextops-0.1.0-62de8d6
+    source_commit: 62de8d61fb4a841f016732815f75d95ca6c403a9
+  inference_runtime:
+    name: llama.cpp
+    source_tag: v0.4.1
+    source_commit: b29c606e28a01b1bc8c1351026a0fa6e616bf6c4
+    binary_sha256: dbe5a5cdd4842fe2d498270c1e1df58344e9052e97214e2ba9c9845443a1b0dc
+    cpu_only: true
+  model:
+    identifier: nextops-qwen3-8b-q4-k-m
+    source_revision: 7c41481f57cb95916b40956ab2f0b139b296d974
+    quantization: Q4_K_M
+    size_bytes: 5027783488
+    sha256: d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785
+  application_database:
+    name: PostgreSQL
+    version: '16.15'
+  zabbix_database:
+    name: PostgreSQL
+    version: '16.15'
+  zabbix:
+    name: Zabbix
+    version: '7.0.30'
+capabilities:
+  - id: authenticated_bilingual_panel
+    status: accepted_controlled
+    evidence:
+      - docs/PROJECT_STATE.md
+      - tests/api/test_app.py
+  - id: general_local_ai_mode
+    status: accepted_controlled
+    evidence:
+      - docs/PROJECT_STATE.md
+      - tests/api/test_app.py
+  - id: zabbix_evidence_investigation
+    status: accepted_controlled
+    evidence:
+      - docs/PROJECT_STATE.md
+      - tests/unit/test_zabbix_connector.py
+  - id: durable_investigation_audit
+    status: accepted_controlled
+    evidence:
+      - docs/PROJECT_STATE.md
+      - tests/integration/test_durable_app_postgresql.py
+  - id: deterministic_read_only_authorization
+    status: implemented_unaccepted
+    evidence:
+      - packages/nextops/policy/authorization.py
+      - tests/unit/test_contracts_and_policy.py
+  - id: controlled_remediation
+    status: experimental
+    evidence:
+      - docs/en/ROADMAP.md
+acceptance_gates:
+  - id: server_api_wan_isolation
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+  - id: serial_vm_reboot
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+  - id: isolated_fresh_browser_offline
+    status: partial
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+  - id: sustained_load
+    status: not_run
+    evidence:
+      - docs/PROJECT_STATE.md
+  - id: independent_backup
+    status: not_run
+    evidence:
+      - docs/en/OPERATIONS.md
+  - id: isolated_restore
+    status: not_run
+    evidence:
+      - docs/en/OPERATIONS.md
+  - id: production_acceptance
+    status: not_run
+    evidence:
+      - docs/PROJECT_STATE.md

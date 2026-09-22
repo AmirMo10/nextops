@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INDEX.md) · [Home](../../README.md) · [Start here](START_HERE.md)
 
-**Updated: 2026-09-21. Status: Phase 0 is accepted; the Stage 1A/1B source foundations are tested, all four role servers are package-prepared, and the pinned CPU model has bounded smoke evidence. Product services and production acceptance remain open.** The active master prompt is English; the original Persian specification remains in the preserved v2 archive.
+**Updated: 2026-09-22. Status: the controlled bilingual application, local CPU model, read-only connector, PostgreSQL state, and Zabbix path are deployed across four guests.** Scoped end-to-end, failure, WAN-isolation, and serial reboot evidence passes for the server/API path. Production acceptance, independent browser isolation, sustained load, backup, and isolated restore remain open. See the [machine-readable release status](../status/current-release.yaml).
 
 > **Current new-server profile:** three NextOps VMs plus `zabbix-server` (4 vCPU / 16 GiB / 200 GiB) = **4 VMs / 40 vCPU / 184 GiB RAM / 980 GiB virtual disks**. Do not add the earlier small lab VM as well. [START_HERE](START_HERE.md) defines the order and Stage 1A–1E; [ZABBIX_SERVER](ZABBIX_SERVER.md) defines the monitoring VM, LVM and read-only integration.
 
@@ -17,6 +17,9 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 | Guide | Contents |
 |---|---|
 | [Project status brief](PROJECT_STATUS_BRIEF.md) | Presentation-ready summary of verified work, remaining delivery gates, and recommended sequence |
+| [Engineering upgrade plan](ENGINEERING_UPGRADE_PLAN.md) | Controlled adoption, evaluation, and deferral matrix for reliability, documentation, testing, and security work |
+| [Specification workflow](SPECIFICATION_WORKFLOW.md) | Brownfield, specification-driven workflow for bounded NextOps features without regenerating the product |
+| [Backup and restore specification](BACKUP_RESTORE_SPEC.md) | PostgreSQL-aware and file-artifact recovery requirements, threats, acceptance gates, and rollback |
 | [Phase 0 report](PHASE_0_REPORT.md) | Repository findings, architecture, gaps, threat summary, resource plan and the approval checkpoint |
 | [Start here](START_HERE.md) | Creation order, four-VM profile, Phase 1A–1E, boundaries and restart dependencies |
 | [Dedicated Zabbix server](ZABBIX_SERVER.md) | 4 vCPU / 16 GiB / 200 GiB, detailed LVM, software, retention, read-only API, self-monitoring and combined budgets |

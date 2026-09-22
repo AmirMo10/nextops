@@ -27,6 +27,9 @@ remaining task-specific sources. The repository skill
 | Server, storage, or deployment | use `nextops-server-operations`; read the start checklist, matching dossier, installer guide, storage/offline/server guide, and current private change record |
 | Zabbix or connector work | Zabbix guide, integration guide, MCP/security/data contracts, matching dossiers, ZBX/OFF acceptance cases, and target-specific private evidence |
 | Documentation | use `nextops-bilingual-documentation`; read the source requirement plus both language versions and update state/traceability when capability changes |
+| Substantial feature or architecture change | use `nextops-change-planner`; read `docs/en/SPECIFICATION_WORKFLOW.md`, the current release manifest, applicable ADRs, and the feature specification |
+| Acceptance or release review | use `nextops-acceptance-reviewer`; read the feature specification, current release manifest, test evidence, offline contract, and security guide |
+| Documentation consistency review | use `nextops-doc-reviewer` plus `nextops-bilingual-documentation`; compare current guidance with the release manifest, source, tests, and paired language files |
 | Release or GitHub workflow | `CONTRIBUTING.md`, `CHANGELOG.md`, `SECURITY.md`, `docs/en/DEVELOPMENT.md`, test guide, and GitHub templates |
 
 ## Complete inventory
@@ -35,6 +38,9 @@ Each bullet uses a repository-relative path followed by its role. Keep the paths
 Markdown file is added, renamed, or removed.
 
 - `.agents/skills/nextops-bilingual-documentation/SKILL.md` — Bilingual documentation workflow and archive rules.
+- `.agents/skills/nextops-change-planner/SKILL.md` — Bounded brownfield change-planning workflow.
+- `.agents/skills/nextops-acceptance-reviewer/SKILL.md` — Evidence-based offline, security, reliability, and release review.
+- `.agents/skills/nextops-doc-reviewer/SKILL.md` — Documentation drift, parity, terminology, and release-consistency review.
 - `.agents/skills/nextops-project-context/SKILL.md` — Core project-memory, source-precedence, and context-routing workflow.
 - `.agents/skills/nextops-server-operations/SKILL.md` — Authorized server, package, storage, and deployment workflow.
 - `.github/ISSUE_TEMPLATE/bug_report.md` — GitHub defect-report template.
@@ -53,6 +59,7 @@ Markdown file is added, renamed, or removed.
 - `docs/adr/0006-evidence-and-bilingual-ui.md` — ADR for evidence-qualified answers and bilingual UI.
 - `docs/adr/README.md` — ADR status and navigation.
 - `docs/en/ARCHITECTURE.md` — English architecture and repository boundaries.
+- `docs/en/BACKUP_RESTORE_SPEC.md` — English bounded specification for independent backup and isolated restore.
 - `docs/en/CONFIGURATION.md` — English configuration contracts and current implemented subset.
 - `docs/en/CPU_AI.md` — English local CPU inference and capacity plan.
 - `docs/en/AI_SYSTEMD.md` — English Stage 1B native systemd service profile and installation hold.
@@ -60,6 +67,7 @@ Markdown file is added, renamed, or removed.
 - `docs/en/DEPLOYMENT_DOSSIERS.md` — English per-server dossier workflow.
 - `docs/en/DEVELOPMENT.md` — English development, CI, GitHub, and release workflow.
 - `docs/en/DIAGRAMS.md` — English architecture diagram atlas.
+- `docs/en/ENGINEERING_UPGRADE_PLAN.md` — English phased candidate-adoption and modernization plan.
 - `docs/en/ESXI_BASELINE.md` — English ESXi and guest CPU evidence boundaries.
 - `docs/en/GLOSSARY.md` — English product terminology.
 - `docs/en/INDEX.md` — English documentation navigation.
@@ -72,6 +80,7 @@ Markdown file is added, renamed, or removed.
 - `docs/en/PROJECT_STATUS_BRIEF.md` — Presentation-ready English summary of verified progress and remaining delivery gates.
 - `docs/en/ROADMAP.md` — English phased roadmap and acceptance gates.
 - `docs/en/SECURITY.md` — English identity, policy, approval, and threat controls.
+- `docs/en/SPECIFICATION_WORKFLOW.md` — English brownfield specification workflow and source-of-truth boundaries.
 - `docs/en/SERVER_PLAN.md` — English G10 VM plan and Zabbix milestone.
 - `docs/en/SERVER_START_CHECKLIST.md` — English first-server and package-bundle checklist.
 - `docs/en/START_HERE.md` — English onboarding and first milestone.
@@ -81,6 +90,7 @@ Markdown file is added, renamed, or removed.
 - `docs/en/UI.md` — English bilingual console and design-system requirements.
 - `docs/en/ZABBIX_SERVER.md` — English dedicated Zabbix server design.
 - `docs/fa/ARCHITECTURE.md` — Persian architecture and repository boundaries.
+- `docs/fa/BACKUP_RESTORE_SPEC.md` — Persian bounded specification for independent backup and isolated restore.
 - `docs/fa/CONFIGURATION.md` — Persian configuration contracts and current implemented subset.
 - `docs/fa/CPU_AI.md` — Persian local CPU inference and capacity plan.
 - `docs/fa/AI_SYSTEMD.md` — Persian Stage 1B native systemd service profile and installation hold.
@@ -88,6 +98,7 @@ Markdown file is added, renamed, or removed.
 - `docs/fa/DEPLOYMENT_DOSSIERS.md` — Persian per-server dossier workflow.
 - `docs/fa/DEVELOPMENT.md` — Persian development, CI, GitHub, and release workflow.
 - `docs/fa/DIAGRAMS.md` — Persian architecture diagram atlas.
+- `docs/fa/ENGINEERING_UPGRADE_PLAN.md` — Persian phased candidate-adoption and modernization plan.
 - `docs/fa/ESXI_BASELINE.md` — Persian ESXi and guest CPU evidence boundaries.
 - `docs/fa/GLOSSARY.md` — Persian product terminology.
 - `docs/fa/INDEX.md` — Persian documentation navigation.
@@ -100,6 +111,7 @@ Markdown file is added, renamed, or removed.
 - `docs/fa/PROJECT_STATUS_BRIEF.md` — Presentation-ready native-Persian summary of verified progress and remaining delivery gates.
 - `docs/fa/ROADMAP.md` — Persian phased roadmap and acceptance gates.
 - `docs/fa/SECURITY.md` — Persian identity, policy, approval, and threat controls.
+- `docs/fa/SPECIFICATION_WORKFLOW.md` — Persian brownfield specification workflow and source-of-truth boundaries.
 - `docs/fa/SERVER_PLAN.md` — Persian G10 VM plan and Zabbix milestone.
 - `docs/fa/SERVER_START_CHECKLIST.md` — Persian first-server and package-bundle checklist.
 - `docs/fa/START_HERE.md` — Persian onboarding and first milestone.

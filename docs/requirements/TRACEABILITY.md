@@ -49,7 +49,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 41 | Systemd / سرویس بومی | `deploy/systemd` | 1,8 | Units, hardening, resource and recovery tests / آزمون واحد سرویس و بازیابی | P |
 | 42 | Security docs / مستندات امنیت | `docs/en/SECURITY.md`, `docs/fa/SECURITY.md` | 0–8 | Documented RBAC/secrets/TLS/audit/backup / راهنمای کنترل‌های امنیت | D |
 | 43 | README / معرفی پروژه | `README.md`, `README_FA.md` | 0–8 | Honest status and bilingual navigation / وضعیت واقعی و مسیر دو زبان | D |
-| 44 | Development rules / قواعد توسعه | `AGENTS.md`, `.agents/skills`, `docs/MARKDOWN_CONTEXT_INDEX.md`, `CONTRIBUTING.md` | 0–8 | Three repo skills, complete Markdown routing/catalog tests, types, reviews and no credential commits / سه skill مخزن، catalog آزموده، نوع و بازبینی | I |
+| 44 | Development rules / قواعد توسعه | `AGENTS.md`, `.agents/skills`, `docs/MARKDOWN_CONTEXT_INDEX.md`, `CONTRIBUTING.md` | 0–8 | Six repo skills, complete Markdown routing/catalog tests, types, reviews and no credential commits / شش skill مخزن، catalog آزموده، نوع و بازبینی | I |
 | 45 | Real MCP interface / پروتکل واقعی MCP | `contracts`, `connectors/base` | 1–2 | SDK/protocol conformance tests / آزمون انطباق | P |
 | 46 | Tool risk / ریسک ابزار | `packages/nextops/domain`, `packages/nextops/policy` | 1 | Trusted risk registry; request/model actor and risk fields rejected; all mutation classes denied / ریسک معتبر و رد تغییر | I |
 | 47 | Decision workflow / گردش تصمیم | `application` | 1–2 | Bounded persisted state machine / ماشین حالت محدود و ماندگار | P |
