@@ -27,6 +27,7 @@ const translations = {
     modelOnlyBadge: "Local model · no live evidence", liveEvidenceBadge: "Live Zabbix evidence",
     source: "Source", host: "Host", collected: "Collected", problems: "Active problems", stale: "stale",
     model: "Model", tokens: "Output tokens", completed: "Completed", requestId: "Request",
+    runId: "Durable run", evidenceReference: "Evidence reference", auditEvent: "Audit event",
     footer: "Controlled local evaluation environment", invalidLogin: "The username or password is incorrect.",
     genericError: "The request could not be completed. Try again.", timeoutError: "The local model took too long. Please try a shorter question.",
     overloadedError: "The local model is busy. Please wait a moment and try again.", dependencyError: "A local service is temporarily unavailable. Please try again.",
@@ -59,6 +60,7 @@ const translations = {
     modelOnlyBadge: "مدل محلی · بدون شاهد زنده", liveEvidenceBadge: "شواهد زنده Zabbix",
     source: "منبع", host: "میزبان", collected: "زمان گردآوری", problems: "مسائل فعال", stale: "قدیمی",
     model: "مدل", tokens: "توکن‌های خروجی", completed: "زمان تکمیل", requestId: "شناسه درخواست",
+    runId: "اجرای ماندگار", evidenceReference: "مرجع شاهد", auditEvent: "رویداد ممیزی",
     footer: "محیط کنترل‌شده و داخلی ارزیابی", invalidLogin: "نام کاربری یا گذرواژه صحیح نیست.",
     genericError: "انجام درخواست ممکن نشد. دوباره تلاش کنید.", timeoutError: "زمان پردازش مدل محلی به پایان رسید. لطفاً پرسش کوتاه‌تری مطرح کنید.",
     overloadedError: "مدل محلی در حال پردازش درخواست دیگری است. لطفاً کمی بعد دوباره تلاش کنید.", dependencyError: "یکی از سرویس‌های داخلی موقتاً در دسترس نیست. لطفاً دوباره تلاش کنید.",
@@ -245,7 +247,16 @@ byId("assistantForm").addEventListener("submit", async event => {
     byId("evidenceBadge").textContent = translations[state.language][badgeKey];
     byId("evidenceBadge").classList.toggle("live", monitoring);
     byId("evidencePanel").classList.toggle("hidden", !monitoring);
-    if (monitoring) renderEvidence(result.evidence);
+    document.querySelectorAll(".monitoring-meta").forEach(node => node.classList.toggle("hidden", !monitoring));
+    if (monitoring) {
+      renderEvidence(result.evidence);
+      byId("runId").textContent = result.run_id;
+      byId("runId").title = result.run_id;
+      byId("evidenceReference").textContent = result.evidence_reference;
+      byId("evidenceReference").title = `${result.evidence_reference} · sha256:${result.evidence_sha256}`;
+      byId("auditEventId").textContent = result.audit_event_id;
+      byId("auditEventId").title = result.audit_event_id;
+    }
     byId("resultCard").classList.remove("hidden");
     byId("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {

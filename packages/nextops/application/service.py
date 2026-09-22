@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from nextops.application.errors import ApplicationError
 from nextops.configuration import AppSettings
+from nextops.contracts.assistant import AssistantRequest, AssistantResponse
 from nextops.contracts.durable import (
     AuditOutcome,
     AuthenticatedSession,
@@ -25,16 +26,19 @@ from nextops.contracts.durable import (
     EvidenceSource,
     FixtureResult,
     LeaseGrant,
+    LiveInvestigationResult,
     LoginRequest,
     RecoveryRequest,
     RecoveryResult,
     RunCreateRequest,
+    RunFailure,
     RunRecord,
     RunStatus,
     SessionToken,
 )
 from nextops.contracts.errors import ErrorCode
 from nextops.contracts.models import ActorContext, InvestigationRequest, Role, TargetReference
+from nextops.contracts.monitoring import MonitoringSummary
 from nextops.domain.types import RiskClass
 from nextops.persistence.models import (
     AuditEvent,
@@ -60,6 +64,9 @@ IDEMPOTENCY_PATTERN = re.compile(r"^[A-Za-z0-9._:-]{8,128}$")
 FIXTURE_ACTION = "zabbix.host.read"
 FIXTURE_SCOPE = "zabbix.read"
 RUN_READ_SCOPE = "runs.read"
+LIVE_INVESTIGATION_ACTION = "zabbix.summary.read"
+LIVE_INVESTIGATION_TARGET_KIND = "zabbix"
+LIVE_INVESTIGATION_TARGET_NAME = "zabbix-live"
 
 
 class DurableAppService:
@@ -144,6 +151,16 @@ class DurableAppService:
                         environment_id=environment_id,
                         kind="fixture",
                         name="stage-1a-fixture",
+                        enabled=True,
+                    )
+                )
+                session.add(
+                    Target(
+                        id=uuid4(),
+                        organization_id=organization_id,
+                        environment_id=environment_id,
+                        kind=LIVE_INVESTIGATION_TARGET_KIND,
+                        name=LIVE_INVESTIGATION_TARGET_NAME,
                         enabled=True,
                     )
                 )
@@ -557,6 +574,300 @@ class DurableAppService:
             raise ApplicationError(ErrorCode.INTERNAL_ERROR, "run.record_missing")
         return record
 
+    def create_live_investigation(
+        self,
+        actor: ActorContext,
+        request: AssistantRequest,
+        correlation_id: UUID,
+    ) -> RunRecord:
+        """Persist a scoped live investigation before calling external local services."""
+
+        now = self._now()
+        request_hash = self._assistant_request_hash(request)
+        idempotency_key = f"investigate:{correlation_id}"
+        pending_error: ApplicationError | None = None
+        record: RunRecord | None = None
+
+        try:
+            with self._session_factory() as session, session.begin():
+                if FIXTURE_SCOPE not in actor.scopes:
+                    self._add_audit(
+                        session,
+                        organization_id=actor.organization_id,
+                        environment_id=actor.environment_id,
+                        actor_id=actor.subject_id,
+                        correlation_id=correlation_id,
+                        event_type="investigation.create.denied",
+                        outcome=AuditOutcome.DENIED,
+                        details={"reason": "missing_zabbix_read_scope"},
+                        occurred_at=now,
+                    )
+                    pending_error = ApplicationError(
+                        ErrorCode.POLICY_DENIED, "investigation.scope_denied"
+                    )
+                else:
+                    target_statement = (
+                        insert(Target)
+                        .values(
+                            id=uuid4(),
+                            organization_id=actor.organization_id,
+                            environment_id=actor.environment_id,
+                            kind=LIVE_INVESTIGATION_TARGET_KIND,
+                            name=LIVE_INVESTIGATION_TARGET_NAME,
+                            enabled=True,
+                            created_at=now,
+                        )
+                        .on_conflict_do_nothing(constraint="uq_targets_scope_name")
+                        .returning(Target)
+                    )
+                    target = session.scalars(target_statement).one_or_none()
+                    if target is None:
+                        target = session.scalar(
+                            select(Target).where(
+                                Target.organization_id == actor.organization_id,
+                                Target.environment_id == actor.environment_id,
+                                Target.name == LIVE_INVESTIGATION_TARGET_NAME,
+                            )
+                        )
+                    if (
+                        target is None
+                        or not target.enabled
+                        or target.kind != LIVE_INVESTIGATION_TARGET_KIND
+                    ):
+                        raise ApplicationError(
+                            ErrorCode.DEPENDENCY_UNAVAILABLE,
+                            "investigation.target_unavailable",
+                            retryable=True,
+                        )
+
+                    statement = (
+                        insert(Run)
+                        .values(
+                            id=uuid4(),
+                            request_id=uuid4(),
+                            correlation_id=correlation_id,
+                            organization_id=actor.organization_id,
+                            environment_id=actor.environment_id,
+                            target_id=target.id,
+                            actor_id=actor.subject_id,
+                            idempotency_key=idempotency_key,
+                            request_sha256=request_hash,
+                            action=LIVE_INVESTIGATION_ACTION,
+                            question=request.question,
+                            locale=request.locale,
+                            parameters={
+                                "max_output_tokens": request.max_output_tokens,
+                                "evidence_mode": "live_zabbix",
+                            },
+                            status=RunStatus.RUNNING.value,
+                            created_at=now,
+                            updated_at=now,
+                        )
+                        .on_conflict_do_nothing(constraint="uq_runs_actor_idempotency")
+                        .returning(Run)
+                    )
+                    run = session.scalars(statement).one_or_none()
+                    event_type = "investigation.started"
+                    if run is None:
+                        run = session.scalar(
+                            select(Run).where(
+                                Run.organization_id == actor.organization_id,
+                                Run.actor_id == actor.subject_id,
+                                Run.idempotency_key == idempotency_key,
+                            )
+                        )
+                        if run is None:
+                            raise ApplicationError(
+                                ErrorCode.INTERNAL_ERROR, "investigation.lookup_failed"
+                            )
+                        if run.request_sha256 != request_hash:
+                            pending_error = ApplicationError(
+                                ErrorCode.CONFLICT, "investigation.correlation_conflict"
+                            )
+                        elif run.status == RunStatus.SUCCEEDED.value:
+                            event_type = "investigation.replayed"
+                        else:
+                            pending_error = ApplicationError(
+                                ErrorCode.CONFLICT, "investigation.already_in_progress"
+                            )
+
+                    if pending_error is None:
+                        self._add_audit(
+                            session,
+                            organization_id=actor.organization_id,
+                            environment_id=actor.environment_id,
+                            actor_id=actor.subject_id,
+                            correlation_id=correlation_id,
+                            run_id=run.id,
+                            event_type=event_type,
+                            outcome=AuditOutcome.ACCEPTED,
+                            details={"target_kind": LIVE_INVESTIGATION_TARGET_KIND},
+                            occurred_at=now,
+                        )
+                        record = self._run_record(run)
+                    else:
+                        self._add_audit(
+                            session,
+                            organization_id=actor.organization_id,
+                            environment_id=actor.environment_id,
+                            actor_id=actor.subject_id,
+                            correlation_id=correlation_id,
+                            run_id=run.id,
+                            event_type="investigation.replay.denied",
+                            outcome=AuditOutcome.DENIED,
+                            details={"reason": pending_error.message_key},
+                            occurred_at=now,
+                        )
+                session.flush()
+        except ApplicationError:
+            raise
+        except SQLAlchemyError as exc:
+            raise self._database_error() from exc
+
+        if pending_error is not None:
+            raise pending_error
+        if record is None:
+            raise ApplicationError(ErrorCode.INTERNAL_ERROR, "investigation.record_missing")
+        return record
+
+    def complete_live_investigation(
+        self,
+        actor: ActorContext,
+        run_id: UUID,
+        assistant: AssistantResponse,
+        evidence: MonitoringSummary,
+    ) -> LiveInvestigationResult:
+        """Atomically persist the bounded evidence, model result, and completion audit."""
+
+        evidence_payload = evidence.model_dump(mode="json")
+        evidence_sha256 = self._json_hash(evidence_payload)
+        evidence_reference = f"run-evidence:{run_id}"
+        now = self._now()
+
+        try:
+            with self._session_factory() as session, session.begin():
+                run = session.scalar(
+                    select(Run)
+                    .where(
+                        Run.id == run_id,
+                        Run.organization_id == actor.organization_id,
+                        Run.environment_id == actor.environment_id,
+                        Run.actor_id == actor.subject_id,
+                        Run.action == LIVE_INVESTIGATION_ACTION,
+                    )
+                    .with_for_update()
+                )
+                if run is None:
+                    raise ApplicationError(ErrorCode.NOT_FOUND, "investigation.not_found")
+                if run.status != RunStatus.RUNNING.value:
+                    raise ApplicationError(ErrorCode.CONFLICT, "investigation.not_running")
+                if assistant.correlation_id != run.correlation_id or assistant.locale != run.locale:
+                    raise ApplicationError(
+                        ErrorCode.DEPENDENCY_UNAVAILABLE,
+                        "investigation.result_identity_mismatch",
+                    )
+
+                audit_event_id = uuid4()
+                result = LiveInvestigationResult(
+                    run_id=run.id,
+                    status=RunStatus.SUCCEEDED,
+                    locale=run.locale,
+                    assistant=assistant,
+                    evidence=evidence,
+                    evidence_reference=evidence_reference,
+                    evidence_sha256=evidence_sha256,
+                    organization_id=run.organization_id,
+                    environment_id=run.environment_id,
+                    target_id=run.target_id,
+                    is_partial=False,
+                    is_stale=any(metric.stale for metric in evidence.metrics),
+                    audit_event_id=audit_event_id,
+                )
+                run.result = result.model_dump(mode="json")
+                run.error = None
+                run.status = RunStatus.SUCCEEDED.value
+                run.updated_at = now
+                self._add_audit(
+                    session,
+                    event_id=audit_event_id,
+                    organization_id=run.organization_id,
+                    environment_id=run.environment_id,
+                    actor_id=run.actor_id,
+                    correlation_id=run.correlation_id,
+                    run_id=run.id,
+                    event_type="investigation.completed",
+                    outcome=AuditOutcome.ACCEPTED,
+                    details={
+                        "evidence_reference": evidence_reference,
+                        "evidence_sha256": evidence_sha256,
+                        "source": evidence.source,
+                        "source_version": evidence.source_version,
+                        "metric_count": len(evidence.metrics),
+                        "problem_count": len(evidence.active_problems),
+                        "is_stale": result.is_stale,
+                        "model_id": assistant.model_id,
+                    },
+                    occurred_at=now,
+                )
+                session.flush()
+                return result
+        except ApplicationError:
+            raise
+        except SQLAlchemyError as exc:
+            raise self._database_error() from exc
+
+    def fail_live_investigation(
+        self,
+        actor: ActorContext,
+        run_id: UUID,
+        error: ApplicationError,
+    ) -> None:
+        """Persist a safe failure outcome and mandatory audit in one transaction."""
+
+        now = self._now()
+        safe_error = {
+            "code": error.code.value,
+            "message_key": error.message_key,
+            "retryable": error.retryable,
+        }
+        try:
+            with self._session_factory() as session, session.begin():
+                run = session.scalar(
+                    select(Run)
+                    .where(
+                        Run.id == run_id,
+                        Run.organization_id == actor.organization_id,
+                        Run.environment_id == actor.environment_id,
+                        Run.actor_id == actor.subject_id,
+                        Run.action == LIVE_INVESTIGATION_ACTION,
+                    )
+                    .with_for_update()
+                )
+                if run is None:
+                    raise ApplicationError(ErrorCode.NOT_FOUND, "investigation.not_found")
+                if run.status != RunStatus.RUNNING.value:
+                    raise ApplicationError(ErrorCode.CONFLICT, "investigation.not_running")
+                run.status = RunStatus.FAILED.value
+                run.error = safe_error
+                run.updated_at = now
+                self._add_audit(
+                    session,
+                    organization_id=run.organization_id,
+                    environment_id=run.environment_id,
+                    actor_id=run.actor_id,
+                    correlation_id=run.correlation_id,
+                    run_id=run.id,
+                    event_type="investigation.failed",
+                    outcome=AuditOutcome.FAILED,
+                    details=safe_error,
+                    occurred_at=now,
+                )
+                session.flush()
+        except ApplicationError:
+            raise
+        except SQLAlchemyError as exc:
+            raise self._database_error() from exc
+
     def get_run(self, actor: ActorContext, run_id: UUID) -> RunRecord:
         """Read a run only inside the authenticated actor's server-derived scope."""
 
@@ -859,8 +1170,27 @@ class DurableAppService:
         return sha256(payload.encode("utf-8")).hexdigest()
 
     @staticmethod
+    def _assistant_request_hash(request: AssistantRequest) -> str:
+        return DurableAppService._json_hash(request.model_dump(mode="json"))
+
+    @staticmethod
+    def _json_hash(payload: Any) -> str:
+        canonical = json.dumps(
+            payload,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        )
+        return sha256(canonical.encode("utf-8")).hexdigest()
+
+    @staticmethod
     def _run_record(run: Run) -> RunRecord:
-        result = FixtureResult.model_validate(run.result) if run.result is not None else None
+        result: FixtureResult | LiveInvestigationResult | None = None
+        if run.result is not None:
+            if run.result.get("result_type") == "live_monitoring":
+                result = LiveInvestigationResult.model_validate(run.result)
+            else:
+                result = FixtureResult.model_validate(run.result)
         return RunRecord(
             run_id=run.id,
             request_id=run.request_id,
@@ -870,6 +1200,7 @@ class DurableAppService:
             created_at=run.created_at,
             updated_at=run.updated_at,
             result=result,
+            error=RunFailure.model_validate(run.error) if run.error is not None else None,
         )
 
     @staticmethod

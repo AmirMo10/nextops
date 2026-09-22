@@ -24,6 +24,7 @@ from nextops.contracts.durable import (
     BootstrapRequest,
     BootstrapResult,
     LeaseGrant,
+    LiveInvestigationResult,
     LoginRequest,
     RecoveryRequest,
     RecoveryResult,
@@ -66,6 +67,28 @@ class AppService(Protocol):
     def claim_lease(self, run_id: UUID, owner_id: str) -> LeaseGrant: ...
 
     def complete_fixture(self, grant: LeaseGrant) -> RunRecord: ...
+
+    def create_live_investigation(
+        self,
+        actor: ActorContext,
+        request: AssistantRequest,
+        correlation_id: UUID,
+    ) -> RunRecord: ...
+
+    def complete_live_investigation(
+        self,
+        actor: ActorContext,
+        run_id: UUID,
+        assistant: AssistantResponse,
+        evidence: MonitoringSummary,
+    ) -> LiveInvestigationResult: ...
+
+    def fail_live_investigation(
+        self,
+        actor: ActorContext,
+        run_id: UUID,
+        error: ApplicationError,
+    ) -> None: ...
 
 
 STATUS_BY_ERROR = {
@@ -245,18 +268,38 @@ def create_app(
         payload: AssistantRequest,
         actor: Annotated[ActorContext, Depends(current_actor)],
     ) -> InvestigationResponse:
-        del actor
-        if inference_gateway is None or monitoring_gateway is None:
-            raise ApplicationError(
-                ErrorCode.DEPENDENCY_UNAVAILABLE,
-                "investigation.not_configured",
-                retryable=True,
+        correlation_id = _correlation_id(request)
+        run = service.create_live_investigation(actor, payload, correlation_id)
+        if isinstance(run.result, LiveInvestigationResult):
+            return _investigation_response(run.result)
+        try:
+            if inference_gateway is None or monitoring_gateway is None:
+                raise ApplicationError(
+                    ErrorCode.DEPENDENCY_UNAVAILABLE,
+                    "investigation.not_configured",
+                    retryable=True,
+                )
+            evidence = await monitoring_gateway.summary()
+            assistant = await inference_gateway.generate(
+                _grounded_prompt(payload, evidence), correlation_id
             )
-        evidence = await monitoring_gateway.summary()
-        assistant = await inference_gateway.generate(
-            _grounded_prompt(payload, evidence), _correlation_id(request)
-        )
-        return InvestigationResponse(assistant=assistant, evidence=evidence)
+            result = service.complete_live_investigation(
+                actor,
+                run.run_id,
+                assistant,
+                evidence,
+            )
+            return _investigation_response(result)
+        except ApplicationError as error:
+            service.fail_live_investigation(actor, run.run_id, error)
+            raise
+        except Exception as error:
+            safe_error = ApplicationError(
+                ErrorCode.INTERNAL_ERROR,
+                "investigation.unexpected_failure",
+            )
+            service.fail_live_investigation(actor, run.run_id, safe_error)
+            raise safe_error from error
 
     @app.get("/api/v1/monitoring/summary", response_model=MonitoringSummary)
     async def monitoring_summary(
@@ -383,3 +426,14 @@ def _general_prompt(request: AssistantRequest) -> AssistantRequest:
 def _correlation_id(request: Request) -> UUID:
     correlation_id = getattr(request.state, "correlation_id", None)
     return correlation_id if isinstance(correlation_id, UUID) else uuid4()
+
+
+def _investigation_response(result: LiveInvestigationResult) -> InvestigationResponse:
+    return InvestigationResponse(
+        assistant=result.assistant,
+        evidence=result.evidence,
+        run_id=result.run_id,
+        evidence_reference=result.evidence_reference,
+        evidence_sha256=result.evidence_sha256,
+        audit_event_id=result.audit_event_id,
+    )

@@ -16,15 +16,19 @@ from sqlalchemy.orm import Session, sessionmaker
 from nextops.application.errors import ApplicationError
 from nextops.application.service import DurableAppService
 from nextops.configuration import AppSettings
+from nextops.contracts.assistant import AssistantRequest, AssistantResponse
 from nextops.contracts.durable import (
     BootstrapRequest,
+    FixtureResult,
     LoginRequest,
     RecoveryRequest,
     RunCreateRequest,
     RunStatus,
 )
 from nextops.contracts.errors import ErrorCode
-from nextops.persistence.models import AuditEvent, Environment, Identity
+from nextops.contracts.monitoring import MonitoringMetric, MonitoringSummary
+from nextops.inference.contracts import FinishReason
+from nextops.persistence.models import AuditEvent, Environment, Identity, Run, Target
 
 pytestmark = pytest.mark.integration
 
@@ -186,7 +190,7 @@ def test_run_idempotency_fixture_result_and_expired_lease_restart_recovery(
     completed = restarted_service.complete_fixture(renewed)
 
     assert completed.status is RunStatus.SUCCEEDED
-    assert completed.result is not None
+    assert isinstance(completed.result, FixtureResult)
     assert completed.result.source.connector == "fixture"
     assert completed.result.is_stale is True
     assert completed.result.audit_event_id is not None
@@ -268,3 +272,109 @@ def test_audit_failure_rolls_back_state_and_append_only_trigger_blocks_owner(
     service.bootstrap(bootstrap_request(), BOOTSTRAP_SECRET, uuid4())
     with admin_engine.begin() as connection, pytest.raises(DBAPIError):
         connection.execute(update(AuditEvent).values(outcome="failed"))
+
+
+def test_live_investigation_persists_bounded_evidence_result_and_failure_audit(
+    app_session_factory: sessionmaker[Session], settings: AppSettings
+) -> None:
+    service = DurableAppService(app_session_factory, settings)
+    bootstrap = service.bootstrap(bootstrap_request(), BOOTSTRAP_SECRET, uuid4())
+    actor = bootstrap.authenticated_session.actor
+    correlation_id = uuid4()
+    request = AssistantRequest(
+        locale="en",
+        question="What is the current monitoring state?",
+        max_output_tokens=128,
+    )
+
+    created = service.create_live_investigation(actor, request, correlation_id)
+    assert created.status is RunStatus.RUNNING
+
+    evidence = MonitoringSummary(
+        source_version="7.0.30",
+        host="Zabbix server",
+        collected_at=datetime(2026, 9, 22, 8, 1, tzinfo=UTC),
+        metrics=(
+            MonitoringMetric(
+                name="CPU idle time",
+                key="system.cpu.util[,idle]",
+                value="91.25",
+                units="%",
+                measured_at=datetime(2026, 9, 22, 8, 0, tzinfo=UTC),
+                stale=False,
+            ),
+        ),
+        active_problems=(),
+    )
+    assistant = AssistantResponse(
+        request_id=uuid4(),
+        correlation_id=correlation_id,
+        locale="en",
+        answer="The supplied monitoring evidence contains one fresh metric.",
+        model_id="nextops-qwen3-8b-q4-k-m",
+        prompt_tokens=100,
+        completion_tokens=20,
+        finish_reason=FinishReason.STOP,
+        started_at=datetime(2026, 9, 22, 8, 1, tzinfo=UTC),
+        completed_at=datetime(2026, 9, 22, 8, 2, tzinfo=UTC),
+        queue_ms=0,
+        cpu_only_required=True,
+    )
+
+    completed = service.complete_live_investigation(
+        actor,
+        created.run_id,
+        assistant,
+        evidence,
+    )
+    fetched = service.get_run(actor, created.run_id)
+
+    assert fetched.status is RunStatus.SUCCEEDED
+    assert fetched.result == completed
+    assert completed.evidence_reference == f"run-evidence:{created.run_id}"
+    assert len(completed.evidence_sha256) == 64
+    assert completed.audit_event_id is not None
+
+    failed_correlation_id = uuid4()
+    failed_run = service.create_live_investigation(actor, request, failed_correlation_id)
+    service.fail_live_investigation(
+        actor,
+        failed_run.run_id,
+        ApplicationError(
+            ErrorCode.DEPENDENCY_UNAVAILABLE,
+            "connector.summary_unavailable",
+            retryable=True,
+        ),
+    )
+    fetched_failure = service.get_run(actor, failed_run.run_id)
+
+    with app_session_factory() as session:
+        target = session.scalar(
+            select(Target).where(Target.name == "zabbix-live", Target.kind == "zabbix")
+        )
+        stored_failure = session.get(Run, failed_run.run_id)
+        event_types = set(
+            session.scalars(
+                select(AuditEvent.event_type).where(
+                    AuditEvent.run_id.in_((created.run_id, failed_run.run_id))
+                )
+            ).all()
+        )
+
+    assert target is not None
+    assert stored_failure is not None
+    assert stored_failure.status == "failed"
+    assert stored_failure.error == {
+        "code": "dependency_unavailable",
+        "message_key": "connector.summary_unavailable",
+        "retryable": True,
+    }
+    assert fetched_failure.status is RunStatus.FAILED
+    assert fetched_failure.error is not None
+    assert fetched_failure.error.code is ErrorCode.DEPENDENCY_UNAVAILABLE
+    assert fetched_failure.error.message_key == "connector.summary_unavailable"
+    assert event_types == {
+        "investigation.started",
+        "investigation.completed",
+        "investigation.failed",
+    }

@@ -1,6 +1,7 @@
 """Contracts for source-qualified monitoring evidence."""
 
 from typing import Literal
+from uuid import UUID
 
 from pydantic import AwareDatetime, Field
 
@@ -43,5 +44,9 @@ class InvestigationResponse(FrozenContract):
 
     assistant: AssistantResponse
     evidence: MonitoringSummary
+    run_id: UUID
+    evidence_reference: str = Field(pattern=r"^run-evidence:[0-9a-f-]{36}$")
+    evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    audit_event_id: UUID
     evidence_mode: Literal["live_zabbix"] = "live_zabbix"
     live_monitoring_data: Literal[True] = True

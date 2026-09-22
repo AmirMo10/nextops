@@ -15,6 +15,7 @@ from nextops.contracts.durable import (
     EvidenceSource,
     FixtureResult,
     LeaseGrant,
+    LiveInvestigationResult,
     LoginRequest,
     RecoveryRequest,
     RecoveryResult,
@@ -49,6 +50,11 @@ class FakeService:
         )
         self.created_with_actor: ActorContext | None = None
         self.raise_on_create: ApplicationError | None = None
+        self.live_created_with_actor: ActorContext | None = None
+        self.live_completed = False
+        self.live_failure: ApplicationError | None = None
+        self.live_correlation_id = uuid4()
+        self.live_locale = "en"
 
     def bootstrap(
         self, request: BootstrapRequest, supplied_secret: str, correlation_id: UUID
@@ -111,6 +117,61 @@ class FakeService:
     def complete_fixture(self, grant: LeaseGrant) -> RunRecord:
         del grant
         return self._record(RunStatus.SUCCEEDED, with_result=True)
+
+    def create_live_investigation(
+        self,
+        actor: ActorContext,
+        request: AssistantRequest,
+        correlation_id: UUID,
+    ) -> RunRecord:
+        self.live_created_with_actor = actor
+        self.live_correlation_id = correlation_id
+        self.live_locale = request.locale
+        return RunRecord(
+            run_id=RUN_ID,
+            request_id=uuid4(),
+            correlation_id=correlation_id,
+            status=RunStatus.RUNNING,
+            locale=request.locale,
+            created_at=NOW,
+            updated_at=NOW,
+        )
+
+    def complete_live_investigation(
+        self,
+        actor: ActorContext,
+        run_id: UUID,
+        assistant: AssistantResponse,
+        evidence: MonitoringSummary,
+    ) -> LiveInvestigationResult:
+        assert actor == self.actor
+        assert run_id == RUN_ID
+        self.live_completed = True
+        return LiveInvestigationResult(
+            run_id=run_id,
+            status=RunStatus.SUCCEEDED,
+            locale=assistant.locale,
+            assistant=assistant,
+            evidence=evidence,
+            evidence_reference=f"run-evidence:{run_id}",
+            evidence_sha256="a" * 64,
+            organization_id=ORG_ID,
+            environment_id=ENV_ID,
+            target_id=TARGET_ID,
+            is_partial=False,
+            is_stale=any(metric.stale for metric in evidence.metrics),
+            audit_event_id=UUID("60000000-0000-4000-8000-000000000001"),
+        )
+
+    def fail_live_investigation(
+        self,
+        actor: ActorContext,
+        run_id: UUID,
+        error: ApplicationError,
+    ) -> None:
+        assert actor == self.actor
+        assert run_id == RUN_ID
+        self.live_failure = error
 
     def _session(self) -> AuthenticatedSession:
         return AuthenticatedSession(
@@ -214,6 +275,17 @@ class FakeMonitoringGateway:
         )
 
 
+class FailingMonitoringGateway:
+    """Controlled connector failure for durable failure-route coverage."""
+
+    async def summary(self) -> MonitoringSummary:
+        raise ApplicationError(
+            ErrorCode.DEPENDENCY_UNAVAILABLE,
+            "connector.summary_unavailable",
+            retryable=True,
+        )
+
+
 def test_health_is_unversioned_and_contains_no_dependency_claim() -> None:
     client = TestClient(create_app(FakeService()))
 
@@ -238,6 +310,10 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
     assert 'data-mode="monitoring"' in response.text
     assert '"/api/v1/assistant/generate"' in javascript.text
     assert "بدون افزودن وضعیت Zabbix" in javascript.text
+    assert 'id="runId"' in response.text
+    assert 'id="evidenceReference"' in response.text
+    assert 'id="auditEventId"' in response.text
+    assert "result.evidence_reference" in javascript.text
     assert "https://" not in response.text
     assert "https://" not in javascript.text
     assert response.headers["x-frame-options"] == "DENY"
@@ -282,8 +358,9 @@ def test_assistant_readiness_is_authenticated() -> None:
 
 
 def test_investigation_requires_session_and_returns_exact_live_evidence() -> None:
+    service = FakeService()
     inference = FakeInferenceGateway()
-    client = TestClient(create_app(FakeService(), inference, FakeMonitoringGateway()))
+    client = TestClient(create_app(service, inference, FakeMonitoringGateway()))
 
     unauthenticated = client.post(
         "/api/v1/investigate",
@@ -302,8 +379,32 @@ def test_investigation_requires_session_and_returns_exact_live_evidence() -> Non
     assert body["live_monitoring_data"] is True
     assert body["evidence"]["source_version"] == "7.0.30"
     assert body["evidence"]["metrics"][0]["stale"] is False
+    assert body["run_id"] == str(RUN_ID)
+    assert body["evidence_reference"] == f"run-evidence:{RUN_ID}"
+    assert body["evidence_sha256"] == "a" * 64
+    assert body["audit_event_id"] == "60000000-0000-4000-8000-000000000001"
+    assert service.live_created_with_actor == service.actor
+    assert service.live_completed is True
+    assert service.live_failure is None
     assert inference.last_request is not None
     assert inference.last_request.max_output_tokens == 128
+
+
+def test_investigation_failure_is_recorded_before_safe_error_response() -> None:
+    service = FakeService()
+    client = TestClient(create_app(service, FakeInferenceGateway(), FailingMonitoringGateway()))
+
+    response = client.post(
+        "/api/v1/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": "What is the current state?"},
+    )
+
+    assert response.status_code == 503
+    assert service.live_created_with_actor == service.actor
+    assert service.live_completed is False
+    assert service.live_failure is not None
+    assert service.live_failure.message_key == "connector.summary_unavailable"
 
 
 def test_run_actor_is_derived_from_bearer_session_and_fixture_is_explicit() -> None:

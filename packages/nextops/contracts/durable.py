@@ -6,7 +6,8 @@ from uuid import UUID
 
 from pydantic import AwareDatetime, Field, JsonValue, SecretStr
 
-from nextops.contracts.errors import ErrorDetail
+from nextops.contracts.assistant import AssistantResponse
+from nextops.contracts.errors import ErrorCode, ErrorDetail
 from nextops.contracts.models import (
     ActionName,
     ActorContext,
@@ -14,6 +15,7 @@ from nextops.contracts.models import (
     ParameterName,
     ScopeName,
 )
+from nextops.contracts.monitoring import MonitoringSummary
 
 Slug = Annotated[str, Field(pattern=r"^[a-z][a-z0-9-]{1,62}$")]
 Username = Annotated[str, Field(pattern=r"^[a-z][a-z0-9_.-]{2,63}$")]
@@ -116,6 +118,7 @@ class EvidenceSource(FrozenContract):
 class FixtureResult(FrozenContract):
     """First deterministic bilingual result with provenance and limitations."""
 
+    result_type: Literal["fixture"] = "fixture"
     run_id: UUID
     status: RunStatus
     locale: Literal["en", "fa"]
@@ -130,6 +133,33 @@ class FixtureResult(FrozenContract):
     audit_event_id: UUID
 
 
+class LiveInvestigationResult(FrozenContract):
+    """Durable model result linked to the exact bounded monitoring snapshot."""
+
+    result_type: Literal["live_monitoring"] = "live_monitoring"
+    run_id: UUID
+    status: RunStatus
+    locale: Literal["en", "fa"]
+    assistant: AssistantResponse
+    evidence: MonitoringSummary
+    evidence_reference: str = Field(pattern=r"^run-evidence:[0-9a-f-]{36}$")
+    evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    organization_id: UUID
+    environment_id: UUID
+    target_id: UUID
+    is_partial: bool
+    is_stale: bool
+    audit_event_id: UUID
+
+
+class RunFailure(FrozenContract):
+    """Safe durable failure metadata without raw exceptions or dependency payloads."""
+
+    code: ErrorCode
+    message_key: str = Field(pattern=r"^[a-z][a-z0-9_.-]{2,127}$")
+    retryable: bool = False
+
+
 class RunRecord(FrozenContract):
     """Public durable-run representation without credential or lease secrets."""
 
@@ -140,7 +170,8 @@ class RunRecord(FrozenContract):
     locale: Literal["en", "fa"]
     created_at: AwareDatetime
     updated_at: AwareDatetime
-    result: FixtureResult | None = None
+    result: FixtureResult | LiveInvestigationResult | None = None
+    error: RunFailure | None = None
 
 
 class LeaseGrant(FrozenContract):
