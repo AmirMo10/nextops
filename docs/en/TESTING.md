@@ -3,7 +3,7 @@
 [فارسی](../fa/TESTING.md) · [Index](INDEX.md)
 
 **Status: active test plan with repository, isolated PostgreSQL, live connector and bounded local-AI
-evidence.** Ruff, strict mypy, 102 non-integration cases and six PostgreSQL integration cases pass.
+evidence.** Ruff, strict mypy, 103 non-integration cases and six PostgreSQL integration cases pass.
 Authenticated browser-path, live read-only Zabbix, durable investigation, revoked-token,
 unreachable-API, recovery, explicit four-guest WAN isolation and serial clean-reboot checks have run
 on the controlled environment. The reboot work exposed and corrected explicit PostgreSQL-cluster
@@ -113,13 +113,16 @@ uv run ruff check packages migrations tests scripts deploy/installers
 uv run mypy packages tests deploy/installers
 uv run pytest -m "not integration" -q
 uv run python scripts/check_docs.py
+uv run python scripts/check_release_status.py
 uv run python scripts/check_deployment_dossiers.py
 uv run python scripts/check_inference_artifacts.py
 uv run python scripts/check_server_installers.py
 ```
 
 The PostgreSQL integration suite requires an isolated database URL in
-`NEXTOPS_TEST_DATABASE_URL`; the current suite contains six cases.
+`NEXTOPS_TEST_DATABASE_URL`; the current suite contains six cases. CI is configured to run the same
+suite against the deployed PostgreSQL 16.15 major/version and the future-compatibility PostgreSQL
+17.6 image. Each container image is digest-pinned; a workflow definition is not a passing result.
 The documentation checker covers local links, paired guide filenames, Persian RTL wrappers and
 required control files. These checks do not contact equipment, apply a package bundle, fetch a
 model, assess natural-language quality, or establish deployment acceptance.

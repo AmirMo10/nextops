@@ -40,7 +40,7 @@ The next operator must treat the following as completed and preserve it:
 - serial clean reboots of Zabbix, connector, AI and application with the offline policy loaded before
   normal networking, explicit database-cluster ordering, role-specific recovery and zero failed
   units; and
-- local quality gates: Ruff, strict mypy, 102 passing non-integration tests and all 6 PostgreSQL
+- local quality gates: Ruff, strict mypy, 103 passing non-integration tests and all 6 PostgreSQL
   integration tests passing against an isolated temporary database.
 
 The immediate implementation sequence is:
@@ -75,9 +75,9 @@ The owner accepted the paired [Phase 0 report](en/PHASE_0_REPORT.md), [Persian r
 
 A sanitized read-only preflight reached all four clean replacement guests after their independently supplied Ed25519 fingerprints matched live handshakes. All four run Ubuntu 24.04.5 LTS under VMware with the intended public resource/mount budgets. On 2026-09-22, after the AI work and a narrow GLib security update on app, every guest reported `running`, zero failed units, zero pending packages and no reboot requirement. Direct root SSH remains disabled. The deployment account has the full passwordless administrative access explicitly requested by the owner; its private key and strict host-key pins are therefore security-critical and remain outside Git.
 
-The role package layers remain as recorded: PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. Product/database/web services outside the AI slice remain inactive and disabled, and no PostgreSQL cluster exists. Docker was not installed because the native systemd design does not need it or a container socket.
+The role package layers remain as recorded: PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The controlled application/database/proxy, AI, connector and Zabbix/database/frontend slices are active and passed the named reboot checks. Docker was not installed because the native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active application is `nextops-0.1.0-62de8d6`; the corrected service uses the protected runtime library path and waits for authenticated model health. Both unprivileged services are enabled and active only on `127.0.0.1:8080` and `127.0.0.1:8090`; each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs.
+The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-62de8d6`; the active user application and connector are `nextops-0.1.0-13a3369` and `nextops-0.1.0-3d7d725`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
 
 Two independent four-case qualification runs passed unauthenticated denial, readiness, Persian and
 English evidence preservation, and safe non-execution responses under both automated checks and
@@ -188,7 +188,7 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
   روی شبکهٔ داخلی مجاز برقرار ماند؛
 - راه‌اندازی مجدد سالم و ترتیبی Zabbix، اتصال، هوش مصنوعی و برنامه؛ سیاست آفلاین پیش از شبکهٔ عادی
   بار شد، ترتیب خوشه‌های واقعی پایگاه صریح بود، سرویس‌های هر نقش بازگشتند و واحد خراب وجود نداشت؛
-- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۰۲ آزمون غیر‌یکپارچه و هر شش آزمون PostgreSQL در پایگاه
+- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۰۳ آزمون غیر‌یکپارچه و هر شش آزمون PostgreSQL در پایگاه
   موقت و جداگانه.
 
 ترتیب مستقیم کار بعدی چنین است:
@@ -222,9 +222,9 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 پیش‌بررسی پاک‌سازی‌شده پس از برابری اثرانگشت‌های Ed25519 با ارتباط زنده به هر چهار مهمان جایگزین رسید. همهٔ مهمان‌ها Ubuntu 24.04.5 LTS را زیر VMware و با بودجهٔ عمومی منابع و محل‌های ذخیره‌سازی اجرا می‌کنند. در ۲۲ سپتامبر ۲۰۲۶، پس از کار هوش مصنوعی و به‌روزرسانی محدود امنیتی GLib روی مهمان برنامه، هر چهار سرور وضعیت `running`، صفر واحد خراب، صفر بستهٔ قابل‌ارتقا و بی‌نیازی از راه‌اندازی مجدد را گزارش کردند. ورود مستقیم root از راه SSH بسته مانده است. حساب استقرار بنا بر دستور صریح مالک اکنون مدیریت کامل و بدون گذرواژه دارد؛ ازاین‌رو کلید خصوصی و کنترل سخت‌گیرانهٔ کلیدهای میزبان اهمیت امنیتی ویژه دارند و بیرون Git نگه‌داری می‌شوند.
 
-لایهٔ بسته‌های هر نقش مطابق رکورد باقی است: PostgreSQL 16.15 و Nginx 1.24 روی برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 روی هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 روی connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 روی Zabbix. به‌جز برش هوش مصنوعی، سرویس‌های محصول، پایگاه و وب همچنان غیرفعال‌اند و هیچ خوشهٔ PostgreSQL ساخته نشده است. Docker نصب نشد، زیرا طراحی بومی systemd نه به آن نیاز دارد و نه باید سوکت کانتینر را وارد مرز اعتماد کند.
+لایهٔ بسته‌های هر نقش مطابق رکورد باقی است: PostgreSQL 16.15 و Nginx 1.24 روی برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 روی هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 روی connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 روی Zabbix. برش‌های کنترل‌شدهٔ برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix و پایگاه و رابط آن فعال‌اند و آزمون‌های نام‌بردهٔ راه‌اندازی مجدد را گذرانده‌اند. Docker نصب نشد، زیرا طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال برنامه `nextops-0.1.0-62de8d6` است؛ سرویس اصلاح‌شده کتابخانه‌ها را از محیط اجرای محافظت‌شده می‌خواند و تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌ماند. هر دو سرویس با هویت بدون امتیاز، فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند و ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند.
+محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-62de8d6` و انتشارهای فعال برنامه و اتصال به‌ترتیب `nextops-0.1.0-13a3369` و `nextops-0.1.0-3d7d725` هستند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
 
 دو اجرای مستقلِ چهارموردی، رد درخواست بدون احراز هویت، آمادگی، حفظ شاهد فارسی و انگلیسی و پاسخ ایمن
 بدون ادعای اجرا را هم در بررسی خودکار و هم در بازبینی انسانی گذراندند. آزمون بار اولیه، مرز یک

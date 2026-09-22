@@ -5,7 +5,7 @@
 [English](../en/TESTING.md) · [فهرست](INDEX.md)
 
 **وضعیت: برنامهٔ فعال آزمون با شواهد مخزن، PostgreSQL جداگانه، اتصال زنده و مدل محلیِ
-محدودشده.** Ruff، mypy سخت‌گیرانه، ۱۰۲ آزمون غیر‌یکپارچه و شش آزمون یکپارچگی PostgreSQL
+محدودشده.** Ruff، mypy سخت‌گیرانه، ۱۰۳ آزمون غیر‌یکپارچه و شش آزمون یکپارچگی PostgreSQL
 موفق‌اند. مسیر احرازهویت‌شدهٔ مرورگر، خواندن زنده و فقط‌خواندنی Zabbix، بررسی ماندگار، لغو توکن،
 قطع API، بازیابی، قطع صریح WAN چهار مهمان و راه‌اندازی مجدد ترتیبی و سالم آن‌ها در محیط کنترل‌شده
 آزموده شده‌اند. این آزمون دو نقص در ترتیب وابستگی PostgreSQL برای سرویس‌های Zabbix و برنامه را آشکار
@@ -111,6 +111,7 @@ uv run ruff check packages migrations tests scripts deploy/installers
 uv run mypy packages tests deploy/installers
 uv run pytest -m "not integration" -q
 uv run python scripts/check_docs.py
+uv run python scripts/check_release_status.py
 uv run python scripts/check_deployment_dossiers.py
 uv run python scripts/check_inference_artifacts.py
 uv run python scripts/check_server_installers.py
@@ -119,7 +120,9 @@ uv run python scripts/check_server_installers.py
 <div dir="rtl">
 
 مجموعهٔ integration به PostgreSQL جدا در `NEXTOPS_TEST_DATABASE_URL` نیاز دارد و اکنون شامل شش
-مورد است. بررسی مستندات لینک محلی، همتای راهنماها، پوشش راست‌به‌چپ و فایل‌های کنترلی را می‌سنجد.
+مورد است. CI همان مجموعه را با imageهای ثابت PostgreSQL 16.15، یعنی نسخهٔ مستقر، و PostgreSQL
+17.6 برای سازگاری آینده اجرا می‌کند؛ تعریف job به‌تنهایی نتیجهٔ موفق نیست. بررسی مستندات لینک
+محلی، همتای راهنماها، پوشش راست‌به‌چپ و فایل‌های کنترلی را می‌سنجد.
 این بررسی‌ها با تجهیز تماس نمی‌گیرند، bundle بسته را اعمال نمی‌کنند، مدل دریافت نمی‌کنند، طبیعی
 بودن زبان را نمی‌سنجند و پذیرش استقرار را ثابت نمی‌کنند.
 

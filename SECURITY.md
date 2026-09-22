@@ -2,7 +2,7 @@
 
 ## English
 
-The repository currently contains design documentation, not a supported production release. No operational security guarantees or supported software versions are claimed. See [security design](docs/en/SECURITY.md).
+The repository contains a controlled user-testing implementation and its design/evidence records; it is not a supported or production-accepted release. Scoped tests and the [current release manifest](docs/status/current-release.yaml) are evidence only for the named controls and versions, not a general operational security guarantee. See [security design](docs/en/SECURITY.md).
 
 Never disclose credentials, production addresses, private logs or exploit details involving real infrastructure in a public issue. Use an owner-approved private channel for sensitive reports. GitHub private vulnerability reporting has not been verified as enabled; do not assume a reporting endpoint exists.
 
@@ -12,7 +12,7 @@ The master prompt and examples contain requirements, not live inventory. All AI 
 
 ## فارسی
 
-مخزن فعلاً مستندات طراحی دارد و نسخهٔ عملیاتی پشتیبانی‌شده نیست. هیچ تضمین امنیت عملیاتی یا فهرست نسخهٔ نرم‌افزاری پشتیبانی‌شده ادعا نمی‌شود. [طرح امنیت](docs/fa/SECURITY.md) را ببینید.
+مخزن شامل پیاده‌سازی کنترل‌شدهٔ ارزیابی کاربران و اسناد طراحی و شواهد آن است، اما هنوز انتشار پشتیبانی‌شده یا پذیرفته‌شده برای تولید نیست. آزمون‌های محدود و [مانیفست وضعیت جاری](docs/status/current-release.yaml) فقط شاهد کنترل‌ها و نسخه‌های نام‌برده‌اند و تضمین کلی امنیت عملیاتی نیستند. [طرح امنیت](docs/fa/SECURITY.md) را ببینید.
 
 اطلاعات ورود، نشانی عملیاتی، لاگ خصوصی یا جزئیات سوءاستفاده از زیرساخت واقعی در issue عمومی منتشر نشود. گزارش حساس از مسیر خصوصیِ تأییدشده توسط مالک ارسال شود. فعال بودن گزارش خصوصی آسیب‌پذیری GitHub بررسی نشده است؛ وجود مسیر گزارش فرض نشود.
 

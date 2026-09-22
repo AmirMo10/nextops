@@ -2,7 +2,7 @@
 
 [فارسی](../fa/OFFLINE_RUNTIME.md) · [Index](INDEX.md) · [Technology stack](TECH_STACK.md) · [CPU-only AI](CPU_AI.md)
 
-**Requirement confirmed by the owner: 2026-09-20. Source application work has started; full offline runtime acceptance: NOT RUN.** This is a mandatory delivery constraint, not an optional feature or a claim that the current API/database slice is an offline-capable product.
+**Requirement confirmed by the owner: 2026-09-20. Current status: partial controlled acceptance, not production acceptance.** Four-guest WAN isolation, new server/API requests, and serial clean reboots passed; the independently isolated fresh-browser case, complete cold-start matrix, sustained load, backup, and isolated restore remain open. See the [release manifest](../status/current-release.yaml) and [test evidence](TESTING.md).
 
 ## 1. The operating contract
 
@@ -70,7 +70,7 @@ Run only in an authorized isolated lab or approved maintenance window with a rec
 
 Block external access for both the server workload and the test browser while allowing required loopback and explicitly approved LAN routes. Cover IPv4/IPv6 and any configured proxy/tunnel paths. Merely breaking public DNS is not an adequate test. Record process-scoped network attempts as well as successful connections; a blocked unwanted request is still a dependency/privacy defect.
 
-All cases below are **NOT RUN**. Define expected answers, bilingual evaluation cases, resource/latency targets and a numeric sustained-test duration before execution; report actual samples and measurements rather than inferred performance.
+The table below remains the normative acceptance suite. Current outcomes are recorded in the release manifest and test evidence: the server/API portions of OFF-01 and OFF-05 pass, the reboot/startup evidence covers a bounded part of OFF-02, and OFF-03 remains partial because the browser process was not independently WAN-isolated. All other unrecorded portions remain `not_run`. Define numeric sustained-test targets before execution and report samples rather than inferred performance.
 
 | ID | Scenario | Required evidence |
 |---|---|---|

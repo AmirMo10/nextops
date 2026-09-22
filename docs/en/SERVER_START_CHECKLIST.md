@@ -118,8 +118,8 @@ Then apply these server-specific holds:
 - **`nextops-app`:** reserve the guest and complete OS/network/storage evidence only. Do
   not initialize the NextOps database or run migrations until the application release,
   database version, login roles, service units, backup, and downgrade/recovery procedure
-  are promoted together. CI currently tests PostgreSQL 17.6; the dossier's PostgreSQL 16
-  proposal is not a production lock and must be reconciled before installation.
+  are promoted together. CI defines separate digest-pinned PostgreSQL 16.15 and 17.6 integration
+  jobs so the deployed major and intended future-compatible major are exercised independently.
 - **`nextops-ai`:** record actual guest-visible CPU flags and NUMA view before selecting a
   CPU build. Do not download a model or install CUDA, ROCm, GPU containers, or a remote
   fallback. The model/runtime checksum, license, memory budget, and measured quality and

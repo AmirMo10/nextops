@@ -2,7 +2,7 @@
 
 [فارسی](../fa/ARCHITECTURE.md) · [Index](INDEX.md)
 
-**Status: Phase 0 architecture accepted; selected source boundaries are implemented and tested.** Source: [master specification](../requirements/NEXTOPS_MASTER_PROMPT.md), sections 2–8 and 16–20. The repository contains the app/API, persistence, policy, identity and local-inference foundations, but not the complete web, gateway, connector or production deployment described below.
+**Status: Phase 0 architecture accepted; the controlled application, static bilingual panel, PostgreSQL state, authenticated CPU inference, and narrow read-only Zabbix connector boundaries are implemented and deployed for user testing.** Durable investigation/audit, server/API WAN isolation, and serial reboot recovery have scoped evidence. A complete MCP gateway, general durable worker, retrieval/topology, remediation, independent recovery, and production acceptance remain future work. See the [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md).
 
 ## Decision
 

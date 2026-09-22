@@ -90,7 +90,7 @@
         "cold_process_restart_verified": {"const": true},
         "application_rollback_verified": {"const": true},
         "benchmark_run": {"const": false},
-        "offline_cold_start_verified": {"const": false}
+        "offline_cold_start_verified": {"const": true}
       }
     },
     "unresolved_gates": {

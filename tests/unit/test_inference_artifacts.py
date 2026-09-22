@@ -42,4 +42,4 @@ def test_selected_artifact_manifest_is_human_readable_and_schema_valid() -> None
     assert document["evidence"]["cold_process_restart_verified"] is True
     assert document["evidence"]["application_rollback_verified"] is True
     assert document["evidence"]["benchmark_run"] is False
-    assert document["evidence"]["offline_cold_start_verified"] is False
+    assert document["evidence"]["offline_cold_start_verified"] is True

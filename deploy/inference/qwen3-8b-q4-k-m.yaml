@@ -55,12 +55,12 @@ evidence:
   cold_process_restart_verified: true
   application_rollback_verified: true
   benchmark_run: false
-  offline_cold_start_verified: false
+  offline_cold_start_verified: true
 unresolved_gates:
   - Hash and independently retain the complete shared-library release tree and normalized build manifest.
   - Approve exact thread, affinity, batch, context, timeout, and memory settings from representative measurement.
   - Complete live cancellation, dependency failure, corrupt-artifact, low-space, and sustained-resource tests.
-  - Prove an explicit WAN-blocked VM reboot, independent offline restore, and runtime/model rollback.
+  - Complete independent offline restore and runtime/model rollback from verified local artifacts.
   - Approve dependency licenses and retain an independent checksummed artifact copy.
 references:
   - https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md

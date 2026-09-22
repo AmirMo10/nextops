@@ -2,7 +2,7 @@
 
 [فارسی](../fa/TECH_STACK.md) · [Index](INDEX.md) · [Diagram atlas](DIAGRAMS.md) · [CPU evaluation](CPU_AI.md)
 
-> **Architecture recommendation with two implemented Stage 1A slices.** Python 3.12, `uv`, Pydantic, FastAPI/Uvicorn, PostgreSQL through SQLAlchemy/Alembic/Psycopg, Ruff, mypy and pytest are declared and locked for the source application. The frontend, connector, inference and deployment choices below are not installed product services. No model or performance result has been validated on the G10.
+> **Architecture recommendation plus a controlled deployed subset.** Python 3.12, `uv`, Pydantic, FastAPI/Uvicorn, PostgreSQL through SQLAlchemy/Alembic/Psycopg, Ruff, mypy and pytest are locked. The current user-testing UI is locally bundled HTML/CSS/JavaScript, not the proposed React/Vite replacement. The pinned llama.cpp/Qwen CPU service, connector, systemd units, Nginx/TLS, application PostgreSQL, and Zabbix path are deployed with scoped evidence; production performance and recovery remain unaccepted. See the [release manifest](../status/current-release.yaml).
 
 ## Recommended starting combination
 
@@ -12,7 +12,7 @@ Build a modular application, not a service per library. The API and worker share
 
 ## 1. Core stack and ownership
 
-The Python contract/API/persistence/quality entries have an implemented source slice; the remaining entries are proposed. “Core” means part of the initial implementation target, not a deployed service. Linked documentation establishes library capabilities, not measured suitability for this server.
+The table mixes the deployed controlled subset with future choices. Treat an entry as deployed only when the release manifest and project state say so. “Core” means part of the implementation target, not automatic production acceptance. Linked documentation establishes library capabilities, not measured suitability for this server.
 
 | Layer | Suggested choice | Purpose in NextOps | Important constraint |
 |---|---|---|---|
@@ -31,7 +31,7 @@ The Python contract/API/persistence/quality entries have an implemented source s
 | Evidence storage | Restricted local filesystem + PostgreSQL metadata | Content hashes, provenance and permission-scoped retrieval | Redact before model exposure; controlled retention and off-host recovery. |
 | Quality tooling | Ruff, mypy, pytest, HTTPX; Vitest and Playwright | Formatting/types, backend contracts and browser tests [11] | Simulator tests are not device validation; document failed/skipped/unrun tests. |
 
-The original baseline selected Python/FastAPI, PostgreSQL, React/Vite, local CPU inference and MCP. Stage 1A now locks and tests the Python/FastAPI/PostgreSQL source stack. React/Vite, MCP, CPU inference, production packaging and server deployment still require reviewed increments.
+The original baseline selected Python/FastAPI, PostgreSQL, React/Vite, local CPU inference and MCP. The Python/FastAPI/PostgreSQL stack, a static local panel, native packaging/deployment, local CPU inference, and the narrow Zabbix boundary are implemented for controlled testing. React/Vite and the official MCP SDK remain unevaluated future increments; production packaging acceptance and recovery remain open.
 
 ## 2. Visual and interaction stack
 

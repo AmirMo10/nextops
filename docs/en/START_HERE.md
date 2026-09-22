@@ -2,7 +2,7 @@
 
 [فارسی](../fa/START_HERE.md) · [Index](INDEX.md) · [Roadmap](ROADMAP.md) · [Server plan](SERVER_PLAN.md) · [Dedicated Zabbix](ZABBIX_SERVER.md)
 
-**Updated: 2026-09-20 — dedicated Zabbix deployment profile.** This is an implementation plan, not a report of provisioned VMs or completed tests. It updates the former small-lab recommendation without increasing the number of NextOps core VMs. Read the [deployment amendment](../requirements/DEPLOYMENT_UPDATE.md) with the active prompt; all non-conflicting safety and feature requirements remain in force.
+**Updated: 2026-09-22 — executed deployment profile and retained build guide.** The four machines described here now exist and the controlled server/API path has passed scoped failure, WAN-isolation and serial-reboot checks. This document retains the safe creation order and original acceptance gates for rebuild/recovery use; it is not the current evidence ledger. Read the [machine-readable status](../status/current-release.yaml), [project state](../PROJECT_STATE.md) and [next task](../NEXT_TASK.md) before acting. They supersede earlier future-tense statements below without weakening any safety requirement.
 
 ## 1. First decision
 

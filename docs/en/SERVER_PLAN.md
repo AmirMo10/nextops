@@ -137,7 +137,7 @@ The initial named tools can be `zabbix.status_overview`, `zabbix.host_status`, `
 
 ## 7. Phase 1 acceptance evidence
 
-All cases below are **NOT RUN**. Do not mark them passed until executed in an authorized environment.
+These are the normative Phase 1 gates, not a frozen status table. Current controlled results are in the [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md): ZBX-01/02/05/06/08 and the server/API portions of ZBX-03/04 have evidence, while the independently isolated browser, remaining recovery/resource cases, and production acceptance remain incomplete. Do not promote partial evidence to a complete pass.
 
 | ID | Acceptance gate |
 |---|---|

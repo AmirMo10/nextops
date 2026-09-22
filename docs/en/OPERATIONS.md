@@ -2,7 +2,7 @@
 
 [فارسی](../fa/OPERATIONS.md) · [Index](INDEX.md)
 
-**Status: operational design; no services or backup jobs are installed.** Source: master specification sections 18–20. Procedures become executable only after their implementations and restore tests exist.
+**Status: the controlled application, databases, AI, connector, proxy, and Zabbix services are installed; no independent backup job or accepted restore procedure exists.** Scoped restart and serial reboot recovery have passed, but backup, isolated restore, and disaster recovery remain `not_run`. The [backup/restore specification](BACKUP_RESTORE_SPEC.md) defines the next recovery increment.
 
 ## Environments and service boundaries
 
