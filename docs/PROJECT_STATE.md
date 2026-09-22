@@ -1,8 +1,39 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-22 — the checksummed CPU runtime, model, and corrected API release are installed as immutable protected releases on the AI guest. The two hardened native systemd services are enabled, active, authenticated, and loopback-only; bilingual quality/load checks, a 109-second cold process restart, and application-release rollback/restoration passed. All four guests are healthy with zero pending packages or reboot requirement. Full VM-reboot, failure, independent restore, general application, PostgreSQL, Zabbix, connector, browser, and end-to-end offline acceptance remain open.
+Updated: 2026-09-22 — a controlled user-testing path is live across the app, AI, connector and Zabbix guests. The protected bilingual panel now retrieves bounded, timestamped Zabbix evidence through a least-privilege reader and uses the local CPU model for English or Persian synthesis. PostgreSQL, TLS/Nginx, both restricted SSH tunnels, the read-only connector, Zabbix 7.0.30 and self-monitoring are active. Programmatic end-to-end tests passed in both languages; full offline, reboot, recovery, scale and production acceptance remain open.
 
 ## English
+
+### Current controlled user-testing checkpoint
+
+The authenticated application and bilingual panel are deployed as an immutable release on the app
+guest behind private TLS and Nginx. PostgreSQL 16 stores application identity and session state on
+its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
+application listener are not exposed through Nginx. The browser receives neither the AI service
+credential nor the Zabbix token.
+
+The dedicated Zabbix guest now runs Zabbix 7.0.30, PostgreSQL 16, Nginx/PHP-FPM and Agent 2. The
+default administrator password was rotated. A separate API-only reader has no frontend access, an
+allowlist limited to `host.get`, `item.get` and `problem.get`, read permission for one approved host
+group and a token stored only on the connector guest. A non-allowlisted API call was denied and the
+reader saw exactly one host. The connector uses verified TLS, bypasses inherited proxies, exposes
+only a named summary operation on loopback and has no generic URL, JSON-RPC, shell or write surface.
+
+The app reaches AI and connector loopback services through separate pinned-host-key SSH forwards.
+Live qualification returned eight fresh self-monitoring measurements with zero stale metrics and no
+active problems. The desktop end-to-end test passed login, session authentication, TLS validation,
+live evidence retrieval and grounded English and Persian answers. The measured synthesis times were
+56.6 seconds and 67.1 seconds for the 128-token ceiling. Visual review confirmed the English and
+genuine RTL Persian login layouts. Source version, host, collection time, measurement time, stale
+state and active-problem count are shown with the answer.
+
+This is a controlled user-testing slice, not production acceptance. It currently monitors the
+Zabbix server itself rather than the full estate. The new investigation route returns its exact
+evidence with the answer, but it does not yet persist an evidence-linked durable run/audit record;
+therefore Stage 1D is only partially complete. WAN-disconnection, VM-reboot, token revocation,
+dependency-loss, stale/partial evidence, sustained load, independent backup/restore and disaster
+recovery cases remain open. Private addresses, tokens, passwords, host keys and raw evidence remain
+outside Git.
 
 ### Requirements and preserved history
 
@@ -79,24 +110,53 @@ Three repository-scoped Codex skills under `.agents/skills` now route general pr
 | Stage | Required result | Evidence status for this update |
 |---|---|---|
 | 0 | Architecture/gap/threat report and appropriate approvals | Owner accepted architecture/roadmap and ADRs on 2026-09-21; the clean replacement guests passed read-only qualification, while ESXi/storage refresh and operation-specific authorization remain separate |
-| 1A | Local identity, policy, database, durable work and audit | Increments 1–2 source-complete for contracts/policy, identity, PostgreSQL, durable runs/leases, audit and API fixture; this behavior remains covered by the current 71 non-integration and 5 real-PostgreSQL cases; browser UI and deployment acceptance remain |
+| 1A | Local identity, policy, database, durable work and audit | Authenticated app, PostgreSQL migration, private TLS panel and session path are live for controlled testing; existing durable run/audit contracts remain, while the new live investigation still needs durable audit linkage |
 | 1B | New local CPU answers and offline model cold load | The pinned runtime/model and corrected API release are installed behind hardened loopback-only units; authentication, bilingual quality, bounded load, cold process restart and application rollback/restoration passed. VM reboot, explicit WAN-disconnection, remaining failure/cancellation tests, runtime/model rollback, independent restore and production targets remain open |
-| Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | The clean 24.04 guest and dedicated database mount passed qualification and the package stack is installed but inactive; database/schema initialization, reader identity, authenticated API and acceptance remain open |
-| 1C | Real bounded read-only evidence with correct counts | Live connector tests not run here |
-| 1D | New evidence-linked Zabbix answer with audit | End-to-end answer not demonstrated here |
-| 1E | Offline fresh login/restart, security/failure/capacity tests | ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 not run here |
+| Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | Zabbix 7.0.30, PostgreSQL, TLS frontend/API, Agent 2, self-monitoring and the scoped reader are active; API allowlist, host scope and denial checks passed |
+| 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; broader estate coverage and the full failure matrix remain |
+| 1D | New evidence-linked Zabbix answer with audit | English and Persian evidence-grounded answers passed end to end and the response carries exact evidence; durable run/audit persistence for this route remains open |
+| 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh authenticated desktop use passed online on the private LAN; WAN-blocked, reboot, revocation, failure, recovery and sustained-capacity cases remain |
 
 The user may perform provisioning independently; verify their actual state before claiming a VM either exists or does not exist. A screenshot of VM settings is not proof of an accepted application workflow. Resume from the next evidenced, authorized incomplete stage rather than resetting progress.
 
 ### Scope of this publication and next action
 
-This state records Phase 0 acceptance, two Stage 1A code increments, the installed and controlled-qualified Stage 1B AI slice, and the schema-validated per-server deployer handoff while preserving the source requirements, archived prompt, diagrams and proposed Zabbix profile. It is not a host vulnerability audit, production acceptance, independent recovery proof, or complete provisioning record.
+This state records Phase 0 acceptance, the deployed controlled Stage 1A application slice, the qualified Stage 1B AI slice, the live Stage 1C read-only connector and the user-test portion of Stage 1D. It preserves the source requirements, archived prompt, diagrams and per-server handoff. It is not a host vulnerability audit, production acceptance, independent recovery proof or complete provisioning record.
 
-The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2, and pytest 9.1.1 with a generated `uv.lock`. After the inference prompt and relocation fixes, formatting, Ruff, strict mypy over 46 files, and the local non-integration suite passed with 80 tests and 5 database skips. Earlier app-host evidence retains 71 non-integration and 5 real PostgreSQL 16.15 integration passes for its reviewed revision. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier/artifact/installer validation, package build, dependency audit, migration and security tests remain merge gates. No browser, complete model benchmark, explicit WAN-disconnection/VM-reboot acceptance, production database/Zabbix initialization, independent backup or isolated restore test ran.
+The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`. Ruff, strict mypy over 57 files and the current local suite pass with 93 tests and 5 PostgreSQL skips. Earlier revision-specific real-PostgreSQL evidence remains preserved. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier validation, dependency and license review, security/failure testing and recovery evidence remain merge or production gates. Visual bilingual login review and programmatic live end-to-end testing ran; full browser workflow automation, WAN-disconnection/VM-reboot acceptance, independent backup and isolated restore did not.
 
-The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to close the remaining Stage 1B acceptance gaps without undoing the working deployment: run an authorized VM reboot and explicit WAN-disconnection observation, live cancellation/dependency/corrupt-artifact cases, runtime/model rollback, sustained resource/NUMA measurement, dependency-license review, and independent offline restore. In parallel, build the general application release and initialize the app PostgreSQL service, then prepare the dedicated Zabbix database/frontend/API and scoped reader for Stage 1C. The next user-visible milestone remains a new evidence-linked Zabbix answer, not merely more installed services.
+The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-test slice without reinstalling it: persist every live investigation and its evidence reference in the durable audit model, add the remaining approved hosts, exercise stale/partial/unreachable/revoked-token cases, then run explicit WAN-disconnection, VM-reboot, rollback and independent restore acceptance. Production promotion remains gated on those results, retention/backup decisions, sustained resource measurements and operational sign-off.
 
 ## فارسی
+
+### نقطهٔ فعلی برای ارزیابی کنترل‌شدهٔ کاربران
+
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، به‌صورت انتشار تغییرناپذیر روی مهمان برنامه و پشت TLS خصوصی
+و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
+می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
+نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.
+
+مهمان مستقل پایش اکنون Zabbix 7.0.30، PostgreSQL 16، Nginx/PHP-FPM و Agent 2 را اجرا می‌کند.
+گذرواژهٔ مدیر پیش‌فرض عوض شده است. خوانشگر جداگانهٔ API به رابط کاربری دسترسی ندارد؛ فقط سه روش
+`host.get`، `item.get` و `problem.get` برایش مجاز است و تنها یک گروه میزبان مصوب را می‌بیند.
+فراخوانی خارج از فهرست مجاز رد شد و دامنهٔ دید آن دقیقاً یک میزبان بود. توکن فقط روی مهمان اتصال
+نگه‌داری می‌شود. اتصال نیز فقط از TLS معتبر استفاده می‌کند، پراکسی موروثی را کنار می‌گذارد و روی
+رابط محلی صرفاً یک عملیات نام‌دار برای خلاصهٔ پایش ارائه می‌دهد؛ نشانی دلخواه، JSON-RPC عمومی، shell
+یا عملیات نوشتنی در اختیار مصرف‌کننده نیست.
+
+برنامه از دو تونل SSH جدا با کلید میزبان ثابت‌شده به سرویس‌های محلی هوش مصنوعی و اتصال می‌رسد.
+صلاحیت‌سنجی زنده، هشت سنجهٔ تازهٔ خودپایشی، بدون سنجهٔ قدیمی و بدون مسئلهٔ فعال بازگرداند. آزمون
+سراسری از رایانهٔ کاربر، TLS، ورود و نشست، دریافت شاهد و پاسخ مستند فارسی و انگلیسی را با موفقیت
+گذراند. زمان تولید با سقف ۱۲۸ توکن برای انگلیسی ۵۶٫۶ ثانیه و برای فارسی ۶۷٫۱ ثانیه بود. نمایش
+انگلیسی و چیدمان راست‌به‌چپ فارسی نیز به‌صورت دیداری بازبینی شد. نسخهٔ منبع، میزبان، زمان گردآوری،
+زمان اندازه‌گیری، وضعیت تازگی و شمار مسئله‌های فعال کنار پاسخ نمایش داده می‌شود.
+
+این خروجی برای ارزیابی کنترل‌شده است، نه پذیرش تولید. فعلاً فقط خود سرور Zabbix پایش می‌شود و همهٔ
+تجهیزات وارد دامنه نشده‌اند. مسیر تازه، شاهد دقیق را همراه پاسخ بازمی‌گرداند، اما هنوز run ماندگار
+و رکورد ممیزیِ پیوندخورده به همان شاهد نمی‌سازد؛ بنابراین 1D به‌طور کامل بسته نشده است. آزمون قطع
+WAN، راه‌اندازی مجدد ماشین، لغو توکن، قطع وابستگی، دادهٔ قدیمی یا ناقص، بار پایدار، پشتیبان مستقل،
+بازیابی و سناریوی بحران همچنان بازند. نشانی‌ها، توکن‌ها، گذرواژه‌ها، کلیدهای میزبان و شواهد خام
+بیرون Git مانده‌اند.
 
 ### نیازها و سابقهٔ محفوظ
 
@@ -156,14 +216,14 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 ### گام‌ها و وضعیت شواهد
 
-معماری، نقشه و ADRهای مرحلهٔ صفر پذیرفته شده‌اند و چهار مهمان جایگزین از صلاحیت‌سنجی عبور کرده‌اند؛ تازه‌سازی شاهد ESXi و ذخیره‌سازی همچنان جداست. Incrementهای 1 و 2 از 1A در کد و آزمون موجودند، اما رابط مرورگر و پذیرش استقرار باقی است. در 1B، محیط اجرا، مدل و API اصلاح‌شده پشت دو واحد سخت‌سازی‌شده و فقط‌محلی نصب شده‌اند؛ احراز هویت، آمادگی، کیفیت دوزبانه، بار محدود، راه‌اندازی سرد فرایندها و بازگشت برنامه موفق بوده است. آزمون راه‌اندازی مجدد ماشین و قطع صریح WAN، بقیهٔ خطاها و لغو، بازگشت محیط اجرا و مدل، بازیابی مستقل و هدف کارایی هنوز باز است. مهمان و محل ذخیره‌سازی Zabbix تأیید و بسته‌های آن نصب، اما سرویس‌ها غیرفعال‌اند؛ ایجاد پایگاه، هویت خوانشگر، API احرازهویت‌شده و پذیرش باقی مانده است. اتصال زندهٔ 1C، پاسخ کامل 1D و موارد ZBX و OFF مربوط به 1E اجرا نشده‌اند.
+معماری و ADRهای مرحلهٔ صفر پذیرفته شده‌اند و چهار مهمان جایگزین از صلاحیت‌سنجی عبور کرده‌اند. برش کنترل‌شدهٔ 1A اکنون با برنامه، PostgreSQL، TLS و پنل دوزبانه فعال است؛ 1B مدل محلی پذیرفته‌شده را فراهم می‌کند؛ پیش‌نیاز Zabbix و مسیر فقط‌خواندنی 1C نیز فعال و آزموده شده‌اند. بخش قابل‌آزمایش 1D برای پاسخ فارسی و انگلیسی موفق است، اما پیوند ماندگار شاهد با run و ممیزی هنوز باید تکمیل شود. راه‌اندازی مجدد ماشین، قطع صریح WAN، سناریوهای خطا و لغو، بار پایدار، بازیابی مستقل و پذیرش کامل 1E همچنان باز هستند.
 
 ممکن است مالک مستقل ماشین ساخته باشد؛ پیش از ادعای وجود یا نبود آن، وضعیت واقعی بررسی شود. تصویر تنظیمات VM به معنای قبولی مسیر برنامه نیست. ادامه از نخستین گام ناتمامِ دارای شاهد و مجوز باشد، نه پاک کردن پیشرفت.
 
 ### دامنهٔ انتشار و کار بعدی
 
-این وضعیت پذیرش مرحلهٔ صفر، دو برش کد 1A، برش نصب‌شده و کنترل‌سنجی‌شدهٔ هوش مصنوعی در 1B و پروندهٔ معتبرشدهٔ تحویل هر سرور را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و طرح Zabbix حفظ شده‌اند. این رکورد به‌معنای ممیزی امنیت میزبان، پذیرش تولیدی، اثبات بازیابی مستقل یا استقرار کامل نیست.
+این وضعیت پذیرش مرحلهٔ صفر، برش مستقرشدهٔ 1A، هوش مصنوعی صلاحیت‌سنجی‌شدهٔ 1B، اتصال زنده و فقط‌خواندنی 1C و بخش قابل‌آزمایش 1D را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و پرونده‌های تحویل حفظ شده‌اند. این رکورد به‌معنای ممیزی امنیت میزبان، پذیرش تولیدی یا اثبات بازیابی مستقل نیست.
 
-برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. پس از اصلاح پیام راهنما و جابه‌جایی محیط اجرا، قالب‌بندی، Ruff، بررسی سخت‌گیرانهٔ mypy روی ۴۶ فایل و مجموعهٔ محلی با ۸۰ آزمون موفق و ۵ آزمون پایگاه کنارگذاشته‌شده، همگی قبول شدند. شاهد قدیمی‌ترِ مهمان برنامه نیز برای revision مربوط خود، ۷۱ آزمون غیرپایگاهی و هر ۵ آزمون واقعی PostgreSQL 16.15 را حفظ می‌کند. نتیجهٔ CI به revision خودش وابسته است. آزمون مرورگر، سنجش کامل مدل، پذیرش صریح با قطع WAN و راه‌اندازی مجدد ماشین، ایجاد پایگاه تولید یا Zabbix، پشتیبان مستقل و بازیابی جدا انجام نشده است.
+برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۷ فایل و مجموعهٔ محلی با ۹۳ آزمون موفق و ۵ آزمون PostgreSQL کنارگذاشته‌شده قبول شدند. شاهد واقعی PostgreSQL برای revision پیشین محفوظ است و CI به revision خودش وابسته می‌ماند. بازبینی دیداری ورود دوزبانه و آزمون سراسری زنده انجام شد؛ پذیرش کامل مرورگر، قطع WAN، راه‌اندازی مجدد ماشین، پشتیبان مستقل و بازیابی جدا هنوز اجرا نشده است.
 
-نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) بستن شکاف‌های باقی‌ماندهٔ 1B بدون برهم زدن استقرار سالم است: راه‌اندازی مجدد مجاز ماشین و مشاهدهٔ صریح هنگام قطع WAN، لغو زنده و خرابی وابستگی یا فایل، بازگشت محیط اجرا و مدل، سنجش پایدار منابع و NUMA، بررسی مجوز وابستگی‌ها و بازیابی آفلاین از نسخه‌ای مستقل. هم‌زمان باید انتشار عمومی برنامه ساخته و PostgreSQL ماشین برنامه راه‌اندازی شود؛ سپس پایگاه، رابط، API و هویت خوانشگر محدود Zabbix برای 1C آماده شوند. نقطهٔ قابل‌مشاهدهٔ بعدی همچنان یک پاسخ تازه و مستند به شاهد واقعی Zabbix است، نه صرفاً افزایش شمار سرویس‌های نصب‌شده.
+نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) سخت‌سازی همین مسیر سالم است، نه نصب دوبارهٔ آن: هر بررسی زنده و مرجع شاهدش باید در مدل ماندگار و ممیزی ثبت شود؛ میزبان‌های مصوب بعدی افزوده شوند؛ دادهٔ قدیمی یا ناقص، قطع مقصد و لغو توکن آزموده شود؛ سپس پذیرش قطع WAN، راه‌اندازی مجدد ماشین، بازگشت و بازیابی مستقل انجام گیرد. ارتقا به تولید به نتیجهٔ این آزمون‌ها، تصمیم نگهداری و پشتیبان، سنجش پایدار منابع و تأیید عملیات وابسته است.

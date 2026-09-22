@@ -1,4 +1,31 @@
-# Native systemd profile for Stage 1B
+# Native systemd profiles for controlled user testing
+
+The directory now covers the protected AI, authenticated application, read-only connector and two
+restricted SSH-forward boundaries used by the controlled user-testing deployment. The source units
+contain no private address or credential. Environment-specific destinations, host-key pins and
+secrets are delivered outside Git.
+
+Application-side units:
+
+- `nextops-app.service` runs the authenticated panel/API on loopback and reads database, bootstrap,
+  recovery, AI-service and connector-service credentials through `LoadCredential`.
+- `nextops-ai-tunnel.service` forwards one app-local port to the AI loopback API using a dedicated
+  key, pinned host key and server-side `PermitOpen` restriction.
+- `nextops-connector-tunnel.service` does the same for the connector summary API on a different
+  loopback port. Neither tunnel grants an interactive shell, remote forwarding, agent forwarding or
+  access to an arbitrary destination.
+
+Connector-side units:
+
+- `nextops-connector.service` runs as the non-login `nextops-connector` identity on loopback. It
+  reads the Zabbix token and internal service secret through `LoadCredential`, validates Zabbix TLS
+  against the deployment CA, bypasses inherited proxies and exposes only the named read-only
+  summary operation.
+
+The 2026-09-22 controlled deployment verified all three application-side services and the connector
+service active, with the app, AI and connector listeners confined to loopback. The external browser
+entry is private TLS through Nginx. This is user-testing evidence, not proof for another host or a
+production-acceptance claim.
 
 This directory contains the reviewed source profile used for the first controlled `nextops-ai`
 qualification. On 2026-09-22 the profile was installed on the authorized AI guest and the bounded
@@ -35,6 +62,14 @@ the executable has loaded its immutable dependencies or finished loading the mod
 /etc/nextops/nextops-ai.env
 /etc/nextops/credentials/llama-api-key
 /etc/nextops/credentials/inference-service-secret
+/etc/nextops/credentials/connector-service-secret
+/etc/nextops/credentials/connector-tunnel-key
+/etc/nextops/ssh/connector_known_hosts
+/etc/nextops/nextops-app.env
+/etc/nextops/nextops-connector-tunnel.env
+/etc/nextops/nextops-connector.env
+/etc/nextops/tls/zabbix-ca.crt
+/etc/nextops/credentials/zabbix-api-token
 ```
 
 `current` must be an atomic symlink to one immutable, checksummed release. Retain one compatible

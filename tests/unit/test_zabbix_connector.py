@@ -66,9 +66,7 @@ def test_connector_api_requires_service_bearer() -> None:
     denied = client.get("/api/v1/zabbix/summary")
     allowed = client.get(
         "/api/v1/zabbix/summary",
-        headers={
-            "Authorization": "Bearer connector-service-secret-that-is-long-enough"
-        },
+        headers={"Authorization": "Bearer connector-service-secret-that-is-long-enough"},
     )
 
     assert denied.status_code == 401

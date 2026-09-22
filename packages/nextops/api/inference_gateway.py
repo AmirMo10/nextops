@@ -57,9 +57,7 @@ class LoopbackInferenceGateway:
                 retryable=True,
             ) from error
 
-    async def generate(
-        self, request: AssistantRequest, correlation_id: UUID
-    ) -> AssistantResponse:
+    async def generate(self, request: AssistantRequest, correlation_id: UUID) -> AssistantResponse:
         request_id = uuid4()
         raw = await self._transport.post_json(
             "/api/v1/generate",

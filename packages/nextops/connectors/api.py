@@ -31,6 +31,7 @@ def create_connector_app(client: MonitoringClient, service_secret: str) -> FastA
     """Build a protected connector API that exposes no generic proxy surface."""
 
     app = FastAPI(title="NextOps read-only connector", version="1.0.0")
+
     @app.exception_handler(ApplicationError)
     async def application_error_handler(_request: object, error: ApplicationError) -> JSONResponse:
         status = 401 if error.code is ErrorCode.UNAUTHENTICATED else 503

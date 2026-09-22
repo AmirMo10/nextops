@@ -1,5 +1,61 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-22 — Live evidence user-testing path / مسیر زندهٔ شاهد برای ارزیابی کاربران
+
+### English
+
+Delivered and deployed the controlled bilingual user-testing path. The app guest now runs the
+authenticated panel/API behind private TLS and Nginx with PostgreSQL 16 state. The AI and connector
+dependencies are reached through separate restricted SSH forwards with pinned host keys; their
+service credentials never reach the browser. Bootstrap, recovery, API documentation and direct
+backend listeners are not exposed by the reverse proxy.
+
+Initialized Zabbix 7.0.30 with PostgreSQL 16, Nginx/PHP-FPM, Agent 2, private TLS and self-monitoring.
+Rotated the default administrator password and created a frontend-disabled API reader whose role
+allows only `host.get`, `item.get` and `problem.get` and whose group can read one approved host
+group. Verified one-host visibility and denial of a non-allowlisted API method. The token is stored
+only as a protected systemd credential on the connector guest.
+
+Added the rootless read-only connector, strict HTTPS validation, bounded result contracts,
+source/version/timestamp/staleness metadata and a protected application gateway. Updated the panel
+to submit evidence-grounded investigations and display the exact evidence beside the local model
+answer in English or Persian. Fixed the Zabbix version probe to remain unauthenticated as required
+by the API and gave the CPU-bound investigation route its explicit Nginx timeout.
+
+Live qualification returned eight fresh self-monitoring measurements with no stale metrics or
+active problems. Desktop TLS/login/session checks and evidence-grounded English and Persian answers
+passed end to end; observed synthesis times at the 128-token ceiling were 56.6 and 67.1 seconds.
+Visual review confirmed the English and native RTL Persian login layouts. Ruff, strict mypy and the
+local suite pass with 93 tests and 5 PostgreSQL skips. The live investigation route still needs
+durable run/audit linkage; WAN-block, VM-reboot, failure, sustained-load and independent recovery
+acceptance remain open.
+
+### فارسی
+
+مسیر کنترل‌شده و دوزبانهٔ ارزیابی کاربران پیاده‌سازی و مستقر شد. مهمان برنامه اکنون پنل و API
+احرازهویت‌شده را پشت TLS خصوصی و Nginx اجرا می‌کند و وضعیت هویت و نشست در PostgreSQL 16 نگه‌داری
+می‌شود. ارتباط با هوش مصنوعی و اتصال از دو تونل SSH جدا، با کلید میزبان ثابت‌شده و مقصد محدود
+می‌گذرد؛ اعتبارنامهٔ این سرویس‌ها هرگز به مرورگر نمی‌رسد. مسیرهای راه‌اندازی اولیه و بازیابی،
+مستندات API و درگاه مستقیم backend از reverse proxy در دسترس نیستند.
+
+Zabbix 7.0.30 با PostgreSQL 16، Nginx/PHP-FPM، Agent 2، TLS خصوصی و خودپایشی راه‌اندازی شد.
+گذرواژهٔ مدیر پیش‌فرض تغییر کرد و یک خوانشگر مخصوص API ساخته شد که به رابط کاربری دسترسی ندارد.
+نقش آن فقط `host.get`، `item.get` و `problem.get` را می‌پذیرد و گروهش فقط یک گروه میزبان مصوب را
+می‌خواند. دیدن دقیقاً یک میزبان و رد روش خارج از فهرست مجاز تأیید شد. توکن فقط به‌صورت اعتبارنامهٔ
+محافظت‌شدهٔ systemd روی مهمان اتصال نگه‌داری می‌شود.
+
+اتصال فقط‌خواندنی با هویت بدون امتیاز، اعتبارسنجی سخت‌گیرانهٔ HTTPS، قرارداد نتیجهٔ محدود، اطلاعات
+منبع و نسخه و زمان و تازگی، و درگاه محافظت‌شدهٔ برنامه افزوده شد. پنل اکنون بررسی مبتنی بر شاهد را
+ارسال و همان شاهد را کنار پاسخ مدل محلی به فارسی یا انگلیسی نمایش می‌دهد. بررسی نسخهٔ Zabbix طبق
+قرارداد API بدون احراز هویت انجام می‌شود و مسیر CPU-محور بررسی نیز مهلت صریح و کافی در Nginx دارد.
+
+صلاحیت‌سنجی زنده هشت سنجهٔ تازهٔ خودپایشی، بدون دادهٔ قدیمی و بدون مسئلهٔ فعال بازگرداند. آزمون
+سراسری TLS، ورود، نشست، دریافت شاهد و پاسخ مستند فارسی و انگلیسی موفق بود؛ زمان مشاهده‌شده با سقف
+۱۲۸ توکن به‌ترتیب ۵۶٫۶ و ۶۷٫۱ ثانیه بود. نمایش انگلیسی و چیدمان طبیعی راست‌به‌چپ فارسی نیز
+بازبینی دیداری شد. Ruff، mypy سخت‌گیر و مجموعهٔ محلی با ۹۳ آزمون موفق و ۵ آزمون PostgreSQL
+کنارگذاشته‌شده قبول شدند. پیوند ماندگار بررسی زنده با run و ممیزی، و نیز پذیرش قطع WAN، راه‌اندازی
+مجدد ماشین، خطاها، بار پایدار و بازیابی مستقل همچنان باز است.
+
 ## 2026-09-22 — Controlled Stage 1B deployment / استقرار کنترل‌شدهٔ مرحلهٔ 1B
 
 ### English

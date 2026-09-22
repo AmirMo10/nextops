@@ -1,8 +1,40 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-22 — all four Ubuntu 24.04 guests are healthy and current. The pinned CPU runtime/model and corrected API release are installed behind hardened authenticated loopback-only services; bilingual quality/load checks, cold process restart, and application rollback/restoration passed. The immediate work is to close the remaining Stage 1B reboot/offline/failure/recovery gates while beginning the app PostgreSQL and dedicated Zabbix prerequisites for Stage 1C.
+Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. The private bilingual panel, application PostgreSQL, local CPU model, read-only connector and Zabbix 7.0.30 self-monitoring path passed live English and Persian end-to-end checks. The immediate work is durable evidence/audit linkage, broader approved host coverage and failure/offline/recovery acceptance; do not rebuild the working slice.
 
-## English — close Stage 1B and prepare Stage 1C
+## English — harden the live user-testing slice
+
+### Authoritative current checkpoint
+
+The next operator must treat the following as completed and preserve it:
+
+- the app release, PostgreSQL migration, private TLS reverse proxy and authenticated bilingual panel;
+- the pinned CPU-only AI runtime/model and authenticated application-to-AI tunnel;
+- Zabbix 7.0.30 with its PostgreSQL database, TLS frontend/API, Agent 2 and self-monitoring;
+- an API-only Zabbix reader restricted to three read methods and one approved host group;
+- the rootless read-only connector and pinned application-to-connector tunnel;
+- live retrieval of eight fresh metrics, explicit source/timestamps/staleness and bilingual grounded
+  answers through the desktop client; and
+- local quality gates: Ruff, strict mypy and 93 passing tests with 5 PostgreSQL tests skipped in the
+  desktop environment.
+
+The immediate implementation sequence is:
+
+1. Persist every `/api/v1/investigate` request, evidence snapshot/reference, model result, actor,
+   correlation ID and failure outcome through the existing durable run and append-restricted audit
+   model. Do not store target credentials or unrestricted raw payloads.
+2. Add approved app, AI and connector hosts to Zabbix with narrowly scoped agent paths; retain the
+   current reader method and host-group boundaries, and verify counts/timestamps after each addition.
+3. Qualify stale, partial, unreachable, revoked-token, malformed-text and prompt-injection cases.
+   General local model use must remain available when Zabbix is unavailable.
+4. Run the explicit WAN-disconnection and VM-reboot matrix, then runtime/model/application rollback,
+   independent backup and isolated restore. Record exact latency and CPU/memory/NUMA observations.
+5. Only after those gates pass, review retention, alerting, certificate/token rotation and operator
+   runbooks for production promotion.
+
+The detailed material below preserves design rationale and earlier checkpoints. Where it describes
+the app, PostgreSQL, Zabbix, connector or browser as not deployed, this authoritative checkpoint and
+[PROJECT_STATE](PROJECT_STATE.md) supersede that older statement.
 
 Read the [active master prompt](requirements/NEXTOPS_MASTER_PROMPT.md) with the new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md), [Zabbix guide](en/ZABBIX_SERVER.md), [per-server deployer guide](en/DEPLOYMENT_DOSSIERS.md), [allocation record](requirements/ZABBIX_SERVER_PLAN.json), [START_HERE](en/START_HERE.md), [PROJECT_STATE](PROJECT_STATE.md), [ROADMAP](en/ROADMAP.md), [SERVER_PLAN](en/SERVER_PLAN.md), [STORAGE_PLAN](STORAGE_PLAN.md), [OFFLINE_RUNTIME](en/OFFLINE_RUNTIME.md), [ESXI_BASELINE](en/ESXI_BASELINE.md) and [hardware evidence](requirements/HARDWARE_BASELINE.json). Original detail remains in the [unchanged v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md); all 51 sections and eleven integrations remain in scope.
 
@@ -95,9 +127,40 @@ Apply the retained project ceiling and every per-datastore capacity check: exist
 
 Use dependency-aware service readiness, not fixed sleeps or an Internet test. The databases precede their dependants; model/gateway can start independently. Zabbix failure must not prevent general local Q&A when its own dependencies are healthy. A host failure affects both systems; independent host-outage detection and backups are separate requirements.
 
-After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The AI product slice is now a live controlled deployment, not only repository evidence. No production PostgreSQL or Zabbix state, public product listener, VM reboot evidence, independent backup, isolated restore, or complete server recovery exists yet.
+After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and Zabbix path is live for user testing. It is not production-accepted: VM-reboot and WAN-block evidence, durable investigation audit linkage, independent backup, isolated restore, broader monitored-estate coverage and complete server recovery remain open.
 
-## فارسی — تکمیل 1B و آماده‌سازی 1C
+## فارسی — سخت‌سازی مسیر زندهٔ ارزیابی کاربران
+
+### نقطهٔ فعلی و ملاک ادامه
+
+عامل یا بهره‌بردار بعدی باید موارد زیر را تکمیل‌شده بداند و بدون دلیل دوباره نسازد:
+
+- انتشار برنامه، مهاجرت PostgreSQL، reverse proxy با TLS خصوصی و پنل دوزبانهٔ احرازهویت‌شده؛
+- محیط اجرا و مدل فقط‌-CPU تثبیت‌شده و تونل احرازهویت‌شدهٔ برنامه به هوش مصنوعی؛
+- Zabbix 7.0.30 با پایگاه PostgreSQL، رابط و API مبتنی بر TLS، Agent 2 و خودپایشی؛
+- خوانشگر مخصوص API با سه روش فقط‌خواندنی و دامنهٔ یک گروه میزبان مصوب؛
+- اتصال فقط‌خواندنی با هویت بدون امتیاز و تونل ثابت‌شدهٔ برنامه به اتصال؛
+- دریافت زندهٔ هشت سنجهٔ تازه، نمایش صریح منبع و زمان و تازگی، و پاسخ مستند فارسی و انگلیسی از
+  مسیر رایانهٔ کاربر؛
+- عبور Ruff، بررسی سخت‌گیرانهٔ mypy و ۹۳ آزمون؛ پنج آزمون PostgreSQL فقط در محیط رومیزی کنار
+  گذاشته شده‌اند.
+
+ترتیب مستقیم کار بعدی چنین است:
+
+1. هر درخواست `/api/v1/investigate`، شاهد یا مرجع آن، نتیجهٔ مدل، کاربر، شناسهٔ هم‌بستگی و نتیجهٔ
+   خطا در مدل run ماندگار و ممیزیِ فقط‌افزودنی ثبت شود. اعتبارنامه یا payload نامحدود ذخیره نشود.
+2. میزبان‌های مصوب برنامه، هوش مصنوعی و اتصال با مسیر عامل محدود به Zabbix افزوده شوند. مرز روش‌ها
+   و گروه میزبان خوانشگر تغییر نکند و شمار و زمان داده پس از هر افزوده تأیید شود.
+3. حالت‌های دادهٔ قدیمی یا ناقص، مقصد قطع، توکن لغوشده، متن بدساخت و تزریق در متن رخداد آزموده شوند.
+   قطع Zabbix نباید پرسش عمومی از مدل محلی را از کار بیندازد.
+4. آزمون صریح قطع WAN و راه‌اندازی مجدد ماشین‌ها، سپس بازگشت برنامه/مدل/محیط اجرا، پشتیبان مستقل و
+   بازیابی جدا اجرا شود. زمان پاسخ و مصرف CPU، حافظه و NUMA دقیق ثبت شود.
+5. تنها پس از عبور این دروازه‌ها، نگهداری داده، هشدار، چرخش گواهی و توکن و راهنمای بهره‌برداری برای
+   ارتقا به تولید بازبینی شود.
+
+مطالب تفصیلی بعدی منطق طراحی و نقاط پیشین را حفظ می‌کند. هرجا برنامه، PostgreSQL، Zabbix، اتصال یا
+رابط مرورگر را نصب‌نشده می‌نامد، این بخش و [وضعیت پروژه](PROJECT_STATE.md) جای آن عبارت قدیمی را
+می‌گیرند.
 
 [پرامپت فعال](requirements/NEXTOPS_MASTER_PROMPT.md)، [اصلاحیهٔ تازهٔ چیدمان](requirements/DEPLOYMENT_UPDATE.md)، [راهنمای Zabbix](fa/ZABBIX_SERVER.md)، [راهنمای پرونده‌های استقرار](fa/DEPLOYMENT_DOSSIERS.md)، [رکورد تخصیص](requirements/ZABBIX_SERVER_PLAN.json)، [شروع کار](fa/START_HERE.md)، [وضعیت پروژه](PROJECT_STATE.md)، [نقشهٔ راه](fa/ROADMAP.md)، [سرورها](fa/SERVER_PLAN.md)، [ذخیره‌سازی](STORAGE_PLAN.md)، [آفلاین](fa/OFFLINE_RUNTIME.md)، [ESXi](fa/ESXI_BASELINE.md) و [شاهد سخت‌افزار](requirements/HARDWARE_BASELINE.json) خوانده شوند. جزئیات اولیه در [بایگانی ثابت نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) باقی است؛ ۵۱ بخش و یازده اتصال حذف نمی‌شوند.
 
@@ -184,4 +247,4 @@ LVM پیشنهادی `vg_zabbix`: بیرون LVM یک GiB برای EFI و دو G
 
 شروع سرویس تابع وابستگی باشد، نه تأخیر ثابت یا تست اینترنت. پایگاه پیش از وابسته بالا بیاید و مدل و درگاه بتوانند مستقل شروع شوند. قطع Zabbix مانع سؤال عمومی محلی با وابستگی سالم نشود. خرابی میزبان هر دو سامانه را قطع می‌کند؛ پشتیبان و بررسی قطعی مستقل نیاز جدا هستند.
 
-پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. برش هوش مصنوعی اکنون استقرار زنده و کنترل‌شده است و دیگر فقط شاهد کد مخزن محسوب نمی‌شود. هنوز PostgreSQL یا Zabbix تولیدی، شنوندهٔ عمومی محصول، شاهد راه‌اندازی مجدد ماشین، پشتیبان مستقل، بازیابی جدا یا بازیابی کامل سرور وجود ندارد.
+پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر برنامه، هوش مصنوعی، اتصال و Zabbix اکنون برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. پیوند ماندگار بررسی با ممیزی، پوشش میزبان‌های بیشتر، شاهد راه‌اندازی مجدد ماشین و قطع WAN، پشتیبان مستقل، بازیابی جدا و بازیابی کامل سرور همچنان وجود ندارد.

@@ -169,9 +169,7 @@ class FakeInferenceGateway:
             queued_requests=0,
         )
 
-    async def generate(
-        self, request: AssistantRequest, correlation_id: UUID
-    ) -> AssistantResponse:
+    async def generate(self, request: AssistantRequest, correlation_id: UUID) -> AssistantResponse:
         return AssistantResponse(
             request_id=uuid4(),
             correlation_id=correlation_id,
@@ -210,6 +208,7 @@ class FakeMonitoringGateway:
             ),
             active_problems=(),
         )
+
 
 def test_health_is_unversioned_and_contains_no_dependency_claim() -> None:
     client = TestClient(create_app(FakeService()))
@@ -268,9 +267,7 @@ def test_assistant_readiness_is_authenticated() -> None:
 
 
 def test_investigation_requires_session_and_returns_exact_live_evidence() -> None:
-    client = TestClient(
-        create_app(FakeService(), FakeInferenceGateway(), FakeMonitoringGateway())
-    )
+    client = TestClient(create_app(FakeService(), FakeInferenceGateway(), FakeMonitoringGateway()))
 
     unauthenticated = client.post(
         "/api/v1/investigate",

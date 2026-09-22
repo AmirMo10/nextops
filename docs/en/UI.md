@@ -2,7 +2,13 @@
 
 [فارسی](../fa/UI.md) · [Index](INDEX.md)
 
-**Status: product/interface specification, not a delivered UI.** Source: master specification sections 3, 7 and 17 plus original sections 3 and 30.
+**Status: specification plus a delivered controlled user-testing subset.** Source: master specification sections 3, 7 and 17 plus original sections 3 and 30.
+
+The deployed subset provides authenticated English/Persian login, genuine RTL/LTR switching,
+AI and monitoring readiness, a bounded question form, evidence-grounded answers and a source panel
+showing Zabbix version, host, collection time, measurement time, freshness and active-problem count.
+Assets are served locally without a CDN. The broader operations console described below—inventory,
+incident timelines, topology, approvals, audit search and settings—remains specification work.
 
 ## Information architecture
 

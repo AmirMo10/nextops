@@ -4,7 +4,7 @@
 
 [فارسی](README_FA.md) · [Status brief](docs/en/PROJECT_STATUS_BRIEF.md) · [Documentation](docs/en/INDEX.md) · [G10 server plan](docs/en/SERVER_PLAN.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project state](docs/PROJECT_STATE.md)
 
-> **Status: Phase 0 is accepted; the Stage 1A/1B source foundations are tested, all four Ubuntu 24.04 servers are package-prepared, and the pinned local CPU model has passed a bounded authenticated smoke test.** Product services remain stopped and unconfigured. The application release, production databases, Zabbix initialization, live connector, full model evaluation, backup/restore, and Internet-blocked acceptance remain open. This repository does not yet provide a production NextOps deployment.
+> **Status: a controlled bilingual user-testing path is live across the four Ubuntu 24.04 guests.** The authenticated private-TLS panel, application PostgreSQL, pinned local CPU model, least-privilege read-only connector and Zabbix 7.0.30 self-monitoring path passed live English and Persian end-to-end checks. This is not production acceptance: durable investigation/audit linkage, broader host coverage, WAN-block and reboot testing, sustained load, backup/restore and disaster recovery remain open.
 
 ## What NextOps is intended to do
 
@@ -77,7 +77,7 @@ git clone https://github.com/Omid-NextAI/nextops.git
 cd nextops
 ```
 
-Read the [documentation index](docs/en/INDEX.md), [current state](docs/PROJECT_STATE.md), and [next task](docs/NEXT_TASK.md). The [installation guide](docs/en/INSTALL.md) distinguishes today's repository setup from future product deployment. The four [package-layer scripts](deploy/installers/README.md) are real, tested, offline and guarded. A hardened native systemd source profile now exists for the AI role, but neither it nor a complete application installer or service profile has been deployed or accepted.
+Read the [documentation index](docs/en/INDEX.md), [current state](docs/PROJECT_STATE.md), and [next task](docs/NEXT_TASK.md). The [installation guide](docs/en/INSTALL.md) distinguishes the controlled user-test deployment from future production promotion. The four [package-layer scripts](deploy/installers/README.md) are real, tested, offline and guarded. Reviewed systemd profiles now cover the AI, app, connector and restricted tunnel boundaries; their live evidence is specific to the current authorized guests and does not prove another deployment.
 
 The [engineering master prompt](docs/requirements/NEXTOPS_MASTER_PROMPT.md) is retained as supplied, without a new translation. Its original Persian appendix is historical source material. Human-facing documentation is maintained in matching English and Persian guides. The revised roadmap explicitly records the owner's later Zabbix-first milestone requirement.
 

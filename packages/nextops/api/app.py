@@ -332,8 +332,7 @@ def _grounded_prompt(request: AssistantRequest, evidence: MonitoringSummary) -> 
     )
     evidence_payload = evidence.model_dump(mode="json")
     evidence_payload["metrics"] = [
-        {**metric, "name": str(metric["name"])[:160]}
-        for metric in evidence_payload["metrics"]
+        {**metric, "name": str(metric["name"])[:160]} for metric in evidence_payload["metrics"]
     ]
     evidence_payload["active_problems"] = [
         {**problem, "name": str(problem["name"])[:160]}
