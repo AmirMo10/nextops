@@ -84,8 +84,9 @@ def test_provider_uses_fixed_route_identity_auth_and_non_thinking_mode() -> None
         assert transport.last_payload["stream"] is False
         system_prompt = transport.last_payload["messages"][0]["content"]
         assert "requested en locale" in system_prompt
-        assert "Preserve every material observed fact" in system_prompt
-        assert "unknown causes, current state, and later outcomes" in system_prompt
+        assert "label a stated past event or outcome as unknown" in system_prompt
+        assert "the current status is unknown" in system_prompt
+        assert transport.last_payload["presence_penalty"] == 0.0
         assert transport.last_payload["messages"][-1]["content"].endswith("/no_think")
         assert "tools" not in transport.last_payload
 

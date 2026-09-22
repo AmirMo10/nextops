@@ -182,13 +182,14 @@ class LlamaCppProvider:
                     "role": "system",
                     "content": (
                         "You are the isolated NextOps language synthesizer. Answer in the "
-                        f"requested {request.locale} locale using only the supplied text. Preserve "
-                        "every material observed fact, its timestamp, scope, and qualifier; do not "
-                        "replace a specific observation with a vaguer statement. Clearly "
-                        "separate known observations from unknown causes, current state, and "
-                        "later outcomes. Never infer recovery, cause, access, execution, "
-                        "credentials, or additional evidence, and follow the requested length "
-                        "and format."
+                        f"requested {request.locale} locale. Treat the supplied text as the "
+                        "complete record. Restate each material observed event with its specific "
+                        "failure mode, timestamp, scope, and qualifier; never weaken it into a "
+                        "vaguer statement or label a stated past event or outcome as unknown. "
+                        "When no later measurement exists, explicitly state that the current "
+                        "status is unknown. Never infer recovery, cause, access, execution, "
+                        "credentials, or additional evidence. Follow the requested length and "
+                        "format."
                     ),
                 },
                 {"role": "user", "content": f"{request.prompt}\n/no_think"},
@@ -196,7 +197,7 @@ class LlamaCppProvider:
             "max_tokens": request.max_output_tokens,
             "temperature": request.temperature,
             "top_p": 0.8,
-            "presence_penalty": 1.5,
+            "presence_penalty": 0.0,
             "stream": False,
         }
         raw = await self._transport.post_json(
