@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import os
 from typing import Self
+from urllib.parse import urlsplit
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, model_validator
+
+from nextops.security.deployment_credentials import deployment_secret
 
 
 class AppSettings(BaseModel):
@@ -18,6 +21,9 @@ class AppSettings(BaseModel):
     recovery_secret: SecretStr = Field(min_length=32, max_length=512)
     session_ttl_seconds: int = Field(default=3_600, ge=900, le=86_400)
     lease_ttl_seconds: int = Field(default=30, ge=5, le=300)
+    inference_base_url: str | None = None
+    inference_service_secret: SecretStr | None = Field(default=None, min_length=32, max_length=512)
+    inference_timeout_seconds: float = Field(default=150.0, ge=1.0, le=600.0)
 
     @model_validator(mode="after")
     def validate_security_boundaries(self) -> Self:
@@ -28,6 +34,25 @@ class AppSettings(BaseModel):
             raise ValueError("database_url must use postgresql+psycopg")
         if self.bootstrap_secret.get_secret_value() == self.recovery_secret.get_secret_value():
             raise ValueError("bootstrap_secret and recovery_secret must differ")
+        if (self.inference_base_url is None) != (self.inference_service_secret is None):
+            raise ValueError("inference_base_url and inference_service_secret must be set together")
+        if self.inference_base_url is not None:
+            parsed = urlsplit(self.inference_base_url)
+            valid = (
+                parsed.scheme == "http"
+                and parsed.hostname == "127.0.0.1"
+                and parsed.port is not None
+                and 1 <= parsed.port <= 65_535
+                and parsed.path in ("", "/")
+                and not parsed.query
+                and not parsed.fragment
+                and parsed.username is None
+                and parsed.password is None
+            )
+            if not valid:
+                raise ValueError(
+                    "inference_base_url must be an undecorated http://127.0.0.1:<port> origin"
+                )
         return self
 
     @classmethod
@@ -35,9 +60,33 @@ class AppSettings(BaseModel):
         """Load required values without a secret-bearing default."""
 
         return cls(
-            database_url=os.environ.get("NEXTOPS_DATABASE_URL", ""),
-            bootstrap_secret=os.environ.get("NEXTOPS_BOOTSTRAP_SECRET", ""),
-            recovery_secret=os.environ.get("NEXTOPS_RECOVERY_SECRET", ""),
+            database_url=deployment_secret(
+                value_variable="NEXTOPS_DATABASE_URL",
+                file_variable="NEXTOPS_DATABASE_URL_FILE",
+                credential_name="database-url",
+            ),
+            bootstrap_secret=deployment_secret(
+                value_variable="NEXTOPS_BOOTSTRAP_SECRET",
+                file_variable="NEXTOPS_BOOTSTRAP_SECRET_FILE",
+                credential_name="bootstrap-secret",
+            ),
+            recovery_secret=deployment_secret(
+                value_variable="NEXTOPS_RECOVERY_SECRET",
+                file_variable="NEXTOPS_RECOVERY_SECRET_FILE",
+                credential_name="recovery-secret",
+            ),
             session_ttl_seconds=int(os.environ.get("NEXTOPS_SESSION_TTL_SECONDS", "3600")),
             lease_ttl_seconds=int(os.environ.get("NEXTOPS_LEASE_TTL_SECONDS", "30")),
+            inference_base_url=os.environ.get("NEXTOPS_INFERENCE_BASE_URL") or None,
+            inference_service_secret=(
+                deployment_secret(
+                    value_variable="NEXTOPS_INFERENCE_SERVICE_SECRET",
+                    file_variable="NEXTOPS_INFERENCE_SERVICE_SECRET_FILE",
+                    credential_name="inference-service-secret",
+                )
+                or None
+            ),
+            inference_timeout_seconds=float(
+                os.environ.get("NEXTOPS_INFERENCE_TIMEOUT_SECONDS", "150")
+            ),
         )

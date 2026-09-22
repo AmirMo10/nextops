@@ -1,5 +1,7 @@
 """Fail-closed application configuration tests."""
 
+from pathlib import Path
+
 import pytest
 from pydantic import ValidationError
 
@@ -33,3 +35,44 @@ def test_settings_reject_unsafe_database_or_secret_configuration(
             bootstrap_secret=bootstrap_secret,
             recovery_secret=recovery_secret,
         )
+
+
+def test_settings_accept_only_a_loopback_inference_origin() -> None:
+    with pytest.raises(ValidationError, match="inference_base_url"):
+        AppSettings(
+            database_url="postgresql+psycopg://nextops_app@db.internal/nextops",
+            bootstrap_secret="b" * 32,
+            recovery_secret="r" * 32,
+            inference_base_url="http://192.0.2.10:8090",
+            inference_service_secret="i" * 32,
+        )
+
+
+def test_runtime_settings_load_protected_systemd_credentials(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    values = {
+        "database-url": "postgresql+psycopg://nextops_app@127.0.0.1/nextops",
+        "bootstrap-secret": "b" * 32,
+        "recovery-secret": "r" * 32,
+        "inference-service-secret": "i" * 32,
+    }
+    for name, value in values.items():
+        path = tmp_path / name
+        path.write_text(f"{value}\n", encoding="utf-8")
+        path.chmod(0o640)
+    for variable in (
+        "NEXTOPS_DATABASE_URL",
+        "NEXTOPS_BOOTSTRAP_SECRET",
+        "NEXTOPS_RECOVERY_SECRET",
+        "NEXTOPS_INFERENCE_SERVICE_SECRET",
+    ):
+        monkeypatch.delenv(variable, raising=False)
+    monkeypatch.setenv("CREDENTIALS_DIRECTORY", str(tmp_path))
+    monkeypatch.setenv("NEXTOPS_INFERENCE_BASE_URL", "http://127.0.0.1:18090")
+
+    settings = AppSettings.from_environment()
+
+    assert settings.database_url.get_secret_value().endswith("/nextops")
+    assert settings.inference_base_url == "http://127.0.0.1:18090"

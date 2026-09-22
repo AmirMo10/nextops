@@ -56,3 +56,33 @@ def test_api_unit_uses_distinct_file_backed_credentials() -> None:
     assert "NEXTOPS_LLAMA_API_KEY=" not in environment
     assert "NEXTOPS_INFERENCE_SERVICE_SECRET=" not in environment
     assert "http://127.0.0.1:8080" in environment
+
+
+def test_app_unit_is_rootless_loopback_only_and_uses_file_backed_credentials() -> None:
+    unit = _unit("nextops-app.service")
+    environment = (SYSTEMD / "nextops-app.env").read_text(encoding="utf-8")
+
+    assert "User=nextops-api" in unit
+    assert "--host 127.0.0.1" in unit
+    assert "LoadCredential=database-url:" in unit
+    assert "LoadCredential=bootstrap-secret:" in unit
+    assert "LoadCredential=recovery-secret:" in unit
+    assert "LoadCredential=inference-service-secret:" in unit
+    assert "IPAddressDeny=any" in unit
+    assert "IPAddressAllow=localhost" in unit
+    assert "NEXTOPS_DATABASE_URL=" not in environment
+    assert "NEXTOPS_INFERENCE_SERVICE_SECRET=" not in environment
+    assert "http://127.0.0.1:18090" in environment
+
+
+def test_ai_tunnel_uses_pinned_host_restricted_key_and_one_local_forward() -> None:
+    unit = _unit("nextops-ai-tunnel.service")
+
+    assert "User=nextops-api" in unit
+    assert "LoadCredential=ai-tunnel-key:" in unit
+    assert "StrictHostKeyChecking=yes" in unit
+    assert "UserKnownHostsFile=/etc/nextops/ssh/ai_known_hosts" in unit
+    assert "-L 127.0.0.1:18090:127.0.0.1:8090" in unit
+    assert "ExitOnForwardFailure=yes" in unit
+    assert "${NEXTOPS_AI_SSH_DESTINATION}" in unit
+    assert "192.168." not in unit

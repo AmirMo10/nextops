@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>NextOps | User Evaluation</title>
+  <link rel="stylesheet" href="/assets/app.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="NextOps home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span><strong>NextOps</strong><small data-i18n="brandTagline">Private infrastructure intelligence</small></span>
+    </a>
+    <div class="top-actions">
+      <span class="environment"><span class="dot"></span><span data-i18n="localEnvironment">Local environment</span></span>
+      <button id="languageButton" class="quiet-button" type="button">فارسی</button>
+      <button id="logoutButton" class="quiet-button hidden" type="button" data-i18n="logout">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="loginView" class="login-layout">
+      <div class="intro">
+        <p class="eyebrow" data-i18n="evaluationLabel">CONTROLLED USER EVALUATION</p>
+        <h1 data-i18n="loginHeadline">Operational insight,<br><span>kept inside your network.</span></h1>
+        <p class="lead" data-i18n="loginLead">Sign in to evaluate the local bilingual AI service. Requests remain within the NextOps environment.</p>
+        <div class="trust-row">
+          <span data-i18n="trustOne">Local identity</span>
+          <span data-i18n="trustTwo">Encrypted access</span>
+          <span data-i18n="trustThree">CPU-only inference</span>
+        </div>
+      </div>
+      <form id="loginForm" class="glass-card login-card" autocomplete="on">
+        <div class="card-heading">
+          <span class="icon-lock" aria-hidden="true"></span>
+          <div><h2 data-i18n="welcome">Welcome</h2><p data-i18n="credentialsPrompt">Enter your evaluation credentials.</p></div>
+        </div>
+        <label><span data-i18n="username">Username</span><input id="username" name="username" type="text" autocomplete="username" minlength="3" maxlength="64" required></label>
+        <label><span data-i18n="password">Password</span><input id="password" name="password" type="password" autocomplete="current-password" maxlength="256" required></label>
+        <p id="loginError" class="form-error" role="alert"></p>
+        <button class="primary-button" type="submit"><span data-i18n="signIn">Sign in securely</span><span aria-hidden="true">→</span></button>
+        <p class="privacy-note" data-i18n="privacyNote">Your session is stored only in this browser tab.</p>
+      </form>
+    </section>
+
+    <section id="workspaceView" class="workspace hidden">
+      <div class="workspace-heading">
+        <div><p class="eyebrow" data-i18n="workspaceLabel">USER EVALUATION WORKSPACE</p><h1 data-i18n="workspaceHeadline">Ask the local assistant</h1><p data-i18n="workspaceLead">Evaluate bilingual response quality and the protected application-to-AI path.</p></div>
+        <div class="status-cluster">
+          <span id="appStatus" class="status-pill ready"><i></i><span data-i18n="appReady">Application ready</span></span>
+          <span id="aiStatus" class="status-pill checking"><i></i><span data-i18n="aiChecking">Checking AI</span></span>
+        </div>
+      </div>
+
+      <div class="workspace-grid">
+        <form id="assistantForm" class="glass-card prompt-card">
+          <div class="card-heading compact"><span class="spark" aria-hidden="true">✦</span><div><h2 data-i18n="newQuestion">New question</h2><p data-i18n="questionHelp">Ask in English or Persian. The answer follows the selected language.</p></div></div>
+          <div class="language-choice" role="group" aria-label="Answer language">
+            <button type="button" class="choice active" data-locale="en">English</button>
+            <button type="button" class="choice" data-locale="fa">فارسی</button>
+          </div>
+          <label class="prompt-label"><span data-i18n="question">Question</span><textarea id="question" maxlength="4000" required data-i18n-placeholder="questionPlaceholder" placeholder="Explain a safe first response to a high CPU alert."></textarea></label>
+          <div class="prompt-footer"><span id="characterCount">0 / 4000</span><button id="askButton" class="primary-button compact-button" type="submit"><span data-i18n="askAssistant">Ask assistant</span><span aria-hidden="true">→</span></button></div>
+          <p id="assistantError" class="form-error" role="alert"></p>
+        </form>
+
+        <aside class="glass-card boundary-card">
+          <p class="eyebrow" data-i18n="evidenceBoundary">EVIDENCE BOUNDARY</p>
+          <h2 data-i18n="modelOnlyTitle">Model-only evaluation</h2>
+          <p data-i18n="modelOnlyBody">This test panel does not yet query live Zabbix data. Its answers are language-model output, not current monitoring evidence.</p>
+          <div class="boundary-item"><span>01</span><div><strong data-i18n="boundaryLocal">Local processing</strong><p data-i18n="boundaryLocalText">No external model API is used.</p></div></div>
+          <div class="boundary-item"><span>02</span><div><strong data-i18n="boundaryAuth">Authenticated path</strong><p data-i18n="boundaryAuthText">The browser never receives the AI service credential.</p></div></div>
+          <div class="boundary-item muted"><span>03</span><div><strong data-i18n="boundaryZabbix">Live Zabbix evidence</strong><p data-i18n="boundaryZabbixText">Planned for the connector phase.</p></div></div>
+        </aside>
+      </div>
+
+      <section id="resultCard" class="glass-card result-card hidden" aria-live="polite">
+        <div class="result-heading"><div><p class="eyebrow" data-i18n="assistantResponse">ASSISTANT RESPONSE</p><h2 data-i18n="responseTitle">Local model result</h2></div><span class="evidence-badge" data-i18n="noLiveEvidence">No live monitoring evidence</span></div>
+        <div id="answer" class="answer"></div>
+        <div class="result-meta">
+          <span><small data-i18n="model">Model</small><strong id="modelId">—</strong></span>
+          <span><small data-i18n="tokens">Output tokens</small><strong id="tokenCount">—</strong></span>
+          <span><small data-i18n="completed">Completed</small><strong id="completedAt">—</strong></span>
+          <span><small data-i18n="requestId">Request</small><strong id="requestId">—</strong></span>
+        </div>
+      </section>
+    </section>
+  </main>
+  <footer><span>NextOps 0.1</span><span data-i18n="footer">Controlled local evaluation environment</span></footer>
+</body>
+</html>

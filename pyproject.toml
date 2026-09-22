@@ -36,6 +36,9 @@ package-dir = {"" = "packages"}
 [tool.setuptools.packages.find]
 where = ["packages"]
 
+[tool.setuptools.package-data]
+"nextops.api" = ["static/*"]
+
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
 testpaths = ["tests"]

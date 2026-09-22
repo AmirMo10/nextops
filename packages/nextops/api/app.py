@@ -1,18 +1,22 @@
 """Minimal authenticated FastAPI surface for Stage 1A Increment 2."""
 
 from collections.abc import Awaitable, Callable
+from pathlib import Path
 from typing import Annotated, Protocol
 from uuid import UUID, uuid4
 
 from fastapi import Depends, FastAPI, Header, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.staticfiles import StaticFiles
 from starlette.responses import Response
 
+from nextops.api.inference_gateway import InferenceGateway, LoopbackInferenceGateway
 from nextops.application.errors import ApplicationError
 from nextops.application.service import DurableAppService
 from nextops.configuration import AppSettings
+from nextops.contracts.assistant import AssistantRequest, AssistantResponse
 from nextops.contracts.durable import (
     AuthenticatedSession,
     BootstrapRequest,
@@ -27,6 +31,7 @@ from nextops.contracts.durable import (
 )
 from nextops.contracts.errors import ErrorCode, ErrorDetail
 from nextops.contracts.models import ActorContext
+from nextops.inference.contracts import InferenceReadiness, ReadinessState
 from nextops.persistence.database import create_database_engine, create_session_factory
 
 
@@ -73,11 +78,16 @@ STATUS_BY_ERROR = {
 }
 
 
-def create_app(service: AppService) -> FastAPI:
+def create_app(
+    service: AppService,
+    inference_gateway: InferenceGateway | None = None,
+) -> FastAPI:
     """Build the API around an injected durable service."""
 
     app = FastAPI(title="NextOps local API", version="1.0.0")
     bearer = HTTPBearer(auto_error=False)
+    static_directory = Path(__file__).with_name("static")
+    app.mount("/assets", StaticFiles(directory=static_directory), name="assets")
 
     @app.middleware("http")
     async def correlation_middleware(
@@ -91,6 +101,14 @@ def create_app(service: AppService) -> FastAPI:
         request.state.correlation_id = correlation_id
         response = await call_next(request)
         response.headers["X-Correlation-ID"] = str(correlation_id)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; base-uri 'none'; frame-ancestors 'none'; "
+            "form-action 'self'; object-src 'none'; script-src 'self'; style-src 'self'"
+        )
         return response
 
     @app.exception_handler(ApplicationError)
@@ -140,6 +158,10 @@ def create_app(service: AppService) -> FastAPI:
     def health() -> dict[str, str]:
         return {"status": "ok", "service": "nextops-app"}
 
+    @app.get("/", include_in_schema=False)
+    def panel() -> FileResponse:
+        return FileResponse(static_directory / "index.html", media_type="text/html")
+
     @app.post("/api/v1/bootstrap", response_model=BootstrapResult, status_code=201)
     def bootstrap(
         request: Request,
@@ -178,6 +200,38 @@ def create_app(service: AppService) -> FastAPI:
     def me(actor: Annotated[ActorContext, Depends(current_actor)]) -> ActorContext:
         return actor
 
+    @app.get("/api/v1/assistant/ready", response_model=InferenceReadiness)
+    async def assistant_readiness(
+        response: Response,
+        actor: Annotated[ActorContext, Depends(current_actor)],
+    ) -> InferenceReadiness:
+        del actor
+        if inference_gateway is None:
+            raise ApplicationError(
+                ErrorCode.DEPENDENCY_UNAVAILABLE,
+                "assistant.not_configured",
+                retryable=True,
+            )
+        readiness = await inference_gateway.readiness()
+        if readiness.state is not ReadinessState.READY:
+            response.status_code = 503
+        return readiness
+
+    @app.post("/api/v1/assistant/generate", response_model=AssistantResponse)
+    async def assistant_generate(
+        request: Request,
+        payload: AssistantRequest,
+        actor: Annotated[ActorContext, Depends(current_actor)],
+    ) -> AssistantResponse:
+        del actor
+        if inference_gateway is None:
+            raise ApplicationError(
+                ErrorCode.DEPENDENCY_UNAVAILABLE,
+                "assistant.not_configured",
+                retryable=True,
+            )
+        return await inference_gateway.generate(payload, _correlation_id(request))
+
     @app.post("/api/v1/runs", response_model=RunRecord, status_code=201)
     def create_run(
         request: Request,
@@ -215,7 +269,14 @@ def create_runtime_app() -> FastAPI:
     settings = AppSettings.from_environment()
     engine = create_database_engine(settings.database_url.get_secret_value())
     service = DurableAppService(create_session_factory(engine), settings)
-    return create_app(service)
+    inference_gateway = None
+    if settings.inference_base_url and settings.inference_service_secret:
+        inference_gateway = LoopbackInferenceGateway(
+            settings.inference_base_url,
+            settings.inference_service_secret.get_secret_value(),
+            settings.inference_timeout_seconds,
+        )
+    return create_app(service, inference_gateway)
 
 
 def _correlation_id(request: Request) -> UUID:

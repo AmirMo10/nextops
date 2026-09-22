@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 
 from nextops.api.app import create_app
 from nextops.application.errors import ApplicationError
+from nextops.contracts.assistant import AssistantRequest, AssistantResponse
 from nextops.contracts.durable import (
     AuthenticatedSession,
     BootstrapRequest,
@@ -24,6 +25,7 @@ from nextops.contracts.durable import (
 )
 from nextops.contracts.errors import ErrorCode
 from nextops.contracts.models import ActorContext, Role
+from nextops.inference.contracts import FinishReason, InferenceReadiness, ReadinessState
 
 NOW = datetime(2026, 9, 21, 9, 0, tzinfo=UTC)
 ORG_ID = UUID("10000000-0000-4000-8000-000000000001")
@@ -151,6 +153,42 @@ class FakeService:
         )
 
 
+class FakeInferenceGateway:
+    """Deterministic protected-AI boundary for application route tests."""
+
+    async def readiness(self) -> InferenceReadiness:
+        return InferenceReadiness(
+            state=ReadinessState.READY,
+            model_id="nextops-qwen3-8b-q4-k-m",
+            runtime_version="v0.4.1",
+            cpu_only_required=True,
+            max_active_requests=1,
+            max_queued_requests=2,
+            active_requests=0,
+            queued_requests=0,
+        )
+
+    async def generate(
+        self, request: AssistantRequest, correlation_id: UUID
+    ) -> AssistantResponse:
+        return AssistantResponse(
+            request_id=uuid4(),
+            correlation_id=correlation_id,
+            locale=request.locale,
+            answer="پاسخ آزمایشی مدل داخلی",
+            model_id="nextops-qwen3-8b-q4-k-m",
+            prompt_tokens=10,
+            completion_tokens=8,
+            finish_reason=FinishReason.STOP,
+            started_at=NOW,
+            completed_at=NOW + timedelta(seconds=1),
+            queue_ms=0,
+            cpu_only_required=True,
+            evidence_mode="model_only",
+            live_monitoring_data=False,
+        )
+
+
 def test_health_is_unversioned_and_contains_no_dependency_claim() -> None:
     client = TestClient(create_app(FakeService()))
 
@@ -158,6 +196,53 @@ def test_health_is_unversioned_and_contains_no_dependency_claim() -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok", "service": "nextops-app"}
+
+
+def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
+    client = TestClient(create_app(FakeService()))
+
+    response = client.get("/")
+    javascript = client.get("/assets/app.js")
+
+    assert response.status_code == 200
+    assert "NextOps" in response.text
+    assert "محیط کنترل‌شده ارزیابی کاربران" in javascript.text
+    assert "https://" not in response.text
+    assert "https://" not in javascript.text
+    assert response.headers["x-frame-options"] == "DENY"
+    assert "default-src 'self'" in response.headers["content-security-policy"]
+
+
+def test_assistant_requires_local_session_and_labels_model_only_output() -> None:
+    client = TestClient(create_app(FakeService(), FakeInferenceGateway()))
+
+    unauthenticated = client.post(
+        "/api/v1/assistant/generate",
+        json={"locale": "fa", "question": "یک پاسخ آزمایشی ارائه کن"},
+    )
+    response = client.post(
+        "/api/v1/assistant/generate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "fa", "question": "یک پاسخ آزمایشی ارائه کن"},
+    )
+
+    assert unauthenticated.status_code == 401
+    assert response.status_code == 200
+    assert response.json()["evidence_mode"] == "model_only"
+    assert response.json()["live_monitoring_data"] is False
+    assert response.json()["answer"] == "پاسخ آزمایشی مدل داخلی"
+
+
+def test_assistant_readiness_is_authenticated() -> None:
+    client = TestClient(create_app(FakeService(), FakeInferenceGateway()))
+
+    response = client.get(
+        "/api/v1/assistant/ready",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["state"] == "ready"
 
 
 def test_run_actor_is_derived_from_bearer_session_and_fixture_is_explicit() -> None:

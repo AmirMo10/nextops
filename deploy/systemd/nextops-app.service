@@ -1,0 +1,83 @@
+[Unit]
+Description=NextOps authenticated application and user panel
+Documentation=https://github.com/Omid-NextAI/nextops
+After=network-online.target postgresql.service nextops-ai-tunnel.service
+Wants=network-online.target nextops-ai-tunnel.service
+ConditionFileIsExecutable=/srv/nextops/releases/current/venv/bin/uvicorn
+ConditionPathExists=/etc/nextops/nextops-app.env
+
+[Service]
+Type=simple
+User=nextops-api
+Group=nextops-api
+UMask=0027
+LoadCredential=database-url:/etc/nextops/credentials/database-url
+LoadCredential=bootstrap-secret:/etc/nextops/credentials/bootstrap-secret
+LoadCredential=recovery-secret:/etc/nextops/credentials/recovery-secret
+LoadCredential=inference-service-secret:/etc/nextops/credentials/inference-service-secret
+EnvironmentFile=/etc/nextops/nextops-app.env
+Environment=HOME=/var/lib/nextops/app
+Environment=HTTP_PROXY=
+Environment=HTTPS_PROXY=
+Environment=ALL_PROXY=
+ExecStart=/srv/nextops/releases/current/venv/bin/uvicorn \
+    nextops.api.app:create_runtime_app \
+    --factory \
+    --host 127.0.0.1 \
+    --port 8000 \
+    --workers 1 \
+    --no-access-log \
+    --no-server-header \
+    --no-proxy-headers
+Restart=on-failure
+RestartSec=5s
+TimeoutStartSec=30s
+TimeoutStopSec=30s
+KillSignal=SIGTERM
+KillMode=mixed
+LimitCORE=0
+LimitNOFILE=4096
+CPUAccounting=yes
+MemoryAccounting=yes
+TasksAccounting=yes
+CPUQuota=400%
+MemoryHigh=1G
+MemoryMax=1536M
+TasksMax=96
+RuntimeDirectory=nextops-app
+RuntimeDirectoryMode=0750
+StateDirectory=nextops/app
+StateDirectoryMode=0750
+LogsDirectory=nextops
+LogsDirectoryMode=0750
+ReadOnlyPaths=/srv/nextops/releases /etc/nextops
+ReadWritePaths=/var/lib/nextops/app /var/log/nextops
+CapabilityBoundingSet=
+AmbientCapabilities=
+NoNewPrivileges=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectClock=yes
+ProtectControlGroups=yes
+ProtectHome=yes
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectProc=invisible
+ProtectSystem=strict
+RestrictAddressFamilies=AF_UNIX AF_INET
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+IPAddressDeny=any
+IPAddressAllow=localhost
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nextops-app
+
+[Install]
+WantedBy=multi-user.target
