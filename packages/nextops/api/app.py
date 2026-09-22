@@ -80,6 +80,8 @@ STATUS_BY_ERROR = {
     ErrorCode.INTERNAL_ERROR: 500,
 }
 
+INVESTIGATION_MAX_OUTPUT_TOKENS = 128
+
 
 def create_app(
     service: AppService,
@@ -350,7 +352,7 @@ def _grounded_prompt(request: AssistantRequest, evidence: MonitoringSummary) -> 
     return AssistantRequest(
         locale=request.locale,
         question=prompt,
-        max_output_tokens=request.max_output_tokens,
+        max_output_tokens=min(request.max_output_tokens, INVESTIGATION_MAX_OUTPUT_TOKENS),
     )
 
 

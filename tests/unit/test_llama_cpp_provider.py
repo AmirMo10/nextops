@@ -1,7 +1,9 @@
 """llama.cpp adapter tests over a deterministic JSON transport."""
 
 import asyncio
-from typing import Any
+from email.message import Message
+from typing import Any, cast
+from urllib.error import HTTPError
 
 import pytest
 
@@ -9,7 +11,7 @@ from nextops.application.errors import ApplicationError
 from nextops.contracts.errors import ErrorCode
 from nextops.inference.configuration import LlamaCppSettings
 from nextops.inference.contracts import InferenceRequest, ReadinessState
-from nextops.inference.llama_cpp import LlamaCppProvider
+from nextops.inference.llama_cpp import LlamaCppProvider, UrllibJsonTransport
 
 
 class StubTransport:
@@ -49,6 +51,21 @@ class StubTransport:
         self.last_payload = payload
         self.last_headers = headers
         return self.generation
+
+
+class HttpErrorOpener:
+    def __init__(self, status_code: int) -> None:
+        self._status_code = status_code
+
+    def open(self, request: Any, timeout: float) -> Any:
+        del request, timeout
+        raise HTTPError(
+            url="http://127.0.0.1:8090/api/v1/generate",
+            code=self._status_code,
+            msg="bounded upstream error",
+            hdrs=Message(),
+            fp=None,
+        )
 
 
 def _settings() -> LlamaCppSettings:
@@ -132,5 +149,25 @@ def test_provider_rejects_usage_above_the_request_limit() -> None:
         with pytest.raises(ApplicationError) as captured:
             await LlamaCppProvider(_settings(), transport).generate(_request())
         assert captured.value.message_key == "inference.provider_response_invalid"
+
+    asyncio.run(scenario())
+
+
+def test_transport_preserves_bounded_upstream_timeout() -> None:
+    async def scenario() -> None:
+        transport = UrllibJsonTransport("http://127.0.0.1:8090")
+        transport._opener = cast(Any, HttpErrorOpener(504))
+
+        with pytest.raises(ApplicationError) as captured:
+            await transport.post_json(
+                "/api/v1/generate",
+                {"prompt": "bounded request"},
+                {"Content-Type": "application/json"},
+                150,
+            )
+
+        assert captured.value.code is ErrorCode.TIMEOUT
+        assert captured.value.message_key == "inference.upstream_timeout"
+        assert captured.value.details == {}
 
     asyncio.run(scenario())

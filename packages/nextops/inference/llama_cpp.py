@@ -93,7 +93,22 @@ class UrllibJsonTransport:
         try:
             with self._opener.open(request, timeout=timeout_seconds) as response:
                 raw = response.read(MAX_PROVIDER_RESPONSE_BYTES + 1)
-        except (HTTPError, URLError, TimeoutError, OSError) as error:
+        except HTTPError as error:
+            if error.code == 429:
+                code = ErrorCode.OVERLOADED
+                message_key = "inference.upstream_overloaded"
+            elif error.code in {408, 504}:
+                code = ErrorCode.TIMEOUT
+                message_key = "inference.upstream_timeout"
+            else:
+                code = ErrorCode.DEPENDENCY_UNAVAILABLE
+                message_key = "inference.provider_unavailable"
+            raise ApplicationError(
+                code,
+                message_key,
+                retryable=True,
+            ) from error
+        except (URLError, TimeoutError, OSError) as error:
             raise ApplicationError(
                 ErrorCode.DEPENDENCY_UNAVAILABLE,
                 "inference.provider_unavailable",

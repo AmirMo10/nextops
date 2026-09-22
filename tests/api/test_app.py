@@ -157,6 +157,9 @@ class FakeService:
 class FakeInferenceGateway:
     """Deterministic protected-AI boundary for application route tests."""
 
+    def __init__(self) -> None:
+        self.last_request: AssistantRequest | None = None
+
     async def readiness(self) -> InferenceReadiness:
         return InferenceReadiness(
             state=ReadinessState.READY,
@@ -170,6 +173,7 @@ class FakeInferenceGateway:
         )
 
     async def generate(self, request: AssistantRequest, correlation_id: UUID) -> AssistantResponse:
+        self.last_request = request
         return AssistantResponse(
             request_id=uuid4(),
             correlation_id=correlation_id,
@@ -228,6 +232,8 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
     assert response.status_code == 200
     assert "NextOps" in response.text
     assert "محیط کنترل‌شده ارزیابی کاربران" in javascript.text
+    assert "max_output_tokens: 128" in javascript.text
+    assert "زمان پردازش مدل محلی به پایان رسید" in javascript.text
     assert "https://" not in response.text
     assert "https://" not in javascript.text
     assert response.headers["x-frame-options"] == "DENY"
@@ -267,7 +273,8 @@ def test_assistant_readiness_is_authenticated() -> None:
 
 
 def test_investigation_requires_session_and_returns_exact_live_evidence() -> None:
-    client = TestClient(create_app(FakeService(), FakeInferenceGateway(), FakeMonitoringGateway()))
+    inference = FakeInferenceGateway()
+    client = TestClient(create_app(FakeService(), inference, FakeMonitoringGateway()))
 
     unauthenticated = client.post(
         "/api/v1/investigate",
@@ -286,6 +293,8 @@ def test_investigation_requires_session_and_returns_exact_live_evidence() -> Non
     assert body["live_monitoring_data"] is True
     assert body["evidence"]["source_version"] == "7.0.30"
     assert body["evidence"]["metrics"][0]["stale"] is False
+    assert inference.last_request is not None
+    assert inference.last_request.max_output_tokens == 128
 
 
 def test_run_actor_is_derived_from_bearer_session_and_fixture_is_explicit() -> None:

@@ -24,7 +24,9 @@ const translations = {
     source: "Source", host: "Host", collected: "Collected", problems: "Active problems", stale: "stale",
     model: "Model", tokens: "Output tokens", completed: "Completed", requestId: "Request",
     footer: "Controlled local evaluation environment", invalidLogin: "The username or password is incorrect.",
-    genericError: "The request could not be completed. Try again.", sessionExpired: "Your session expired. Please sign in again.",
+    genericError: "The request could not be completed. Try again.", timeoutError: "The local model took too long. Please try a shorter question.",
+    overloadedError: "The local model is busy. Please wait a moment and try again.", dependencyError: "A local service is temporarily unavailable. Please try again.",
+    sessionExpired: "Your session expired. Please sign in again.",
     working: "Generating locally…"
   },
   fa: {
@@ -50,7 +52,9 @@ const translations = {
     source: "منبع", host: "میزبان", collected: "زمان گردآوری", problems: "مسائل فعال", stale: "قدیمی",
     model: "مدل", tokens: "توکن‌های خروجی", completed: "زمان تکمیل", requestId: "شناسه درخواست",
     footer: "محیط کنترل‌شده و داخلی ارزیابی", invalidLogin: "نام کاربری یا گذرواژه صحیح نیست.",
-    genericError: "انجام درخواست ممکن نشد. دوباره تلاش کنید.", sessionExpired: "نشست شما پایان یافته است. دوباره وارد شوید.",
+    genericError: "انجام درخواست ممکن نشد. دوباره تلاش کنید.", timeoutError: "زمان پردازش مدل محلی به پایان رسید. لطفاً پرسش کوتاه‌تری مطرح کنید.",
+    overloadedError: "مدل محلی در حال پردازش درخواست دیگری است. لطفاً کمی بعد دوباره تلاش کنید.", dependencyError: "یکی از سرویس‌های داخلی موقتاً در دسترس نیست. لطفاً دوباره تلاش کنید.",
+    sessionExpired: "نشست شما پایان یافته است. دوباره وارد شوید.",
     working: "در حال تولید پاسخ در محیط داخلی…"
   }
 };
@@ -82,6 +86,7 @@ async function api(path, options = {}) {
   if (!response.ok) {
     const error = new Error(body?.error?.message_key || "request.failed");
     error.status = response.status;
+    error.code = body?.error?.code || "internal_error";
     throw error;
   }
   return body;
@@ -153,6 +158,15 @@ function renderEvidence(evidence) {
   });
 }
 
+function safeRequestError(error) {
+  const keyByCode = {
+    timeout: "timeoutError",
+    overloaded: "overloadedError",
+    dependency_unavailable: "dependencyError"
+  };
+  return translations[state.language][keyByCode[error.code] || "genericError"];
+}
+
 byId("languageButton").addEventListener("click", () => applyLanguage(state.language === "en" ? "fa" : "en"));
 byId("logoutButton").addEventListener("click", () => showLogin());
 byId("loginForm").addEventListener("submit", async event => {
@@ -186,7 +200,7 @@ byId("assistantForm").addEventListener("submit", async event => {
   const original = button.querySelector("span").textContent;
   button.querySelector("span").textContent = translations[state.language].working;
   try {
-    const result = await api("/api/v1/investigate", { method: "POST", body: JSON.stringify({ locale: state.answerLocale, question: byId("question").value, max_output_tokens: 384 }) });
+    const result = await api("/api/v1/investigate", { method: "POST", body: JSON.stringify({ locale: state.answerLocale, question: byId("question").value, max_output_tokens: 128 }) });
     const assistant = result.assistant;
     byId("answer").textContent = assistant.answer;
     byId("answer").dir = assistant.locale === "fa" ? "rtl" : "ltr";
@@ -199,7 +213,7 @@ byId("assistantForm").addEventListener("submit", async event => {
     byId("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
     if (error.status === 401) showLogin(translations[state.language].sessionExpired);
-    else errorNode.textContent = translations[state.language].genericError;
+    else errorNode.textContent = safeRequestError(error);
   } finally { button.disabled = false; button.querySelector("span").textContent = original; }
 });
 
