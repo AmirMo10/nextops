@@ -10,6 +10,11 @@ showing Zabbix version, host, collection time, measurement time, freshness and a
 Assets are served locally without a CDN. The broader operations console described below—inventory,
 incident timelines, topology, approvals, audit search and settings—remains specification work.
 
+Live investigations are capped server-side at the qualified 128-token CPU budget; the browser uses
+the same bound. Timeout, overload and local-dependency failures retain safe machine-readable status
+and are presented as distinct actionable messages in both languages. This prevents a stale or
+modified browser from raising the output limit beyond the qualified user-testing profile.
+
 ## Information architecture
 
 Build an operations console, not just a chat page or decorative landing page. Primary areas are overview, asset inventory/details, incidents and evidence timeline, topology, approval requests, connector health, audit search, model/resource health, and settings. Chat is one way to start or inspect a durable investigation.

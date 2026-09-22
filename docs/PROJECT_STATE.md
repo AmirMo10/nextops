@@ -1,12 +1,13 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-22 — a controlled user-testing path is live across the app, AI, connector and Zabbix guests. The protected bilingual panel now retrieves bounded, timestamped Zabbix evidence through a least-privilege reader and uses the local CPU model for English or Persian synthesis. PostgreSQL, TLS/Nginx, both restricted SSH tunnels, the read-only connector, Zabbix 7.0.30 and self-monitoring are active. Programmatic end-to-end tests passed in both languages; full offline, reboot, recovery, scale and production acceptance remain open.
+Updated: 2026-09-22 — a controlled user-testing path is live across the app, AI, connector and Zabbix guests. The protected bilingual panel now retrieves bounded, timestamped Zabbix evidence through a least-privilege reader and uses the local CPU model for English or Persian synthesis. The first browser-reported timeout was repaired in immutable app release `nextops-0.1.0-8d31bcb`; the exact request now passes within the qualified 128-token ceiling. PostgreSQL, TLS/Nginx, both restricted SSH tunnels, the read-only connector, Zabbix 7.0.30 and self-monitoring are active. Programmatic end-to-end tests passed in both languages; full offline, reboot, recovery, scale and production acceptance remain open.
 
 ## English
 
 ### Current controlled user-testing checkpoint
 
-The authenticated application and bilingual panel are deployed as an immutable release on the app
+The authenticated application and bilingual panel are deployed as immutable release
+`nextops-0.1.0-8d31bcb` on the app
 guest behind private TLS and Nginx. PostgreSQL 16 stores application identity and session state on
 its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
 application listener are not exposed through Nginx. The browser receives neither the AI service
@@ -26,6 +27,14 @@ live evidence retrieval and grounded English and Persian answers. The measured s
 56.6 seconds and 67.1 seconds for the 128-token ceiling. Visual review confirmed the English and
 genuine RTL Persian login layouts. Source version, host, collection time, measurement time, stale
 state and active-problem count are shown with the answer.
+
+The first real browser request exposed a mismatch between the panel's 384-token request and the
+qualified 120-second CPU generation boundary. It ended as a generic `503` even though readiness and
+monitoring were healthy. The deployed repair caps live investigations to 128 tokens in both the
+server and panel, preserves safe timeout/overload status across the internal boundary and displays
+localized actionable errors. Replaying the exact `hi` request with the old 384-token payload passed
+with HTTP 200, live evidence and 128 output tokens in 61.6 seconds. The previous immutable release
+remains available for rollback.
 
 This is a controlled user-testing slice, not production acceptance. It currently monitors the
 Zabbix server itself rather than the full estate. The new investigation route returns its exact
@@ -123,7 +132,7 @@ The user may perform provisioning independently; verify their actual state befor
 
 This state records Phase 0 acceptance, the deployed controlled Stage 1A application slice, the qualified Stage 1B AI slice, the live Stage 1C read-only connector and the user-test portion of Stage 1D. It preserves the source requirements, archived prompt, diagrams and per-server handoff. It is not a host vulnerability audit, production acceptance, independent recovery proof or complete provisioning record.
 
-The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`. Ruff, strict mypy over 57 files and the current local suite pass with 93 tests and 5 PostgreSQL skips. Earlier revision-specific real-PostgreSQL evidence remains preserved. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier validation, dependency and license review, security/failure testing and recovery evidence remain merge or production gates. Visual bilingual login review and programmatic live end-to-end testing ran; full browser workflow automation, WAN-disconnection/VM-reboot acceptance, independent backup and isolated restore did not.
+The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`. Ruff, strict mypy over 57 files and the current local suite pass with 94 tests and 5 PostgreSQL skips. Earlier revision-specific real-PostgreSQL evidence remains preserved. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier validation, dependency and license review, security/failure testing and recovery evidence remain merge or production gates. Visual bilingual login review and programmatic live end-to-end testing ran; full browser workflow automation, WAN-disconnection/VM-reboot acceptance, independent backup and isolated restore did not.
 
 The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-test slice without reinstalling it: persist every live investigation and its evidence reference in the durable audit model, add the remaining approved hosts, exercise stale/partial/unreachable/revoked-token cases, then run explicit WAN-disconnection, VM-reboot, rollback and independent restore acceptance. Production promotion remains gated on those results, retention/backup decisions, sustained resource measurements and operational sign-off.
 
@@ -131,7 +140,7 @@ The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-t
 
 ### نقطهٔ فعلی برای ارزیابی کنترل‌شدهٔ کاربران
 
-برنامهٔ احرازهویت‌شده و پنل دوزبانه، به‌صورت انتشار تغییرناپذیر روی مهمان برنامه و پشت TLS خصوصی
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-8d31bcb` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
 می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
 نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.
@@ -150,6 +159,13 @@ The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-t
 گذراند. زمان تولید با سقف ۱۲۸ توکن برای انگلیسی ۵۶٫۶ ثانیه و برای فارسی ۶۷٫۱ ثانیه بود. نمایش
 انگلیسی و چیدمان راست‌به‌چپ فارسی نیز به‌صورت دیداری بازبینی شد. نسخهٔ منبع، میزبان، زمان گردآوری،
 زمان اندازه‌گیری، وضعیت تازگی و شمار مسئله‌های فعال کنار پاسخ نمایش داده می‌شود.
+
+نخستین درخواست واقعی مرورگر، ناسازگاری میان درخواست ۳۸۴ توکنی پنل و مهلت تأییدشدهٔ ۱۲۰ ثانیه‌ای
+پردازش روی CPU را آشکار کرد. با وجود سلامت آمادگی و پایش، درخواست در پایان به خطای عمومی `503`
+رسید. اصلاح مستقرشده سقف بررسی زنده را در سرور و پنل به ۱۲۸ توکن محدود می‌کند، وضعیت امن پایان
+مهلت و اشباع را در مرز داخلی حفظ می‌کند و پیام خطای روشن و بومی‌شده نشان می‌دهد. بازاجرای همان
+پرسش `hi` با payload قدیمی ۳۸۴ توکنی، در ۶۱٫۶ ثانیه با HTTP 200، شاهد زنده و ۱۲۸ توکن خروجی موفق
+شد. انتشار تغییرناپذیر قبلی نیز برای بازگشت نگه‌داری می‌شود.
 
 این خروجی برای ارزیابی کنترل‌شده است، نه پذیرش تولید. فعلاً فقط خود سرور Zabbix پایش می‌شود و همهٔ
 تجهیزات وارد دامنه نشده‌اند. مسیر تازه، شاهد دقیق را همراه پاسخ بازمی‌گرداند، اما هنوز run ماندگار
@@ -224,6 +240,6 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 این وضعیت پذیرش مرحلهٔ صفر، برش مستقرشدهٔ 1A، هوش مصنوعی صلاحیت‌سنجی‌شدهٔ 1B، اتصال زنده و فقط‌خواندنی 1C و بخش قابل‌آزمایش 1D را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و پرونده‌های تحویل حفظ شده‌اند. این رکورد به‌معنای ممیزی امنیت میزبان، پذیرش تولیدی یا اثبات بازیابی مستقل نیست.
 
-برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۷ فایل و مجموعهٔ محلی با ۹۳ آزمون موفق و ۵ آزمون PostgreSQL کنارگذاشته‌شده قبول شدند. شاهد واقعی PostgreSQL برای revision پیشین محفوظ است و CI به revision خودش وابسته می‌ماند. بازبینی دیداری ورود دوزبانه و آزمون سراسری زنده انجام شد؛ پذیرش کامل مرورگر، قطع WAN، راه‌اندازی مجدد ماشین، پشتیبان مستقل و بازیابی جدا هنوز اجرا نشده است.
+برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۷ فایل و مجموعهٔ محلی با ۹۴ آزمون موفق و ۵ آزمون PostgreSQL کنارگذاشته‌شده قبول شدند. شاهد واقعی PostgreSQL برای revision پیشین محفوظ است و CI به revision خودش وابسته می‌ماند. بازبینی دیداری ورود دوزبانه و آزمون سراسری زنده انجام شد؛ پذیرش کامل مرورگر، قطع WAN، راه‌اندازی مجدد ماشین، پشتیبان مستقل و بازیابی جدا هنوز اجرا نشده است.
 
 نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) سخت‌سازی همین مسیر سالم است، نه نصب دوبارهٔ آن: هر بررسی زنده و مرجع شاهدش باید در مدل ماندگار و ممیزی ثبت شود؛ میزبان‌های مصوب بعدی افزوده شوند؛ دادهٔ قدیمی یا ناقص، قطع مقصد و لغو توکن آزموده شود؛ سپس پذیرش قطع WAN، راه‌اندازی مجدد ماشین، بازگشت و بازیابی مستقل انجام گیرد. ارتقا به تولید به نتیجهٔ این آزمون‌ها، تصمیم نگهداری و پشتیبان، سنجش پایدار منابع و تأیید عملیات وابسته است.

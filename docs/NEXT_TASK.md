@@ -1,6 +1,6 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. The private bilingual panel, application PostgreSQL, local CPU model, read-only connector and Zabbix 7.0.30 self-monitoring path passed live English and Persian end-to-end checks. The immediate work is durable evidence/audit linkage, broader approved host coverage and failure/offline/recovery acceptance; do not rebuild the working slice.
+Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. The private bilingual panel, application PostgreSQL, local CPU model, read-only connector and Zabbix 7.0.30 self-monitoring path passed live English and Persian end-to-end checks. The first browser timeout is repaired in app release `nextops-0.1.0-8d31bcb`, and the exact reported request passed after deployment. The immediate work is durable evidence/audit linkage, broader approved host coverage and failure/offline/recovery acceptance; do not rebuild the working slice.
 
 ## English — harden the live user-testing slice
 
@@ -15,7 +15,9 @@ The next operator must treat the following as completed and preserve it:
 - the rootless read-only connector and pinned application-to-connector tunnel;
 - live retrieval of eight fresh metrics, explicit source/timestamps/staleness and bilingual grounded
   answers through the desktop client; and
-- local quality gates: Ruff, strict mypy and 93 passing tests with 5 PostgreSQL tests skipped in the
+- the 128-token server-side investigation ceiling and localized timeout/overload/dependency states,
+  with the reported old 384-token request verified as HTTP 200 after repair; and
+- local quality gates: Ruff, strict mypy and 94 passing tests with 5 PostgreSQL tests skipped in the
   desktop environment.
 
 The immediate implementation sequence is:
@@ -142,7 +144,9 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 - اتصال فقط‌خواندنی با هویت بدون امتیاز و تونل ثابت‌شدهٔ برنامه به اتصال؛
 - دریافت زندهٔ هشت سنجهٔ تازه، نمایش صریح منبع و زمان و تازگی، و پاسخ مستند فارسی و انگلیسی از
   مسیر رایانهٔ کاربر؛
-- عبور Ruff، بررسی سخت‌گیرانهٔ mypy و ۹۳ آزمون؛ پنج آزمون PostgreSQL فقط در محیط رومیزی کنار
+- سقف ۱۲۸ توکن در سمت سرور و پیام‌های روشن پایان مهلت، اشباع و قطع وابستگی؛ درخواست قدیمی ۳۸۴
+  توکنیِ گزارش‌شده پس از اصلاح با HTTP 200 موفق شد؛
+- عبور Ruff، بررسی سخت‌گیرانهٔ mypy و ۹۴ آزمون؛ پنج آزمون PostgreSQL فقط در محیط رومیزی کنار
   گذاشته شده‌اند.
 
 ترتیب مستقیم کار بعدی چنین است:

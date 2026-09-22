@@ -1,5 +1,43 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-22 — User-test timeout repair / اصلاح پایان مهلت آزمون کاربر
+
+### English
+
+Resolved the first browser-reported investigation failure. The deployed page requested a 384-token
+answer while the qualified CPU inference boundary allows 120 seconds; the request exhausted that
+boundary and the application converted the internal timeout into a generic `503`. Live monitoring
+and readiness remained healthy throughout the incident.
+
+The investigation route now enforces the qualified 128-token output ceiling server-side, including
+for an already-open browser that still submits the old larger value. The panel submits the same
+bound and presents safe, localized timeout, overload and dependency messages. The loopback JSON
+transport also preserves bounded upstream `429` and `504` outcomes instead of collapsing them into
+a generic dependency error.
+
+Immutable app release `nextops-0.1.0-8d31bcb` was promoted with the prior release retained for
+rollback. A reproduction using the exact question `hi` and the old 384-token browser payload
+returned HTTP 200, live Zabbix evidence and a 128-token local answer in 61.6 seconds. Ruff, strict
+mypy over 57 files and 94 tests pass; five desktop PostgreSQL integration tests remain skipped.
+
+### فارسی
+
+نخستین خطای گزارش‌شده از رابط مرورگر برطرف شد. صفحهٔ مستقرشده پاسخ ۳۸۴ توکنی درخواست می‌کرد، در
+حالی که مرز تأییدشدهٔ پردازش روی CPU برای هر درخواست ۱۲۰ ثانیه مهلت دارد؛ درخواست به پایان این
+مهلت رسید و برنامه خطای داخلی را به یک `503` عمومی تبدیل کرد. در تمام این مدت، پایش زنده و نشانگرهای
+آمادگی سالم بودند.
+
+مسیر بررسی اکنون سقف تأییدشدهٔ ۱۲۸ توکن را در سمت سرور اعمال می‌کند؛ بنابراین حتی صفحه‌ای که پیش
+از به‌روزرسانی باز مانده و هنوز مقدار بزرگ‌تر را می‌فرستد نیز از این مرز عبور نمی‌کند. پنل همین سقف
+را درخواست می‌کند و برای پایان مهلت، اشباع و قطع وابستگی، پیام‌های روشن و بومی‌شده نشان می‌دهد.
+لایهٔ ارتباط داخلی نیز پاسخ‌های محدود `429` و `504` را به‌درستی حفظ می‌کند و دیگر همه را به خطای
+عمومی وابستگی تبدیل نمی‌کند.
+
+انتشار تغییرناپذیر `nextops-0.1.0-8d31bcb` فعال شد و نسخهٔ قبلی برای بازگشت محفوظ ماند. بازآزمایی
+با همان پرسش `hi` و payload قدیمی ۳۸۴ توکنی، کد HTTP 200، شاهد زندهٔ Zabbix و پاسخ محلی ۱۲۸ توکنی
+را در ۶۱٫۶ ثانیه بازگرداند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۷ فایل و ۹۴ آزمون موفق‌اند؛ پنج
+آزمون یکپارچهٔ PostgreSQL در محیط رومیزی همچنان کنار گذاشته شده‌اند.
+
 ## 2026-09-22 — Live evidence user-testing path / مسیر زندهٔ شاهد برای ارزیابی کاربران
 
 ### English
