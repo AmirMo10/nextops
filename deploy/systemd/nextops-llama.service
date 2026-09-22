@@ -16,6 +16,7 @@ LoadCredential=llama-api-key:/etc/nextops/credentials/llama-api-key
 Environment=HOME=/var/lib/nextops/inference
 Environment=OPENBLAS_NUM_THREADS=1
 Environment=OMP_NUM_THREADS=16
+Environment=LD_LIBRARY_PATH=/srv/nextops/runtime/llama.cpp/current/bin
 Environment=HTTP_PROXY=
 Environment=HTTPS_PROXY=
 Environment=ALL_PROXY=

@@ -82,6 +82,10 @@ def test_provider_uses_fixed_route_identity_auth_and_non_thinking_mode() -> None
         assert transport.last_headers["Authorization"].startswith("Bearer ")
         assert transport.last_payload["model"] == "nextops-qwen3-8b-q4-k-m"
         assert transport.last_payload["stream"] is False
+        system_prompt = transport.last_payload["messages"][0]["content"]
+        assert "requested en locale" in system_prompt
+        assert "Preserve every material observed fact" in system_prompt
+        assert "unknown causes, current state, and later outcomes" in system_prompt
         assert transport.last_payload["messages"][-1]["content"].endswith("/no_think")
         assert "tools" not in transport.last_payload
 

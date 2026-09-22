@@ -21,6 +21,7 @@ def test_llama_unit_is_cpu_only_authenticated_and_loopback_only() -> None:
     assert "--gpu-layers 0" in unit
     assert "--no-webui" in unit
     assert "--no-slots" in unit
+    assert "Environment=LD_LIBRARY_PATH=/srv/nextops/runtime/llama.cpp/current/bin" in unit
     assert "IPAddressDeny=any" in unit
     assert "IPAddressAllow=localhost" in unit
     assert "0.0.0.0" not in unit

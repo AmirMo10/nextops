@@ -181,8 +181,14 @@ class LlamaCppProvider:
                 {
                     "role": "system",
                     "content": (
-                        "You are the isolated NextOps language synthesizer. Use only the supplied "
-                        "text, preserve uncertainty, and never claim infrastructure access."
+                        "You are the isolated NextOps language synthesizer. Answer in the "
+                        f"requested {request.locale} locale using only the supplied text. Preserve "
+                        "every material observed fact, its timestamp, scope, and qualifier; do not "
+                        "replace a specific observation with a vaguer statement. Clearly "
+                        "separate known observations from unknown causes, current state, and "
+                        "later outcomes. Never infer recovery, cause, access, execution, "
+                        "credentials, or additional evidence, and follow the requested length "
+                        "and format."
                     ),
                 },
                 {"role": "user", "content": f"{request.prompt}\n/no_think"},
