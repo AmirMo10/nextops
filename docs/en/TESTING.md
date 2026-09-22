@@ -5,9 +5,11 @@
 **Status: active test plan with repository, isolated PostgreSQL, live connector and bounded local-AI
 evidence.** Ruff, strict mypy, 101 non-integration cases and six PostgreSQL integration cases pass.
 Authenticated browser-path, live read-only Zabbix, durable investigation, revoked-token,
-unreachable-API and recovery checks have run on the controlled four-guest environment. Explicit
-WAN-disconnection, VM reboot, sustained load, independent restore and production acceptance have
-not run. Source: master specification sections 10–14 and 21–23.
+unreachable-API, recovery and explicit four-guest WAN-isolation checks have run on the controlled
+environment. The first VM-reboot case recovered its services but failed clean-reboot acceptance
+after a 30-minute systemd job timeout forced the reboot; the remaining guests were not rebooted.
+Sustained load, independent restore and production acceptance have not run. Source: master
+specification sections 10–14 and 21–23.
 
 ## Stage 1E failure qualification
 
@@ -29,8 +31,32 @@ The scoped failure increment separates deterministic fixtures from live operatio
   frontend reads the database directly. That observed distinction is retained rather than being
   mislabeled as an outage pass.
 
-These results qualify the named cases only. They do not replace the remaining WAN, reboot,
+These results qualify the named cases only. They do not replace the remaining browser-isolated WAN, reboot,
 certificate-expiry, timeout/cancellation, low-space, sustained-load, backup and restore matrix.
+
+## Stage 1F WAN isolation and reboot qualification
+
+A temporary, separately named nftables output policy was applied to all four guests after an
+automatic rollback timer was armed. It preserved loopback, the approved private LAN and link-local
+IPv6 while rejecting every other IPv4 and IPv6 destination. Direct Internet probes failed on all
+four guests and rule counters recorded rejected packets. SSH and approved LAN paths remained
+available, and every guest stayed in `running` system state with zero failed units.
+
+While all four guests were isolated, a fresh authenticated session passed English and Persian
+model-only questions without Zabbix contamination. Local-AI readiness passed, and a new live
+investigation returned eight fresh measurements, the expected `metrics_truncated` marker, durable
+storage, an independently verified evidence hash and linked audit. This passes the server/API
+portion of OFF-01 and OFF-05. OFF-03 remains partial because the client used a fresh authenticated
+API session rather than a separately WAN-isolated fresh browser process.
+
+The reboot matrix stopped after its first guest. Zabbix eventually restored SSH, PostgreSQL,
+Zabbix Server, PHP-FPM, Nginx, Agent 2 and fresh monitoring, but `reboot.target` made no progress for
+30 minutes and systemd then forced the reboot. The journal also showed SSH child processes remaining
+after `ssh.service` stopped; the temporary early-boot policy lacked an explicit shutdown conflict,
+so the test harness itself cannot be excluded as a contributor. The journal did not identify one
+definitive blocking unit. No app, AI or connector reboot was attempted. All temporary policies and
+unit files were removed, Internet access was restored, and the fleet returned to `running` with zero
+failed units. OFF-05 and clean VM-reboot acceptance remain open.
 
 ## Test layers
 
