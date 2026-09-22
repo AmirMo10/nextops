@@ -2,7 +2,16 @@
 
 [فارسی](../fa/ZABBIX_SERVER.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [Allocation record](../requirements/ZABBIX_SERVER_PLAN.json)
 
-**Updated: 2026-09-20. Status: recommended deployment profile; not provisioned or tested by this documentation change.** The owner requested publication of the dedicated Zabbix VM recommendation. This guide replaces the earlier small `zabbix-lab` default for the new-monitoring-server path. It does not authorize reinstalling an existing working Zabbix server or modifying ESXi.
+**Updated: 2026-09-22. Status: the original deployment design below is now implemented for controlled
+user testing, but production acceptance remains open.** Zabbix 7.0.30 and the scoped reader are live.
+The Zabbix guest plus the application, AI and connector guests are monitored in the one approved
+host group. The three NextOps guests use Agent 2 active checks with distinct PSKs, no passive
+listener or remote-command permission, and a source-restricted trapper path. The reader still has
+only `host.get`, `item.get` and `problem.get`; it saw exactly four approved hosts, fresh items for
+each newly added host, and denied both an unlisted read and a mutation. Failure, WAN-block, reboot,
+backup and isolated-restore acceptance remain open. The sections below retain the original design
+and capacity rationale; current evidence in [PROJECT_STATE](../PROJECT_STATE.md) supersedes their
+earlier not-deployed wording.
 
 ## 1. One monitoring VM, separate from the three NextOps VMs
 

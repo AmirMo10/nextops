@@ -1,6 +1,6 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-22 — a controlled user-testing path is live across the app, AI, connector and Zabbix guests. Immutable app release `nextops-0.1.0-fde27bd` adds durable live-investigation runs: every started monitoring request now records its server-derived actor/scope and correlation ID, then atomically stores the bounded Zabbix snapshot and SHA-256 reference, local-model result and append-only audit outcome. General assistance remains separate and model-only. PostgreSQL, TLS/Nginx, both restricted SSH tunnels, the read-only connector, Zabbix 7.0.30 and self-monitoring are active. Live persistence/retrieval/hash/audit checks passed; broader host coverage and full failure, offline, reboot, recovery, scale and production acceptance remain open.
+Updated: 2026-09-22 — a controlled user-testing path is live across the app, AI, connector and Zabbix guests. Immutable app release `nextops-0.1.0-fde27bd` provides durable live-investigation evidence and audit linkage while general assistance remains model-only. Zabbix 7.0.30 now monitors its own guest plus the approved app, AI and connector guests. The three NextOps guests use exact-version Agent 2, distinct PSKs, outbound active checks only, no passive listener or remote-command permission, and a source-restricted trapper path. The unchanged API reader sees exactly four approved hosts and fresh items for every new host. Full failure, offline, reboot, recovery, scale and production acceptance remain open.
 
 ## English
 
@@ -16,9 +16,17 @@ credential nor the Zabbix token.
 The dedicated Zabbix guest now runs Zabbix 7.0.30, PostgreSQL 16, Nginx/PHP-FPM and Agent 2. The
 default administrator password was rotated. A separate API-only reader has no frontend access, an
 allowlist limited to `host.get`, `item.get` and `problem.get`, read permission for one approved host
-group and a token stored only on the connector guest. A non-allowlisted API call was denied and the
-reader saw exactly one host. The connector uses verified TLS, bypasses inherited proxies, exposes
-only a named summary operation on loopback and has no generic URL, JSON-RPC, shell or write surface.
+group and a token stored only on the connector guest. It now sees exactly four approved hosts: the
+Zabbix guest plus app, AI and connector. An unlisted read and a mutation were both denied. The
+connector uses verified TLS, bypasses inherited proxies, exposes only a named summary operation on
+loopback and has no generic URL, JSON-RPC, shell or write surface.
+
+The app, AI and connector guests run the exact cached Agent 2 package
+`1:7.0.30-1+ubuntu24.04`. Each has a distinct PSK and sends active checks to the source-restricted
+Zabbix trapper path. They expose no passive port 10050 and explicitly deny `system.run[*]`. Final
+reader validation observed 65, 65 and 58 fresh supported items respectively; these counts are a
+point-in-time observation, not a fixed template contract. No repository refresh or unrelated
+package upgrade ran. All four hosts retained a `running` system state and zero failed units.
 
 The app reaches AI and connector loopback services through separate pinned-host-key SSH forwards.
 Live qualification returned eight fresh self-monitoring measurements with zero stale metrics and no
@@ -58,8 +66,8 @@ independent evidence-hash verification and audit linkage passed. A direct databa
 successful `live_monitoring` result, two linked audit events, the 64-character hash and a matching
 completion audit ID.
 
-This is a controlled user-testing slice, not production acceptance. It currently monitors the
-Zabbix server itself rather than the full estate. WAN-disconnection, VM-reboot, token revocation,
+This is a controlled user-testing slice, not production acceptance. The four approved Phase 1
+guests are now monitored; the wider estate is not. WAN-disconnection, VM-reboot, token revocation,
 dependency-loss, stale/partial evidence, sustained load, independent backup/restore and disaster
 recovery cases remain open. Private addresses, tokens, passwords, host keys and raw evidence remain
 outside Git.
@@ -97,9 +105,9 @@ Preserve ESXi; Ubuntu Server 24.04 LTS is the approved guest baseline, not a hos
 
 ### Sanitized replacement-guest qualification
 
-On 2026-09-21, authorized read-only SSH preflight reached all four clean replacement guests after the owner supplied their new Ed25519 fingerprints independently and each matched the live handshake. Key-only authentication, strict host-key checking and direct-root denial were verified. The configured vCPU, memory, virtual-disk and dedicated-mount layouts match the public role budgets. All guests run Ubuntu 24.04.5 LTS under VMware. On 2026-09-22 the fleet was rechecked after the AI deployment and a narrow GLib security update on app: every guest reported `running` systemd state, zero failed units, zero pending package upgrades and no reboot requirement. UFW remains active. The only new product listeners are the two intended AI loopback endpoints; no public product listener was added.
+On 2026-09-21, authorized read-only SSH preflight reached all four clean replacement guests after the owner supplied their new Ed25519 fingerprints independently and each matched the live handshake. Key-only authentication, strict host-key checking and direct-root denial were verified. The configured vCPU, memory, virtual-disk and dedicated-mount layouts match the public role budgets. All guests run Ubuntu 24.04.5 LTS under VMware. On 2026-09-22 the fleet was rechecked after the AI deployment and a narrow GLib security update on app: every guest reported `running` systemd state, zero failed units, zero pending package upgrades and no reboot requirement. UFW remains active. The AI endpoints remain loopback-only; the later monitoring change added one Zabbix trapper listener on the private service interface with three source-specific firewall rules. The three monitored NextOps guests added no listener, and no public product listener exists.
 
-After explicit owner authorization for connected preparation, each host used its existing strict proxy chain to refresh signed repositories and install only its role package layer. No broad OS upgrade ran. Exact observed direct versions are PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The official Zabbix 7.0 Ubuntu 24.04 release bootstrap package was pinned by SHA-256 before repository import. Package post-install starts were blocked and, at that preparation checkpoint, all product/database/web services were inactive and disabled, no PostgreSQL cluster existed, and no listener was added. Only the AI slice has since been deliberately activated. Docker was not installed because the selected native systemd design does not need it and a container socket would enlarge the trust boundary.
+After explicit owner authorization for connected preparation, each host used its existing strict proxy chain to refresh signed repositories and install only its role package layer. No broad OS upgrade ran. Exact observed direct versions are PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The official Zabbix 7.0 Ubuntu 24.04 release bootstrap package was pinned by SHA-256 before repository import. Package post-install starts were blocked and, at that preparation checkpoint, all product/database/web services were inactive and disabled, no PostgreSQL cluster existed, and no listener was added. Since then, the application/database/proxy, AI, connector and Zabbix slices have been deliberately configured and activated for controlled testing, followed by the bounded Agent 2 host-coverage change recorded above. Docker was not installed because the selected native systemd design does not need it and a container socket would enlarge the trust boundary.
 
 Protected non-login service identities and role directories now exist. The pinned llama.cpp commit was built on the qualified AI guest with Release, CPU-native, OpenMP and OpenBLAS settings and no GPU linkage; its promoted binary hash is in the inference manifest. The pinned 5,027,783,488-byte Qwen model matched its expected SHA-256 before and after protected-volume promotion. The active immutable API release is `nextops-0.1.0-62de8d6`; `417d888` is the tested application rollback. Two independent qualification runs returned `401` for unauthenticated generation, `200` for readiness, and acceptable Persian/English evidence and safety answers under automated checks and human review. The bounded load probe observed one accepted request with the remaining concurrent requests rejected or timed out according to the scheduler/timeout boundary. A cold process restart restored both services in 109 seconds. Application rollback and forward restoration passed authentication/readiness checks and left `62de8d6` active. Both services are enabled, unprivileged, CPU-only, and limited to `127.0.0.1:8080` and `127.0.0.1:8090`; `systemd-analyze security` reports `2.7 OK` for each. Raw evidence, credentials, addresses and host keys remain outside Git. Runtime/model rollback, live cancellation and corrupt-artifact cases, VM reboot, explicit WAN-disconnection observation, dependency-license approval, independent backup/restore and production performance thresholds remain open. The general application release, PostgreSQL/Zabbix initialization, reverse proxy/TLS and end-to-end acceptance remain separate gates.
 
@@ -128,7 +136,14 @@ Each dossier includes authorization state, source records, VM sizing, service id
 
 Each role now has an executable entry script under `deploy/installers`. A shared tested engine authenticates an all-file bundle manifest against a separately supplied SHA-256, requires exact Debian package versions including the dependency closure, isolates APT to the signed local repository, rejects unexpected installs/removals, blocks package-managed service startup and automatic PostgreSQL cluster creation, and verifies installed versions. Apply additionally requires root, Ubuntu 24.04 on VMware, root-owned/non-writable bundle contents, an explicit authorization marker and a change ID. Check mode performs bundle validation only. No real package lock, signing key, repository bundle, or clean-server apply evidence exists in this repository.
 
-These records expose rather than hide the deployment blockers: the application source, migration and package-layer scripts exist, but no approved general offline application bundle, complete production installer, reverse proxy, browser UI, or tested backup/restore bundle exists. The hardened AI services and immutable releases are now installed and controlled qualification plus application rollback passed; dependency-license approval, the remaining failure matrix, runtime/model rollback, explicit WAN-disconnection/VM-reboot tests, independent restore, and production performance targets remain unresolved. The replacement guests and dedicated mounts are qualified, but private application/connector/Zabbix configuration, production PostgreSQL and Zabbix initialization, and complete server acceptance remain open. No production database, Zabbix state, public product listener, certificate, target token, backup, or restore was created.
+These records expose rather than hide the deployment blockers. The controlled application,
+PostgreSQL, private reverse proxy/UI, AI, connector, Zabbix state and four-host monitoring coverage
+now exist, but a reproducible complete production installer and tested backup/restore bundle do not.
+Dependency-license approval, the remaining failure matrix, runtime/model rollback, explicit
+WAN-disconnection/VM-reboot tests, independent restore and production performance targets remain
+unresolved. Private configuration, certificates and target credentials exist only in their
+protected deployment locations; no independent backup or isolated restore evidence exists, and
+complete server/production acceptance remains open.
 
 ### Durable agent context
 
@@ -141,8 +156,8 @@ Three repository-scoped Codex skills under `.agents/skills` now route general pr
 | 0 | Architecture/gap/threat report and appropriate approvals | Owner accepted architecture/roadmap and ADRs on 2026-09-21; the clean replacement guests passed read-only qualification, while ESXi/storage refresh and operation-specific authorization remain separate |
 | 1A | Local identity, policy, database, durable work and audit | Authenticated app, PostgreSQL migration, private TLS panel and session path are live for controlled testing; durable live-investigation and audit linkage now uses the existing scoped run model |
 | 1B | New local CPU answers and offline model cold load | The pinned runtime/model and corrected API release are installed behind hardened loopback-only units; authentication, bilingual quality, bounded load, cold process restart and application rollback/restoration passed. VM reboot, explicit WAN-disconnection, remaining failure/cancellation tests, runtime/model rollback, independent restore and production targets remain open |
-| Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | Zabbix 7.0.30, PostgreSQL, TLS frontend/API, Agent 2, self-monitoring and the scoped reader are active; API allowlist, host scope and denial checks passed |
-| 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; broader estate coverage and the full failure matrix remain |
+| Zabbix prerequisite | Dedicated database mount, monitoring, frontend/API and scoped reader before 1C | Zabbix 7.0.30, PostgreSQL, TLS frontend/API and the scoped reader are active; the server plus app, AI and connector are monitored by PSK-authenticated active Agent 2 paths, and the API allowlist/host-scope denials pass |
+| 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; the reader sees all four approved Phase 1 hosts with fresh items, while the full failure matrix remains |
 | 1D | New evidence-linked Zabbix answer with audit | English/Persian grounded answers pass; every started live investigation now has a durable scoped run, bounded evidence snapshot/hash, model result, safe failure outcome and append-only audit linkage verified in isolated PostgreSQL and the live path |
 | 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh authenticated desktop use passed online on the private LAN; WAN-blocked, reboot, revocation, failure, recovery and sustained-capacity cases remain |
 
@@ -154,7 +169,7 @@ This state records Phase 0 acceptance, the deployed controlled Stage 1A applicat
 
 The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`. Ruff, strict mypy over 57 files, 95 non-integration tests and all six tests against a temporary isolated PostgreSQL 16.15 database pass. The temporary database, login role, credential and SSH tunnel were removed after validation. Hosted CI evidence remains revision-specific. Documentation/catalog/dossier validation, dependency and license review, broader security/failure testing and recovery evidence remain merge or production gates. Visual bilingual login review and programmatic live end-to-end testing ran; full browser workflow automation, WAN-disconnection/VM-reboot acceptance, independent backup and isolated restore did not.
 
-The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-test slice without reinstalling it: add the remaining approved hosts, exercise stale/partial/unreachable/revoked-token cases, then run explicit WAN-disconnection, VM-reboot, rollback and independent restore acceptance. Production promotion remains gated on those results, retention/backup decisions, sustained resource measurements and operational sign-off.
+The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-test slice without reinstalling it: exercise stale, partial, unreachable, revoked-token, malformed-text and prompt-injection cases, then run explicit WAN-disconnection, VM-reboot, rollback and independent restore acceptance. Production promotion remains gated on those results, retention/backup decisions, sustained resource measurements and operational sign-off.
 
 ## فارسی
 
@@ -167,11 +182,19 @@ The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is to harden the working user-t
 
 مهمان مستقل پایش اکنون Zabbix 7.0.30، PostgreSQL 16، Nginx/PHP-FPM و Agent 2 را اجرا می‌کند.
 گذرواژهٔ مدیر پیش‌فرض عوض شده است. خوانشگر جداگانهٔ API به رابط کاربری دسترسی ندارد؛ فقط سه روش
-`host.get`، `item.get` و `problem.get` برایش مجاز است و تنها یک گروه میزبان مصوب را می‌بیند.
-فراخوانی خارج از فهرست مجاز رد شد و دامنهٔ دید آن دقیقاً یک میزبان بود. توکن فقط روی مهمان اتصال
-نگه‌داری می‌شود. اتصال نیز فقط از TLS معتبر استفاده می‌کند، پراکسی موروثی را کنار می‌گذارد و روی
-رابط محلی صرفاً یک عملیات نام‌دار برای خلاصهٔ پایش ارائه می‌دهد؛ نشانی دلخواه، JSON-RPC عمومی، shell
-یا عملیات نوشتنی در اختیار مصرف‌کننده نیست.
+`host.get`، `item.get` و `problem.get` برایش مجاز است و تنها یک گروه میزبان مصوب را می‌بیند. اکنون
+دقیقاً چهار میزبان مصوب، یعنی Zabbix، برنامه، هوش مصنوعی و اتصال، در دامنهٔ دید آن هستند. یک روش
+خواندن خارج از فهرست و یک روش نوشتنی هر دو رد شدند. توکن فقط روی مهمان اتصال نگه‌داری می‌شود.
+اتصال نیز فقط از TLS معتبر استفاده می‌کند، پراکسی موروثی را کنار می‌گذارد و روی رابط محلی صرفاً یک
+عملیات نام‌دار برای خلاصهٔ پایش ارائه می‌دهد؛ نشانی دلخواه، JSON-RPC عمومی، shell یا عملیات نوشتنی
+در اختیار مصرف‌کننده نیست.
+
+روی مهمان‌های برنامه، هوش مصنوعی و اتصال، بستهٔ دقیق Agent 2 با نسخهٔ
+`1:7.0.30-1+ubuntu24.04` نصب است. هر مهمان PSK مستقل دارد و فقط بررسی فعال را به مسیر محدودشدهٔ
+Zabbix می‌فرستد. هیچ‌کدام روی درگاه ۱۰۰۵۰ گوش نمی‌دهند و `system.run[*]` صریحاً بسته است. در بررسی
+نهایی خوانشگر، تعداد نقطه‌ای سنجه‌های تازه و پشتیبانی‌شده به‌ترتیب ۶۵، ۶۵ و ۵۸ بود؛ این اعداد
+مشاهدهٔ همان لحظه‌اند، نه قرارداد ثابت template. مخزن بسته تازه نشد و ارتقای نامرتبطی انجام نشد.
+وضعیت هر چهار میزبان `running` و شمار واحد خراب صفر باقی ماند.
 
 برنامه از دو تونل SSH جدا با کلید میزبان ثابت‌شده به سرویس‌های محلی هوش مصنوعی و اتصال می‌رسد.
 صلاحیت‌سنجی زنده، هشت سنجهٔ تازهٔ خودپایشی، بدون سنجهٔ قدیمی و بدون مسئلهٔ فعال بازگرداند. آزمون
@@ -208,8 +231,8 @@ PostgreSQL در پایگاه موقت و جداگانه موفق بودند. آ�
 بررسی مستقیم پایگاه، نتیجهٔ `live_monitoring`، دو رویداد ممیزی پیوندخورده، هش ۶۴ نویسه‌ای و تطبیق
 شناسهٔ ممیزی تکمیل با نتیجهٔ ذخیره‌شده را تأیید کرد.
 
-این خروجی برای ارزیابی کنترل‌شده است، نه پذیرش تولید. فعلاً فقط خود سرور Zabbix پایش می‌شود و همهٔ
-تجهیزات وارد دامنه نشده‌اند. آزمون قطع WAN، راه‌اندازی مجدد ماشین، لغو توکن، قطع وابستگی، دادهٔ
+این خروجی برای ارزیابی کنترل‌شده است، نه پذیرش تولید. هر چهار مهمان مصوب مرحلهٔ یک پایش می‌شوند،
+اما دامنهٔ گسترده‌تر تجهیزات هنوز وارد نشده است. آزمون قطع WAN، راه‌اندازی مجدد ماشین، لغو توکن، قطع وابستگی، دادهٔ
 قدیمی یا ناقص، بار پایدار، پشتیبان مستقل، بازیابی و سناریوی بحران همچنان بازند. نشانی‌ها، توکن‌ها،
 گذرواژه‌ها، کلیدهای میزبان و شواهد خام بیرون Git مانده‌اند.
 
@@ -239,9 +262,9 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 ### صلاحیت‌سنجی پاک‌سازی‌شدهٔ مهمان‌های جایگزین
 
-در ۲۱ سپتامبر ۲۰۲۶، پس از ارسال مستقل اثرانگشت‌های تازهٔ Ed25519 توسط مالک و برابری هرکدام با ارتباط زنده، پیش‌بررسی فقط‌خواندنی مجاز از راه SSH به هر چهار مهمان جایگزین رسید. احراز هویت فقط با کلید، کنترل سخت‌گیرانهٔ کلید میزبان و رد ورود مستقیم root تأیید شد و منابع هر نقش با بودجهٔ عمومی برابر بود. در ۲۲ سپتامبر، پس از استقرار هوش مصنوعی و یک به‌روزرسانی محدود امنیتی GLib روی مهمان برنامه، همهٔ مهمان‌ها دوباره بررسی شدند: وضعیت systemd در هر چهار مورد `running`، شمار واحد خراب و بستهٔ قابل‌ارتقا صفر و راه‌اندازی مجدد لازم نبود. UFW فعال مانده است. تنها شنونده‌های تازهٔ محصول، دو درگاه محلی و موردانتظار هوش مصنوعی‌اند و هیچ شنوندهٔ عمومیِ محصول ایجاد نشده است.
+در ۲۱ سپتامبر ۲۰۲۶، پس از ارسال مستقل اثرانگشت‌های تازهٔ Ed25519 توسط مالک و برابری هرکدام با ارتباط زنده، پیش‌بررسی فقط‌خواندنی مجاز از راه SSH به هر چهار مهمان جایگزین رسید. احراز هویت فقط با کلید، کنترل سخت‌گیرانهٔ کلید میزبان و رد ورود مستقیم root تأیید شد و منابع هر نقش با بودجهٔ عمومی برابر بود. در ۲۲ سپتامبر، پس از استقرار هوش مصنوعی و یک به‌روزرسانی محدود امنیتی GLib روی مهمان برنامه، همهٔ مهمان‌ها دوباره بررسی شدند: وضعیت systemd در هر چهار مورد `running`، شمار واحد خراب و بستهٔ قابل‌ارتقا صفر و راه‌اندازی مجدد لازم نبود. UFW فعال مانده است. درگاه‌های هوش مصنوعی همچنان فقط روی رابط محلی‌اند. تغییر بعدی پایش، یک شنوندهٔ دریافت داده را روی رابط خصوصی Zabbix با سه قاعدهٔ دیوارهٔ آتشِ مختص مبدأ افزود؛ سه مهمان NextOps هیچ شنونده‌ای اضافه نکردند و شنوندهٔ عمومی محصول وجود ندارد.
 
-پس از مجوز صریح مالک برای آماده‌سازی متصل، هر میزبان از زنجیرهٔ پراکسی سخت‌گیرانهٔ موجود برای تازه‌سازی مخزن‌های امضاشده و نصب فقط لایهٔ بستهٔ نقش خود استفاده کرد. ارتقای کلی سیستم‌عامل اجرا نشد. نسخه‌های مستقیم مشاهده‌شده عبارت‌اند از PostgreSQL 16.15 و Nginx 1.24 در برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 در هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 در connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 در Zabbix. بستهٔ راه‌انداز رسمی Zabbix 7.0 برای Ubuntu 24.04 پیش از افزودن مخزن با SHA-256 ثابت شد. شروع خودکار پس از نصب مسدود بود و در همان نقطهٔ آماده‌سازی، همهٔ سرویس‌های محصول، پایگاه و وب غیرفعال بودند، خوشهٔ PostgreSQL ساخته نشده بود و درگاه تازه‌ای باز نشد. پس از آن فقط برش هوش مصنوعی آگاهانه فعال شده است. Docker نصب نشد، چون طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
+پس از مجوز صریح مالک برای آماده‌سازی متصل، هر میزبان از زنجیرهٔ پراکسی سخت‌گیرانهٔ موجود برای تازه‌سازی مخزن‌های امضاشده و نصب فقط لایهٔ بستهٔ نقش خود استفاده کرد. ارتقای کلی سیستم‌عامل اجرا نشد. نسخه‌های مستقیم مشاهده‌شده عبارت‌اند از PostgreSQL 16.15 و Nginx 1.24 در برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 در هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 در connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 در Zabbix. بستهٔ راه‌انداز رسمی Zabbix 7.0 برای Ubuntu 24.04 پیش از افزودن مخزن با SHA-256 ثابت شد. شروع خودکار پس از نصب مسدود بود و در همان نقطهٔ آماده‌سازی، همهٔ سرویس‌های محصول، پایگاه و وب غیرفعال بودند، خوشهٔ PostgreSQL ساخته نشده بود و درگاه تازه‌ای باز نشد. پس از آن، برش‌های برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix به‌صورت کنترل‌شده تنظیم و فعال شدند و سپس تغییر محدود پوشش چهارمیزبانی Agent 2 اجرا شد. Docker نصب نشد، چون طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
 هویت‌های بدون ورود و مسیرهای محافظت‌شدهٔ نقش ساخته شده‌اند. llama.cpp با تنظیم Release، اجرای بومی CPU، OpenMP و OpenBLAS و بدون پیوند GPU ساخته شد و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت پیش و پس از انتقال به فضای محافظت‌شده با SHA-256 موردانتظار برابر بود. انتشار تغییرناپذیر و فعال API، `nextops-0.1.0-62de8d6` است و `417d888` به‌عنوان نسخهٔ آزموده‌شدهٔ بازگشت برنامه نگه‌داری می‌شود. در دو اجرای مستقل، تولید بدون احراز هویت با `401` رد، آمادگی با `200` تأیید و پاسخ‌های فارسی و انگلیسیِ شاهد و ایمنی هم در بررسی خودکار و هم در بازبینی انسانی پذیرفته شدند. آزمون بار محدود، یک درخواست پذیرفته‌شده و مهار درخواست‌های هم‌زمان اضافه را مطابق صف و پایان مهلت ثبت کرد. توقف و شروع سرد فرایندها هر دو سرویس را در ۱۰۹ ثانیه بازگرداند. بازگشت برنامه و سپس بازگرداندن نسخهٔ پذیرفته‌شده نیز موفق بود و در پایان `62de8d6` فعال ماند. هر دو سرویس با هویت بدون امتیاز، فقط روی CPU و فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` اجرا می‌شوند و ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. شواهد خام، اعتبارنامه‌ها، نشانی‌ها و کلیدهای میزبان بیرون Git مانده‌اند. بازگشت محیط اجرا و مدل، لغو زنده و فایل خراب، راه‌اندازی مجدد ماشین، مشاهدهٔ صریح هنگام قطع WAN، مجوز وابستگی‌ها، پشتیبان مستقل و بازیابی جدا و هدف کارایی تولیدی هنوز باز است. استقرار عمومی برنامه، ایجاد PostgreSQL و Zabbix، reverse proxy/TLS و پذیرش سراسری نیز دروازه‌های جدا هستند.
 
@@ -263,7 +286,13 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 برای هر role یک script اجرایی در `deploy/installers` وجود دارد. موتور مشترک و آزموده، manifest همهٔ فایل‌های bundle را با SHA-256 جداگانه تطبیق می‌دهد، نسخهٔ دقیق همهٔ packageها و وابستگی‌ها را لازم می‌داند، APT را فقط به repository محلی امضاشده محدود می‌کند، نصب یا حذف پیش‌بینی‌نشده را رد می‌کند، شروع خودکار سرویس و ساخت خودکار cluster در PostgreSQL را می‌بندد و نسخهٔ نصب‌شده را می‌سنجد. `--apply` علاوه بر این به root، Ubuntu 24.04 روی VMware، bundle متعلق به root و غیرقابل‌نوشتن برای دیگران، نشان مجوز و change ID نیاز دارد. حالت check فقط bundle را بررسی می‌کند. هیچ lock واقعی package، کلید امضا، bundle مخزن یا شاهد اجرای موفق روی سرور تمیز در این مخزن وجود ندارد.
 
-این پرونده‌ها مانع را پنهان نمی‌کنند: کد برنامه، مهاجرت و اسکریپت‌های لایهٔ بسته‌ها ساخته شده‌اند؛ اما بستهٔ عمومی و تأییدشدهٔ برنامه برای اجرای آفلاین، نصب‌کنندهٔ کامل تولید، reverse proxy، رابط مرورگر و بستهٔ آزمودهٔ پشتیبان‌گیری و بازیابی وجود ندارد. سرویس‌های سخت‌سازی‌شده و انتشارهای تغییرناپذیر هوش مصنوعی اکنون نصب شده‌اند و صلاحیت‌سنجی کنترل‌شده و بازگشت برنامه موفق بوده است؛ بااین‌حال تأیید مجوز وابستگی‌ها، بقیهٔ ماتریس خطا، بازگشت محیط اجرا و مدل، آزمون صریح قطع WAN و راه‌اندازی مجدد ماشین، بازیابی مستقل و هدف کارایی تولیدی باقی مانده‌اند. تنظیم خصوصی برنامه، اتصال و Zabbix، ایجاد PostgreSQL و Zabbix تولیدی و پذیرش کامل سرورها نیز باز است. هنوز هیچ پایگاه تولید، وضعیت Zabbix، شنوندهٔ عمومی محصول، گواهی، توکن مقصد، نسخهٔ پشتیبان یا بازیابی ایجاد نشده است.
+این پرونده‌ها مانع را پنهان نمی‌کنند. برنامهٔ کنترل‌شده، PostgreSQL، پراکسی خصوصی و رابط کاربری،
+هوش مصنوعی، اتصال، وضعیت Zabbix و پوشش پایش چهار میزبان اکنون وجود دارند؛ اما نصب‌کنندهٔ کامل و
+تکرارپذیر تولید و بستهٔ آزمودهٔ پشتیبان‌گیری و بازیابی هنوز آماده نیست. تأیید مجوز وابستگی‌ها،
+باقی ماتریس خطا، بازگشت محیط اجرا و مدل، آزمون صریح قطع WAN و راه‌اندازی مجدد ماشین، بازیابی مستقل
+و هدف کارایی تولیدی همچنان بازند. تنظیم خصوصی، گواهی و اعتبارنامهٔ مقصد فقط در محل محافظت‌شدهٔ
+استقرار هستند؛ شاهد پشتیبان مستقل یا بازیابی جدا وجود ندارد و پذیرش کامل سرور و تولید تکمیل نشده
+است.
 
 ### context ماندگار عامل
 
@@ -281,4 +310,4 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 برش‌های منبع با Python 3.12.10، uv 0.12.17، Pydantic 2.13.5، FastAPI 0.141.1، SQLAlchemy 2.0.54، Alembic 1.20.0، Psycopg 3.3.6، Ruff 0.16.8، mypy 1.20.2 و pytest 9.1.1 آزموده شدند. Ruff، بررسی سخت‌گیرانهٔ mypy روی ۵۷ فایل، ۹۵ آزمون غیر‌یکپارچه و هر شش آزمون روی پایگاه موقت و جداگانهٔ PostgreSQL 16.15 موفق بودند. پایگاه، login role، credential و تونل SSH موقت پس از آزمون حذف شدند. شاهد CI به revision خودش وابسته می‌ماند. اعتبارسنجی مستندات و پرونده‌ها، بررسی وابستگی و مجوز، آزمون گسترده‌تر امنیت و خطا و شاهد بازیابی همچنان دروازه‌اند. بازبینی دیداری ورود دوزبانه و آزمون سراسری زنده انجام شد؛ پذیرش کامل مرورگر، قطع WAN، راه‌اندازی مجدد ماشین، پشتیبان مستقل و بازیابی جدا هنوز اجرا نشده است.
 
-نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) سخت‌سازی همین مسیر سالم است، نه نصب دوبارهٔ آن: میزبان‌های مصوب بعدی افزوده شوند؛ دادهٔ قدیمی یا ناقص، قطع مقصد و لغو توکن آزموده شود؛ سپس پذیرش قطع WAN، راه‌اندازی مجدد ماشین، بازگشت و بازیابی مستقل انجام گیرد. ارتقا به تولید به نتیجهٔ این آزمون‌ها، تصمیم نگهداری و پشتیبان، سنجش پایدار منابع و تأیید عملیات وابسته است.
+نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) سخت‌سازی همین مسیر سالم است، نه نصب دوبارهٔ آن: دادهٔ قدیمی یا ناقص، قطع مقصد، لغو توکن، متن بدساخت و تزریق در متن رخداد آزموده شود؛ سپس پذیرش قطع WAN، راه‌اندازی مجدد ماشین، بازگشت و بازیابی مستقل انجام گیرد. ارتقا به تولید به نتیجهٔ این آزمون‌ها، تصمیم نگهداری و پشتیبان، سنجش پایدار منابع و تأیید عملیات وابسته است.

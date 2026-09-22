@@ -1,6 +1,6 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. App release `nextops-0.1.0-fde27bd` now persists every started live investigation, bounded evidence snapshot/hash, local-model result, actor, correlation ID and safe failure outcome through the existing durable run and append-only audit model. Live run retrieval, independent evidence-hash verification and audit linkage passed. The immediate work is broader approved host coverage followed by failure/offline/recovery acceptance; do not rebuild the working slice.
+Updated: 2026-09-22 — the controlled user-testing path is live across all four Ubuntu 24.04 guests. App release `nextops-0.1.0-fde27bd` persists live investigations and their bounded evidence/audit linkage. Zabbix now monitors the server plus the approved app, AI and connector guests through PSK-authenticated active-only Agent 2 paths. The restricted reader sees exactly those four hosts while its three-method allowlist and one-group boundary remain unchanged. The immediate work is failure qualification followed by offline, reboot and recovery acceptance; do not rebuild the working slice.
 
 ## English — harden the live user-testing slice
 
@@ -19,6 +19,10 @@ The next operator must treat the following as completed and preserve it:
   snapshot and SHA-256 reference, stored model result, safe failures and append-only audit linkage;
 - live retrieval of eight fresh metrics, explicit source/timestamps/staleness and bilingual grounded
   answers through the desktop client; and
+- exact-version Agent 2 coverage for the app, AI and connector guests using distinct PSKs,
+  outbound active checks only, no passive listeners or remote commands, and three source-restricted
+  Zabbix trapper firewall rules; the unchanged reader sees four approved hosts and fresh items for
+  every added host; and
 - the 128-token server-side investigation ceiling and localized timeout/overload/dependency states,
   with the reported old 384-token request verified as HTTP 200 after repair; and
 - local quality gates: Ruff, strict mypy, 95 passing non-integration tests and all 6 PostgreSQL
@@ -26,9 +30,10 @@ The next operator must treat the following as completed and preserve it:
 
 The immediate implementation sequence is:
 
-1. Add approved app, AI and connector hosts to Zabbix with narrowly scoped agent paths; retain the
-   current reader method and host-group boundaries, and verify counts/timestamps after each addition.
-2. Qualify stale, partial, unreachable, revoked-token, malformed-text and prompt-injection cases.
+1. **Completed:** add approved app, AI and connector hosts to Zabbix with narrowly scoped agent
+   paths; retain the reader method and host-group boundaries, and verify counts/timestamps after
+   each addition.
+2. **Next:** qualify stale, partial, unreachable, revoked-token, malformed-text and prompt-injection cases.
    General local model use must remain available when Zabbix is unavailable.
 3. Run the explicit WAN-disconnection and VM-reboot matrix, then runtime/model/application rollback,
    independent backup and isolated restore. Record exact latency and CPU/memory/NUMA observations.
@@ -130,7 +135,7 @@ Apply the retained project ceiling and every per-datastore capacity check: exist
 
 Use dependency-aware service readiness, not fixed sleeps or an Internet test. The databases precede their dependants; model/gateway can start independently. Zabbix failure must not prevent general local Q&A when its own dependencies are healthy. A host failure affects both systems; independent host-outage detection and backups are separate requirements.
 
-After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and Zabbix path is live for user testing. It is not production-accepted: VM-reboot and WAN-block evidence, independent backup, isolated restore, broader monitored-estate coverage and complete server recovery remain open.
+After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and four-host Zabbix path is live for user testing. It is not production-accepted: failure qualification, VM-reboot and WAN-block evidence, independent backup, isolated restore and complete server recovery remain open.
 
 ## فارسی — سخت‌سازی مسیر زندهٔ ارزیابی کاربران
 
@@ -149,6 +154,9 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
   خلاصهٔ محدود شاهد و مرجع SHA-256، نتیجهٔ مدل، خطای امن و پیوند ممیزیِ فقط‌افزودنی؛
 - دریافت زندهٔ هشت سنجهٔ تازه، نمایش صریح منبع و زمان و تازگی، و پاسخ مستند فارسی و انگلیسی از
   مسیر رایانهٔ کاربر؛
+- پوشش میزبان‌های برنامه، هوش مصنوعی و اتصال با Agent 2 هم‌نسخه، PSK مستقل، فقط بررسی فعالِ
+  خروجی، بدون شنوندهٔ غیرفعال یا فرمان راه دور، و سه قاعدهٔ محدود دیوارهٔ آتش در Zabbix؛ خوانشگر
+  بدون تغییر دقیقاً چهار میزبان مصوب و دادهٔ تازهٔ هر میزبان افزوده‌شده را می‌بیند؛
 - سقف ۱۲۸ توکن در سمت سرور و پیام‌های روشن پایان مهلت، اشباع و قطع وابستگی؛ درخواست قدیمی ۳۸۴
   توکنیِ گزارش‌شده پس از اصلاح با HTTP 200 موفق شد؛
 - عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۹۵ آزمون غیر‌یکپارچه و هر شش آزمون PostgreSQL در پایگاه
@@ -156,9 +164,9 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 ترتیب مستقیم کار بعدی چنین است:
 
-1. میزبان‌های مصوب برنامه، هوش مصنوعی و اتصال با مسیر عامل محدود به Zabbix افزوده شوند. مرز روش‌ها
-   و گروه میزبان خوانشگر تغییر نکند و شمار و زمان داده پس از هر افزوده تأیید شود.
-2. حالت‌های دادهٔ قدیمی یا ناقص، مقصد قطع، توکن لغوشده، متن بدساخت و تزریق در متن رخداد آزموده شوند.
+1. **تکمیل شد:** میزبان‌های مصوب برنامه، هوش مصنوعی و اتصال با مسیر محدود عامل به Zabbix افزوده
+   شدند؛ مرز روش‌ها و گروه میزبان خوانشگر تغییر نکرد و شمار و زمان داده پس از هر افزوده تأیید شد.
+2. **گام بعد:** حالت‌های دادهٔ قدیمی یا ناقص، مقصد قطع، توکن لغوشده، متن بدساخت و تزریق در متن رخداد آزموده شوند.
    قطع Zabbix نباید پرسش عمومی از مدل محلی را از کار بیندازد.
 3. آزمون صریح قطع WAN و راه‌اندازی مجدد ماشین‌ها، سپس بازگشت برنامه/مدل/محیط اجرا، پشتیبان مستقل و
    بازیابی جدا اجرا شود. زمان پاسخ و مصرف CPU، حافظه و NUMA دقیق ثبت شود.
@@ -254,4 +262,4 @@ LVM پیشنهادی `vg_zabbix`: بیرون LVM یک GiB برای EFI و دو G
 
 شروع سرویس تابع وابستگی باشد، نه تأخیر ثابت یا تست اینترنت. پایگاه پیش از وابسته بالا بیاید و مدل و درگاه بتوانند مستقل شروع شوند. قطع Zabbix مانع سؤال عمومی محلی با وابستگی سالم نشود. خرابی میزبان هر دو سامانه را قطع می‌کند؛ پشتیبان و بررسی قطعی مستقل نیاز جدا هستند.
 
-پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر برنامه، هوش مصنوعی، اتصال و Zabbix اکنون برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. پوشش میزبان‌های بیشتر، شاهد راه‌اندازی مجدد ماشین و قطع WAN، پشتیبان مستقل، بازیابی جدا و بازیابی کامل سرور همچنان وجود ندارد.
+پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر برنامه، هوش مصنوعی، اتصال و Zabbix چهارمیزبانی اکنون برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. صلاحیت‌سنجی خطا، شاهد راه‌اندازی مجدد ماشین و قطع WAN، پشتیبان مستقل، بازیابی جدا و بازیابی کامل سرور همچنان وجود ندارد.

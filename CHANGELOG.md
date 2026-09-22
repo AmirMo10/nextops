@@ -1,5 +1,38 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-22 — Four-host Zabbix coverage / پوشش چهارمیزبانی Zabbix
+
+### English
+
+Added the application, AI and read-only connector guests to the existing approved Zabbix host
+group. Each guest runs the exact cached Zabbix Agent 2 package `1:7.0.30-1+ubuntu24.04` with a
+distinct PSK and outbound active checks only. Passive checks and remote commands are disabled, no
+guest listens on port 10050, and the Zabbix trapper path is limited by host firewall rules to the
+three approved sources. No repository refresh or unrelated package upgrade was performed.
+
+The unchanged API-only reader can now see exactly the four approved hosts. Its existing
+`host.get`, `item.get` and `problem.get` boundary remains in force: an unlisted read and a mutation
+were both denied. Final reader validation observed fresh supported items for all three new hosts,
+and the application monitoring endpoint continued to return eight fresh metrics, zero stale
+metrics and zero active problems. All four systems remained in the `running` state with no failed
+units; existing application, database, proxy, tunnel, AI, connector and monitoring services stayed
+active.
+
+### فارسی
+
+مهمان‌های برنامه، هوش مصنوعی و اتصال فقط‌خواندنی به همان گروه میزبان مصوب در Zabbix افزوده شدند.
+روی هر سه مهمان، بستهٔ دقیق Zabbix Agent 2 با نسخهٔ `1:7.0.30-1+ubuntu24.04`، کلید PSK مستقل و
+فقط بررسی فعالِ خروجی اجرا می‌شود. بررسی غیرفعال و فرمان راه دور بسته است، هیچ مهمانی روی درگاه
+۱۰۰۵۰ گوش نمی‌دهد و دیوارهٔ آتش مسیر دریافت داده در Zabbix را به همان سه مبدأ مصوب محدود می‌کند.
+هیچ تازه‌سازی مخزن یا ارتقای نامرتبطی انجام نشد.
+
+خوانشگر فقط‌ـAPI و بدون تغییر اکنون دقیقاً چهار میزبان مصوب را می‌بیند. مرز سه روش
+`host.get`، `item.get` و `problem.get` پابرجا ماند و یک خواندن خارج از فهرست و یک روش نوشتنی هر دو
+رد شدند. در بررسی نهایی، هر سه میزبان تازه دادهٔ پشتیبانی‌شده و تازه داشتند و مسیر پایش برنامه نیز
+همچنان هشت سنجهٔ تازه، بدون سنجهٔ قدیمی و بدون مسئلهٔ فعال بازگرداند. وضعیت هر چهار سامانه
+`running` و شمار واحد خراب صفر ماند و سرویس‌های برنامه، پایگاه، پراکسی، تونل‌ها، هوش مصنوعی،
+اتصال و پایش همگی فعال باقی ماندند.
+
 ## 2026-09-22 — Durable live-investigation audit / ثبت ماندگار بررسی زنده و ممیزی
 
 ### English
