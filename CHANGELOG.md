@@ -1,5 +1,49 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## Unreleased — controlled engineering foundation / بنیان مهندسی کنترل‌شده
+
+### English
+
+Added a schema-validated, non-secret release/status manifest and cross-checks against the pinned
+llama.cpp/model artifact identity. Introduced a brownfield specification workflow, a bounded
+backup/restore specification, a tool-adoption plan and three project workflows for change planning,
+acceptance review and bilingual documentation review. These workflows are development aids, not
+authorization or infrastructure security boundaries.
+
+Aligned active English and Persian documentation with the verified four-host deployment, durable
+investigation/audit, scoped failure qualification, WAN-isolated server/API path and serial reboot
+evidence. Historical records remain intact. CI now tests PostgreSQL 16.15, matching deployment, and
+17.6 in separate digest-pinned jobs; checkout credentials are not persisted, workflow permissions
+remain minimal, and strict typing now includes operational scripts. The inference artifact records
+the accepted offline cold-start result without promoting production readiness.
+
+Local validation passes Ruff format/lint, strict mypy over 65 files, 103 non-integration tests,
+documentation validation for 102 Markdown files and 31 bilingual guide pairs, release/deployment/
+inference/installer validators, package build, locked-dependency audit, Gitleaks and pedantic
+Zizmor 1.29.0 with no findings. The six
+PostgreSQL integration tests retain prior isolated-database evidence but were not rerun in this
+Windows session because no local server or working container runtime was available.
+
+### فارسی
+
+یک مانیفست پالایش‌شده و بدون اطلاعات محرمانه برای وضعیت انتشار، همراه schema و تطبیق هویت فایل
+مدل و محیط اجرای تثبیت‌شدهٔ llama.cpp افزوده شد. گردش‌کار مشخصات برای سامانهٔ موجود، مشخصات محدود
+پشتیبان و بازیابی، برنامهٔ ارزیابی ابزارها و سه راهنمای پروژه برای برنامه‌ریزی تغییر، بازبینی پذیرش
+و بازبینی مستندات دوزبانه ایجاد شدند. این راهنماها ابزار توسعه‌اند و مرز مجوز یا امنیت زیرساخت نیستند.
+
+مستندات فعال فارسی و انگلیسی با استقرار تأییدشدهٔ چهار میزبان، بررسی و ممیزی ماندگار، آزمون‌های
+محدود خطا، قطع WAN در مسیر سرور/API و شواهد راه‌اندازی مجدد ترتیبی هم‌راستا شدند؛ سوابق تاریخی
+دست‌نخورده ماندند. CI اکنون PostgreSQL 16.15، برابر با نسخهٔ مستقر، و 17.6 را در کارهای جدا و با
+image تثبیت‌شده بر اساس digest می‌آزماید؛ اعتبارنامهٔ checkout حفظ نمی‌شود، مجوز گردش‌کار حداقلی
+است و نوع‌سنجی سخت‌گیرانه scriptهای عملیاتی را نیز پوشش می‌دهد. فایل هویت هوش مصنوعی، نتیجهٔ پذیرفتهٔ
+شروع سرد آفلاین را بدون ادعای آمادگی تولید ثبت می‌کند.
+
+در محیط محلی، قالب و lint با Ruff، نوع‌سنجی سخت‌گیرانهٔ ۶۵ فایل، ۱۰۳ آزمون غیر‌یکپارچه، اعتبارسنجی
+۱۰۲ فایل Markdown و ۳۱ جفت راهنمای دوزبانه، اعتبارسنج‌های انتشار، استقرار، هوش مصنوعی و نصب، ساخت
+بسته، ممیزی وابستگی‌های قفل‌شده، Gitleaks و Zizmor 1.29.0 در حالت سخت‌گیرانه موفق‌اند. شش آزمون
+PostgreSQL شواهد موفق پیشین روی پایگاه جدا
+دارند، اما در این نشست Windows به‌دلیل نبود سرور محلی و محیط کانتینری سالم دوباره اجرا نشدند.
+
 ## 2026-09-22 — Stage 1F WAN and clean reboot qualification / صلاحیت‌سنجی قطع WAN و راه‌اندازی مجدد سالم در مرحلهٔ 1F
 
 ### English

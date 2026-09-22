@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Check out reviewed source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.12
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -38,7 +40,7 @@ jobs:
           uv run ruff check packages migrations tests scripts deploy/installers
 
       - name: Check strict types
-        run: uv run mypy packages tests deploy/installers
+        run: uv run mypy packages tests scripts deploy/installers
 
       - name: Run unit, contract, and API tests
         run: uv run pytest -m "not integration" -q
@@ -48,6 +50,7 @@ jobs:
           PYTHONUTF8: "1"
         run: |
           uv run python scripts/check_docs.py
+          uv run python scripts/check_release_status.py
           uv run python scripts/check_deployment_dossiers.py
           uv run python scripts/check_inference_artifacts.py
           uv run python scripts/check_server_installers.py
@@ -66,12 +69,20 @@ jobs:
           uvx --from pip-audit==2.10.1 pip-audit --requirement audit-requirements.txt
 
   postgres:
-    name: PostgreSQL integration
+    name: PostgreSQL ${{ matrix.postgres_major }} integration
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - postgres_major: "16"
+            image: postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+          - postgres_major: "17"
+            image: postgres:17.6-alpine@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
     services:
       postgres:
-        image: postgres:17.6-alpine@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
+        image: ${{ matrix.image }}
         env:
           POSTGRES_DB: nextops_test
           POSTGRES_USER: postgres
@@ -86,6 +97,8 @@ jobs:
     steps:
       - name: Check out reviewed source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.12
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -108,12 +121,12 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
-      pull-requests: read
     steps:
       - name: Check out full history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Install pinned open-source scanner
         run: go install github.com/zricethezav/gitleaks/v8@v8.30.1

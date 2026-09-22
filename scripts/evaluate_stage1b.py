@@ -82,7 +82,10 @@ def write_private_report(path: Path, report: dict[str, Any]) -> None:
     descriptor = os.open(path, flags, 0o600)
     try:
         if os.name == "posix":
-            os.fchmod(descriptor, 0o600)
+            fchmod = getattr(os, "fchmod", None)
+            if fchmod is None:
+                raise OSError("POSIX runtime does not expose fchmod")
+            fchmod(descriptor, 0o600)
         with os.fdopen(descriptor, "w", encoding="utf-8") as output:
             descriptor = -1
             json.dump(report, output, ensure_ascii=False, indent=2)
