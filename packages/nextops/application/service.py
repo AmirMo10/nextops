@@ -779,7 +779,7 @@ class DurableAppService:
                     organization_id=run.organization_id,
                     environment_id=run.environment_id,
                     target_id=run.target_id,
-                    is_partial=False,
+                    is_partial=evidence.is_partial,
                     is_stale=any(metric.stale for metric in evidence.metrics),
                     audit_event_id=audit_event_id,
                 )
@@ -804,6 +804,8 @@ class DurableAppService:
                         "source_version": evidence.source_version,
                         "metric_count": len(evidence.metrics),
                         "problem_count": len(evidence.active_problems),
+                        "is_partial": result.is_partial,
+                        "partial_reasons": list(evidence.partial_reasons),
                         "is_stale": result.is_stale,
                         "model_id": assistant.model_id,
                     },

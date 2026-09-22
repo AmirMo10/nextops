@@ -15,7 +15,12 @@ from pydantic import ValidationError
 
 from nextops.application.errors import ApplicationError
 from nextops.contracts.errors import ErrorCode
-from nextops.contracts.monitoring import MonitoringMetric, MonitoringProblem, MonitoringSummary
+from nextops.contracts.monitoring import (
+    MonitoringMetric,
+    MonitoringPartialReason,
+    MonitoringProblem,
+    MonitoringSummary,
+)
 
 MAX_ZABBIX_RESPONSE_BYTES = 1_048_576
 PREFERRED_KEYS = (
@@ -143,6 +148,8 @@ class ZabbixReadClient:
         )
         try:
             metrics = self._metrics(raw_items, collected_at)
+            if not isinstance(raw_problems, list):
+                raise TypeError("problems result is not a list")
             problems = tuple(
                 MonitoringProblem(
                     name=str(problem["name"]),
@@ -157,6 +164,10 @@ class ZabbixReadClient:
                 collected_at=collected_at,
                 metrics=metrics,
                 active_problems=problems,
+                is_partial=bool(
+                    partial_reasons := self._partial_reasons(raw_items, raw_problems, metrics)
+                ),
+                partial_reasons=partial_reasons,
             )
         except (KeyError, TypeError, ValueError, ValidationError) as error:
             raise ApplicationError(
@@ -195,3 +206,25 @@ class ZabbixReadClient:
             )
             for item in selected
         )
+
+    @staticmethod
+    def _partial_reasons(
+        raw_items: Any,
+        raw_problems: list[Any],
+        metrics: tuple[MonitoringMetric, ...],
+    ) -> tuple[MonitoringPartialReason, ...]:
+        if not isinstance(raw_items, list):
+            raise TypeError("items result is not a list")
+        reasons: list[MonitoringPartialReason] = []
+        usable_item_count = sum(
+            1
+            for item in raw_items
+            if int(item.get("lastclock", "0")) > 0 and str(item.get("lastvalue", ""))
+        )
+        if usable_item_count > len(metrics) or len(raw_items) >= 1000:
+            reasons.append("metrics_truncated")
+        if len(raw_problems) >= 25:
+            reasons.append("problems_truncated")
+        if not metrics:
+            reasons.append("no_usable_metrics")
+        return tuple(reasons)

@@ -1,12 +1,18 @@
 """Contracts for source-qualified monitoring evidence."""
 
-from typing import Literal
+from typing import Literal, Self
 from uuid import UUID
 
-from pydantic import AwareDatetime, Field
+from pydantic import AwareDatetime, Field, model_validator
 
 from nextops.contracts.assistant import AssistantResponse
 from nextops.contracts.models import FrozenContract
+
+MonitoringPartialReason = Literal[
+    "metrics_truncated",
+    "problems_truncated",
+    "no_usable_metrics",
+]
 
 
 class MonitoringMetric(FrozenContract):
@@ -37,6 +43,19 @@ class MonitoringSummary(FrozenContract):
     collected_at: AwareDatetime
     metrics: tuple[MonitoringMetric, ...] = Field(max_length=8)
     active_problems: tuple[MonitoringProblem, ...] = Field(max_length=25)
+    is_partial: bool = False
+    partial_reasons: tuple[MonitoringPartialReason, ...] = Field(
+        default_factory=tuple,
+        max_length=3,
+    )
+
+    @model_validator(mode="after")
+    def validate_partial_marker(self) -> Self:
+        """Require the public marker and its machine-readable reasons to agree."""
+
+        if self.is_partial != bool(self.partial_reasons):
+            raise ValueError("is_partial must match partial_reasons")
+        return self
 
 
 class InvestigationResponse(FrozenContract):

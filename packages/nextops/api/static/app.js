@@ -25,7 +25,8 @@ const translations = {
     boundaryZabbix: "Live Zabbix evidence", boundaryZabbixText: "Read-only, source-qualified and timestamped.",
     assistantResponse: "ASSISTANT RESPONSE", generalResponseTitle: "Direct local answer", responseTitle: "Evidence-grounded result",
     modelOnlyBadge: "Local model · no live evidence", liveEvidenceBadge: "Live Zabbix evidence",
-    source: "Source", host: "Host", collected: "Collected", problems: "Active problems", stale: "stale",
+    source: "Source", host: "Host", collected: "Collected", problems: "Active problems", coverage: "Evidence coverage",
+    complete: "Complete", partial: "Partial (bounded)", stale: "stale",
     model: "Model", tokens: "Output tokens", completed: "Completed", requestId: "Request",
     runId: "Durable run", evidenceReference: "Evidence reference", auditEvent: "Audit event",
     footer: "Controlled local evaluation environment", invalidLogin: "The username or password is incorrect.",
@@ -58,7 +59,8 @@ const translations = {
     boundaryZabbix: "شواهد زنده Zabbix", boundaryZabbixText: "فقط‌خواندنی، دارای منبع مشخص و مُهر زمانی.",
     assistantResponse: "پاسخ دستیار", generalResponseTitle: "پاسخ مستقیم مدل محلی", responseTitle: "نتیجه مبتنی بر شواهد",
     modelOnlyBadge: "مدل محلی · بدون شاهد زنده", liveEvidenceBadge: "شواهد زنده Zabbix",
-    source: "منبع", host: "میزبان", collected: "زمان گردآوری", problems: "مسائل فعال", stale: "قدیمی",
+    source: "منبع", host: "میزبان", collected: "زمان گردآوری", problems: "مسائل فعال", coverage: "پوشش شواهد",
+    complete: "کامل", partial: "جزئی (محدودشده)", stale: "قدیمی",
     model: "مدل", tokens: "توکن‌های خروجی", completed: "زمان تکمیل", requestId: "شناسه درخواست",
     runId: "اجرای ماندگار", evidenceReference: "مرجع شاهد", auditEvent: "رویداد ممیزی",
     footer: "محیط کنترل‌شده و داخلی ارزیابی", invalidLogin: "نام کاربری یا گذرواژه صحیح نیست.",
@@ -157,6 +159,8 @@ function renderEvidence(evidence) {
   byId("evidenceHost").textContent = evidence.host;
   byId("evidenceCollected").textContent = new Date(evidence.collected_at).toLocaleString(locale);
   byId("problemCount").textContent = evidence.active_problems.length;
+  byId("evidenceCoverage").textContent = translations[state.language][evidence.is_partial ? "partial" : "complete"];
+  byId("evidenceCoverage").title = evidence.partial_reasons.join(", ");
   const list = byId("metricList");
   list.replaceChildren();
   evidence.metrics.forEach(metric => {

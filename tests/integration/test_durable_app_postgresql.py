@@ -305,6 +305,8 @@ def test_live_investigation_persists_bounded_evidence_result_and_failure_audit(
             ),
         ),
         active_problems=(),
+        is_partial=True,
+        partial_reasons=("metrics_truncated",),
     )
     assistant = AssistantResponse(
         request_id=uuid4(),
@@ -327,6 +329,7 @@ def test_live_investigation_persists_bounded_evidence_result_and_failure_audit(
         assistant,
         evidence,
     )
+    assert completed.is_partial is True
     fetched = service.get_run(actor, created.run_id)
 
     assert fetched.status is RunStatus.SUCCEEDED
