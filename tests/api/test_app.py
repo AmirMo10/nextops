@@ -25,6 +25,7 @@ from nextops.contracts.durable import (
 )
 from nextops.contracts.errors import ErrorCode
 from nextops.contracts.models import ActorContext, Role
+from nextops.contracts.monitoring import MonitoringMetric, MonitoringSummary
 from nextops.inference.contracts import FinishReason, InferenceReadiness, ReadinessState
 
 NOW = datetime(2026, 9, 21, 9, 0, tzinfo=UTC)
@@ -189,6 +190,27 @@ class FakeInferenceGateway:
         )
 
 
+class FakeMonitoringGateway:
+    """Deterministic source-qualified monitoring boundary."""
+
+    async def summary(self) -> MonitoringSummary:
+        return MonitoringSummary(
+            source_version="7.0.30",
+            host="Zabbix server",
+            collected_at=NOW,
+            metrics=(
+                MonitoringMetric(
+                    name="CPU idle time",
+                    key="system.cpu.util[,idle]",
+                    value="91.25",
+                    units="%",
+                    measured_at=NOW - timedelta(seconds=15),
+                    stale=False,
+                ),
+            ),
+            active_problems=(),
+        )
+
 def test_health_is_unversioned_and_contains_no_dependency_claim() -> None:
     client = TestClient(create_app(FakeService()))
 
@@ -243,6 +265,30 @@ def test_assistant_readiness_is_authenticated() -> None:
 
     assert response.status_code == 200
     assert response.json()["state"] == "ready"
+
+
+def test_investigation_requires_session_and_returns_exact_live_evidence() -> None:
+    client = TestClient(
+        create_app(FakeService(), FakeInferenceGateway(), FakeMonitoringGateway())
+    )
+
+    unauthenticated = client.post(
+        "/api/v1/investigate",
+        json={"locale": "en", "question": "What is the current state?"},
+    )
+    response = client.post(
+        "/api/v1/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": "What is the current state?"},
+    )
+
+    assert unauthenticated.status_code == 401
+    assert response.status_code == 200
+    body = response.json()
+    assert body["evidence_mode"] == "live_zabbix"
+    assert body["live_monitoring_data"] is True
+    assert body["evidence"]["source_version"] == "7.0.30"
+    assert body["evidence"]["metrics"][0]["stale"] is False
 
 
 def test_run_actor_is_derived_from_bearer_session_and_fixture_is_explicit() -> None:

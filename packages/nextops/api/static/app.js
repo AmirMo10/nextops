@@ -12,14 +12,16 @@ const translations = {
     workspaceLabel: "USER EVALUATION WORKSPACE", workspaceHeadline: "Ask the local assistant",
     workspaceLead: "Evaluate bilingual response quality and the protected application-to-AI path.",
     appReady: "Application ready", aiChecking: "Checking AI", aiReady: "AI ready", aiUnavailable: "AI unavailable",
+    monitoringChecking: "Checking monitoring", monitoringReady: "Monitoring ready", monitoringUnavailable: "Monitoring unavailable",
     newQuestion: "New question", questionHelp: "Ask in English or Persian. The answer follows the selected language.",
     question: "Question", questionPlaceholder: "Explain a safe first response to a high CPU alert.", askAssistant: "Ask assistant",
-    evidenceBoundary: "EVIDENCE BOUNDARY", modelOnlyTitle: "Model-only evaluation",
-    modelOnlyBody: "This test panel does not yet query live Zabbix data. Its answers are language-model output, not current monitoring evidence.",
+    evidenceBoundary: "EVIDENCE BOUNDARY", liveEvidenceTitle: "Live evidence evaluation",
+    liveEvidenceBody: "The read-only connector supplies current Zabbix observations and their timestamps to the local model.",
     boundaryLocal: "Local processing", boundaryLocalText: "No external model API is used.",
     boundaryAuth: "Authenticated path", boundaryAuthText: "The browser never receives the AI service credential.",
-    boundaryZabbix: "Live Zabbix evidence", boundaryZabbixText: "Planned for the connector phase.",
-    assistantResponse: "ASSISTANT RESPONSE", responseTitle: "Local model result", noLiveEvidence: "No live monitoring evidence",
+    boundaryZabbix: "Live Zabbix evidence", boundaryZabbixText: "Read-only, source-qualified and timestamped.",
+    assistantResponse: "ASSISTANT RESPONSE", responseTitle: "Evidence-grounded result", liveEvidenceBadge: "Live Zabbix evidence",
+    source: "Source", host: "Host", collected: "Collected", problems: "Active problems", stale: "stale",
     model: "Model", tokens: "Output tokens", completed: "Completed", requestId: "Request",
     footer: "Controlled local evaluation environment", invalidLogin: "The username or password is incorrect.",
     genericError: "The request could not be completed. Try again.", sessionExpired: "Your session expired. Please sign in again.",
@@ -36,14 +38,16 @@ const translations = {
     workspaceLabel: "فضای ارزیابی کاربران", workspaceHeadline: "از دستیار داخلی بپرسید",
     workspaceLead: "کیفیت پاسخ‌های فارسی و انگلیسی و مسیر امن ارتباط برنامه با سرویس هوش مصنوعی را ارزیابی کنید.",
     appReady: "برنامه آماده است", aiChecking: "در حال بررسی سرویس هوش مصنوعی", aiReady: "سرویس هوش مصنوعی آماده است", aiUnavailable: "سرویس هوش مصنوعی در دسترس نیست",
+    monitoringChecking: "در حال بررسی سامانه پایش", monitoringReady: "سامانه پایش آماده است", monitoringUnavailable: "سامانه پایش در دسترس نیست",
     newQuestion: "پرسش جدید", questionHelp: "پرسش را به فارسی یا انگلیسی بنویسید؛ پاسخ به زبان انتخاب‌شده ارائه می‌شود.",
     question: "پرسش", questionPlaceholder: "برای هشدار مصرف بالای پردازنده، یک اقدام اولیه ایمن پیشنهاد کنید.", askAssistant: "ارسال به دستیار",
-    evidenceBoundary: "مرز شواهد", modelOnlyTitle: "ارزیابی مدل، بدون داده زنده",
-    modelOnlyBody: "این پنل آزمایشی هنوز به داده زنده Zabbix متصل نیست. پاسخ‌ها خروجی مدل زبانی‌اند و نباید به‌عنوان وضعیت فعلی سامانه‌ها تلقی شوند.",
+    evidenceBoundary: "مرز شواهد", liveEvidenceTitle: "ارزیابی مبتنی بر شواهد زنده",
+    liveEvidenceBody: "کانکتور فقط‌خواندنی، مشاهدات جاری Zabbix و زمان ثبت آن‌ها را در اختیار مدل داخلی قرار می‌دهد.",
     boundaryLocal: "پردازش داخلی", boundaryLocalText: "هیچ سرویس مدل بیرونی فراخوانی نمی‌شود.",
     boundaryAuth: "مسیر احراز هویت‌شده", boundaryAuthText: "اعتبارنامه سرویس هوش مصنوعی هرگز در اختیار مرورگر قرار نمی‌گیرد.",
-    boundaryZabbix: "شواهد زنده Zabbix", boundaryZabbixText: "در مرحله اتصال امن کانکتور اضافه خواهد شد.",
-    assistantResponse: "پاسخ دستیار", responseTitle: "خروجی مدل داخلی", noLiveEvidence: "فاقد شواهد زنده پایش",
+    boundaryZabbix: "شواهد زنده Zabbix", boundaryZabbixText: "فقط‌خواندنی، دارای منبع مشخص و مُهر زمانی.",
+    assistantResponse: "پاسخ دستیار", responseTitle: "نتیجه مبتنی بر شواهد", liveEvidenceBadge: "شواهد زنده Zabbix",
+    source: "منبع", host: "میزبان", collected: "زمان گردآوری", problems: "مسائل فعال", stale: "قدیمی",
     model: "مدل", tokens: "توکن‌های خروجی", completed: "زمان تکمیل", requestId: "شناسه درخواست",
     footer: "محیط کنترل‌شده و داخلی ارزیابی", invalidLogin: "نام کاربری یا گذرواژه صحیح نیست.",
     genericError: "انجام درخواست ممکن نشد. دوباره تلاش کنید.", sessionExpired: "نشست شما پایان یافته است. دوباره وارد شوید.",
@@ -98,6 +102,7 @@ async function showWorkspace() {
   byId("workspaceView").classList.remove("hidden");
   byId("logoutButton").classList.remove("hidden");
   checkAi();
+  checkMonitoring();
 }
 
 async function checkAi() {
@@ -111,6 +116,41 @@ async function checkAi() {
     pill.className = "status-pill failed";
     pill.querySelector("span").textContent = translations[state.language].aiUnavailable;
   }
+}
+
+async function checkMonitoring() {
+  const pill = byId("monitoringStatus");
+  try {
+    const summary = await api("/api/v1/monitoring/summary");
+    const ok = summary.source === "zabbix";
+    pill.className = `status-pill ${ok ? "ready" : "failed"}`;
+    pill.querySelector("span").textContent = translations[state.language][ok ? "monitoringReady" : "monitoringUnavailable"];
+  } catch (_) {
+    pill.className = "status-pill failed";
+    pill.querySelector("span").textContent = translations[state.language].monitoringUnavailable;
+  }
+}
+
+function renderEvidence(evidence) {
+  const locale = state.language === "fa" ? "fa-IR" : "en-GB";
+  byId("evidenceSource").textContent = `Zabbix ${evidence.source_version}`;
+  byId("evidenceHost").textContent = evidence.host;
+  byId("evidenceCollected").textContent = new Date(evidence.collected_at).toLocaleString(locale);
+  byId("problemCount").textContent = evidence.active_problems.length;
+  const list = byId("metricList");
+  list.replaceChildren();
+  evidence.metrics.forEach(metric => {
+    const item = document.createElement("div");
+    item.className = "metric-item";
+    const title = document.createElement("strong");
+    title.textContent = metric.name;
+    const value = document.createElement("span");
+    value.textContent = `${metric.value}${metric.units ? ` ${metric.units}` : ""}`;
+    const time = document.createElement("small");
+    time.textContent = `${new Date(metric.measured_at).toLocaleString(locale)}${metric.stale ? ` · ${translations[state.language].stale}` : ""}`;
+    item.append(title, value, time);
+    list.append(item);
+  });
 }
 
 byId("languageButton").addEventListener("click", () => applyLanguage(state.language === "en" ? "fa" : "en"));
@@ -146,13 +186,15 @@ byId("assistantForm").addEventListener("submit", async event => {
   const original = button.querySelector("span").textContent;
   button.querySelector("span").textContent = translations[state.language].working;
   try {
-    const result = await api("/api/v1/assistant/generate", { method: "POST", body: JSON.stringify({ locale: state.answerLocale, question: byId("question").value, max_output_tokens: 384 }) });
-    byId("answer").textContent = result.answer;
-    byId("answer").dir = result.locale === "fa" ? "rtl" : "ltr";
-    byId("modelId").textContent = result.model_id;
-    byId("tokenCount").textContent = result.completion_tokens;
-    byId("completedAt").textContent = new Date(result.completed_at).toLocaleString(state.language === "fa" ? "fa-IR" : "en-GB");
-    byId("requestId").textContent = result.request_id;
+    const result = await api("/api/v1/investigate", { method: "POST", body: JSON.stringify({ locale: state.answerLocale, question: byId("question").value, max_output_tokens: 384 }) });
+    const assistant = result.assistant;
+    byId("answer").textContent = assistant.answer;
+    byId("answer").dir = assistant.locale === "fa" ? "rtl" : "ltr";
+    byId("modelId").textContent = assistant.model_id;
+    byId("tokenCount").textContent = assistant.completion_tokens;
+    byId("completedAt").textContent = new Date(assistant.completed_at).toLocaleString(state.language === "fa" ? "fa-IR" : "en-GB");
+    byId("requestId").textContent = assistant.request_id;
+    renderEvidence(result.evidence);
     byId("resultCard").classList.remove("hidden");
     byId("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {

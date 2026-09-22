@@ -1,31 +1,29 @@
 [Unit]
-Description=NextOps authenticated application and user panel
+Description=NextOps read-only Zabbix connector
 Documentation=https://github.com/Omid-NextAI/nextops
-After=network-online.target postgresql.service nextops-ai-tunnel.service nextops-connector-tunnel.service
-Wants=network-online.target nextops-ai-tunnel.service nextops-connector-tunnel.service
+After=network-online.target
+Wants=network-online.target
 ConditionFileIsExecutable=/srv/nextops/releases/current/venv/bin/uvicorn
-ConditionPathExists=/etc/nextops/nextops-app.env
+ConditionPathExists=/etc/nextops/nextops-connector.env
+ConditionPathExists=/etc/nextops/tls/zabbix-ca.crt
 
 [Service]
 Type=simple
-User=nextops-api
-Group=nextops-api
+User=nextops-connector
+Group=nextops-connector
 UMask=0027
-LoadCredential=database-url:/etc/nextops/credentials/database-url
-LoadCredential=bootstrap-secret:/etc/nextops/credentials/bootstrap-secret
-LoadCredential=recovery-secret:/etc/nextops/credentials/recovery-secret
-LoadCredential=inference-service-secret:/etc/nextops/credentials/inference-service-secret
+LoadCredential=zabbix-api-token:/etc/nextops/credentials/zabbix-api-token
 LoadCredential=connector-service-secret:/etc/nextops/credentials/connector-service-secret
-EnvironmentFile=/etc/nextops/nextops-app.env
-Environment=HOME=/var/lib/nextops/app
+EnvironmentFile=/etc/nextops/nextops-connector.env
+Environment=HOME=/var/lib/nextops/connector
 Environment=HTTP_PROXY=
 Environment=HTTPS_PROXY=
 Environment=ALL_PROXY=
 ExecStart=/srv/nextops/releases/current/venv/bin/uvicorn \
-    nextops.api.app:create_runtime_app \
+    nextops.connectors.api:create_runtime_connector_app \
     --factory \
     --host 127.0.0.1 \
-    --port 8000 \
+    --port 8100 \
     --workers 1 \
     --no-access-log \
     --no-server-header \
@@ -37,22 +35,22 @@ TimeoutStopSec=30s
 KillSignal=SIGTERM
 KillMode=mixed
 LimitCORE=0
-LimitNOFILE=4096
+LimitNOFILE=1024
 CPUAccounting=yes
 MemoryAccounting=yes
 TasksAccounting=yes
-CPUQuota=400%
-MemoryHigh=1G
-MemoryMax=1536M
-TasksMax=96
-RuntimeDirectory=nextops-app
+CPUQuota=100%
+MemoryHigh=256M
+MemoryMax=384M
+TasksMax=48
+RuntimeDirectory=nextops-connector
 RuntimeDirectoryMode=0750
-StateDirectory=nextops/app
+StateDirectory=nextops/connector
 StateDirectoryMode=0750
 LogsDirectory=nextops
 LogsDirectoryMode=0750
 ReadOnlyPaths=/srv/nextops/releases /etc/nextops
-ReadWritePaths=/var/lib/nextops/app /var/log/nextops
+ReadWritePaths=/var/lib/nextops/connector /var/log/nextops
 CapabilityBoundingSet=
 AmbientCapabilities=
 NoNewPrivileges=yes
@@ -74,11 +72,9 @@ RestrictSUIDSGID=yes
 LockPersonality=yes
 MemoryDenyWriteExecute=yes
 SystemCallArchitectures=native
-IPAddressDeny=any
-IPAddressAllow=localhost
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=nextops-app
+SyslogIdentifier=nextops-connectors-ro
 
 [Install]
 WantedBy=multi-user.target

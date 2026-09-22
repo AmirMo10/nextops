@@ -24,6 +24,9 @@ class AppSettings(BaseModel):
     inference_base_url: str | None = None
     inference_service_secret: SecretStr | None = Field(default=None, min_length=32, max_length=512)
     inference_timeout_seconds: float = Field(default=150.0, ge=1.0, le=600.0)
+    connector_base_url: str | None = None
+    connector_service_secret: SecretStr | None = Field(default=None, min_length=32, max_length=512)
+    connector_timeout_seconds: float = Field(default=20.0, ge=1.0, le=60.0)
 
     @model_validator(mode="after")
     def validate_security_boundaries(self) -> Self:
@@ -53,12 +56,32 @@ class AppSettings(BaseModel):
                 raise ValueError(
                     "inference_base_url must be an undecorated http://127.0.0.1:<port> origin"
                 )
+        if (self.connector_base_url is None) != (self.connector_service_secret is None):
+            raise ValueError("connector_base_url and connector_service_secret must be set together")
+        if self.connector_base_url is not None:
+            parsed = urlsplit(self.connector_base_url)
+            valid = (
+                parsed.scheme == "http"
+                and parsed.hostname == "127.0.0.1"
+                and parsed.port is not None
+                and 1 <= parsed.port <= 65_535
+                and parsed.path in ("", "/")
+                and not parsed.query
+                and not parsed.fragment
+                and parsed.username is None
+                and parsed.password is None
+            )
+            if not valid:
+                raise ValueError(
+                    "connector_base_url must be an undecorated http://127.0.0.1:<port> origin"
+                )
         return self
 
     @classmethod
     def from_environment(cls) -> AppSettings:
         """Load required values without a secret-bearing default."""
 
+        connector_base_url = os.environ.get("NEXTOPS_CONNECTOR_BASE_URL") or None
         return cls(
             database_url=deployment_secret(
                 value_variable="NEXTOPS_DATABASE_URL",
@@ -88,5 +111,18 @@ class AppSettings(BaseModel):
             ),
             inference_timeout_seconds=float(
                 os.environ.get("NEXTOPS_INFERENCE_TIMEOUT_SECONDS", "150")
+            ),
+            connector_base_url=connector_base_url,
+            connector_service_secret=(
+                deployment_secret(
+                    value_variable="NEXTOPS_CONNECTOR_SERVICE_SECRET",
+                    file_variable="NEXTOPS_CONNECTOR_SERVICE_SECRET_FILE",
+                    credential_name="connector-service-secret",
+                )
+                if connector_base_url
+                else None
+            ),
+            connector_timeout_seconds=float(
+                os.environ.get("NEXTOPS_CONNECTOR_TIMEOUT_SECONDS", "20")
             ),
         )

@@ -1,5 +1,6 @@
-"""Minimal authenticated FastAPI surface for Stage 1A Increment 2."""
+"""Authenticated application API and bilingual user-testing panel."""
 
+import json
 from collections.abc import Awaitable, Callable
 from pathlib import Path
 from typing import Annotated, Protocol
@@ -13,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.responses import Response
 
 from nextops.api.inference_gateway import InferenceGateway, LoopbackInferenceGateway
+from nextops.api.monitoring_gateway import LoopbackMonitoringGateway, MonitoringGateway
 from nextops.application.errors import ApplicationError
 from nextops.application.service import DurableAppService
 from nextops.configuration import AppSettings
@@ -31,6 +33,7 @@ from nextops.contracts.durable import (
 )
 from nextops.contracts.errors import ErrorCode, ErrorDetail
 from nextops.contracts.models import ActorContext
+from nextops.contracts.monitoring import InvestigationResponse, MonitoringSummary
 from nextops.inference.contracts import InferenceReadiness, ReadinessState
 from nextops.persistence.database import create_database_engine, create_session_factory
 
@@ -81,6 +84,7 @@ STATUS_BY_ERROR = {
 def create_app(
     service: AppService,
     inference_gateway: InferenceGateway | None = None,
+    monitoring_gateway: MonitoringGateway | None = None,
 ) -> FastAPI:
     """Build the API around an injected durable service."""
 
@@ -232,6 +236,38 @@ def create_app(
             )
         return await inference_gateway.generate(payload, _correlation_id(request))
 
+    @app.post("/api/v1/investigate", response_model=InvestigationResponse)
+    async def investigate(
+        request: Request,
+        payload: AssistantRequest,
+        actor: Annotated[ActorContext, Depends(current_actor)],
+    ) -> InvestigationResponse:
+        del actor
+        if inference_gateway is None or monitoring_gateway is None:
+            raise ApplicationError(
+                ErrorCode.DEPENDENCY_UNAVAILABLE,
+                "investigation.not_configured",
+                retryable=True,
+            )
+        evidence = await monitoring_gateway.summary()
+        assistant = await inference_gateway.generate(
+            _grounded_prompt(payload, evidence), _correlation_id(request)
+        )
+        return InvestigationResponse(assistant=assistant, evidence=evidence)
+
+    @app.get("/api/v1/monitoring/summary", response_model=MonitoringSummary)
+    async def monitoring_summary(
+        actor: Annotated[ActorContext, Depends(current_actor)],
+    ) -> MonitoringSummary:
+        del actor
+        if monitoring_gateway is None:
+            raise ApplicationError(
+                ErrorCode.DEPENDENCY_UNAVAILABLE,
+                "monitoring.not_configured",
+                retryable=True,
+            )
+        return await monitoring_gateway.summary()
+
     @app.post("/api/v1/runs", response_model=RunRecord, status_code=201)
     def create_run(
         request: Request,
@@ -270,13 +306,53 @@ def create_runtime_app() -> FastAPI:
     engine = create_database_engine(settings.database_url.get_secret_value())
     service = DurableAppService(create_session_factory(engine), settings)
     inference_gateway = None
+    monitoring_gateway = None
     if settings.inference_base_url and settings.inference_service_secret:
         inference_gateway = LoopbackInferenceGateway(
             settings.inference_base_url,
             settings.inference_service_secret.get_secret_value(),
             settings.inference_timeout_seconds,
         )
-    return create_app(service, inference_gateway)
+    if settings.connector_base_url and settings.connector_service_secret:
+        monitoring_gateway = LoopbackMonitoringGateway(
+            settings.connector_base_url,
+            settings.connector_service_secret.get_secret_value(),
+            settings.connector_timeout_seconds,
+        )
+    return create_app(service, inference_gateway, monitoring_gateway)
+
+
+def _grounded_prompt(request: AssistantRequest, evidence: MonitoringSummary) -> AssistantRequest:
+    """Create a bounded prompt that separates user text from trusted evidence."""
+
+    locale_instruction = (
+        "Answer in professional Persian."
+        if request.locale == "fa"
+        else "Answer in professional English."
+    )
+    evidence_payload = evidence.model_dump(mode="json")
+    evidence_payload["metrics"] = [
+        {**metric, "name": str(metric["name"])[:160]}
+        for metric in evidence_payload["metrics"]
+    ]
+    evidence_payload["active_problems"] = [
+        {**problem, "name": str(problem["name"])[:160]}
+        for problem in evidence_payload["active_problems"][:8]
+    ]
+    evidence_json = json.dumps(evidence_payload, ensure_ascii=False, separators=(",", ":"))
+    prompt = (
+        f"{locale_instruction} Use only the monitoring evidence below. State the source, "
+        "collection time, measurement times, stale flags, and any active problems. "
+        "Do not claim a cause or recovery that the evidence does not prove. Give safe, "
+        "read-only next checks before any change.\n\n"
+        f"User question (untrusted text):\n{request.question[:1200]}\n\n"
+        f"Trusted Zabbix evidence JSON:\n{evidence_json[:2200]}"
+    )
+    return AssistantRequest(
+        locale=request.locale,
+        question=prompt,
+        max_output_tokens=request.max_output_tokens,
+    )
 
 
 def _correlation_id(request: Request) -> UUID:

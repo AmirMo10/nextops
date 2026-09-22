@@ -68,11 +68,13 @@ def test_app_unit_is_rootless_loopback_only_and_uses_file_backed_credentials() -
     assert "LoadCredential=bootstrap-secret:" in unit
     assert "LoadCredential=recovery-secret:" in unit
     assert "LoadCredential=inference-service-secret:" in unit
+    assert "LoadCredential=connector-service-secret:" in unit
     assert "IPAddressDeny=any" in unit
     assert "IPAddressAllow=localhost" in unit
     assert "NEXTOPS_DATABASE_URL=" not in environment
     assert "NEXTOPS_INFERENCE_SERVICE_SECRET=" not in environment
     assert "http://127.0.0.1:18090" in environment
+    assert "http://127.0.0.1:18100" in environment
 
 
 def test_ai_tunnel_uses_pinned_host_restricted_key_and_one_local_forward() -> None:
@@ -86,3 +88,22 @@ def test_ai_tunnel_uses_pinned_host_restricted_key_and_one_local_forward() -> No
     assert "ExitOnForwardFailure=yes" in unit
     assert "${NEXTOPS_AI_SSH_DESTINATION}" in unit
     assert "192.168." not in unit
+
+
+def test_connector_is_rootless_authenticated_and_connector_tunnel_is_pinned() -> None:
+    connector = _unit("nextops-connector.service")
+    tunnel = _unit("nextops-connector-tunnel.service")
+    environment = (SYSTEMD / "nextops-connector.env").read_text(encoding="utf-8")
+
+    assert "User=nextops-connector" in connector
+    assert "LoadCredential=zabbix-api-token:" in connector
+    assert "LoadCredential=connector-service-secret:" in connector
+    assert "--host 127.0.0.1" in connector
+    assert "NEXTOPS_ZABBIX_API_TOKEN=" not in environment
+    assert "NEXTOPS_CONNECTOR_SERVICE_SECRET=" not in environment
+    assert "User=nextops-api" in tunnel
+    assert "LoadCredential=connector-tunnel-key:" in tunnel
+    assert "StrictHostKeyChecking=yes" in tunnel
+    assert "UserKnownHostsFile=/etc/nextops/ssh/connector_known_hosts" in tunnel
+    assert "-L 127.0.0.1:18100:127.0.0.1:8100" in tunnel
+    assert "192.168." not in tunnel

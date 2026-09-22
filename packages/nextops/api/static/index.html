@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>NextOps | User Evaluation</title>
   <link rel="stylesheet" href="/assets/app.css">
+  <link rel="stylesheet" href="/assets/evidence.css">
   <script src="/assets/app.js" defer></script>
 </head>
 <body>
@@ -54,6 +55,7 @@
         <div class="status-cluster">
           <span id="appStatus" class="status-pill ready"><i></i><span data-i18n="appReady">Application ready</span></span>
           <span id="aiStatus" class="status-pill checking"><i></i><span data-i18n="aiChecking">Checking AI</span></span>
+          <span id="monitoringStatus" class="status-pill checking"><i></i><span data-i18n="monitoringChecking">Checking monitoring</span></span>
         </div>
       </div>
 
@@ -71,17 +73,21 @@
 
         <aside class="glass-card boundary-card">
           <p class="eyebrow" data-i18n="evidenceBoundary">EVIDENCE BOUNDARY</p>
-          <h2 data-i18n="modelOnlyTitle">Model-only evaluation</h2>
-          <p data-i18n="modelOnlyBody">This test panel does not yet query live Zabbix data. Its answers are language-model output, not current monitoring evidence.</p>
+          <h2 data-i18n="liveEvidenceTitle">Live evidence evaluation</h2>
+          <p data-i18n="liveEvidenceBody">The read-only connector supplies current Zabbix observations and their timestamps to the local model.</p>
           <div class="boundary-item"><span>01</span><div><strong data-i18n="boundaryLocal">Local processing</strong><p data-i18n="boundaryLocalText">No external model API is used.</p></div></div>
           <div class="boundary-item"><span>02</span><div><strong data-i18n="boundaryAuth">Authenticated path</strong><p data-i18n="boundaryAuthText">The browser never receives the AI service credential.</p></div></div>
-          <div class="boundary-item muted"><span>03</span><div><strong data-i18n="boundaryZabbix">Live Zabbix evidence</strong><p data-i18n="boundaryZabbixText">Planned for the connector phase.</p></div></div>
+          <div class="boundary-item"><span>03</span><div><strong data-i18n="boundaryZabbix">Live Zabbix evidence</strong><p data-i18n="boundaryZabbixText">Read-only, source-qualified and timestamped.</p></div></div>
         </aside>
       </div>
 
       <section id="resultCard" class="glass-card result-card hidden" aria-live="polite">
-        <div class="result-heading"><div><p class="eyebrow" data-i18n="assistantResponse">ASSISTANT RESPONSE</p><h2 data-i18n="responseTitle">Local model result</h2></div><span class="evidence-badge" data-i18n="noLiveEvidence">No live monitoring evidence</span></div>
+        <div class="result-heading"><div><p class="eyebrow" data-i18n="assistantResponse">ASSISTANT RESPONSE</p><h2 data-i18n="responseTitle">Evidence-grounded result</h2></div><span class="evidence-badge live" data-i18n="liveEvidenceBadge">Live Zabbix evidence</span></div>
         <div id="answer" class="answer"></div>
+        <div class="evidence-panel">
+          <div class="evidence-summary"><span><small data-i18n="source">Source</small><strong id="evidenceSource">—</strong></span><span><small data-i18n="host">Host</small><strong id="evidenceHost">—</strong></span><span><small data-i18n="collected">Collected</small><strong id="evidenceCollected">—</strong></span><span><small data-i18n="problems">Active problems</small><strong id="problemCount">—</strong></span></div>
+          <div id="metricList" class="metric-list"></div>
+        </div>
         <div class="result-meta">
           <span><small data-i18n="model">Model</small><strong id="modelId">—</strong></span>
           <span><small data-i18n="tokens">Output tokens</small><strong id="tokenCount">—</strong></span>
