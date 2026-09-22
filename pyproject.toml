@@ -60,7 +60,7 @@ known-first-party = ["nextops"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["packages", "tests", "deploy/installers"]
+files = ["packages", "tests", "scripts", "deploy/installers"]
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]

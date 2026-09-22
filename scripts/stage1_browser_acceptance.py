@@ -10,8 +10,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
+from playwright.sync_api import Response, sync_playwright
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
-from playwright.sync_api import sync_playwright
 
 
 class DenyProxyHandler(socketserver.StreamRequestHandler):
@@ -108,7 +108,7 @@ def main() -> int:
                 lambda request: request_hosts.add(urlparse(request.url).hostname or ""),
             )
 
-            def record_response(response) -> None:
+            def record_response(response: Response) -> None:
                 path = urlparse(response.url).path
                 if path.startswith("/api/"):
                     api_statuses.append({"path": path, "status": response.status})
@@ -142,7 +142,7 @@ def main() -> int:
             general_answer = page.locator("#answer").inner_text().strip()
             check(bool(general_answer), "general answer is empty")
             check(
-                page.locator("#evidencePanel").get_attribute("class").find("hidden") >= 0,
+                "hidden" in (page.locator("#evidencePanel").get_attribute("class") or ""),
                 "general answer exposed monitoring evidence",
             )
             check(
@@ -234,7 +234,7 @@ def main() -> int:
 
     print(f"browser_acceptance_status={result['status']}")
     print(f"evidence_file={args.output_dir / 'fresh-browser-result.json'}")
-    print(f"wan_attempts={len(result['deny_proxy_attempts'])}")
+    print(f"wan_attempts={len(proxy.attempts)}")
     if result["status"] != "PASS":
         print(f"failure={result.get('error_type')}: {result.get('error')}")
         return 1
