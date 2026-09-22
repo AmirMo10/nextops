@@ -19,9 +19,9 @@
   ],
   "properties": {
     "$schema": {"const": "./inference-artifact.schema.json"},
-    "schema_version": {"const": "1.1.0"},
+    "schema_version": {"const": "1.2.0"},
     "manifest_revision": {"type": "string", "format": "date"},
-    "status": {"const": "built_imported_smoke_tested_not_accepted"},
+    "status": {"const": "controlled_service_qualified_not_production_accepted"},
     "runtime": {
       "type": "object",
       "additionalProperties": false,
@@ -76,12 +76,19 @@
     "evidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source_metadata_verified", "runtime_binary_built", "model_imported", "cpu_only_execution_verified", "benchmark_run", "offline_cold_start_verified"],
+      "required": ["source_metadata_verified", "runtime_binary_built", "model_imported", "cpu_only_execution_verified", "controlled_service_installed", "application_source_commit", "authentication_readiness_verified", "bilingual_quality_review_passed", "bounded_load_run", "cold_process_restart_verified", "application_rollback_verified", "benchmark_run", "offline_cold_start_verified"],
       "properties": {
         "source_metadata_verified": {"const": true},
         "runtime_binary_built": {"const": true},
         "model_imported": {"const": true},
         "cpu_only_execution_verified": {"const": true},
+        "controlled_service_installed": {"const": true},
+        "application_source_commit": {"const": "62de8d61fb4a841f016732815f75d95ca6c403a9"},
+        "authentication_readiness_verified": {"const": true},
+        "bilingual_quality_review_passed": {"const": true},
+        "bounded_load_run": {"const": true},
+        "cold_process_restart_verified": {"const": true},
+        "application_rollback_verified": {"const": true},
         "benchmark_run": {"const": false},
         "offline_cold_start_verified": {"const": false}
       }

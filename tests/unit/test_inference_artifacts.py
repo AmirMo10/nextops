@@ -20,7 +20,7 @@ def test_selected_artifact_manifest_is_human_readable_and_schema_valid() -> None
     )
 
     assert result.returncode == 0, result.stderr
-    assert "built_imported_smoke_tested_not_accepted" in result.stdout
+    assert "controlled_service_qualified_not_production_accepted" in result.stdout
     document = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     assert document["model"]["size_bytes"] == 5_027_783_488
     assert document["model"]["sha256"] == (
@@ -32,4 +32,14 @@ def test_selected_artifact_manifest_is_human_readable_and_schema_valid() -> None
     assert document["evidence"]["runtime_binary_built"] is True
     assert document["evidence"]["model_imported"] is True
     assert document["evidence"]["cpu_only_execution_verified"] is True
+    assert document["evidence"]["controlled_service_installed"] is True
+    assert document["evidence"]["application_source_commit"] == (
+        "62de8d61fb4a841f016732815f75d95ca6c403a9"
+    )
+    assert document["evidence"]["authentication_readiness_verified"] is True
+    assert document["evidence"]["bilingual_quality_review_passed"] is True
+    assert document["evidence"]["bounded_load_run"] is True
+    assert document["evidence"]["cold_process_restart_verified"] is True
+    assert document["evidence"]["application_rollback_verified"] is True
     assert document["evidence"]["benchmark_run"] is False
+    assert document["evidence"]["offline_cold_start_verified"] is False

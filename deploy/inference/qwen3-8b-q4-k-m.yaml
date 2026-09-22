@@ -1,10 +1,10 @@
-# Source-pinned evaluation candidate with an observed CPU build, verified model import, and bounded smoke test.
-# This file is not production acceptance; full offline, load, recovery, and service evidence remain unresolved.
+# Source-pinned CPU candidate with verified import and controlled service-qualification evidence.
+# This file is not production acceptance; full offline, recovery, and sustained-performance evidence remain unresolved.
 ---
 $schema: ./inference-artifact.schema.json
-schema_version: 1.1.0
-manifest_revision: '2026-09-21'
-status: built_imported_smoke_tested_not_accepted
+schema_version: 1.2.0
+manifest_revision: '2026-09-22'
+status: controlled_service_qualified_not_production_accepted
 runtime:
   name: llama.cpp
   source_repository: https://github.com/ggml-org/llama.cpp
@@ -47,14 +47,21 @@ evidence:
   runtime_binary_built: true
   model_imported: true
   cpu_only_execution_verified: true
+  controlled_service_installed: true
+  application_source_commit: 62de8d61fb4a841f016732815f75d95ca6c403a9
+  authentication_readiness_verified: true
+  bilingual_quality_review_passed: true
+  bounded_load_run: true
+  cold_process_restart_verified: true
+  application_rollback_verified: true
   benchmark_run: false
   offline_cold_start_verified: false
 unresolved_gates:
-  - Hash and retain the complete shared-library release tree, normalized build manifest, and compatible rollback set.
-  - Review and install the authenticated systemd unit, protected API-key delivery, resource controls, and log policy.
+  - Hash and independently retain the complete shared-library release tree and normalized build manifest.
   - Approve exact thread, affinity, batch, context, timeout, and memory settings from representative measurement.
-  - Pass Persian and English quality, latency, saturation, cancellation, and resource benchmarks.
-  - Prove an Internet-blocked cold start, backup restore, and last-known-good rollback.
+  - Complete live cancellation, dependency failure, corrupt-artifact, low-space, and sustained-resource tests.
+  - Prove an explicit WAN-blocked VM reboot, independent offline restore, and runtime/model rollback.
+  - Approve dependency licenses and retain an independent checksummed artifact copy.
 references:
   - https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
   - https://github.com/ggml-org/llama.cpp/blob/master/docs/release.md

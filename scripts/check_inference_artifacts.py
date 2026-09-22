@@ -95,6 +95,10 @@ def main() -> int:
         f"status={document['status']}; runtime_binary_built="
         f"{document['evidence']['runtime_binary_built']}; "
         f"model_imported={document['evidence']['model_imported']}; "
+        f"controlled_service_installed="
+        f"{document['evidence']['controlled_service_installed']}; "
+        f"bilingual_quality_review_passed="
+        f"{document['evidence']['bilingual_quality_review_passed']}; "
         f"benchmark_run={document['evidence']['benchmark_run']}."
     )
     return 0

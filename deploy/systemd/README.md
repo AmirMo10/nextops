@@ -1,7 +1,10 @@
 # Native systemd profile for Stage 1B
 
-This directory contains the reviewed source profile for the first controlled `nextops-ai`
-qualification. It is not evidence that the units are installed or accepted on a server.
+This directory contains the reviewed source profile used for the first controlled `nextops-ai`
+qualification. On 2026-09-22 the profile was installed on the authorized AI guest and the bounded
+deployment, bilingual quality, cold-process restart, and application rollback checks passed. Raw
+host evidence and credentials remain outside Git; the repository profile alone is not proof of a
+different host's state or production acceptance.
 
 The profile deliberately uses two processes under the existing unprivileged `nextops-ai` identity:
 
@@ -17,6 +20,11 @@ artifact and release trees, restrict writable paths, remove Linux capabilities, 
 CPU, memory, task, file, restart, and core-dump limits. The initial llama.cpp profile uses 16
 generation and prompt-processing threads on the 24-vCPU guest. This is a bounded qualification
 starting point, not a final performance claim or NUMA decision.
+
+The llama.cpp build stores its required shared libraries beside `llama-server`. The unit therefore
+sets `LD_LIBRARY_PATH` to the protected stable runtime `bin` directory. Do not replace it with a
+developer-build path: the first relocated start demonstrated that a socket check alone cannot prove
+the executable has loaded its immutable dependencies or finished loading the model.
 
 ## Required installed layout
 
@@ -34,9 +42,9 @@ last-known-good runtime/model/application set for rollback. Credential files con
 file, are root-owned, are not world-accessible, and are never committed or printed. The two values
 must be different and at least 32 characters.
 
-## Review and installation gates
+## Review, installation, and remaining acceptance gates
 
-Before installation:
+Before installation on any new or rebuilt host:
 
 1. Re-run the read-only guest, mount, listener, CPU/NUMA, memory, free-space, update, and service
    preflight. Stop on a changed baseline, pending reboot, unexpected listener, unavailable recovery
@@ -60,8 +68,11 @@ systemctl daemon-reload
 systemctl enable nextops-llama.service nextops-ai.service
 ```
 
-Enabling does not prove readiness. Start only inside the approved change window, verify both
-loopback listeners and both authentication boundaries, capture the CPU-only startup report without
-paths or secrets, and run the versioned bilingual/load/failure/offline evaluation. Promote only if
-AI-01 through AI-06 have actual evidence; otherwise stop or return atomically to the retained
-last-known-good set.
+Enabling does not prove readiness. Start only inside the approved change window, wait for the
+authenticated llama.cpp health endpoint rather than only the listener, verify both loopback
+listeners and the API authentication boundary, capture CPU-only startup without secrets, and run
+the versioned bilingual/load/failure/offline evaluation. The 2026-09-22 qualification covers the
+current controlled deployment, bounded load, cold process restart, and application-link rollback.
+VM reboot, explicit WAN-disconnection testing, runtime/model rollback, corrupt-artifact isolation,
+cancellation under live load, independent restore, license approval, and agreed production
+performance thresholds remain separate evidence gates.

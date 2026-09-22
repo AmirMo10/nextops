@@ -2,7 +2,8 @@
 
 [فارسی](../fa/AI_SYSTEMD.md) · [Index](INDEX.md) · [CPU-only AI](CPU_AI.md) · [Offline runtime](OFFLINE_RUNTIME.md)
 
-**Status: implemented and tested in repository source; not installed or accepted on the AI server.**
+**Status: installed and running on the authorized AI server; controlled Stage 1B qualification
+passed on 2026-09-22, while production and full offline acceptance remain open.**
 
 Stage 1B uses the native systemd profile under [`deploy/systemd`](../../deploy/systemd). Docker is
 not required and no service receives a container socket. The profile separates the pinned llama.cpp
@@ -21,36 +22,42 @@ state and log paths, disable core dumps and Linux capabilities, and set explicit
 file, and restart limits. The initial 16-thread llama.cpp setting is a qualification starting point,
 not an accepted performance result or a topology claim.
 
+The promoted llama.cpp build keeps its shared libraries beside the executable. The installed unit
+sets `LD_LIBRARY_PATH` to the stable protected runtime `bin` directory; this corrects the first live
+relocation failure without referencing a developer checkout. Controlled startup waits for the
+authenticated model health response, not merely an open socket.
+
 The Python configuration loader accepts systemd `LoadCredential` files, rejects symlinks, multiline
 values, oversized files, ambiguous environment-plus-file sources, and world-accessible credential
 files on POSIX. Ordinary environment values remain available only for isolated development/tests;
 the deployment profile does not use them.
 
-For source commit `5de76ac`, a relocatable Linux Python 3.12 API release was assembled through the
-required proxy and then rebuilt from the populated cache with networking disabled. It passed imports,
-`uvicorn` version execution, compatibility checking for all 25 installed packages, and relocation to
-a second staging path. The 14,209,478-byte archive has SHA-256
-`cf20dada68f2a56eeee7608790fd32c2119ca724ce81ed1cef7ac029f00ca20b`. This is staging
-evidence only: the archive is not in the protected release tree, its dependency licenses are not
-approved, no independent copy exists, and no service has executed from it.
+The protected application release `nextops-0.1.0-62de8d6` is active. It contains the prompt fix that
+preserves the supplied event, failure mode, timestamp, scope, and current-state uncertainty in the
+requested language. `nextops-0.1.0-417d888` remains available and has passed an application-link
+rollback/readiness test; it is not the accepted quality release. The earlier `5de76ac` build remains
+historical staging/rollback evidence, not the current application.
 
-## Installation hold
+## Verified live result
 
-Do not install or start the units until the current private change record resolves all of the
-following:
+The private evidence record for 2026-09-22 verifies:
 
-1. the target account has narrow approved privilege for the exact unit, credential, immutable
-   release-link, daemon-reload, enable/start/stop, and evidence commands;
-2. the latest guest preflight has no unresolved update/reboot, listener, mount, resource, recovery,
-   or rollback issue;
-3. the complete llama.cpp shared-library tree, model, Python release/wheel bundle, licenses, and
-   independent SHA-256 trust anchors verify;
-4. two distinct credentials are delivered without printing or committing them;
-5. `systemd-analyze verify` and the effective sandbox/resource settings pass on the target guest;
-6. an immutable previous compatible runtime/model/application set and an independent artifact copy
-   exist for rollback and offline restore.
+1. the runtime and 5,027,783,488-byte model match their pinned SHA-256 values and are reached through
+   stable links to immutable protected release directories;
+2. two distinct root-owned `0400` credentials are installed without entering Git or logs;
+3. both units are enabled and active only on `127.0.0.1:8080` and `127.0.0.1:8090`, and each receives
+   `2.7 OK` from `systemd-analyze security`;
+4. unauthenticated generation returns `401`, readiness returns `200`, bounded load admits one active
+   request and rejects/times out excess work as designed, and two independent Persian/English
+   four-case runs passed both automated checks and human review;
+5. a cold process restart restored the authenticated services in 109 seconds; the unit network policy
+   denied non-loopback IP traffic throughout;
+6. application rollback to `417d888` and forward restoration to `62de8d6` both passed authentication
+   denial/readiness checks, leaving `62de8d6` active.
 
-After installation, capture actual results for authentication, readiness, CPU-only startup,
-bilingual generation, queue saturation, cancellation/timeouts, dependency failure, restart, resource
-use, Internet-blocked cold start, rollback, and isolated restore. Until those results exist, AI-01
-through AI-06 remain `not_run` and the service is not production-ready.
+This is a controlled Stage 1B qualification, not production acceptance. Still required are an
+authorized VM reboot, an explicit external WAN-disconnection observation, live cancellation and
+dependency-failure cases, runtime/model rollback, corrupt or missing artifact behavior, sustained
+performance and NUMA thresholds, dependency-license approval, an independent artifact/backup copy,
+and an isolated restore. Full Phase 1 also requires the application, PostgreSQL, Zabbix, connector,
+browser, audit, and end-to-end offline gates.

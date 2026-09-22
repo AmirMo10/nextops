@@ -1,5 +1,69 @@
 # Changelog / تاریخچهٔ تغییرات
 
+## 2026-09-22 — Controlled Stage 1B deployment / استقرار کنترل‌شدهٔ مرحلهٔ 1B
+
+### English
+
+Promoted the checksummed llama.cpp runtime, Qwen model, and Python API into immutable protected
+release directories on the AI guest. Installed and enabled the two hardened native systemd units
+with distinct root-owned credentials. Both services run as the unprivileged `nextops-ai` identity,
+listen only on `127.0.0.1:8080` and `127.0.0.1:8090`, and retain the cgroup rule that denies
+non-loopback IP traffic. The effective systemd security exposure score is `2.7 OK` for each unit.
+
+The first live start exposed two deployment defects: the relocated llama.cpp executable could not
+find its adjacent shared libraries, and evaluation could begin after the socket opened but before
+the model was ready. The service profile now supplies the immutable runtime library directory, and
+the controlled-start procedure waits for authenticated model health. A first prompt correction
+fixed missing Persian evidence but weakened an English answer; commit `62de8d6` makes the evidence
+preservation rule explicit and removes the repetition penalty that contributed to that regression.
+
+Release `nextops-0.1.0-62de8d6` is active, with `417d888` retained as the tested application
+rollback. Authentication denial, readiness, all four Persian/English evidence and safety cases, and
+the bounded one-active/two-queued load behavior passed. Human review accepted two independent
+four-case runs. A cold process restart returned both authenticated services in 109 seconds, and the
+application rollback/restoration test returned `401` for unauthenticated generation and `200` for
+readiness on both releases before restoring `62de8d6`. This qualifies the controlled Stage 1B
+deployment; it does not claim full Phase 1, VM-reboot, independent restore, production performance,
+or Zabbix acceptance.
+
+All four Ubuntu guests subsequently reported healthy systemd state, no failed units, no pending
+package upgrade, and no reboot requirement. After a narrow package simulation, four GLib security
+upgrades on the app guest were applied through its configured package proxy; the deferred affected
+service was restarted and rechecked. Direct root SSH remains disabled. The owner-authorized deployment account
+now has full passwordless administrative access, which is operationally powerful and must remain
+protected by the private key and host-key verification.
+
+### فارسی
+
+محیط اجرای بررسی‌شدهٔ llama.cpp، مدل Qwen و API پایتون در شاخه‌های تغییرناپذیر و محافظت‌شدهٔ
+مهمان هوش مصنوعی مستقر شدند. دو واحد سخت‌سازی‌شدهٔ systemd با دو اعتبارنامهٔ جدا، متعلق به root،
+نصب و فعال شده‌اند. هر دو سرویس با شناسهٔ بدون امتیاز `nextops-ai` اجرا می‌شوند، فقط روی
+`127.0.0.1:8080` و `127.0.0.1:8090` گوش می‌دهند و در سطح cgroup اجازهٔ ارتباط IP بیرون از رابط
+محلی را ندارند. امتیاز مواجههٔ امنیتی مؤثر systemd برای هر واحد `2.7 OK` است.
+
+نخستین راه‌اندازی زنده دو نقص استقرار را آشکار کرد: فایل اجرایی جابه‌جاشدهٔ llama.cpp کتابخانه‌های
+مشترک کنار خود را پیدا نمی‌کرد و ارزیابی می‌توانست پس از باز شدن درگاه، اما پیش از آماده شدن مدل،
+آغاز شود. مسیر کتابخانهٔ محیط اجرای تغییرناپذیر به پروفایل سرویس افزوده شد و رویهٔ شروع کنترل‌شده
+اکنون تا تأیید احرازهویت‌شدهٔ سلامت مدل صبر می‌کند. اصلاح نخستِ پیام راهنما، حذف جزئیات شاهد فارسی
+را برطرف کرد، اما یک پاسخ انگلیسی را تضعیف کرد؛ commit `62de8d6` الزام حفظ دقیق شاهد را صریح کرده و
+جریمهٔ تکراری را که در آن پس‌رفت نقش داشت حذف می‌کند.
+
+انتشار `nextops-0.1.0-62de8d6` فعال است و `417d888` به‌عنوان نسخهٔ آزموده‌شدهٔ بازگشت برنامه حفظ
+شده است. رد درخواست بدون احراز هویت، آمادگی سرویس، هر چهار مورد فارسی و انگلیسیِ شاهد و ایمنی، و
+رفتار محدودِ یک درخواست فعال و دو درخواست در صف موفق بودند. بازبینی انسانی دو اجرای مستقلِ
+چهارموردی را پذیرفت. پس از توقف فرایندها، هر دو سرویس احرازهویت‌شده در ۱۰۹ ثانیه دوباره آماده شدند.
+آزمون بازگشت برنامه نیز روی هر دو انتشار، کد `401` برای تولید بدون احراز هویت و `200` برای آمادگی
+دریافت کرد و در پایان `62de8d6` را بازگرداند. این نتیجه، استقرار کنترل‌شدهٔ 1B را تأیید می‌کند؛ اما
+به‌معنای پذیرش کامل مرحلهٔ یک، راه‌اندازی مجدد ماشین، بازیابی از نسخهٔ پشتیبان مستقل، کارایی تولیدی
+یا اتصال Zabbix نیست.
+
+در بازبینی نهایی، هر چهار مهمان Ubuntu وضعیت سالم systemd، صفر واحد خراب، صفر بستهٔ قابل‌ارتقا و
+بی‌نیازی از راه‌اندازی مجدد را گزارش کردند. چهار به‌روزرسانی امنیتی مرتبط با GLib روی مهمان برنامه،
+پس از شبیه‌سازی محدود، از مسیر پراکسی تنظیم‌شده نصب شد؛ سرویس به‌تعویق‌افتاده نیز دوباره راه‌اندازی و
+بررسی شد. ورود مستقیم root از راه SSH همچنان بسته است. حساب استقرار بنا بر دستور صریح مالک اکنون
+دسترسی مدیریتی کامل و بدون گذرواژه دارد؛ بنابراین حفاظت از کلید خصوصی و کنترل سخت‌گیرانهٔ کلید
+میزبان یک الزام عملیاتی است.
+
 ## 2026-09-21 — Stage 1B native service profile / پروفایل بومی سرویس مرحلهٔ 1B
 
 ### English
