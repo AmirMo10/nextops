@@ -255,6 +255,12 @@ def _login(page: Page, base_url: str) -> None:
     icon_href = page.locator("#appIcon").get_attribute("href")
     assert icon_href is not None
     assert icon_href.startswith("data:image/jpeg;base64,")
+    page.locator("#languageButton").click()
+    page.set_viewport_size({"width": 375, "height": 812})
+    assert page.locator("html").get_attribute("dir") == "rtl"
+    assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth") is True
+    page.locator("#languageButton").click()
+    page.set_viewport_size({"width": 1280, "height": 900})
     page.get_by_label("Username").fill("owner")
     page.get_by_label("Password").fill("test-password")
     page.get_by_role("button", name="Sign in securely").click()

@@ -296,7 +296,7 @@ html[dir="rtl"] .trust-row > span { padding: 14px 38px 14px 14px; }
 @media (max-width: 960px) {
   .login-layout, .workspace-grid { grid-template-columns: 1fr; }
   .login-layout { align-items: start; gap: 36px; padding: 46px 0 58px; }
-  .intro { max-width: 760px; }
+  .intro { max-width: 760px; overflow: clip; }
   .login-card { width: min(100%, 620px); }
   .workspace-heading { grid-template-columns: 1fr; align-items: start; }
   .status-panel { width: 100%; }
