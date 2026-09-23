@@ -3,6 +3,7 @@
 import json
 import os
 import sys
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
 import pytest
@@ -10,7 +11,12 @@ import pytest
 if os.name != "posix":
     pytest.skip("Linux collector executes only on POSIX hosts", allow_module_level=True)
 
-from scripts import linux_readonly_collector as collector
+COLLECTOR_PATH = Path(__file__).resolve().parents[2] / "scripts" / "linux_readonly_collector.py"
+COLLECTOR_SPEC = spec_from_file_location("nextops_linux_readonly_collector", COLLECTOR_PATH)
+if COLLECTOR_SPEC is None or COLLECTOR_SPEC.loader is None:
+    raise RuntimeError("unable to load the standalone Linux collector")
+collector = module_from_spec(COLLECTOR_SPEC)
+COLLECTOR_SPEC.loader.exec_module(collector)
 
 
 def _write_config(path: Path, **changes: object) -> None:
