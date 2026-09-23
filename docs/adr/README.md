@@ -1,8 +1,14 @@
 # Architecture decision records / سوابق تصمیم معماری
 
-All records below were **accepted by the owner on 2026-09-21** with the Phase 0 architecture and roadmap. Acceptance establishes the design direction; it is not infrastructure authorization or proof that later application stages are implemented.
+Records 0001–0006 below were **accepted by the owner on 2026-09-21** with the Phase 0 architecture
+and roadmap. Record 0007 was accepted with the Phase 2 implementation on 2026-09-23. Record 0008
+is proposed and explicitly blocked on external recovery inputs. Acceptance establishes design
+direction; it is not infrastructure authorization or proof that later application stages are
+implemented.
 
-همهٔ تصمیم‌های زیر در **۲۱ سپتامبر ۲۰۲۶ به تأیید مالک رسیدند** و معماری و نقشهٔ راه مرحلهٔ صفر را تثبیت می‌کنند. این پذیرش، مجوز زیرساخت یا شاهد پیاده‌سازی مرحله‌های بعد نیست.
+تصمیم‌های 0001 تا 0006 در **۲۱ سپتامبر ۲۰۲۶ به تأیید مالک رسیدند**؛ تصمیم 0007 همراه پیاده‌سازی
+مرحلهٔ دو در ۲۳ سپتامبر پذیرفته شد. تصمیم 0008 پیشنهادی است و صریحاً به ورودی‌های بیرونی بازیابی
+وابسته است. پذیرش تصمیم، مجوز زیرساخت یا شاهد اجرای مرحله‌های بعد نیست.
 
 | Record | Subject / موضوع |
 |---|---|
@@ -13,5 +19,6 @@ All records below were **accepted by the owner on 2026-09-21** with the Phase 0 
 | [0005](0005-incremental-delivery.md) | Complete flows and controlled release / جریان کامل و انتشار کنترل‌شده |
 | [0006](0006-evidence-and-bilingual-ui.md) | Evidence-qualified RCA and bilingual UI / علت‌یابی مستند و رابط دوزبانه |
 | [0007](0007-forced-command-linux-connector.md) | Forced-command Linux diagnostics / عیب‌یابی Linux با فرمان اجباری |
+| [0008](0008-independent-recovery-repositories.md) | Independent database/file recovery repositories / مخزن‌های مستقل بازیابی پایگاه و فایل |
 
 A later decision should record context, options, consequences, evidence, status and superseded records in both languages. / تصمیم بعدی باید زمینه، گزینه، پیامد، شاهد، وضعیت و سند جایگزین‌شده را به هر دو زبان ثبت کند.

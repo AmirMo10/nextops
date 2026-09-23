@@ -21,6 +21,15 @@ Nginx route timeout for Phase 2 incident requests; the route now has the bounded
 window and regression coverage. Production acceptance remains blocked by independent off-datastore
 backup, WAL/PITR, certificate lifecycle and disaster-recovery sign-off.
 
+Recovery source readiness now has an explicit claim boundary. ADR 0008 and the schema-validated
+public profile select separate pgBackRest repositories for the application and Zabbix PostgreSQL
+16 clusters and restrict restic to approved non-database files. CI rejects shared database
+repositories, secret-like public fields, database/WAL input to restic, and any qualified claim that
+lacks an independent destination, approved RPO/RTO and retention, verified offline bundles, key
+recovery, and passed isolated/offline/negative restore gates. The profile is intentionally valid
+but `BLOCKED`; no backup package or job was installed on the serving VMs and production readiness
+is not claimed.
+
 ## English
 
 ### Current controlled user-testing checkpoint
@@ -33,6 +42,12 @@ service restart and guarded server/API WAN isolation passed. The browser fixture
 LTR, Persian RTL, responsive layout and reduced-motion behavior. The full deployed authenticated
 browser, Phase 2 dependency loss/recovery and serial VM reboot gates now also pass. The next
 engineering checkpoint is recovery infrastructure, not another Phase 2 feature increment.
+
+The repository-side recovery contract for that checkpoint is implemented under `deploy/recovery`,
+with eight focused validator tests and CI enforcement. Its production-only
+`--require-qualified` mode currently fails by design. The remaining work begins with an approved
+destination outside the serving guest, datastore and hypervisor failure domains, followed by exact
+offline bundle verification and real independent restore drills.
 
 The authenticated application and bilingual panel are deployed as immutable release
 `nextops-0.1.0-54c8bb4` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
@@ -227,8 +242,9 @@ The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141
 SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1
 with a generated `uv.lock`; Playwright 1.63 is a locked development-only browser dependency. The
 CI workflow defines digest-pinned PostgreSQL 16.15 and 17.6 jobs. For Phase 2, formatting, lint,
-strict typing, 129 non-integration tests, both PostgreSQL jobs, real-browser fixtures and secret
-scanning passed. The earlier Stage 1 fresh-browser/offline, failure-recovery, load and restore
+strict typing, 136 local non-integration tests plus one POSIX-only collector check, both PostgreSQL
+CI jobs, real-browser fixtures and secret scanning passed. The earlier Stage 1 fresh-browser/offline,
+failure-recovery, load and restore
 records remain historical evidence, not inferred Phase 2 reruns. Dependency/license approval,
 independent backup/PITR and production promotion remain separate gates.
 
@@ -257,6 +273,13 @@ reboot بودند. اجرای زنده، نقص مهلت مسیر رخداد د�
 ۱۸۰ثانیه‌ای و آزمون بازگشت دارد. پذیرش تولید همچنان تا پشتیبان مستقل، WAL/PITR، چرخهٔ عمر گواهی و
 تأیید بازیابی بحران مسدود می‌ماند.
 
+آمادگی کد و سند بازیابی اکنون مرز ادعای صریح دارد. ADR 0008 و پروفایل عمومیِ دارای schema برای
+دو خوشهٔ PostgreSQL 16 برنامه و Zabbix مخزن‌های جداگانهٔ pgBackRest را انتخاب و restic را به
+فایل‌های غیرپایگاهی مصوب محدود می‌کنند. CI مخزن مشترک دو پایگاه، فیلد عمومی شبیه راز، ورود داده یا
+WAL پایگاه به restic و هر ادعای صلاحیت بدون مقصد مستقل، RPO/RTO و نگه‌داری مصوب، بستهٔ آفلاین
+معتبر، بازیابی کلید و موفقیت آزمون‌های جدا، آفلاین و منفی را رد می‌کند. پروفایل عمداً معتبر اما
+`BLOCKED` است؛ هیچ بسته یا job پشتیبان روی VMهای سرویس‌دهنده نصب نشده و آمادگی تولید ادعا نمی‌شود.
+
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 
 در کارزار `stage1-completion-20260922-01`، مرورگر تازه با WAN مسدود، بازگشت برنامه و فایل‌های
@@ -281,6 +304,11 @@ PITR، مخزن فایل با restic و تأیید نهایی بازیابی ب�
 پذیرفته شدند. افزون بر fixture مرورگر، گردش کامل و احرازهویت‌شدهٔ سامانهٔ زنده، چیدمان فارسی RTL،
 جداسازی نشست، reboot ترتیبی مرحلهٔ دو و قطع و بازیابی وابستگی نیز پذیرفته شده‌اند. گام بعدی، مهندسی
 بازیابی مستقل است، نه افزودن قابلیت تازه به مرحلهٔ دو.
+
+قرارداد سمت مخزن این نقطه در `deploy/recovery` با هشت آزمون متمرکز و کنترل CI پیاده شده است. حالت
+ویژهٔ تولید با گزینهٔ `--require-qualified` اکنون مطابق طراحی شکست می‌خورد. ادامهٔ کار به مقصدی
+مصوب و خارج از دامنهٔ خرابی مهمان، datastore و hypervisor سرویس‌دهنده نیاز دارد؛ پس از آن بسته‌های
+دقیق آفلاین و تمرین واقعی بازیابی مستقل را می‌توان راستی‌آزمایی کرد.
 
 برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-54c8bb4` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
@@ -440,8 +468,9 @@ pgBackRest/WAL، مخزن restic، آزمون PITR و بستهٔ بازیابی 
 بازیابی مستقل نیست.
 
 برش‌های منبع با Python 3.12.10، uv 0.12.17 و زنجیرهٔ قفل‌شده آزموده شدند؛ Playwright 1.63 نیز
-وابستگی صرفاً توسعه‌ای است. برای مرحلهٔ دو، Ruff، mypy سخت‌گیرانه، ۱۲۹ آزمون غیر‌یکپارچه، هر دو
-کار PostgreSQL 16 و 17، fixture واقعی مرورگر و پویش راز موفق بودند. شاهدهای پیشین مرحلهٔ یک برای
+وابستگی صرفاً توسعه‌ای است. برای مرحلهٔ دو، Ruff، mypy سخت‌گیرانه، ۱۳۶ آزمون غیر‌یکپارچهٔ محلی
+به‌همراه یک کنترل ویژهٔ POSIX، هر دو کار PostgreSQL 16 و 17 در CI، fixture واقعی مرورگر و پویش راز
+موفق بودند. شاهدهای پیشین مرحلهٔ یک برای
 مرورگر آفلاین، بازیابی خطا، بار و restore سابقه‌اند و به‌عنوان اجرای دوبارهٔ مرحلهٔ دو تلقی
 نمی‌شوند. بررسی وابستگی و مجوز، پشتیبان مستقل/PITR و ارتقا به تولید همچنان دروازه‌اند.
 

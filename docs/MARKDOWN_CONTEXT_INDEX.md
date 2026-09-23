@@ -29,6 +29,7 @@ remaining task-specific sources. The repository skill
 | Documentation | use `nextops-bilingual-documentation`; read the source requirement plus both language versions and update state/traceability when capability changes |
 | Substantial feature or architecture change | use `nextops-change-planner`; read `docs/en/SPECIFICATION_WORKFLOW.md`, the current release manifest, applicable ADRs, and the feature specification |
 | Phase 2 Linux/Zabbix investigation | `docs/en/PHASE_2_COMPLETION_SPEC.md`, `docs/en/PHASE_2_OPERATIONS.md`, Persian pairs, ADR 0007, current release manifest, and the connector/systemd deployment profiles |
+| Backup, restore, or disaster recovery | `docs/en/BACKUP_RESTORE_SPEC.md`, Persian pair, ADR 0008, `deploy/recovery/README.md`, recovery profile, current release manifest, operations guide, and private destination/restore evidence |
 | Acceptance or release review | use `nextops-acceptance-reviewer`; read the feature specification, current release manifest, test evidence, offline contract, and security guide |
 | Documentation consistency review | use `nextops-doc-reviewer` plus `nextops-bilingual-documentation`; compare current guidance with the release manifest, source, tests, and paired language files |
 | Release or GitHub workflow | `CONTRIBUTING.md`, `CHANGELOG.md`, `SECURITY.md`, `docs/en/DEVELOPMENT.md`, test guide, and GitHub templates |
@@ -53,6 +54,7 @@ Markdown file is added, renamed, or removed.
 - `deploy/installers/README.md` — Offline OS-package bundle and installer operator guide.
 - `deploy/systemd/README.md` — Native Stage 1B systemd source profile, installed layout, and deployment gates.
 - `deploy/linux/README.md` — Forced-command Phase 2 Linux collector assets and operational boundary.
+- `deploy/recovery/README.md` — Bilingual guarded promotion sequence for independent recovery.
 - `docs/adr/0001-modular-single-host.md` — ADR for the modular core and initial single-host topology.
 - `docs/adr/0002-local-cpu-only.md` — ADR for mandatory local CPU-only AI.
 - `docs/adr/0003-security-before-execution.md` — ADR for policy and safety before execution.
@@ -60,6 +62,7 @@ Markdown file is added, renamed, or removed.
 - `docs/adr/0005-incremental-delivery.md` — ADR for incremental complete-flow delivery.
 - `docs/adr/0006-evidence-and-bilingual-ui.md` — ADR for evidence-qualified answers and bilingual UI.
 - `docs/adr/0007-forced-command-linux-connector.md` — ADR for forced-command, read-only Linux diagnostics.
+- `docs/adr/0008-independent-recovery-repositories.md` — Proposed ADR for separate PostgreSQL and file recovery repositories.
 - `docs/adr/README.md` — ADR status and navigation.
 - `docs/en/ARCHITECTURE.md` — English architecture and repository boundaries.
 - `docs/en/BACKUP_RESTORE_SPEC.md` — English bounded specification for independent backup and isolated restore.

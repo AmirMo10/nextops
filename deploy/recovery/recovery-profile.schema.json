@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nextops.invalid/schemas/recovery-profile.schema.json",
+  "title": "NextOps recovery qualification profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "profile_id",
+    "evaluated_at",
+    "qualification",
+    "tools",
+    "databases",
+    "file_backup",
+    "destination",
+    "objectives",
+    "retention",
+    "key_custody",
+    "acceptance_gates"
+  ],
+  "properties": {
+    "$schema": {"const": "./recovery-profile.schema.json"},
+    "schema_version": {"const": "1.0.0"},
+    "profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"},
+    "evaluated_at": {"type": "string", "format": "date"},
+    "qualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["qualified", "status", "blockers"],
+      "properties": {
+        "qualified": {"type": "boolean"},
+        "status": {"enum": ["blocked", "qualified"]},
+        "blockers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_]{2,63}$"}
+        }
+      }
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pgbackrest", "restic"],
+      "properties": {
+        "pgbackrest": {"$ref": "#/$defs/tool"},
+        "restic": {"$ref": "#/$defs/tool"}
+      }
+    },
+    "databases": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application", "zabbix"],
+      "properties": {
+        "application": {"$ref": "#/$defs/database"},
+        "zabbix": {"$ref": "#/$defs/database"}
+      }
+    },
+    "file_backup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool", "repository_id", "included_classes", "forbidden_classes"],
+      "properties": {
+        "tool": {"const": "restic"},
+        "repository_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"},
+        "included_classes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "approved_configuration",
+              "documentation",
+              "permitted_evidence",
+              "release_artifacts",
+              "release_manifests"
+            ]
+          }
+        },
+        "forbidden_classes": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "database_data_directories",
+              "live_database_snapshots",
+              "postgresql_wal",
+              "unapproved_secrets"
+            ]
+          }
+        }
+      }
+    },
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approved",
+        "identifier",
+        "independent_from_serving_guest",
+        "independent_from_serving_datastore",
+        "independent_from_serving_hypervisor"
+      ],
+      "properties": {
+        "approved": {"type": "boolean"},
+        "identifier": {"type": ["string", "null"], "minLength": 3, "maxLength": 128},
+        "independent_from_serving_guest": {"type": "boolean"},
+        "independent_from_serving_datastore": {"type": "boolean"},
+        "independent_from_serving_hypervisor": {"type": "boolean"}
+      }
+    },
+    "objectives": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rpo_minutes", "rto_minutes"],
+      "properties": {
+        "rpo_minutes": {"type": ["integer", "null"], "minimum": 1},
+        "rto_minutes": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_backups", "differential_backups", "wal_days", "file_snapshots"],
+      "properties": {
+        "full_backups": {"type": ["integer", "null"], "minimum": 2},
+        "differential_backups": {"type": ["integer", "null"], "minimum": 2},
+        "wal_days": {"type": ["integer", "null"], "minimum": 1},
+        "file_snapshots": {"type": ["integer", "null"], "minimum": 2}
+      }
+    },
+    "key_custody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["separate_operators_required", "git_storage", "recovery_tested"],
+      "properties": {
+        "separate_operators_required": {"const": true},
+        "git_storage": {"const": "forbidden"},
+        "recovery_tested": {"type": "boolean"}
+      }
+    },
+    "acceptance_gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "offline_bundles_verified",
+        "application_restore_passed",
+        "zabbix_restore_passed",
+        "point_in_time_recovery_passed",
+        "file_restore_passed",
+        "negative_recovery_tests_passed",
+        "offline_restore_passed",
+        "key_recovery_passed"
+      ],
+      "properties": {
+        "offline_bundles_verified": {"type": "boolean"},
+        "application_restore_passed": {"type": "boolean"},
+        "zabbix_restore_passed": {"type": "boolean"},
+        "point_in_time_recovery_passed": {"type": "boolean"},
+        "file_restore_passed": {"type": "boolean"},
+        "negative_recovery_tests_passed": {"type": "boolean"},
+        "offline_restore_passed": {"type": "boolean"},
+        "key_recovery_passed": {"type": "boolean"}
+      }
+    }
+  },
+  "$defs": {
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_version",
+        "source_url",
+        "license",
+        "artifact_sha256",
+        "offline_bundle_verified"
+      ],
+      "properties": {
+        "selected_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"},
+        "source_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "license": {"type": "string", "minLength": 3, "maxLength": 32},
+        "artifact_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "offline_bundle_verified": {"type": "boolean"}
+      }
+    },
+    "database": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backup_tool",
+        "postgres_major",
+        "service_unit",
+        "data_directory",
+        "repository_id",
+        "wal_archiving_required"
+      ],
+      "properties": {
+        "backup_tool": {"const": "pgbackrest"},
+        "postgres_major": {"const": 16},
+        "service_unit": {"type": "string", "pattern": "^postgresql@16-[a-z0-9-]+\\.service$"},
+        "data_directory": {"type": "string", "pattern": "^/var/lib/postgresql/16/[a-z0-9-]+$"},
+        "repository_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"},
+        "wal_archiving_required": {"const": true}
+      }
+    }
+  }
+}

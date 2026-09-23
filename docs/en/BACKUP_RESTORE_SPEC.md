@@ -2,12 +2,30 @@
 
 [فارسی](../fa/BACKUP_RESTORE_SPEC.md) · [Specification workflow](SPECIFICATION_WORKFLOW.md) · [Operations](OPERATIONS.md)
 
-**Status: logical restore mechanics exercised; independent recovery not implemented.** On
+**Status: logical restore mechanics exercised and the repository qualification contract is
+implemented; independent recovery is blocked.** On
 2026-09-23, checksummed custom-format dumps of both PostgreSQL 16 databases restored successfully
 into separate socket-only temporary clusters and were verified and removed. This does not satisfy
 the independent-backup gate: no destination independent of the serving guests, DS-C/G10 and its
 host has been verified; pgBackRest/WAL, PITR, restic artifact recovery, retention and key recovery
-remain unimplemented. See the [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
+remain unimplemented. The [public recovery contract](../../deploy/recovery/README.md) now prevents
+an unsupported production claim. See the [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
+
+## Evaluated design and claim boundary
+
+[ADR 0008](../adr/0008-independent-recovery-repositories.md) proposes separate pgBackRest
+repositories for the application and Zabbix PostgreSQL 16 clusters and a third restic repository
+only for approved non-database files. The current controlled-bundle candidates are pgBackRest
+2.59.1 and restic 0.19.1. They are not installed production dependencies: artifact hashes, exact
+offline bundles, dependency/license approval and same-version pgBackRest endpoint verification are
+still required.
+
+`deploy/recovery/recovery-profile.yaml` records only public policy and sanitized readiness state.
+Its schema plus `scripts/check_recovery_profile.py` reject duplicate YAML keys, shared database
+repository IDs, secret-like fields or URL user information, database/WAL inclusion in restic, and
+qualified claims without an approved independent destination, RPO/RTO, retention, verified offline
+bundles, key recovery and every restore/negative/offline gate. Normal CI accepts the honest blocked
+state. Production review must additionally run the validator with `--require-qualified`.
 
 ## Problem statement
 

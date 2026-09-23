@@ -7,7 +7,7 @@ deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: 54c8bb4ec4db23a03eeba4aa7b35c81bd28d1bc2
+  inspected_baseline_commit: 26f6f60c3e0f6eeb94038cef914f919ec29651c3
 components:
   application:
     release: nextops-0.1.0-54c8bb4
@@ -97,6 +97,13 @@ capabilities:
     status: experimental
     evidence:
       - docs/en/ROADMAP.md
+  - id: recovery_qualification_contract
+    status: implemented_unaccepted
+    evidence:
+      - deploy/recovery/recovery-profile.yaml
+      - scripts/check_recovery_profile.py
+      - tests/unit/test_recovery_profile.py
+      - docs/adr/0008-independent-recovery-repositories.md
 acceptance_gates:
   - id: server_api_wan_isolation
     status: passed
@@ -130,11 +137,14 @@ acceptance_gates:
     evidence:
       - docs/en/STAGE_1_COMPLETION_REPORT.md
       - docs/en/BACKUP_RESTORE_SPEC.md
+      - deploy/recovery/recovery-profile.yaml
+      - scripts/check_recovery_profile.py
   - id: isolated_restore
     status: partial
     evidence:
       - docs/en/STAGE_1_COMPLETION_REPORT.md
       - docs/en/BACKUP_RESTORE_SPEC.md
+      - deploy/recovery/recovery-profile.yaml
   - id: production_acceptance
     status: not_run
     evidence:

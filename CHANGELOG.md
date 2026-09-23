@@ -4,6 +4,15 @@
 
 ### English
 
+Added the guarded source contract for the next recovery phase without changing serving VMs. ADR
+0008 proposes separate pgBackRest repositories for the application and Zabbix PostgreSQL 16
+clusters and limits restic to approved non-database files. A schema-validated public profile,
+validator, eight focused tests and CI checks reject duplicate YAML keys, shared database
+repositories, secret-like material, database/WAL input to restic, and unsupported production
+claims. The profile is intentionally valid but blocked: no independent destination, approved
+RPO/RTO/retention, verified offline tool bundle, PITR, file restore, negative test or key-recovery
+evidence exists yet. No package or backup job was installed on the live guests.
+
 Completed controlled Phase 2 qualification against the live four-VM deployment. A fresh Edge
 context used normal TLS verification and a deny proxy limited to the private application origin;
 English and Persian incident investigations returned combined Zabbix/Linux provenance and durable
@@ -105,6 +114,14 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+قرارداد محافظت‌شدهٔ مرحلهٔ بعدی بازیابی بدون تغییر VMهای سرویس‌دهنده افزوده شد. ADR 0008 برای دو
+خوشهٔ PostgreSQL 16 برنامه و Zabbix مخزن‌های جداگانهٔ pgBackRest پیشنهاد می‌کند و restic را به
+فایل‌های غیرپایگاهی مصوب محدود نگه می‌دارد. پروفایل عمومی دارای schema، validator، هشت آزمون
+متمرکز و کنترل CI، کلید تکراری YAML، مخزن مشترک دو پایگاه، مادهٔ شبیه راز، ورود داده یا WAL پایگاه
+به restic و ادعای بی‌پشتوانهٔ تولید را رد می‌کنند. پروفایل عمداً معتبر اما مسدود است: هنوز مقصد
+مستقل، RPO/RTO و نگه‌داری مصوب، بستهٔ آفلاین معتبر ابزارها، PITR، بازیابی فایل، آزمون منفی یا شاهد
+بازیابی کلید وجود ندارد. هیچ بسته یا job پشتیبان روی مهمان‌های زنده نصب نشد.
 
 صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو روی استقرار زندهٔ چهارماشینی تکمیل شد. یک نشست تازهٔ Edge با
 اعتبارسنجی عادی TLS و پراکسیِ مسدودکننده‌ای اجرا شد که فقط مبدأ خصوصی برنامه را مستثنا می‌کرد.

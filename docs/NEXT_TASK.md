@@ -8,9 +8,13 @@ all four collectors, restart, rollback, server/API WAN denial, authenticated WAN
 dependency loss/recovery and serial VM reboot checks passed; source CI is green.
 Do not rebuild or repeat this accepted implementation.
 
-The immediate work is recovery engineering: obtain an approved off-datastore destination, then
-implement separate PostgreSQL-aware backup/WAL paths, permitted artifact backup, isolated
-PITR/restore, measured RPO/RTO and disaster-recovery sign-off. Do not describe local dumps or a
+The repository-side recovery qualification contract is now implemented: ADR 0008, a strict public
+schema/profile, focused tests and CI select separate pgBackRest paths for the two PostgreSQL 16
+clusters and restic only for approved non-database files. The profile reports `BLOCKED`, and its
+production-only check fails intentionally. The immediate external prerequisite is an approved
+destination outside the serving guest, datastore and hypervisor failure domains. Only then may the
+offline bundles, separate backup/WAL paths, permitted artifact backup, isolated PITR/restore,
+measured RPO/RTO and disaster-recovery sign-off be executed. Do not describe local dumps or a
 same-datastore copy as an independent backup.
 
 ## English — harden the live user-testing slice
@@ -45,8 +49,9 @@ The next operator must treat the following as completed and preserve it:
 - serial clean reboots of Zabbix, connector, AI and application with the offline policy loaded before
   normal networking, explicit database-cluster ordering, role-specific recovery and zero failed
   units; and
-- local and CI quality gates: Ruff, strict mypy, 129 passing non-integration tests, PostgreSQL 16
-  and 17 integration jobs, real-browser fixture acceptance and secret scanning.
+- quality gates: Ruff, strict mypy, 136 passing local non-integration tests plus one POSIX-only
+  collector test, PostgreSQL 16 and 17 CI integration jobs, real-browser fixture acceptance and
+  secret scanning.
 
 The immediate implementation sequence is:
 
@@ -65,9 +70,11 @@ The immediate implementation sequence is:
    missing/corrupt model, isolated `ENOSPC`, five-minute load and socket-only logical restores of
    both databases passed. Exact latency and CPU/memory/NUMA observations are in the
    [Stage 1 report](en/STAGE_1_COMPLETION_REPORT.md).
-6. **Next external prerequisite:** approve a recovery destination independent of the serving guest,
-   DS-C/G10 and host; define RPO/RTO, retention and key custody; then implement separate pgBackRest
-   repositories/WAL archiving, restic for permitted files, independent PITR and operational sign-off.
+6. **Repository safeguard completed; external prerequisite remains:** ADR 0008, the recovery
+   schema/profile, eight focused tests and CI now enforce separate pgBackRest repositories, restic
+   database exclusions and fail-closed production qualification. Approve a recovery destination
+   independent of the serving guest, DS-C/G10 and host; define RPO/RTO, retention and key custody;
+   then verify offline bundles and execute the independent backup, PITR and restore drills.
 7. **Completed:** Phase 2 implementation and controlled qualification. Immutable app/connector
    release, exact `history.get`/`event.get` role expansion, four forced-command Linux targets,
    composite durable investigation, bilingual local-model answers, provenance/limits/partial
@@ -183,10 +190,13 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 WAN مسدود، مرورگر احرازهویت‌شده، قطع و بازیابی وابستگی و reboot ترتیبی VMها موفق بوده و CI سبز
 است. این پیاده‌سازی پذیرفته‌شده نباید از نو ساخته شود.
 
-کار فوری، مهندسی بازیابی است: مقصد پشتیبان مستقل و مصوب تعیین شود؛ سپس مسیرهای جداگانهٔ پشتیبان و
-WAL آگاه از PostgreSQL، پشتیبان مجاز artifact، PITR و restore ایزوله، RPO/RTO اندازه‌گیری‌شده و
-تأیید بازیابی بحران پیاده شوند. dump محلی یا نسخه‌ای روی همان datastore نباید پشتیبان مستقل
-نامیده شود.
+قرارداد صلاحیت‌سنجی سمت مخزن اکنون پیاده شده است: ADR 0008، schema و پروفایل سخت‌گیر عمومی،
+آزمون‌های متمرکز و CI برای دو خوشهٔ PostgreSQL 16 مسیرهای جداگانهٔ pgBackRest را الزام می‌کنند و
+restic را فقط برای فایل‌های غیرپایگاهی مصوب می‌پذیرند. پروفایل `BLOCKED` گزارش می‌دهد و کنترل ویژهٔ
+تولید عمداً شکست می‌خورد. پیش‌نیاز بیرونی فوری، تصویب مقصدی خارج از دامنهٔ خرابی مهمان، datastore
+و hypervisor سرویس‌دهنده است. پس از آن بسته‌های آفلاین، مسیرهای جداگانهٔ پشتیبان و WAL، پشتیبان
+artifact مجاز، PITR و restore ایزوله، RPO/RTO اندازه‌گیری‌شده و تأیید بازیابی بحران اجرا می‌شوند.
+dump محلی یا نسخه‌ای روی همان datastore نباید پشتیبان مستقل نامیده شود.
 
 عامل یا بهره‌بردار بعدی باید موارد زیر را تکمیل‌شده بداند و بدون دلیل دوباره نسازد:
 
@@ -216,8 +226,8 @@ WAL آگاه از PostgreSQL، پشتیبان مجاز artifact، PITR و restor
 - مرورگر تازه با WAN مسدود، بازگشت برنامه و محیط اجرا و مدل، لغو، قطع وابستگی، مدل مفقود/خراب،
   کمبود فضای ایزوله، بار پنج‌دقیقه‌ای و بازیابی منطقی هر دو پایگاه؛ جزئیات در
   [گزارش تکمیل مرحلهٔ ۱](fa/STAGE_1_COMPLETION_REPORT.md)؛
-- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۲۹ آزمون غیر‌یکپارچه، کارهای یکپارچگی PostgreSQL 16 و 17،
-  fixture واقعی مرورگر و پویش راز.
+- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۳۶ آزمون غیر‌یکپارچهٔ موفق در محیط محلی به‌همراه یک آزمون
+  ویژهٔ POSIX، کارهای یکپارچگی PostgreSQL 16 و 17 در CI، fixture واقعی مرورگر و پویش راز.
 
 ترتیب مستقیم کار بعدی چنین است:
 
@@ -233,9 +243,11 @@ WAL آگاه از PostgreSQL، پشتیبان مجاز artifact، PITR و restor
    پایگاه را آشکار کرد؛ اصلاح انجام شد و تکرار سالم آزمون پذیرفته شد.
 5. **تکمیل شد:** بازگشت برنامه و محیط اجرا و مدل، لغو زنده، قطع فراهم‌کننده، مدل مفقود/خراب،
    `ENOSPC` ایزوله، بار پنج‌دقیقه‌ای و بازیابی فقط‌سوکتی هر دو پایگاه با ثبت زمان و منابع موفق شد.
-6. **پیش‌نیاز بیرونی بعدی:** مقصدی مستقل از مهمان سرویس‌دهنده، DS-C/G10 و میزبان تصویب شود؛ سپس
-   RPO/RTO، نگه‌داری و متولی کلید تعیین، مخزن‌های جداگانهٔ pgBackRest و WAL، پشتیبان فایل مجاز با
-   restic، PITR روی میزبان مستقل و تأیید نهایی عملیات اجرا شوند.
+6. **محافظ مخزن تکمیل شد؛ پیش‌نیاز بیرونی باقی است:** ADR 0008، schema و پروفایل بازیابی، هشت
+   آزمون متمرکز و CI اکنون جدایی مخزن‌های pgBackRest، منع ورود دادهٔ پایگاه به restic و شکست امن
+   ادعای تولید را اعمال می‌کنند. مقصدی مستقل از مهمان سرویس‌دهنده، DS-C/G10 و میزبان تصویب و
+   RPO/RTO، نگه‌داری و متولی کلید تعیین شود؛ سپس بسته‌های آفلاین راستی‌آزمایی و پشتیبان، PITR و
+   بازیابی مستقل اجرا شوند.
 7. **تکمیل شد:** پیاده‌سازی و صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو. انتشار تغییرناپذیر برنامه و
    اتصال‌دهنده، افزودن دقیق `history.get` و `event.get`، چهار مقصد Linux با فرمان اجباری، بررسی
    ترکیبی و ماندگار، پاسخ دوزبانهٔ مدل محلی، منشأ و سقف و نشان نقص، راه‌اندازی مجدد سرویس، بازگشت
