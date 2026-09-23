@@ -1,20 +1,20 @@
 ---
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
-release_identifier: nextops-controlled-2026-09-23
+release_identifier: nextops-phase2-controlled-2026-09-23
 observed_at: '2026-09-23'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: 1ab6586cd6cb1d67b4aa0c7cf7baf8cbe7959dc9
+  inspected_baseline_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
 components:
   application:
-    release: nextops-0.1.0-1ab6586
-    source_commit: 1ab6586cd6cb1d67b4aa0c7cf7baf8cbe7959dc9
+    release: nextops-0.1.0-e2dad3a
+    source_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
   connector:
-    release: nextops-0.1.0-1ab6586
-    source_commit: 1ab6586cd6cb1d67b4aa0c7cf7baf8cbe7959dc9
+    release: nextops-0.1.0-e2dad3a
+    source_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
   inference_api:
     release: nextops-0.1.0-62de8d6
     source_commit: 62de8d61fb4a841f016732815f75d95ca6c403a9
@@ -56,7 +56,7 @@ capabilities:
       - docs/PROJECT_STATE.md
       - tests/unit/test_zabbix_connector.py
   - id: zabbix_incident_context
-    status: implemented_unaccepted
+    status: accepted_controlled
     evidence:
       - docs/requirements/PHASE_2_INCIDENT_CONTEXT_SPEC.md
       - packages/nextops/connectors/zabbix.py
@@ -67,10 +67,24 @@ capabilities:
       - docs/PROJECT_STATE.md
       - tests/integration/test_durable_app_postgresql.py
   - id: deterministic_read_only_authorization
-    status: implemented_unaccepted
+    status: accepted_controlled
     evidence:
       - packages/nextops/policy/authorization.py
       - tests/unit/test_contracts_and_policy.py
+  - id: bounded_linux_diagnostics
+    status: accepted_controlled
+    evidence:
+      - docs/en/PHASE_2_COMPLETION_SPEC.md
+      - scripts/linux_readonly_collector.py
+      - tests/unit/test_linux_connector.py
+      - tests/unit/test_linux_readonly_collector.py
+  - id: composite_incident_investigation
+    status: accepted_controlled
+    evidence:
+      - docs/en/PHASE_2_COMPLETION_SPEC.md
+      - tests/api/test_app.py
+      - tests/integration/test_durable_app_postgresql.py
+      - tests/browser/test_phase2_panel.py
   - id: controlled_remediation
     status: experimental
     evidence:
@@ -117,22 +131,50 @@ acceptance_gates:
     status: not_run
     evidence:
       - docs/PROJECT_STATE.md
-  - id: phase2a_live_connector
+  - id: phase2_live_connector
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - tests/unit/test_linux_connector.py
+      - tests/unit/test_zabbix_connector.py
+  - id: phase2_guarded_wan_isolation
     status: passed
     evidence:
       - docs/PROJECT_STATE.md
       - docs/en/TESTING.md
-  - id: phase2a_guarded_wan_isolation
+  - id: phase2_live_bilingual_incident
     status: passed
     evidence:
       - docs/PROJECT_STATE.md
-      - docs/en/TESTING.md
-  - id: phase2a_authenticated_browser
+      - docs/en/PHASE_2_COMPLETION_SPEC.md
+  - id: phase2_service_restart
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/PHASE_2_OPERATIONS.md
+  - id: phase2_release_rollback
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/PHASE_2_OPERATIONS.md
+  - id: phase2_source_ci
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - tests/api/test_app.py
+      - tests/integration/test_durable_app_postgresql.py
+      - tests/browser/test_phase2_panel.py
+  - id: phase2_authenticated_live_browser
     status: not_run
     evidence:
       - docs/PROJECT_STATE.md
       - docs/en/TESTING.md
-  - id: phase2a_vm_reboot
+  - id: phase2_vm_reboot
+    status: not_run
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+  - id: phase2_dependency_recovery
     status: not_run
     evidence:
       - docs/PROJECT_STATE.md

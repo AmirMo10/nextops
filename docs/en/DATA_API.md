@@ -2,13 +2,13 @@
 
 [فارسی](../fa/DATA_API.md) · [Index](INDEX.md)
 
-**Status: Stage 1A durable foundation, the deployed Stage 1D live-investigation linkage and a
-deployed, server-path-qualified Phase 2A incident-context read.**
+**Status: the Stage 1 durable foundation and the complete controlled Phase 2 read-only investigation
+API are deployed.**
 Source: master specification sections 11, 16–17 and 20. The implemented subset is deliberately
 local, single-organization and read-only. General model-only answers remain separate; live Zabbix
 investigations now use the existing durable run and append-only audit model.
 
-## Implemented Stage 1A subset
+## Implemented durable subset
 
 Alembic revision `0001_durable_app` creates PostgreSQL tables for organizations,
 environments, targets, identities, opaque sessions, runs, worker leases, and audit events.
@@ -18,6 +18,10 @@ keys, run idempotency, bounded run/locale states, and lease validity. The migrat
 role can append but cannot update/delete audit records, and a trigger also rejects audit
 mutation by a table owner. Deployment login roles and secret delivery remain external
 deployment work.
+
+Alembic revision `0002_phase2_linux_read` adds only the explicit `linux.read` scope to existing
+administrators and removes only that scope on downgrade. It creates no target addresses or
+credentials in the application database.
 
 The implemented HTTP surface is:
 
@@ -31,7 +35,9 @@ The implemented HTTP surface is:
 | `GET /api/v1/assistant/ready` | bearer | Returns bounded local inference readiness without exposing its service credential |
 | `POST /api/v1/assistant/generate` | bearer | Returns a model-only general answer with no monitoring evidence |
 | `GET /api/v1/monitoring/summary` | bearer plus server-derived `zabbix.read` scope | Retrieves the current bounded read-only Zabbix summary |
-| `GET /api/v1/monitoring/incident-context` | bearer plus server-derived `zabbix.read` scope | Retrieves the configured host's bounded current summary, recent numeric history and trigger events; deployed, with authenticated browser acceptance still not run |
+| `GET /api/v1/monitoring/incident-context` | bearer plus server-derived `zabbix.read` scope | Retrieves the configured host's bounded current summary, recent numeric history and trigger events |
+| `GET /api/v1/incidents/targets` | bearer plus server-derived `zabbix.read` and `linux.read` scopes | Returns only deployment-owned logical target IDs; never addresses or credentials |
+| `POST /api/v1/incidents/investigate` | bearer plus server-derived `zabbix.read` and `linux.read` scopes | Creates a durable target-scoped run, retrieves bounded composite Zabbix/Linux evidence, generates locally, then atomically stores the result, canonical evidence hash and completion audit |
 | `POST /api/v1/investigate` | bearer | Creates a durable scoped run, retrieves bounded evidence, generates locally, then atomically stores the result/evidence hash and completion audit |
 | `POST /api/v1/runs` | bearer plus `Idempotency-Key` | Authorizes and persists one read-only fixture run, leases it, and returns its explicit fixture result |
 | `GET /api/v1/runs/{run_id}` | bearer | Reads only within the actor's server-derived organization/environment scope |
@@ -59,12 +65,20 @@ untrusted content: authentication establishes where the observation came from, n
 instructions embedded in a host, metric, value, unit or problem name. Staleness remains a separate
 per-measurement flag because a freshly fetched summary can contain old source values.
 
-`MonitoringIncidentContext` is the additive Phase 2A transport contract. It fixes the target to the
+`MonitoringIncidentContext` is the bounded Zabbix transport contract. It fixes the target to the
 connector's configured host, bounds the lookback and list sizes, preserves source timestamps, and
-uses explicit partial reasons. The route is live on the app and connector and passed the protected
-tunnel and guarded WAN-denied server path. This first increment intentionally does not create a new
-durable run, send the context to the model or expose it in the browser workflow; those acceptance
-gates remain separate.
+uses explicit partial reasons. `LinuxDiagnosticSnapshot` represents bounded, redacted output from
+one immutable forced-command target. `IncidentEvidence` combines the two while preserving target,
+collector, collection-time, freshness, partial and failure provenance. The connector exposes only
+authenticated internal `/api/v1/linux/{target_id}/snapshot` and
+`/api/v1/incidents/{target_id}/evidence` routes; the target ID is resolved through its immutable
+registry and cannot supply an address, command, path or SSH option.
+
+The Phase 2 application route persists a target-scoped run before dependency calls, sends only the
+bounded composite evidence to the local model, and stores a canonical evidence hash plus the typed
+answer and append-only audit linkage in one completion transaction. Safe dependency failures are
+also stored and audited. The panel exposes logical targets and evidence identifiers, not connector
+credentials. Fresh live-browser acceptance on this release remains a separate `not_run` gate.
 
 ## Persistence model
 

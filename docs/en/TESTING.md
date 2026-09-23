@@ -12,7 +12,23 @@ logical isolated restores of both PostgreSQL 16 databases. Independent off-datas
 WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
 21–23.
 
-## Phase 2A controlled deployment evidence
+## Phase 2 current qualification — 2026-09-23
+
+Release `nextops-0.1.0-e2dad3a` passed the source quality/unit job, PostgreSQL 16 and 17 integration
+jobs, real-browser fixture job and secret scan. The source suite includes forced-command parsing,
+private-target validation, strict host-key/identity construction, provenance mismatch, output limits,
+redaction, authentication, scope denial, unknown targets, safe dependency errors, prompt-injection
+text, durable composite evidence, reversible scope migration and Persian/English RTL/LTR behavior.
+
+On the controlled guests, each of the four direct Linux collectors and each composite connector
+path returned schema-valid bounded evidence. Generic shell execution, unauthenticated access and an
+unknown target were denied. Fresh English and Persian application API investigations returned local
+CPU answers and durable run/evidence/audit IDs. App/connector restart, immutable rollback/forward and
+server/API use while direct WAN access was denied passed. Fresh live-browser use against this
+release, Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`. See the
+[Phase 2 qualification record](PHASE_2_COMPLETION_SPEC.md).
+
+## Historical Phase 2A controlled deployment evidence
 
 The bounded incident-context contract is implemented and tested at connector and application API
 boundaries. Deterministic tests verify the exact configured host, 15–1440-minute configuration
@@ -32,7 +48,8 @@ incident-context request continued through the approved private path. The table 
 removed; direct IPv4 TCP reachability returned, all four guests were `running`, failed-unit counts
 were zero and no reboot was required. This proves the Phase 2A server path under guarded WAN denial,
 not a fresh authenticated browser flow or cold start. Authenticated browser/session use, durable
-model/audit linkage and Phase 2A VM reboot remain `not_run`.
+model/audit linkage and Phase 2A VM reboot were `not_run` at that checkpoint. The current record
+above supersedes that implementation state while preserving the dated evidence.
 
 ## Stage 1 controlled completion qualification
 

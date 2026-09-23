@@ -1,37 +1,37 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-23 — the controlled user-testing path is live. The fresh-browser WAN-denied case,
-application/runtime/model rollback, live cancellation and dependency recovery, missing/corrupt
-artifact handling, isolated low-space staging case, five-minute bounded load and socket-only logical
-restores of both PostgreSQL 16 databases passed under change
-`stage1-completion-20260922-01`. App and connector release `nextops-0.1.0-1ab6586` is now active;
-all four guests ended `running`, with zero failed units and no
-reboot requirement. The [paired Stage 1 report](en/STAGE_1_COMPLETION_REPORT.md) contains measured
-results. Production acceptance remains blocked by the lack of a verified off-datastore backup
-destination, WAL/PITR recovery and disaster-recovery sign-off.
+Updated: 2026-09-23 — Phase 2 is deployed for controlled user testing as application and connector
+release `nextops-0.1.0-e2dad3a`. An authenticated operator can select one of four deployment-owned
+targets and receive a durable English or Persian incident explanation grounded in bounded Zabbix
+history/events and a direct read-only Linux snapshot. The model and browser receive no target
+credentials; authorization, target selection, forced commands, evidence hashing and audit remain
+deterministic application/connector controls.
 
-Phase 2A is deployed as a bounded controlled increment. The app and connector run the same immutable
-release, the Zabbix reader role now allows exactly `host.get`, `item.get`, `problem.get`,
-`history.get` and `event.get`, and a live 60-minute request returned eight current metrics and 32
-history points with explicit truncation markers. Connector authentication, the protected app tunnel,
-release rollback/forward, role rollback/forward and a guarded WAN-denied server path passed under
-change `phase2a-incident-context-20260923-01`. A full authenticated browser request, durable
-model/audit integration, Phase 2A reboot and direct Linux diagnostics remain not run. The open
-Phase 1 recovery blocker is unchanged.
+Live English and Persian API investigations passed with the local CPU model, composite evidence and
+run/evidence/audit identifiers. All four direct Linux collectors and all four composite connector
+paths passed; unauthenticated and unknown-target requests failed closed. App and connector restart,
+immutable rollback/forward, and a server/API path with direct WAN access denied passed. The four
+guests ended `running`, with zero failed units and no reboot requirement. CI passed formatting,
+lint, strict typing, 128 non-integration tests, PostgreSQL 16 and 17 integration jobs, the real-browser
+fixture and secret scanning. A new Phase 2 live fresh-browser run, Phase 2-specific serial VM reboot,
+and Phase 2 dependency loss/recovery remain `not_run`; prior Stage 1 evidence does not substitute for
+them. Production acceptance remains blocked by independent off-datastore backup, WAL/PITR,
+certificate lifecycle and disaster-recovery sign-off.
 
 ## English
 
 ### Current controlled user-testing checkpoint
 
-Phase 2A is deployed for controlled server-path testing at this checkpoint. Its contract fixes the
-target and bounded lookback at deployment, permits only named read operations, and enforces
-four-metric, eight-point-per-metric and 25-event response ceilings. Live provenance, authentication,
-partial markers, immutable release rollback, exact reader-role rollback and guarded WAN isolation
-passed. Authenticated browser/session acceptance, durable model/audit use of the new context, VM
-reboot and direct Linux collection remain not run.
+Phase 2 is deployed for controlled user testing at this checkpoint. Its contract resolves four
+logical target IDs from deployment configuration, permits only named read operations, and bounds
+Zabbix history/events and every Linux diagnostic category. Live provenance, authentication,
+partial markers, direct collection, durable model/audit integration, immutable release rollback,
+service restart and guarded server/API WAN isolation passed. The browser fixture passed English
+LTR, Persian RTL, responsive layout and reduced-motion behavior. A fresh live browser against this
+release, a Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`.
 
 The authenticated application and bilingual panel are deployed as immutable release
-`nextops-0.1.0-1ab6586` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
+`nextops-0.1.0-e2dad3a` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
 application identity and session state on
 its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
 application listener are not exposed through Nginx. The browser receives neither the AI service
@@ -126,7 +126,7 @@ The directly verified Git remote is `Omid-NextAI/nextops`, branch `main`. Earlie
 
 The active [master prompt v3.0](requirements/NEXTOPS_MASTER_PROMPT.md) and [v2 archive](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) remain unchanged in this update. The new [deployment amendment](requirements/DEPLOYMENT_UPDATE.md) explicitly supersedes only the old small-lab recommendation and combined budgets; non-conflicting security, acceptance and feature requirements remain mandatory. The archive still contains the original Persian specification.
 
-The first deliverable is a new Persian/English question about authorized Zabbix status, answered by local CPU generation from actual evidence, with source times, scope and audit while Internet is blocked. Linux enrichment follows in Phase 2. Documentation publication does not complete a software phase or establish deployment approval.
+The first deliverable was a new Persian/English question about authorized Zabbix status, answered by local CPU generation from actual evidence, with source times, scope and audit while Internet was blocked. Phase 2 now supplies the planned Linux enrichment. Documentation publication alone does not complete a software phase or establish deployment approval.
 
 The paired [Phase 0 report](en/PHASE_0_REPORT.md) and [Persian report](fa/PHASE_0_REPORT.md) record repository evidence, the accepted four-VM architecture, trust boundaries, module and data contracts, CPU benchmark plan, resource gate, connector roadmap, test plan, blockers and the Stage 1A increments. The repository-grounded [threat model](requirements/nextops-threat-model.md) records TM-001–TM-010. On 2026-09-21 the owner accepted Phase 0 and ADRs 0001–0006, confirming one organization initially, small initial scale with future growth, and the dedicated Zabbix path. Every infrastructure authorization remains separate and pending.
 
@@ -208,32 +208,48 @@ Six repository-scoped Codex skills under `.agents/skills` route project context,
 | 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; the reader sees all four approved Phase 1 hosts with fresh items, while the full failure matrix remains |
 | 1D | New evidence-linked Zabbix answer with audit | English/Persian grounded answers pass; every started live investigation now has a durable scoped run, bounded evidence snapshot/hash, model result, safe failure outcome and append-only audit linkage verified in isolated PostgreSQL and the live path |
 | 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh login, bilingual general Q&A, live evidence and audit passed while all four guests were WAN-blocked. A separately WAN-denied fresh browser, revocation, cancellation, dependency/artifact/low-space recovery and five-minute capacity profile pass. After correcting database-cluster ordering, all four guests passed the serial clean-reboot matrix. Production backup/PITR acceptance remains open |
+| 2 | Read-only Linux/Zabbix incident investigation | Release `nextops-0.1.0-e2dad3a` is live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, restart, rollback and server/API WAN-denied checks pass; live-browser, Phase 2 reboot and dependency-recovery gates remain `not_run` |
 
 The user may perform provisioning independently; verify their actual state before claiming a VM either exists or does not exist. A screenshot of VM settings is not proof of an accepted application workflow. Resume from the next evidenced, authorized incomplete stage rather than resetting progress.
 
 ### Scope of this publication and next action
 
-This state records Phase 0 acceptance, the deployed controlled Stage 1A application slice, the qualified Stage 1B AI slice, the live Stage 1C read-only connector and the durable evidence-linked Stage 1D user-test path. It preserves the source requirements, archived prompt, diagrams and per-server handoff. It is not a host vulnerability audit, production acceptance, independent recovery proof or complete provisioning record.
+This state records Phase 0 acceptance, the controlled Stage 1 slices and the deployed Phase 2
+read-only Linux/Zabbix investigation path. It preserves the source requirements, archived prompt,
+diagrams and per-server handoff. It is not a host vulnerability audit, production acceptance,
+independent recovery proof or complete provisioning record.
 
-The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`; Playwright 1.63 is now a locked development-only browser dependency. The CI workflow defines digest-pinned PostgreSQL 16.15 and 17.6 jobs. Fresh browser automation, live rollback/failure recovery, five-minute load and temporary PostgreSQL 16.15 restores ran in the controlled environment. The temporary restore clusters and staging copies were removed. Dependency/license approval, independent backup/PITR and production promotion remain separate gates.
+The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1,
+SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1
+with a generated `uv.lock`; Playwright 1.63 is a locked development-only browser dependency. The
+CI workflow defines digest-pinned PostgreSQL 16.15 and 17.6 jobs. For Phase 2, formatting, lint,
+strict typing, 128 non-integration tests, both PostgreSQL jobs, real-browser fixtures and secret
+scanning passed. The earlier Stage 1 fresh-browser/offline, failure-recovery, load and restore
+records remain historical evidence, not inferred Phase 2 reruns. Dependency/license approval,
+independent backup/PITR and production promotion remain separate gates.
 
-The next engineering checkpoint in [NEXT_TASK](NEXT_TASK.md) is to connect the deployed Phase 2A
-context to the durable investigation/model/browser path, then run authenticated browser and reboot
-acceptance before starting the separately scoped read-only Linux increment. In parallel, production
-promotion remains blocked on an approved off-datastore recovery destination, PostgreSQL-aware
-repositories/WAL archiving, permitted artifact backup, independent PITR, recorded RPO/RTO and key
-recovery, and operational sign-off.
+The next engineering checkpoint in [NEXT_TASK](NEXT_TASK.md) is to close the three explicitly
+unexecuted Phase 2 gates—fresh live-browser use, serial reboot and dependency loss/recovery—without
+rebuilding the accepted implementation. Production promotion remains blocked on an approved
+off-datastore recovery destination, PostgreSQL-aware repositories/WAL archiving, permitted artifact
+backup, independent PITR, recorded RPO/RTO and key recovery, and operational sign-off.
 
 ## فارسی
 
-گام 2A مرحلهٔ دو به‌صورت محدود و کنترل‌شده مستقر شده است. برنامه و اتصال‌دهنده یک انتشار
-تغییرناپذیر مشترک را اجرا می‌کنند و نقش خوانشگر Zabbix دقیقاً پنج روش `host.get`، `item.get`،
-`problem.get`، `history.get` و `event.get` را مجاز می‌داند. یک خواندن زنده در بازهٔ ۶۰ دقیقه، هشت
-سنجهٔ جاری و ۳۲ نقطهٔ تاریخی را همراه نشان صریحِ محدودشدن نتیجه برگرداند. احرازهویت اتصال‌دهنده،
-تونل محافظت‌شدهٔ برنامه، بازگشت و بازگردانی انتشار و نقش، و مسیر سروری با WAN مسدود در تغییر
-`phase2a-incident-context-20260923-01` موفق بودند. آزمون کامل با نشست مرورگر، پیوند با مدل و ممیزی
-ماندگار، راه‌اندازی مجدد ویژهٔ 2A و عیب‌یابی مستقیم Linux هنوز اجرا نشده‌اند. مانع بازیابی مرحلهٔ
-یک نیز بدون تغییر باز است.
+مرحلهٔ دو با انتشار مشترک و تغییرناپذیر `nextops-0.1.0-e2dad3a` برای ارزیابی کنترل‌شدهٔ کاربران
+مستقر شده است. بهره‌بردار احرازهویت‌شده می‌تواند یکی از چهار مقصد منطقی و ازپیش‌تعریف‌شده را برگزیند
+و توضیحی ماندگار به فارسی یا انگلیسی دریافت کند که هم به تاریخچه و رویدادهای محدود Zabbix و هم به
+تصویر مستقیم و فقط‌خواندنی Linux مستند است. اعتبارنامهٔ مقصد به مدل یا مرورگر نمی‌رسد و مجوزدهی،
+انتخاب مقصد، فرمان اجباری، هش شواهد و ممیزی خارج از مدل و به‌صورت قطعی اعمال می‌شوند.
+
+بررسی زندهٔ API به هر دو زبان، گردآوری مستقیم Linux و مسیر ترکیبی اتصال‌دهنده برای هر چهار مقصد،
+رد درخواست بدون احرازهویت و مقصد ناشناخته، راه‌اندازی مجدد سرویس‌های برنامه و اتصال‌دهنده، بازگشت
+و بازگردانی انتشار و مسیر سرور/API با WAN مسدود موفق بودند. CI نیز قالب و lint، نوع‌سنجی
+سخت‌گیرانه، ۱۲۸ آزمون غیر‌یکپارچه، یکپارچگی PostgreSQL 16 و 17، آزمون واقعی مرورگر با fixture و
+پویش راز را با موفقیت گذراند. آزمون تازهٔ مرورگر روی انتشار زنده، راه‌اندازی مجدد ترتیبی VMها ویژهٔ
+مرحلهٔ دو و قطع و بازیابی وابستگی در مرحلهٔ دو همچنان `not_run` هستند؛ شاهد مرحلهٔ یک جای اجرای
+دوبارهٔ آن‌ها را نمی‌گیرد. پذیرش تولید نیز تا پشتیبان مستقل، WAL/PITR، چرخهٔ عمر گواهی و تأیید
+بازیابی بحران مسدود می‌ماند.
 
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 
@@ -252,13 +268,15 @@ PITR، مخزن فایل با restic و تأیید نهایی بازیابی ب�
 
 ### نقطهٔ فعلی برای ارزیابی کنترل‌شدهٔ کاربران
 
-گام 2A در این نقطه برای آزمون کنترل‌شدهٔ مسیر سرور مستقر است. قرارداد آن مقصد و بازهٔ محدود را در
-استقرار ثابت می‌کند، فقط خواندن‌های نام‌دار را می‌پذیرد و خروجی را به چهار سنجه، هشت نقطه برای هر
-سنجه و ۲۵ رویداد محدود می‌سازد. منشأ زنده، احرازهویت، نشان نتیجهٔ ناقص، بازگشت انتشار و نقش و قطع
-موقت WAN پذیرفته شدند. آزمون نشست مرورگر، استفادهٔ ماندگار مدل و ممیزی از بافت تازه، راه‌اندازی
-مجدد VM و گردآوری مستقیم Linux هنوز اجرا نشده‌اند.
+مرحلهٔ دو در این نقطه برای ارزیابی کنترل‌شدهٔ کاربران مستقر است. قرارداد آن چهار شناسهٔ منطقی مقصد
+را تنها از پیکربندی استقرار می‌گیرد، فقط خواندن‌های نام‌دار را می‌پذیرد و تاریخچه و رویداد Zabbix
+و همهٔ دسته‌های عیب‌یابی Linux را محدود می‌کند. منشأ زنده، احرازهویت، نشان نتیجهٔ ناقص، گردآوری
+مستقیم، پیوند ماندگار مدل و ممیزی، بازگشت انتشار، راه‌اندازی مجدد سرویس و قطع WAN در مسیر سرور/API
+پذیرفته شدند. fixture مرورگر، چیدمان انگلیسی LTR، فارسی RTL، نمایش واکنش‌گرا و کاهش حرکت را گذراند؛
+اما آزمون تازهٔ مرورگر روی سامانهٔ زنده، reboot ترتیبی مرحلهٔ دو و قطع و بازیابی وابستگی هنوز
+`not_run` هستند.
 
-برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-1ab6586` روی مهمان برنامه و پشت TLS خصوصی
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-e2dad3a` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
 می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
 نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.
@@ -348,7 +366,7 @@ remote بررسی‌شدهٔ مستقیم Git برابر `Omid-NextAI/nextops` �
 
 [پرامپت فعال ۳.۰](requirements/NEXTOPS_MASTER_PROMPT.md) و [بایگانی نسخهٔ ۲](requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md) در این تغییر دست‌نخورده‌اند. [اصلاحیهٔ استقرار](requirements/DEPLOYMENT_UPDATE.md) فقط پیشنهاد آزمایشگاه کوچک و مجموع منابع وابسته را صریح جایگزین می‌کند؛ سایر نیازهای امنیت، پذیرش و قابلیت‌ها پابرجا هستند. مشخصات فارسی اولیه همچنان در بایگانی محفوظ است.
 
-اولین خروجی، پاسخ تازهٔ فارسی یا انگلیسی دربارهٔ وضعیت مجاز Zabbix، تولیدشده روی CPU محلی و مستند به دادهٔ واقعی، همراه منبع و زمان و دامنه و ممیزی با اینترنت قطع است. بررسی مستقیم Linux در مرحلهٔ دو می‌آید. انتشار مستندات، پایان مرحلهٔ نرم‌افزاری یا اثبات مجوز استقرار نیست.
+نخستین خروجی، پاسخ تازهٔ فارسی یا انگلیسی دربارهٔ وضعیت مجاز Zabbix بود که روی CPU محلی، مستند به دادهٔ واقعی و همراه منبع و زمان و دامنه و ممیزی با اینترنت قطع تولید شد. مرحلهٔ دو اکنون عیب‌یابی Linux برنامه‌ریزی‌شده را فراهم می‌کند. انتشار مستندات به‌تنهایی پایان مرحلهٔ نرم‌افزاری یا اثبات مجوز استقرار نیست.
 
 [گزارش مرحلهٔ صفر انگلیسی](en/PHASE_0_REPORT.md)، [نسخهٔ فارسی](fa/PHASE_0_REPORT.md) و [مدل تهدید](requirements/nextops-threat-model.md) یافتهٔ مخزن، معماری چهارماشینی پذیرفته‌شده، مرز اعتماد، قرارداد ماژول و داده، برنامهٔ سنجش CPU، بودجه، نقشهٔ اتصال، آزمون و گام‌های 1A را ثبت می‌کنند. مالک در ۲۱ سپتامبر ۲۰۲۶ مرحلهٔ صفر و ADRهای 0001 تا 0006 را با تک‌سازمانی بودن فعلی، مقیاس کوچک اولیه با رشد آینده و Zabbix مستقل پذیرفت. همهٔ مجوزهای زیرساخت جدا و در انتظار باقی می‌مانند.
 
@@ -410,12 +428,18 @@ pgBackRest/WAL، مخزن restic، آزمون PITR و بستهٔ بازیابی 
 
 ### دامنهٔ انتشار و کار بعدی
 
-این وضعیت پذیرش مرحلهٔ صفر، برش مستقرشدهٔ 1A، هوش مصنوعی صلاحیت‌سنجی‌شدهٔ 1B، اتصال زنده و فقط‌خواندنی 1C و مسیر ماندگار و مستند به شاهد 1D را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و پرونده‌های تحویل حفظ شده‌اند. این رکورد به‌معنای ممیزی امنیت میزبان، پذیرش تولیدی یا اثبات بازیابی مستقل نیست.
+این وضعیت پذیرش مرحلهٔ صفر، برش‌های کنترل‌شدهٔ مرحلهٔ یک و مسیر مستقرشدهٔ بررسی رخداد با شواهد
+فقط‌خواندنی Linux و Zabbix در مرحلهٔ دو را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها
+و پرونده‌های تحویل حفظ شده‌اند. این رکورد به‌معنای ممیزی امنیت میزبان، پذیرش تولیدی یا اثبات
+بازیابی مستقل نیست.
 
-برش‌های منبع با Python 3.12.10، uv 0.12.17 و زنجیرهٔ قفل‌شده آزموده شدند؛ Playwright 1.63 نیز وابستگی صرفاً توسعه‌ای است. Ruff، mypy سخت‌گیرانه و ۱۱۱ آزمون غیر‌یکپارچه موفق‌اند. مرورگر تازه، بازگشت و بازیابی خطا، بار پنج‌دقیقه‌ای و خوشه‌های موقت PostgreSQL 16.15 در محیط کنترل‌شده اجرا شدند و خوشه‌ها و نسخه‌های موقت پاک شدند. بررسی وابستگی و مجوز، پشتیبان مستقل/PITR و ارتقا به تولید همچنان دروازه‌اند.
+برش‌های منبع با Python 3.12.10، uv 0.12.17 و زنجیرهٔ قفل‌شده آزموده شدند؛ Playwright 1.63 نیز
+وابستگی صرفاً توسعه‌ای است. برای مرحلهٔ دو، Ruff، mypy سخت‌گیرانه، ۱۲۸ آزمون غیر‌یکپارچه، هر دو
+کار PostgreSQL 16 و 17، fixture واقعی مرورگر و پویش راز موفق بودند. شاهدهای پیشین مرحلهٔ یک برای
+مرورگر آفلاین، بازیابی خطا، بار و restore سابقه‌اند و به‌عنوان اجرای دوبارهٔ مرحلهٔ دو تلقی
+نمی‌شوند. بررسی وابستگی و مجوز، پشتیبان مستقل/PITR و ارتقا به تولید همچنان دروازه‌اند.
 
-نقطهٔ مهندسی بعدی در [کار بعدی](NEXT_TASK.md)، پیوند بافت مستقرشدهٔ 2A با مسیر ماندگار بررسی، مدل و
-مرورگر است؛ سپس پذیرش نشست احرازهویت‌شده و راه‌اندازی مجدد انجام می‌شود و پس از آن گام جداگانه و
-فقط‌خواندنی عیب‌یابی Linux آغاز خواهد شد.
-هم‌زمان، ارتقا به تولید تا تصویب مقصد پشتیبان مستقل، مخزن و WAL آگاه از PostgreSQL، پشتیبان
-فایل مجاز، PITR مستقل، ثبت RPO/RTO و بازیابی کلید و تأیید عملیات متوقف می‌ماند.
+نقطهٔ مهندسی بعدی در [کار بعدی](NEXT_TASK.md)، بستن سه دروازهٔ صریحاً اجرا‌نشدهٔ مرحلهٔ دو است:
+مرورگر تازه روی سامانهٔ زنده، reboot ترتیبی و قطع و بازیابی وابستگی؛ پیاده‌سازی پذیرفته‌شده نباید
+از نو ساخته شود. هم‌زمان، ارتقا به تولید تا تصویب مقصد پشتیبان مستقل، مخزن و WAL آگاه از
+PostgreSQL، پشتیبان فایل مجاز، PITR مستقل، ثبت RPO/RTO و بازیابی کلید و تأیید عملیات متوقف می‌ماند.

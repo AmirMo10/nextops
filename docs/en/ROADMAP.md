@@ -2,16 +2,15 @@
 
 [فارسی](../fa/ROADMAP.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
 
-**Status: the sequence is accepted and the controlled Phase 1 user-testing flow is deployed across four guests.** Local login, CPU-only answers, read-only Zabbix evidence, durable audit, fresh-browser WAN denial, rollback, failure recovery, five-minute bounded load and logical isolated restore have evidence. This is not production acceptance; independent backup, WAL/PITR and disaster recovery remain open. The [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md) are authoritative.
+**Status: the sequence is accepted and the controlled Phase 2 implementation is deployed across four guests.** Four fixed targets now combine bounded Zabbix history/events with direct read-only Linux snapshots in a durable bilingual local-CPU investigation. Live API, restart, rollback and server/API WAN-denied checks pass. Fresh live-browser, Phase 2 serial-reboot and Phase 2 dependency-recovery checks remain `not_run`. This is not production acceptance; independent backup, WAL/PITR and disaster recovery remain open. The [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md) are authoritative.
 
-**First delivery remains Phase 1: a new question → authorized read-only Zabbix data → local CPU-generated answer → source/time references and audit, with Internet blocked.** Linux enrichment follows in Phase 2. The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
+**Phase 1 delivered the first Zabbix answer; Phase 2 now adds bounded direct Linux evidence.** The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
-**Phase 2A is deployed for controlled server-path testing.** The bounded authenticated Zabbix
-incident-context read returns the configured host's current summary, recent numeric history and
-trigger events with fixed limits and explicit partial markers. Exact reader-role expansion, live
-provenance, release/role rollback and guarded WAN isolation pass. Durable model/audit integration,
-authenticated browser acceptance and VM reboot remain; direct read-only Linux diagnostics are the
-next separately scoped increment after those gates.
+**Phase 2 implementation is complete for controlled user testing.** Release
+`nextops-0.1.0-e2dad3a` combines the bounded authenticated Zabbix incident context with fixed-target,
+forced-command Linux snapshots, durable audit/evidence linkage and bilingual model output. Source
+CI, live English/Persian API requests, service restart, rollback and guarded server/API WAN isolation
+pass. Fresh live-browser, Phase 2 serial-reboot and dependency-recovery gates remain `not_run`.
 
 ## Create these VMs first
 
@@ -45,7 +44,12 @@ Counts cover one serving environment, not physical hosts or connector families. 
 | **1D — End-to-end answer** | Join the app, connector and model flow using the same three VMs | A new question returns a readable answer matching captured Zabbix facts with scope, timestamps and references. |
 | **1E — Offline acceptance** | Block Internet for the test workloads and fresh browser while preserving approved LAN routes; exercise startup, failure and bounded-load cases | Recorded ZBX-01–ZBX-08 and applicable OFF-01–OFF-10 outcomes, including fresh local login and authorized cold-start/reboot checks. |
 
-Phase 0 and the controlled Stage 1A–1E path have the evidence recorded in [PROJECT_STATE](../PROJECT_STATE.md). Fresh-browser isolation, rollback, failure recovery, bounded capacity and logical restore are complete. The next bounded sequence requires an approved independent destination, PostgreSQL-aware backup/WAL, file-artifact recovery and independent-host PITR. Later phases remain unaccepted unless an evidence-backed entry says otherwise. Contracts, scaffolding, raw JSON, cached answers or simulators alone never complete an acceptance gate.
+Phase 0, the controlled Stage 1A–1E path and the Phase 2 implementation have evidence recorded in
+[PROJECT_STATE](../PROJECT_STATE.md). Three Phase 2 acceptance exercises remain explicit there. The
+next development phase requires an approved independent destination, PostgreSQL-aware backup/WAL,
+file-artifact recovery and independent-host PITR. Later phases remain unaccepted unless an
+evidence-backed entry says otherwise. Contracts, scaffolding, raw JSON, cached answers or simulators
+alone never complete an acceptance gate.
 
 Advanced RAG, direct Linux SSH, a full dashboard and the other ten connector families must not delay the first Zabbix status answer. Separate API connectivity, monitored-host state and monitoring-engine health. The model must not invent counts, live observations or missing self-monitoring data.
 

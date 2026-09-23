@@ -15,7 +15,7 @@
 | `policies.example.yaml` | Deny-by-default scopes, named diagnostics, risk, approval and execution limits |
 | `resource-profiles.example.yaml` | Measured CPU/memory/thread/concurrency profiles and queue limits |
 
-The remaining file-based implementation must introduce typed schemas, validation errors, configuration versioning and documented loading rules. Current supported environment variables are defined by `AppSettings`, `LlamaCppSettings` and `ConnectorSettings`; avoid inventing others in installation commands. `NEXTOPS_INCIDENT_LOOKBACK_MINUTES` controls the Phase 2A incident window, defaults to 60, and fails closed outside 15–1440 minutes. It is deployment configuration, not caller input. Application state belongs in PostgreSQL, not mutable YAML used as a job queue.
+Any additional file-based implementation must introduce typed schemas, validation errors, configuration versioning and documented loading rules. Current supported environment variables are defined by `AppSettings`, `LlamaCppSettings` and `ConnectorSettings`; avoid inventing others in installation commands. `NEXTOPS_INCIDENT_LOOKBACK_MINUTES` controls the Phase 2 incident window, defaults to 60, and fails closed outside 15–1440 minutes. It is deployment configuration, not caller input. Application state belongs in PostgreSQL, not mutable YAML used as a job queue.
 
 ## Language and identity
 

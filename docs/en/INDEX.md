@@ -2,13 +2,13 @@
 
 [فارسی](../fa/INDEX.md) · [Home](../../README.md) · [Start here](START_HERE.md)
 
-**Updated: 2026-09-23. Status: the controlled bilingual application, local CPU model, read-only connector, PostgreSQL state and Zabbix path are deployed across four guests.** Fresh-browser WAN denial, rollback, failure recovery, bounded load and logical isolated restore pass. Production acceptance, independent backup, WAL/PITR and disaster recovery remain open. See the [machine-readable release status](../status/current-release.yaml).
+**Updated: 2026-09-23. Status: the controlled bilingual Phase 2 path is deployed across four guests.** Four fixed Linux targets, bounded Zabbix history/events, durable local-CPU answers and evidence/audit linkage are live. Source CI, live API, restart, rollback and server/API WAN-denied checks pass; three Phase 2 qualification gates remain `not_run`. Production acceptance, independent backup, WAL/PITR and disaster recovery remain open. See the [machine-readable release status](../status/current-release.yaml).
 
 > **Current new-server profile:** three NextOps VMs plus `zabbix-server` (4 vCPU / 16 GiB / 200 GiB) = **4 VMs / 40 vCPU / 184 GiB RAM / 980 GiB virtual disks**. Do not add the earlier small lab VM as well. [START_HERE](START_HERE.md) defines the order and Stage 1A–1E; [ZABBIX_SERVER](ZABBIX_SERVER.md) defines the monitoring VM, LVM and read-only integration.
 
 > **Mandatory constraint:** local CPU answers, fresh local login and cold restart must work without Internet. Read [OFFLINE_RUNTIME](OFFLINE_RUNTIME.md) before choosing dependencies. GitHub is not a runtime service.
 
-> **First outcome:** a real, evidence-linked local answer about authorized Zabbix status with WAN blocked. Linux enrichment follows in Phase 2. Prepare the dedicated Zabbix server before Stage 1C live reads, or reuse an existing suitable authorized local instance.
+> **Delivered sequence:** Phase 1 established the evidence-linked local Zabbix answer with WAN blocked; Phase 2 adds bounded direct Linux evidence for four approved targets. Prepare the dedicated Zabbix server before Stage 1C live reads, or reuse an existing suitable authorized local instance.
 
 ## Reading paths
 
@@ -43,6 +43,8 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 | [Development](DEVELOPMENT.md) | Module ownership, GitHub, CI and delivery discipline |
 | [Testing](TESTING.md) | Security, integration, offline, language and model evaluations |
 | [Stage 1 completion report](STAGE_1_COMPLETION_REPORT.md) | Dated browser, rollback, failure, load and isolated-restore evidence plus the remaining backup boundary |
+| [Phase 2 completion specification](PHASE_2_COMPLETION_SPEC.md) | Implemented Linux/Zabbix incident boundary, qualification results, explicit unexecuted gates and rollback |
+| [Phase 2 operations](PHASE_2_OPERATIONS.md) | Forced-command deployment, validation, controlled start and rollback procedure |
 | [Operations](OPERATIONS.md) | Local monitoring, backup/restore, failures and release rollback |
 | [Troubleshooting](TROUBLESHOOTING.md) | Safe diagnostics and unknown outcomes |
 | [Roadmap](ROADMAP.md) | Phases 0–8 and five work packages ending in the offline Zabbix answer |

@@ -2,8 +2,30 @@
 
 [فارسی](../fa/PHASE_2_COMPLETION_SPEC.md) · [Architecture decision](../adr/0007-forced-command-linux-connector.md) · [Current state](../PROJECT_STATE.md)
 
-**Status: implementation in progress.** Phase 2A's bounded connector route is deployed; the durable
-incident workflow, Linux diagnostic boundary and complete acceptance program remain to converge.
+**Status: implementation complete; controlled qualification partial.** Application and connector
+release `nextops-0.1.0-e2dad3a` implements the durable incident workflow and bounded Linux/Zabbix
+evidence boundary. It is live for controlled user testing, not production-accepted.
+
+## Qualification record — 2026-09-23
+
+| Gate | Status | Evidence |
+|---|---|---|
+| Source quality and security CI | `passed` | Formatting, lint, strict typing, 128 non-integration tests, PostgreSQL 16/17 jobs, real-browser fixture and secret scan passed |
+| Authorization and target boundary | `passed` | Unauthenticated requests returned `401`; unknown/unapproved target returned `403`; the browser and model received no target credentials |
+| Four direct Linux collectors | `passed` | Each fixed target returned a schema-valid, bounded, redacted snapshot through its distinct forced-command key; generic shell execution was denied |
+| Four composite connector paths | `passed` | Each target returned bounded Zabbix history/events plus direct Linux evidence with explicit partial/truncation metadata |
+| Live bilingual local-model flow | `passed` | Fresh English and Persian API investigations returned local CPU answers and durable run/evidence/audit identifiers |
+| App/connector restart | `passed` | Both services returned healthy on the promoted release after restart |
+| Immutable rollback/forward | `passed` | App and connector each ran the prior release, then returned to `e2dad3a`; the additive migration remained compatible |
+| Server/API WAN-denied path | `passed` | Direct public-network access was denied on all four guests while local connector evidence and model generation remained available |
+| Fresh live browser on this release | `not_run` | The automation browser did not trust the private CA; no TLS bypass was used. The fixture-backed real-browser test passed but does not substitute for live acceptance |
+| Phase 2 serial VM reboot | `not_run` | Stage 1 reboot evidence is preserved but is not counted as a Phase 2 rerun |
+| Phase 2 dependency loss/recovery | `not_run` | Stage 1 recovery evidence is preserved but is not counted as a Phase 2 rerun |
+
+All four guests ended `running`, with zero failed units and no reboot requirement. A local
+pre-migration PostgreSQL dump passed checksum/list validation, but it is not an independent backup
+or restore proof. Independent backup, WAL/PITR, certificate lifecycle and disaster recovery remain
+production blockers.
 
 ## Problem and outcome
 

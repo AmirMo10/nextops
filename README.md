@@ -4,13 +4,13 @@
 
 [فارسی](README_FA.md) · [Release status](docs/status/current-release.yaml) · [Status brief](docs/en/PROJECT_STATUS_BRIEF.md) · [Documentation](docs/en/INDEX.md) · [G10 server plan](docs/en/SERVER_PLAN.md) · [Diagrams](docs/en/DIAGRAMS.md) · [Tech stack](docs/en/TECH_STACK.md) · [Architecture](docs/en/ARCHITECTURE.md) · [Roadmap](docs/en/ROADMAP.md) · [Project state](docs/PROJECT_STATE.md)
 
-> **Status: the controlled bilingual Stage 1 path is live across four Ubuntu 24.04 guests.** The private-TLS panel, PostgreSQL-backed identity and audit, pinned CPU-only model, least-privilege connector and Zabbix 7.0.30 path have passed fresh-browser WAN denial, serial reboots, application/runtime/model rollback, scoped failure recovery, five-minute bounded load and logical isolated restore. This is not production acceptance: independent off-datastore backup, WAL/PITR, certificate lifecycle and disaster-recovery sign-off remain open. See the [release status](docs/status/current-release.yaml) and [Stage 1 report](docs/en/STAGE_1_COMPLETION_REPORT.md).
+> **Status: the controlled bilingual Phase 2 path is live across four Ubuntu 24.04 guests.** Release `nextops-0.1.0-e2dad3a` adds four fixed, forced-command Linux targets to the bounded Zabbix history/event flow and returns durable local-CPU incident explanations with evidence and audit identifiers. Live API, restart, rollback and server/API WAN-denied checks pass; a fresh live browser, Phase 2 serial reboot and Phase 2 dependency-recovery run remain `not_run`. This is not production acceptance: independent off-datastore backup, WAL/PITR, certificate lifecycle and disaster-recovery sign-off remain open. See the [release status](docs/status/current-release.yaml), [Phase 2 specification and qualification](docs/en/PHASE_2_COMPLETION_SPEC.md) and [Stage 1 report](docs/en/STAGE_1_COMPLETION_REPORT.md).
 
 ## What NextOps is intended to do
 
 NextOps is a proposed bilingual IT operations platform for investigating infrastructure incidents, correlating monitoring evidence, and recommending safe next steps. A later, separately approved phase introduces tightly controlled remediation. Persian and English are first-class product and documentation languages.
 
-The first operational milestone is now **Phase 1: a new Persian/English question → authorized read-only Zabbix data → a locally generated, evidence-linked status answer → an audit record, with Internet blocked**. Direct Linux diagnostics enrich this flow in Phase 2; they are not a prerequisite for the first Zabbix answer. Eleven integration families remain in the roadmap; none is advertised as working before its tests and capability record exist.
+Phase 1 delivered **a new Persian/English question → authorized read-only Zabbix data → a locally generated, evidence-linked status answer → an audit record, with Internet blocked**. Phase 2 now enriches that path with bounded direct Linux diagnostics for four approved targets. Eleven integration families remain in the roadmap; none is advertised as working before its tests and capability record exist.
 
 ## Deployment constraints
 
