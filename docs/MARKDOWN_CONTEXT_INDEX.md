@@ -24,6 +24,7 @@ remaining task-specific sources. The repository skill
 | Architecture or public interfaces | relevant ADRs, `docs/en/ARCHITECTURE.md`, `DATA_API.md`, `MCP.md`, `SECURITY.md`, and their Persian pairs |
 | Application or database code | `docs/en/DEVELOPMENT.md`, `DATA_API.md`, `TESTING.md`, current state/next task, source contracts, migrations, and neighboring tests |
 | Authentication or session lifecycle | `docs/requirements/SESSION_TERMINATION_SPEC.md`, `docs/en/SECURITY.md`, `DATA_API.md`, `TESTING.md`, current release manifest, source service/API, and identity integration tests |
+| Certificate lifecycle | `docs/requirements/CERTIFICATE_LIFECYCLE_SPEC.md`, `docs/en/OPERATIONS.md`, Persian operations pair, systemd checker/timer, Nginx profiles, current release manifest, and private rotation/alert evidence |
 | Local CPU inference | `docs/en/CPU_AI.md`, `OFFLINE_RUNTIME.md`, `TESTING.md`, inference manifest, current state/next task, and Persian pairs when human-facing text changes |
 | Server, storage, or deployment | use `nextops-server-operations`; read the start checklist, matching dossier, installer guide, storage/offline/server guide, and current private change record |
 | Zabbix or connector work | Zabbix guide, integration guide, MCP/security/data contracts, matching dossiers, ZBX/OFF acceptance cases, and target-specific private evidence |
@@ -137,6 +138,7 @@ Markdown file is added, renamed, or removed.
 - `docs/NEXT_TASK.md` — Current unfinished checkpoint and acceptance evidence.
 - `docs/PROJECT_STATE.md` — Current implemented, tested, proposed, and blocked state.
 - `docs/requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md` — Immutable original requirements and Persian appendix.
+- `docs/requirements/CERTIFICATE_LIFECYCLE_SPEC.md` — Bilingual local expiry, alert, rotation, and rollback contract.
 - `docs/requirements/DEPLOYMENT_UPDATE.md` — Active four-server deployment amendment.
 - `docs/requirements/NEXTOPS_MASTER_PROMPT.md` — Active engineering requirements and precedence.
 - `docs/requirements/nextops-threat-model.md` — Repository-grounded threat model and mitigations.

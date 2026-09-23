@@ -5,6 +5,12 @@ restricted SSH-forward boundaries used by the controlled user-testing deployment
 contain no private address or credential. Environment-specific destinations, host-key pins and
 secrets are delivered outside Git.
 
+The directory also contains a generic local certificate-lifecycle oneshot and persistent daily
+timer. It runs without network access as the dedicated `nextops-certcheck` identity, reads only the
+configured public certificate and fails on an invalid or warning-window state. The checker does not
+read private keys, renew certificates or itself provide operator notification; deployment must keep
+the key root-only and connect failure state to an approved local alert before production sign-off.
+
 Application-side units:
 
 - `nextops-app.service` runs the authenticated panel/API on loopback and reads database, bootstrap,

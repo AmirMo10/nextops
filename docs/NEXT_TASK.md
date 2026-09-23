@@ -23,6 +23,15 @@ normal-TLS browser and direct API logout, former-token `401`, other-session pres
 idempotent replay and exactly one sanitized correlated audit event. This does not bypass the
 independent-recovery prerequisite for production.
 
+The next source increment is certificate-expiry detection. The repository now contains a
+deterministic local checker, a no-network least-privilege systemd service/timer, guarded installer,
+focused tests and a bilingual rotation/rollback contract. Direct-source preflight found both live
+frontend certificates healthy under the 90-day policy and their keys root-only; isolated expiring
+and malformed fixtures returned the required non-zero states. Require green hosted CI before
+installing this source on the app and Zabbix frontends. Controlled acceptance must then prove timer
+persistence and inability of the checker identity to read either private key. Alert delivery plus
+an observed rotation/rollback drill remain separate production gates.
+
 ## English — harden the live user-testing slice
 
 ### Authoritative current checkpoint
@@ -209,6 +218,14 @@ dump محلی یا نسخه‌ای روی همان datastore نباید پشتی
 TLS عادی و API مستقیم، خروج، `401` برای توکن قبلی، حفظ نشست دیگر، تکرار idempotent و وجود دقیقاً
 یک رویداد ممیزی پالایش‌شده و دارای شناسهٔ هم‌بستگی را ثابت کرد. این کار پیش‌نیاز بازیابی مستقل برای
 تولید را کنار نمی‌زند.
+
+increment بعدی منبع، تشخیص انقضای گواهی است. checker قطعی و محلی، واحد و timer بدون شبکه و
+کم‌اختیار systemd، installer محافظت‌شده، آزمون‌های متمرکز و قرارداد دوزبانهٔ چرخش و بازگشت اکنون
+در مخزنند. پیش‌بررسی مستقیم منبع، هر دو گواهی زنده را با سیاست ۹۰روزه سالم و کلیدها را فقط برای
+root حفاظت‌شده یافت؛ fixture جداگانهٔ نزدیک انقضا و ورودی خراب نیز وضعیت غیرصفر لازم را دادند. پیش
+از نصب این منبع روی رابط برنامه و Zabbix، CI میزبانی‌شده باید سبز باشد. پذیرش کنترل‌شده سپس باید
+ماندگاری timer و ناتوانی هویت checker در خواندن هر دو کلید خصوصی را ثابت کند. تحویل هشدار و تمرین
+مشاهده‌شدهٔ چرخش و بازگشت دروازه‌های جداگانهٔ تولید باقی می‌مانند.
 
 عامل یا بهره‌بردار بعدی باید موارد زیر را تکمیل‌شده بداند و بدون دلیل دوباره نسازد:
 

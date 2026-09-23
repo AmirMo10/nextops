@@ -4,6 +4,19 @@
 
 ### English
 
+Started the bounded local certificate-lifecycle increment. A dependency-free Python checker uses
+the pinned local OpenSSL binary and system clock to classify healthy, warning-window, expired and
+not-yet-valid certificates, emitting only bounded public metadata. A hardened daily systemd timer
+runs as a dedicated non-login identity with no network access and read permission for the public
+certificate only; the private key remains root-only. The guarded installer verifies the
+certificate/key match without printing either, installs non-secret configuration and fails unless
+the timer and immediate check succeed. Thirteen focused parser/state tests and static unit/installer
+checks are present. Point-in-time direct-source preflight classified both live frontend certificates
+healthy under the 90-day policy and kept their keys root-only; an isolated one-day certificate
+returned `expiring`, while malformed input returned the distinct error status. Hosted CI,
+controlled installation and checker-identity/timer validation, alert delivery, rotation and rollback
+remain pending, so production acceptance is unchanged.
+
 Closed and deployed the session-termination gap. The panel now calls an audited server-side logout
 endpoint before clearing its tab-local bearer. PostgreSQL revokes exactly the presented session
 under a row lock, emits one correlated append-only event, leaves other sessions valid and treats
@@ -127,6 +140,17 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+increment محدود چرخهٔ محلی گواهی آغاز شد. ابزار Python بدون وابستگی تازه، با OpenSSL ثابت و محلی
+و ساعت سامانه، گواهی را در یکی از حالت‌های سالم، واردشده به بازهٔ هشدار، منقضی یا هنوز نامعتبر
+قرار می‌دهد و فقط فرادادهٔ عمومی و محدود می‌نویسد. timer روزانه و سخت‌سازی‌شده با هویت مستقل و
+بدون ورود یا دسترسی شبکه اجرا می‌شود؛ این هویت فقط گواهی عمومی را می‌خواند و کلید خصوصی فقط برای
+root می‌ماند. installer محافظت‌شده، بدون چاپ محتوا تطبیق گواهی و کلید را بررسی، تنظیم غیرمحرمانه
+را نصب و در صورت موفق‌نبودن timer و اجرای فوری متوقف می‌شود. سیزده آزمون متمرکز parser و وضعیت و
+کنترل‌های ایستای واحد و installer افزوده شدند. پیش‌بررسی مستقیم منبع، هر دو گواهی زنده را با سیاست
+۹۰روزه سالم یافت و کلیدها فقط برای root ماندند؛ گواهی یک‌روزهٔ جدا وضعیت `expiring` و ورودی خراب
+کد خطای مستقل گرفت. CI میزبانی‌شده، نصب کنترل‌شده و آزمون هویت checker و timer، تحویل هشدار و
+تمرین چرخش و بازگشت هنوز باقی‌اند؛ پذیرش تولید تغییری نکرده است.
 
 شکاف پایان‌دادن نشست بسته و مستقر شد. پنل اکنون پیش از پاک‌کردن bearer محلی برگه، مسیر ممیزی‌شدهٔ
 خروج در سمت سرور را فراخوانی می‌کند. PostgreSQL فقط همان نشست ارائه‌شده را زیر قفل سطر لغو، یک

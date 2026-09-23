@@ -1,0 +1,33 @@
+[Unit]
+Description=NextOps local TLS certificate lifecycle check
+Documentation=file:///usr/local/share/doc/nextops/CERTIFICATE_LIFECYCLE.md
+After=local-fs.target
+
+[Service]
+Type=oneshot
+User=nextops-certcheck
+Group=nextops-certcheck
+EnvironmentFile=/etc/nextops/certificate-check.env
+ExecStart=/usr/bin/python3.12 /usr/local/libexec/nextops/check_certificate_expiry.py --certificate ${NEXTOPS_CERTIFICATE_PATH} --label ${NEXTOPS_CERTIFICATE_LABEL} --warning-days ${NEXTOPS_CERTIFICATE_WARNING_DAYS}
+NoNewPrivileges=yes
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectClock=yes
+ProtectControlGroups=yes
+ProtectHome=yes
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectSystem=strict
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+UMask=0077
+StandardOutput=journal
+StandardError=journal

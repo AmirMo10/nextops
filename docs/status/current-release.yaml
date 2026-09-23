@@ -113,6 +113,14 @@ capabilities:
       - tests/api/test_app.py
       - tests/integration/test_durable_app_postgresql.py
       - tests/browser/test_phase2_panel.py
+  - id: local_certificate_lifecycle_check
+    status: implemented_unaccepted
+    evidence:
+      - docs/requirements/CERTIFICATE_LIFECYCLE_SPEC.md
+      - scripts/check_certificate_expiry.py
+      - deploy/systemd/nextops-certificate-check.service
+      - deploy/systemd/nextops-certificate-check.timer
+      - tests/unit/test_certificate_expiry.py
 acceptance_gates:
   - id: server_api_wan_isolation
     status: passed
@@ -225,3 +233,9 @@ acceptance_gates:
       - tests/api/test_app.py
       - tests/integration/test_durable_app_postgresql.py
       - tests/browser/test_phase2_panel.py
+  - id: certificate_lifecycle_live
+    status: not_run
+    evidence:
+      - docs/requirements/CERTIFICATE_LIFECYCLE_SPEC.md
+      - docs/PROJECT_STATE.md
+      - docs/en/OPERATIONS.md

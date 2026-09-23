@@ -16,6 +16,40 @@ Track API/worker/connector health, durable queue age, collection failures, infer
 
 Distinguish host health, application readiness, model readiness and each connector's actual capability. Ordinary logs support diagnosis; security audit provides a separate record of authorized decisions and effects.
 
+## Local certificate lifecycle
+
+The application and Zabbix TLS frontends use the same offline-safe certificate check. A persistent
+daily timer runs `scripts/check_certificate_expiry.py` under the dedicated non-login
+`nextops-certcheck` identity. It reads only the public certificate, calls the pinned local OpenSSL
+binary, emits bounded JSON without names or addresses, and fails when the certificate is not yet
+valid, expired, or within the configured warning window. The controlled warning window is 90 days.
+The private key remains root-only and is never an input to the checker. See the
+[certificate lifecycle specification](../requirements/CERTIFICATE_LIFECYCLE_SPEC.md).
+
+Install the reviewed script, unit and timer from a verified release; create the dedicated identity;
+and give it traverse/read access only to the certificate directory and public certificate. Keep the
+key at `root:root` mode `0600`. Place the role-specific certificate path, bounded label and warning
+days in root-owned `/etc/nextops/certificate-check.env`, then run:
+
+```bash
+systemd-analyze verify /etc/systemd/system/nextops-certificate-check.service \
+  /etc/systemd/system/nextops-certificate-check.timer
+systemctl daemon-reload
+systemctl enable --now nextops-certificate-check.timer
+systemctl start nextops-certificate-check.service
+systemctl status --no-pager nextops-certificate-check.service \
+  nextops-certificate-check.timer
+```
+
+An authorized rotation stages the new pair in a root-only directory, compares the public key from
+the certificate with the key-derived public key, verifies the local CA chain and validity window,
+and preserves the exact prior pair. Validate Nginx before atomic promotion; reload rather than stop;
+then prove an ordinary TLS handshake, fresh offline login and Zabbix HTTPS/API access. On any
+failure, restore the preserved pair, revalidate Nginx, reload and repeat the client checks. Do not
+disable hostname/expiry validation or fetch a certificate during runtime. A successful timer is
+only detection: production sign-off still requires an owned local alert plus an observed rotation
+and rollback exercise.
+
 ## Degraded operation
 
 | Failure | Required behavior |

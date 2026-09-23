@@ -57,11 +57,13 @@ jobs:
           uv run python scripts/check_server_installers.py
           bash -n deploy/installers/install-*.sh
           bash -n deploy/linux/install-linux-readonly.sh
+          bash -n deploy/tls/install-certificate-check.sh
           test -x deploy/installers/install-nextops-app.sh
           test -x deploy/installers/install-nextops-ai.sh
           test -x deploy/installers/install-nextops-connectors-ro.sh
           test -x deploy/installers/install-zabbix-server.sh
           test -x deploy/linux/install-linux-readonly.sh
+          test -x deploy/tls/install-certificate-check.sh
 
       - name: Build the locked package
         run: uv build --no-sources

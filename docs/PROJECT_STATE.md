@@ -40,6 +40,17 @@ normal-TLS browser logout, former-token rejection, other-session preservation, i
 exactly one sanitized audit-event verification. Release `nextops-0.1.0-54c8bb4` remains available
 for rollback.
 
+The next bounded source increment addresses certificate-expiry detection without adding a runtime
+network dependency. A deterministic checker, hardened daily systemd timer, dedicated non-login
+identity, guarded installer, focused state/parser tests and bilingual rotation/rollback contract are
+now in the repository. The checker accepts only a public certificate path and emits bounded public
+metadata; it cannot accept a private-key path. A read-only direct-source preflight found both
+current frontend certificates healthy under the 90-day policy through 2027-10-24, with both keys
+still `root:root` mode `0600`. An isolated one-day certificate returned `expiring`; malformed input
+returned the distinct error status. Hosted CI, controlled installation and checker-identity/timer
+validation, owned local alert and rotation/rollback drill are pending, so the manifest records this
+capability as implemented but unaccepted.
+
 ## English
 
 ### Current controlled user-testing checkpoint
@@ -298,6 +309,16 @@ increment بعدی سخت‌سازی، خروج صرفاً مرورگری را �
 انتشار تغییرناپذیر `nextops-0.1.0-eb57241` در API زنده و مرورگر دارای TLS عادی، خروج، رد توکن
 قبلی، حفظ نشست دیگر، تکرار idempotent و وجود دقیقاً یک رویداد ممیزی پالایش‌شده را با موفقیت
 آزمود. انتشار `nextops-0.1.0-54c8bb4` برای بازگشت باقی است.
+
+increment محدود بعدی، تشخیص انقضای گواهی را بدون وابستگی شبکه‌ای زمان اجرا هدف گرفته است. checker
+قطعی، timer روزانه و سخت‌سازی‌شدهٔ systemd، هویت مستقل و بدون ورود، installer محافظت‌شده، آزمون‌های
+متمرکز وضعیت و parser و قرارداد دوزبانهٔ چرخش و بازگشت اکنون در مخزنند. ابزار فقط مسیر گواهی عمومی
+را می‌پذیرد و فرادادهٔ عمومی و محدود می‌نویسد؛ مسیری برای پذیرش کلید خصوصی ندارد. پیش‌بررسی
+مستقیم منبع، هر دو گواهی فعلی را با سیاست ۹۰روزه تا ۲۴ اکتبر ۲۰۲۷ سالم یافت و هر دو کلید همچنان با
+مالکیت `root:root` و mode برابر `0600` حفاظت می‌شوند. گواهی یک‌روزهٔ جدا وضعیت `expiring` و ورودی
+خراب کد خطای مستقل گرفت. CI میزبانی‌شده، نصب کنترل‌شده و آزمون هویت checker و timer، هشدار محلی
+با مالک مشخص و تمرین چرخش و بازگشت هنوز باقی‌اند؛ ازاین‌رو مانیفست این قابلیت را پیاده‌شده اما
+پذیرفته‌نشده ثبت می‌کند.
 
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 

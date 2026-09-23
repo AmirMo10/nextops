@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).parents[2]
 SYSTEMD = ROOT / "deploy" / "systemd"
 LINUX = ROOT / "deploy" / "linux"
+TLS = ROOT / "deploy" / "tls"
 
 
 def _unit(name: str) -> str:
@@ -142,3 +143,42 @@ def test_linux_installer_never_reowns_the_shared_configuration_parent() -> None:
     assert "if [[ ! -d /etc/nextops ]]" in installer
     assert "install -d -o root -g root -m 0755 /etc/nextops" in installer
     assert "install -d -o root -g nextops-linux-ro -m 0750 /etc/nextops" not in installer
+
+
+def test_certificate_checker_is_local_least_privilege_and_persistent() -> None:
+    service = _unit("nextops-certificate-check.service")
+    timer = _unit("nextops-certificate-check.timer")
+    example = (ROOT / "deploy" / "tls" / "certificate-check.env.example").read_text(
+        encoding="utf-8"
+    )
+
+    assert "User=nextops-certcheck" in service
+    assert "EnvironmentFile=/etc/nextops/certificate-check.env" in service
+    assert "/usr/bin/python3.12" in service
+    assert "/usr/local/libexec/nextops/check_certificate_expiry.py" in service
+    assert "ProtectSystem=strict" in service
+    assert "NoNewPrivileges=yes" in service
+    assert "RestrictAddressFamilies=AF_UNIX" in service
+    assert "CapabilityBoundingSet=\n" in service
+    assert "NEXTOPS_CERTIFICATE_KEY" not in example
+    assert "PRIVATE_KEY" not in example
+    assert "NEXTOPS_CERTIFICATE_WARNING_DAYS=90" in example
+    assert "OnUnitActiveSec=1d" in timer
+    assert "Persistent=true" in timer
+
+
+def test_certificate_installer_preserves_the_private_key_boundary() -> None:
+    installer = (TLS / "install-certificate-check.sh").read_text(encoding="utf-8")
+
+    assert "certificate and private key do not match" in installer
+    assert 'chown root:nextops-certcheck "$certificate_directory" "$certificate"' in installer
+    assert 'chmod 0640 "$certificate"' in installer
+    assert 'chown root:root "$private_key"' in installer
+    assert 'chmod 0600 "$private_key"' in installer
+    assert 'chmod 0710 "$certificate_directory"' in installer
+    assert "systemd-analyze verify" in installer
+    assert "systemctl enable --now nextops-certificate-check.timer" in installer
+    assert "curl " not in installer
+    assert "wget " not in installer
+    assert "apt " not in installer
+    assert "192.168." not in installer
