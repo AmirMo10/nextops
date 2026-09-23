@@ -4,6 +4,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parents[2]
 SYSTEMD = ROOT / "deploy" / "systemd"
+LINUX = ROOT / "deploy" / "linux"
 
 
 def _unit(name: str) -> str:
@@ -133,3 +134,11 @@ def test_phase2_app_exposes_only_logical_incident_target_ids() -> None:
 
     assert "NEXTOPS_INCIDENT_TARGET_IDS=app,ai,connector,zabbix" in environment
     assert "192.168." not in environment
+
+
+def test_linux_installer_never_reowns_the_shared_configuration_parent() -> None:
+    installer = (LINUX / "install-linux-readonly.sh").read_text(encoding="utf-8")
+
+    assert "if [[ ! -d /etc/nextops ]]" in installer
+    assert "install -d -o root -g root -m 0755 /etc/nextops" in installer
+    assert "install -d -o root -g nextops-linux-ro -m 0750 /etc/nextops" not in installer

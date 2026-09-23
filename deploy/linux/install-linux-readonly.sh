@@ -89,7 +89,9 @@ passwd --lock nextops-linux-ro >/dev/null
 install -d -o root -g root -m 0755 /usr/local/libexec
 install -o root -g root -m 0755 \
   "$COLLECTOR_SOURCE" /usr/local/libexec/nextops-linux-readonly
-install -d -o root -g nextops-linux-ro -m 0750 /etc/nextops
+if [[ ! -d /etc/nextops ]]; then
+  install -d -o root -g root -m 0755 /etc/nextops
+fi
 install -o root -g nextops-linux-ro -m 0640 \
   "$CONFIG_PATH" /etc/nextops/linux-readonly.json
 install -d -o root -g root -m 0755 /var/lib/nextops-linux-ro
