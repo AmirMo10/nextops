@@ -159,6 +159,35 @@ def test_bootstrap_login_and_recovery_revoke_every_prior_session(
     assert service.authenticate(new_login.session.access_token).subject_id == actor.subject_id
 
 
+def test_logout_revokes_only_the_presented_session_and_is_idempotent(
+    app_session_factory: sessionmaker[Session], settings: AppSettings
+) -> None:
+    service = DurableAppService(app_session_factory, settings)
+    bootstrap = service.bootstrap(bootstrap_request(), BOOTSTRAP_SECRET, uuid4())
+    bootstrap_token = bootstrap.authenticated_session.session.access_token
+    login = service.login(
+        LoginRequest(username="owner", password=ADMIN_PASSWORD), correlation_id=uuid4()
+    )
+    correlation_id = uuid4()
+
+    service.logout(login.session.access_token, correlation_id)
+    service.logout(login.session.access_token, uuid4())
+
+    assert service.authenticate(bootstrap_token).subject_id == bootstrap.admin_identity_id
+    with pytest.raises(ApplicationError) as failure:
+        service.authenticate(login.session.access_token)
+    assert failure.value.code is ErrorCode.UNAUTHENTICATED
+
+    with app_session_factory() as session:
+        logout_events = session.scalars(
+            select(AuditEvent).where(AuditEvent.event_type == "identity.logout.accepted")
+        ).all()
+    assert len(logout_events) == 1
+    assert logout_events[0].actor_id == bootstrap.admin_identity_id
+    assert logout_events[0].correlation_id == correlation_id
+    assert logout_events[0].details == {}
+
+
 def test_run_idempotency_fixture_result_and_expired_lease_restart_recovery(
     app_session_factory: sessionmaker[Session], settings: AppSettings
 ) -> None:

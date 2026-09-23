@@ -7,7 +7,7 @@ deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: 26f6f60c3e0f6eeb94038cef914f919ec29651c3
+  inspected_baseline_commit: f6a60659e31cb956df8cb5bfee3763370cf14bda
 components:
   application:
     release: nextops-0.1.0-54c8bb4
@@ -104,6 +104,15 @@ capabilities:
       - scripts/check_recovery_profile.py
       - tests/unit/test_recovery_profile.py
       - docs/adr/0008-independent-recovery-repositories.md
+  - id: server_side_session_termination
+    status: implemented_unaccepted
+    evidence:
+      - docs/requirements/SESSION_TERMINATION_SPEC.md
+      - packages/nextops/application/service.py
+      - packages/nextops/api/app.py
+      - tests/api/test_app.py
+      - tests/integration/test_durable_app_postgresql.py
+      - tests/browser/test_phase2_panel.py
 acceptance_gates:
   - id: server_api_wan_isolation
     status: passed

@@ -35,6 +35,13 @@ High-risk/critical actions require independent approval and impact/maintenance-w
 
 Configuration stores credential references only. Decrypt credentials only inside the authorized execution boundary. Keep encryption keys separate from ciphertext; `.env` is not a production vault. Use scoped SSH/API/database accounts, verified SSH host keys, validated TLS certificates, rotation and expiring sessions. No default administrator password, blanket host-key acceptance, `verify=False`, privileged container or engine-socket shortcut.
 
+The source now implements an audited, server-side `POST /api/v1/logout` boundary. It hashes the
+presented bearer, row-locks and revokes only that durable session, and records one correlated
+append-only event. Replay is idempotent and an unknown bearer receives the same empty result as an
+already-revoked session, avoiding a token-existence oracle. The offline panel always removes its
+tab-local copy after attempting revocation. Controlled deployment acceptance is still pending; see
+the [session termination specification](../requirements/SESSION_TERMINATION_SPEC.md).
+
 SQL tools use predefined bounded diagnostic queries and narrow database identities. `SELECT` alone does not prove safety. Stored functions, output-to-file operations, locks, costly queries and execution-oriented EXPLAIN variants require their actual semantics to be considered.
 
 ## Audit and operational isolation

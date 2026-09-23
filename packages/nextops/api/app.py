@@ -61,6 +61,8 @@ class AppService(Protocol):
 
     def authenticate(self, token: str) -> ActorContext: ...
 
+    def logout(self, token: str, correlation_id: UUID) -> None: ...
+
     def recover(
         self, request: RecoveryRequest, supplied_secret: str, correlation_id: UUID
     ) -> RecoveryResult: ...
@@ -213,12 +215,15 @@ def create_app(
             content={"error": detail.model_dump(mode="json")},
         )
 
-    def current_actor(
+    def current_token(
         credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
-    ) -> ActorContext:
+    ) -> str:
         if credentials is None or credentials.scheme.lower() != "bearer":
             raise ApplicationError(ErrorCode.UNAUTHENTICATED, "auth.session_required")
-        return service.authenticate(credentials.credentials)
+        return credentials.credentials
+
+    def current_actor(token: Annotated[str, Depends(current_token)]) -> ActorContext:
+        return service.authenticate(token)
 
     def require_monitoring_read(actor: ActorContext) -> None:
         if "zabbix.read" not in actor.scopes:
@@ -254,6 +259,14 @@ def create_app(
     @app.post("/api/v1/login", response_model=AuthenticatedSession)
     def login(request: Request, payload: LoginRequest) -> AuthenticatedSession:
         return service.login(payload, _correlation_id(request))
+
+    @app.post("/api/v1/logout", status_code=204)
+    def logout(
+        request: Request,
+        token: Annotated[str, Depends(current_token)],
+    ) -> Response:
+        service.logout(token, _correlation_id(request))
+        return Response(status_code=204)
 
     @app.post("/api/v1/recovery", response_model=RecoveryResult)
     def recover(

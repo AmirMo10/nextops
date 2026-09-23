@@ -61,6 +61,12 @@ the private application origin. Application traffic addressed no Internet host; 
 requests were blocked. Login, both text directions, general and monitoring modes, provenance,
 durable identifiers, logout and a new-tab login requirement passed.
 
+Server-side logout source coverage now verifies missing-bearer denial, exact correlated revocation,
+empty idempotent responses, isolation from the identity's other sessions, one sanitized append-only
+audit event, browser `sessionStorage` removal and localized return to login. The PostgreSQL checks
+run in the version 16/17 CI matrix. This becomes deployed acceptance only after a former live token
+is rejected by a protected endpoint and the corresponding audit event is verified.
+
 The application rolled back from `13a3369` to `fde27bd` and forward again. Hash-matched protected
 runtime/model copies were selected through the stable links, generated through the actual NextOps
 inference API, and then restored to the original paths. Live cancellation released capacity;

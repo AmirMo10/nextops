@@ -4,6 +4,14 @@
 
 ### English
 
+Closed a source-level session-termination gap. The panel now calls an audited server-side logout
+endpoint before clearing its tab-local bearer. PostgreSQL revokes exactly the presented session
+under a row lock, emits one correlated append-only event, leaves other sessions valid and treats
+replay or an unknown token idempotently without exposing a token-existence oracle. API, integration
+and real-browser coverage verifies denial without a bearer, empty `204`, single-session isolation,
+one audit event, local-token removal and localized return to login. Controlled deployment and live
+former-token rejection remain pending; no schema migration is required.
+
 Added the guarded source contract for the next recovery phase without changing serving VMs. ADR
 0008 proposes separate pgBackRest repositories for the application and Zabbix PostgreSQL 16
 clusters and limits restic to approved non-database files. A schema-validated public profile,
@@ -114,6 +122,14 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+شکاف منبع در پایان‌دادن نشست بسته شد. پنل اکنون پیش از پاک‌کردن bearer محلی برگه، مسیر ممیزی‌شدهٔ
+خروج در سمت سرور را فراخوانی می‌کند. PostgreSQL فقط همان نشست ارائه‌شده را زیر قفل سطر لغو، یک
+رویداد فقط‌افزودنی و دارای شناسهٔ هم‌بستگی ثبت و نشست‌های دیگر را معتبر نگه می‌دارد؛ تکرار درخواست
+یا توکن ناشناخته نیز بدون افشای وجود توکن به‌صورت idempotent پاسخ می‌گیرند. پوشش API، یکپارچگی و
+مرورگر واقعی، رد درخواست بدون bearer، پاسخ خالی `204`، جداسازی یک نشست، یک رویداد ممیزی، حذف توکن
+محلی و بازگشت بومی‌شده به ورود را می‌سنجد. استقرار کنترل‌شده و رد زندهٔ توکن پیشین هنوز باقی است
+و migration پایگاه لازم نیست.
 
 قرارداد محافظت‌شدهٔ مرحلهٔ بعدی بازیابی بدون تغییر VMهای سرویس‌دهنده افزوده شد. ADR 0008 برای دو
 خوشهٔ PostgreSQL 16 برنامه و Zabbix مخزن‌های جداگانهٔ pgBackRest پیشنهاد می‌کند و restic را به

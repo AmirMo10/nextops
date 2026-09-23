@@ -17,6 +17,13 @@ offline bundles, separate backup/WAL paths, permitted artifact backup, isolated 
 measured RPO/RTO and disaster-recovery sign-off be executed. Do not describe local dumps or a
 same-datastore copy as an independent backup.
 
+In parallel, the first post-Phase-2 security increment is source-complete: audited server-side
+logout revokes only the presented durable session and the browser clears its tab-local copy after
+the attempt. Local API/browser tests pass. Before deployment, require green PostgreSQL 16/17 CI;
+then promote one immutable app release and prove that the former live token receives `401`, the
+other session remains valid, and exactly one sanitized audit event exists. This does not bypass the
+independent-recovery prerequisite for production.
+
 ## English — harden the live user-testing slice
 
 ### Authoritative current checkpoint
@@ -49,7 +56,7 @@ The next operator must treat the following as completed and preserve it:
 - serial clean reboots of Zabbix, connector, AI and application with the offline policy loaded before
   normal networking, explicit database-cluster ordering, role-specific recovery and zero failed
   units; and
-- quality gates: Ruff, strict mypy, 136 passing local non-integration tests plus one POSIX-only
+- quality gates: Ruff, strict mypy, 137 passing local non-integration tests plus one POSIX-only
   collector test, PostgreSQL 16 and 17 CI integration jobs, real-browser fixture acceptance and
   secret scanning.
 
@@ -198,6 +205,12 @@ restic را فقط برای فایل‌های غیرپایگاهی مصوب می
 artifact مجاز، PITR و restore ایزوله، RPO/RTO اندازه‌گیری‌شده و تأیید بازیابی بحران اجرا می‌شوند.
 dump محلی یا نسخه‌ای روی همان datastore نباید پشتیبان مستقل نامیده شود.
 
+هم‌زمان، نخستین increment امنیتی پس از مرحلهٔ دو در منبع تکمیل شده است: خروج ممیزی‌شده در سمت
+سرور فقط نشست ماندگار ارائه‌شده را لغو می‌کند و مرورگر پس از تلاش، نسخهٔ محلی برگه را پاک می‌کند.
+آزمون محلی API و مرورگر موفق است. پیش از استقرار، CI سبز PostgreSQL 16/17 لازم است؛ سپس یک انتشار
+تغییرناپذیر برنامه ارتقا یابد و `401` برای توکن زندهٔ پیشین، اعتبار نشست دیگر و وجود دقیقاً یک
+رویداد ممیزی پالایش‌شده ثابت شود. این کار پیش‌نیاز بازیابی مستقل برای تولید را کنار نمی‌زند.
+
 عامل یا بهره‌بردار بعدی باید موارد زیر را تکمیل‌شده بداند و بدون دلیل دوباره نسازد:
 
 - انتشار برنامه، مهاجرت PostgreSQL، reverse proxy با TLS خصوصی و پنل دوزبانهٔ احرازهویت‌شده؛
@@ -226,7 +239,7 @@ dump محلی یا نسخه‌ای روی همان datastore نباید پشتی
 - مرورگر تازه با WAN مسدود، بازگشت برنامه و محیط اجرا و مدل، لغو، قطع وابستگی، مدل مفقود/خراب،
   کمبود فضای ایزوله، بار پنج‌دقیقه‌ای و بازیابی منطقی هر دو پایگاه؛ جزئیات در
   [گزارش تکمیل مرحلهٔ ۱](fa/STAGE_1_COMPLETION_REPORT.md)؛
-- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۳۶ آزمون غیر‌یکپارچهٔ موفق در محیط محلی به‌همراه یک آزمون
+- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۳۷ آزمون غیر‌یکپارچهٔ موفق در محیط محلی به‌همراه یک آزمون
   ویژهٔ POSIX، کارهای یکپارچگی PostgreSQL 16 و 17 در CI، fixture واقعی مرورگر و پویش راز.
 
 ترتیب مستقیم کار بعدی چنین است:

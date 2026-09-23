@@ -73,6 +73,7 @@ class FakeService:
         self.live_locale = "en"
         self.incident_completed = False
         self.incident_failure: ApplicationError | None = None
+        self.logout_tokens: list[tuple[str, UUID]] = []
 
     def bootstrap(
         self, request: BootstrapRequest, supplied_secret: str, correlation_id: UUID
@@ -94,6 +95,9 @@ class FakeService:
         if token != "valid-bearer-token-that-is-long-enough":
             raise ApplicationError(ErrorCode.UNAUTHENTICATED, "auth.session_invalid")
         return self.actor
+
+    def logout(self, token: str, correlation_id: UUID) -> None:
+        self.logout_tokens.append((token, correlation_id))
 
     def recover(
         self, request: RecoveryRequest, supplied_secret: str, correlation_id: UUID
@@ -514,6 +518,7 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
     assert 'data-mode="incident"' in response.text
     assert 'id="incidentTarget"' in response.text
     assert '"/api/v1/assistant/generate"' in javascript.text
+    assert '"/api/v1/logout"' in javascript.text
     assert '"/api/v1/incidents/investigate"' in javascript.text
     assert "بدون افزودن وضعیت Zabbix" in javascript.text
     assert 'id="runId"' in response.text
@@ -553,6 +558,28 @@ def test_assistant_requires_local_session_and_labels_model_only_output() -> None
     assert inference.last_request.max_output_tokens == 128
     assert "Answer the user's question directly" in inference.last_request.question
     assert "یک پاسخ آزمایشی ارائه کن" in inference.last_request.question
+
+
+def test_logout_requires_bearer_and_revokes_the_presented_session() -> None:
+    service = FakeService()
+    client = TestClient(create_app(service))
+    correlation_id = str(uuid4())
+
+    missing = client.post("/api/v1/logout")
+    response = client.post(
+        "/api/v1/logout",
+        headers={
+            "Authorization": "Bearer valid-bearer-token-that-is-long-enough",
+            "X-Correlation-ID": correlation_id,
+        },
+    )
+
+    assert missing.status_code == 401
+    assert response.status_code == 204
+    assert response.content == b""
+    assert service.logout_tokens == [
+        ("valid-bearer-token-that-is-long-enough", UUID(correlation_id))
+    ]
 
 
 def test_assistant_readiness_is_authenticated() -> None:

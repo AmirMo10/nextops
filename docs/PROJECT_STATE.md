@@ -30,6 +30,14 @@ recovery, and passed isolated/offline/negative restore gates. The profile is int
 but `BLOCKED`; no backup package or job was installed on the serving VMs and production readiness
 is not claimed.
 
+The next source hardening increment closes browser-only logout. `POST /api/v1/logout` now revokes
+exactly the presented durable PostgreSQL session under a row lock and writes one correlated,
+append-only audit event without token material. Replay and unknown tokens are idempotent and do not
+create an existence oracle; another session for the same identity remains valid. The offline panel
+attempts server revocation before clearing `sessionStorage`, with fail-safe local cleanup. API and
+real-browser tests pass locally, while PostgreSQL 16/17 CI and controlled live deployment are still
+pending, so the release manifest records this capability as implemented but unaccepted.
+
 ## English
 
 ### Current controlled user-testing checkpoint
@@ -242,7 +250,7 @@ The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141
 SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1
 with a generated `uv.lock`; Playwright 1.63 is a locked development-only browser dependency. The
 CI workflow defines digest-pinned PostgreSQL 16.15 and 17.6 jobs. For Phase 2, formatting, lint,
-strict typing, 136 local non-integration tests plus one POSIX-only collector check, both PostgreSQL
+strict typing, 137 local non-integration tests plus one POSIX-only collector check, both PostgreSQL
 CI jobs, real-browser fixtures and secret scanning passed. The earlier Stage 1 fresh-browser/offline,
 failure-recovery, load and restore
 records remain historical evidence, not inferred Phase 2 reruns. Dependency/license approval,
@@ -279,6 +287,14 @@ reboot بودند. اجرای زنده، نقص مهلت مسیر رخداد د�
 WAL پایگاه به restic و هر ادعای صلاحیت بدون مقصد مستقل، RPO/RTO و نگه‌داری مصوب، بستهٔ آفلاین
 معتبر، بازیابی کلید و موفقیت آزمون‌های جدا، آفلاین و منفی را رد می‌کند. پروفایل عمداً معتبر اما
 `BLOCKED` است؛ هیچ بسته یا job پشتیبان روی VMهای سرویس‌دهنده نصب نشده و آمادگی تولید ادعا نمی‌شود.
+
+increment بعدی سخت‌سازی منبع، خروج صرفاً مرورگری را اصلاح می‌کند. مسیر `POST /api/v1/logout`
+اکنون فقط همان نشست ماندگار PostgreSQL را زیر قفل سطر لغو می‌کند و یک رویداد ممیزیِ فقط‌افزودنی و
+دارای شناسهٔ هم‌بستگی، بدون مادهٔ توکن، می‌نویسد. تکرار درخواست و توکن ناشناخته idempotent هستند و
+نشست دیگر همان هویت معتبر می‌ماند. پنل آفلاین پیش از پاک‌کردن `sessionStorage` برای لغو سروری تلاش
+می‌کند و پاک‌سازی محلی در حالت خطا نیز انجام می‌شود. آزمون API و مرورگر واقعی در محیط محلی موفق
+است؛ اما CI مربوط به PostgreSQL 16/17 و استقرار کنترل‌شدهٔ زنده هنوز باقی است، بنابراین مانیفست
+این قابلیت را پیاده‌شده اما پذیرفته‌نشده ثبت می‌کند.
 
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 
@@ -468,7 +484,7 @@ pgBackRest/WAL، مخزن restic، آزمون PITR و بستهٔ بازیابی 
 بازیابی مستقل نیست.
 
 برش‌های منبع با Python 3.12.10، uv 0.12.17 و زنجیرهٔ قفل‌شده آزموده شدند؛ Playwright 1.63 نیز
-وابستگی صرفاً توسعه‌ای است. برای مرحلهٔ دو، Ruff، mypy سخت‌گیرانه، ۱۳۶ آزمون غیر‌یکپارچهٔ محلی
+وابستگی صرفاً توسعه‌ای است. برای مرحلهٔ دو، Ruff، mypy سخت‌گیرانه، ۱۳۷ آزمون غیر‌یکپارچهٔ محلی
 به‌همراه یک کنترل ویژهٔ POSIX، هر دو کار PostgreSQL 16 و 17 در CI، fixture واقعی مرورگر و پویش راز
 موفق بودند. شاهدهای پیشین مرحلهٔ یک برای
 مرورگر آفلاین، بازیابی خطا، بار و restore سابقه‌اند و به‌عنوان اجرای دوبارهٔ مرحلهٔ دو تلقی

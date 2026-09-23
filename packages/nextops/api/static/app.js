@@ -166,6 +166,16 @@ async function showWorkspace() {
   loadIncidentTargets();
 }
 
+async function logout() {
+  try {
+    if (state.token) await api("/api/v1/logout", { method: "POST" });
+  } catch (_) {
+    // Local token removal remains fail-safe if the server is temporarily unavailable.
+  } finally {
+    showLogin();
+  }
+}
+
 async function loadIncidentTargets() {
   const select = byId("incidentTarget");
   select.disabled = true;
@@ -374,7 +384,7 @@ function setAnswerMode(mode) {
 }
 
 byId("languageButton").addEventListener("click", () => applyLanguage(state.language === "en" ? "fa" : "en"));
-byId("logoutButton").addEventListener("click", () => showLogin());
+byId("logoutButton").addEventListener("click", logout);
 byId("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
   const button = event.currentTarget.querySelector("button[type=submit]");

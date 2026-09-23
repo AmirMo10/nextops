@@ -159,6 +159,7 @@ def _fixture_app() -> FastAPI:
     app = FastAPI()
     app.mount("/assets", StaticFiles(directory=STATIC), name="assets")
     app.state.incident_requests = []
+    app.state.logout_requests = 0
 
     @app.get("/")
     def panel() -> FileResponse:
@@ -180,6 +181,10 @@ def _fixture_app() -> FastAPI:
     @app.get("/api/v1/me")
     async def me() -> dict[str, str]:
         return {"status": "authenticated"}
+
+    @app.post("/api/v1/logout", status_code=204)
+    async def logout() -> None:
+        app.state.logout_requests += 1
 
     @app.get("/api/v1/assistant/ready")
     async def ready() -> dict[str, Any]:
@@ -317,4 +322,9 @@ def test_phase2_panel_supports_incident_evidence_and_persian_rtl(
         page.emulate_media(reduced_motion="reduce")
         page.set_viewport_size({"width": 844, "height": 390})
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth") is True
+
+        page.get_by_role("button", name="خروج").click()
+        expect(page.get_by_role("button", name="ورود امن")).to_be_visible()
+        assert page.evaluate("sessionStorage.getItem('nextops-session')") is None
+        assert app.state.logout_requests == 1
         browser.close()

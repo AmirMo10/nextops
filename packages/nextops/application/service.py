@@ -331,6 +331,39 @@ class DurableAppService:
         except SQLAlchemyError as exc:
             raise self._database_error() from exc
 
+    def logout(self, token: str, correlation_id: UUID) -> None:
+        """Revoke one presented session without revealing whether an unknown token existed."""
+
+        now = self._now()
+        try:
+            with self._session_factory() as session, session.begin():
+                row = session.execute(
+                    select(SessionModel, Identity)
+                    .join(Identity, Identity.id == SessionModel.identity_id)
+                    .where(SessionModel.token_sha256 == hash_opaque_token(token))
+                    .with_for_update(of=SessionModel)
+                ).one_or_none()
+                if row is None:
+                    return
+                stored_session, identity = row
+                if stored_session.revoked_at is not None:
+                    return
+                stored_session.revoked_at = now
+                self._add_audit(
+                    session,
+                    organization_id=identity.organization_id,
+                    environment_id=identity.environment_id,
+                    actor_id=identity.id,
+                    correlation_id=correlation_id,
+                    event_type="identity.logout.accepted",
+                    outcome=AuditOutcome.ACCEPTED,
+                    details={},
+                    occurred_at=now,
+                )
+                session.flush()
+        except SQLAlchemyError as exc:
+            raise self._database_error() from exc
+
     def recover(
         self,
         request: RecoveryRequest,

@@ -23,6 +23,7 @@ remaining task-specific sources. The repository skill
 | Requirements, scope, or acceptance | `docs/requirements/NEXTOPS_MASTER_PROMPT.md`, `PROMPT_CHANGELOG.md`, `TRACEABILITY.md`, relevant amendment, and the archive only for original non-conflicting detail |
 | Architecture or public interfaces | relevant ADRs, `docs/en/ARCHITECTURE.md`, `DATA_API.md`, `MCP.md`, `SECURITY.md`, and their Persian pairs |
 | Application or database code | `docs/en/DEVELOPMENT.md`, `DATA_API.md`, `TESTING.md`, current state/next task, source contracts, migrations, and neighboring tests |
+| Authentication or session lifecycle | `docs/requirements/SESSION_TERMINATION_SPEC.md`, `docs/en/SECURITY.md`, `DATA_API.md`, `TESTING.md`, current release manifest, source service/API, and identity integration tests |
 | Local CPU inference | `docs/en/CPU_AI.md`, `OFFLINE_RUNTIME.md`, `TESTING.md`, inference manifest, current state/next task, and Persian pairs when human-facing text changes |
 | Server, storage, or deployment | use `nextops-server-operations`; read the start checklist, matching dossier, installer guide, storage/offline/server guide, and current private change record |
 | Zabbix or connector work | Zabbix guide, integration guide, MCP/security/data contracts, matching dossiers, ZBX/OFF acceptance cases, and target-specific private evidence |
@@ -142,6 +143,7 @@ Markdown file is added, renamed, or removed.
 - `docs/requirements/PHASE_2_INCIDENT_CONTEXT_SPEC.md` — Bounded Phase 2 Zabbix history/event feature packet.
 - `docs/requirements/PROMPT_CHANGELOG.md` — Prompt version and precedence history.
 - `docs/requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md` — Per-server dossier and package-layer specification.
+- `docs/requirements/SESSION_TERMINATION_SPEC.md` — Bilingual bounded specification for audited server-side logout.
 - `docs/requirements/SOURCES.md` — Source provenance and archive identities.
 - `docs/requirements/TRACEABILITY.md` — Mapping of all original requirements to phases and evidence.
 - `docs/STORAGE_PLAN.md` — Bilingual storage evidence, arithmetic, and capacity guardrails.
