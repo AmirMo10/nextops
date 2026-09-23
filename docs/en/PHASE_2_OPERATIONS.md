@@ -2,8 +2,10 @@
 
 [فارسی](../fa/PHASE_2_OPERATIONS.md) · [Specification](PHASE_2_COMPLETION_SPEC.md) · [ADR 0007](../adr/0007-forced-command-linux-connector.md)
 
-**Status:** deployed controlled-user-testing procedure for release `nextops-0.1.0-e2dad3a`. This
-document does not authorize target access, a service restart, or a firewall change.
+**Status:** deployed controlled-user-testing procedure with application release
+`nextops-0.1.0-8d042cf` and connector release `nextops-0.1.0-e2dad3a`. The application-only OCS
+frontend promotion did not change the connector contract. This document does not authorize target
+access, a service restart, or a firewall change.
 
 ## What Phase 2 adds
 

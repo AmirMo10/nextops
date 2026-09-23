@@ -14,8 +14,9 @@ WAL/PITR and production acceptance remain open. Source: master specification sec
 
 ## Phase 2 current qualification — 2026-09-23
 
-Release `nextops-0.1.0-e2dad3a` passed the source quality/unit job, PostgreSQL 16 and 17 integration
-jobs, real-browser fixture job and secret scan. The source suite includes forced-command parsing,
+Phase 2 connector release `nextops-0.1.0-e2dad3a` and current application release
+`nextops-0.1.0-8d042cf` passed the source quality/unit job, PostgreSQL 16 and 17 integration jobs,
+real-browser fixture job and secret scan. The source suite includes forced-command parsing,
 private-target validation, strict host-key/identity construction, provenance mismatch, output limits,
 redaction, authentication, scope denial, unknown targets, safe dependency errors, prompt-injection
 text, durable composite evidence, reversible scope migration and Persian/English RTL/LTR behavior.
@@ -25,7 +26,10 @@ path returned schema-valid bounded evidence. Generic shell execution, unauthenti
 unknown target were denied. Fresh English and Persian application API investigations returned local
 CPU answers and durable run/evidence/audit IDs. App/connector restart, immutable rollback/forward and
 server/API use while direct WAN access was denied passed. Fresh live-browser use against this
-release, Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`. See the
+release with authentication, Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain
+`not_run`. The OCS frontend additionally passed a fresh unauthenticated deployed-login check in
+English desktop and Persian RTL mobile views with no external request, failed response, console
+error or horizontal overflow; that narrower check does not replace the authenticated gate. See the
 [Phase 2 qualification record](PHASE_2_COMPLETION_SPEC.md).
 
 ## Historical Phase 2A controlled deployment evidence

@@ -7,11 +7,11 @@ deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
+  inspected_baseline_commit: 8d042cf47c41ae4a895475b3887de08c83d3a806
 components:
   application:
-    release: nextops-0.1.0-e2dad3a
-    source_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
+    release: nextops-0.1.0-8d042cf
+    source_commit: 8d042cf47c41ae4a895475b3887de08c83d3a806
   connector:
     release: nextops-0.1.0-e2dad3a
     source_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
@@ -45,6 +45,14 @@ capabilities:
     evidence:
       - docs/PROJECT_STATE.md
       - tests/api/test_app.py
+      - tests/browser/test_phase2_panel.py
+  - id: ocs_branded_offline_frontend
+    status: accepted_controlled
+    evidence:
+      - docs/en/UI.md
+      - docs/fa/UI.md
+      - tests/api/test_app.py
+      - tests/browser/test_phase2_panel.py
   - id: general_local_ai_mode
     status: accepted_controlled
     evidence:
@@ -163,6 +171,13 @@ acceptance_gates:
       - docs/PROJECT_STATE.md
       - tests/api/test_app.py
       - tests/integration/test_durable_app_postgresql.py
+      - tests/browser/test_phase2_panel.py
+  - id: ocs_branded_live_login
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/UI.md
+      - docs/fa/UI.md
       - tests/browser/test_phase2_panel.py
   - id: phase2_authenticated_live_browser
     status: not_run

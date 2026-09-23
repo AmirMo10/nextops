@@ -44,8 +44,10 @@ enterprise layout keeps semantic success, warning and failure colors separate fr
 
 The real-browser fixture covers the branded login, authenticated workspace, composite incident
 evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width without horizontal
-overflow or external requests. This is source/fixture evidence; live promotion and a fresh deployed
-browser check must be recorded separately.
+overflow or external requests. The source passed all five CI jobs and was promoted as immutable
+application release `nextops-0.1.0-8d042cf`. A fresh deployed login check passed English desktop and
+Persian RTL at 375 pixels with no overflow, external request, failed response or console error. The
+authenticated Phase 2 live-browser workflow remains a separate `not_run` acceptance gate.
 
 ## Persian and English behavior
 

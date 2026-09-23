@@ -1,14 +1,14 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-23 — Phase 2 implementation is complete and release
-`nextops-0.1.0-e2dad3a` is active on the application and connector guests. Four fixed targets now
+Updated: 2026-09-23 — Phase 2 implementation is complete. Application release
+`nextops-0.1.0-8d042cf` and connector release `nextops-0.1.0-e2dad3a` are active. Four fixed targets now
 provide bounded Zabbix history/events plus direct, redacted and forced-command Linux evidence to a
 durable bilingual investigation workflow. Live English/Persian API investigations, authorization,
 all four collectors, restart, rollback and server/API WAN-denied checks passed; source CI is green.
 Do not rebuild or repeat this accepted implementation.
 
-The immediate work is qualification, not new feature development: run a fresh authenticated browser
-against the live release once its private CA is trusted in the automation context, then execute a
+The immediate work is qualification, not new feature development: run the full authenticated browser
+workflow against the live release, then execute a
 Phase 2 serial VM reboot and Phase 2 dependency loss/recovery campaign. These three gates are
 `not_run`, not inferred from Stage 1. Afterward, the next development phase is recovery engineering:
 an approved off-datastore destination, separate PostgreSQL-aware backup/WAL paths, permitted artifact
@@ -46,7 +46,7 @@ The next operator must treat the following as completed and preserve it:
 - serial clean reboots of Zabbix, connector, AI and application with the offline policy loaded before
   normal networking, explicit database-cluster ordering, role-specific recovery and zero failed
   units; and
-- local and CI quality gates: Ruff, strict mypy, 128 passing non-integration tests, PostgreSQL 16
+- local and CI quality gates: Ruff, strict mypy, 129 passing non-integration tests, PostgreSQL 16
   and 17 integration jobs, real-browser fixture acceptance and secret scanning.
 
 The immediate implementation sequence is:
@@ -73,7 +73,8 @@ The immediate implementation sequence is:
    release, exact `history.get`/`event.get` role expansion, four forced-command Linux targets,
    composite durable investigation, bilingual local-model answers, provenance/limits/partial
    behavior, service restart, release rollback and guarded server/API WAN denial passed. Fresh live
-   browser, Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`. All
+   authenticated browser workflow, Phase 2 serial VM reboot and Phase 2 dependency loss/recovery
+   remain `not_run`. The fresh deployed OCS login smoke check has passed. All
    mutation remains disabled.
 
 The detailed material below preserves design rationale and earlier checkpoints. Where it describes
@@ -92,7 +93,7 @@ A sanitized read-only preflight reached all four clean replacement guests after 
 
 The role package layers remain as recorded: PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The controlled application/database/proxy, AI, connector and Zabbix/database/frontend slices are active and passed the named reboot checks. Docker was not installed because the native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-62de8d6`; the active user application and connector both use `nextops-0.1.0-e2dad3a`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
+The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-62de8d6`; the active user application is `nextops-0.1.0-8d042cf` and the connector remains `nextops-0.1.0-e2dad3a`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
 
 Two independent four-case qualification runs passed unauthenticated denial, readiness, Persian and
 English evidence preservation, and safe non-execution responses under both automated checks and
@@ -177,14 +178,14 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 ### نقطهٔ فعلی و ملاک ادامه
 
-پیاده‌سازی مرحلهٔ دو تکمیل شده و انتشار `nextops-0.1.0-e2dad3a` روی مهمان‌های برنامه و
-اتصال‌دهنده فعال است. چهار مقصد ثابت اکنون تاریخچه و رویداد محدود Zabbix را همراه شواهد مستقیم،
+پیاده‌سازی مرحلهٔ دو تکمیل شده است؛ انتشار برنامه `nextops-0.1.0-8d042cf` و انتشار اتصال‌دهنده
+`nextops-0.1.0-e2dad3a` فعال‌اند. چهار مقصد ثابت اکنون تاریخچه و رویداد محدود Zabbix را همراه شواهد مستقیم،
 پالایش‌شده و مبتنی بر فرمان اجباری Linux به گردش ماندگار بررسی دوزبانه می‌رسانند. بررسی زندهٔ API
 به فارسی و انگلیسی، مجوزدهی، هر چهار گردآورنده، راه‌اندازی مجدد، بازگشت انتشار و مسیر سرور/API با
 WAN مسدود موفق بوده و CI سبز است. این پیاده‌سازی پذیرفته‌شده نباید از نو ساخته شود.
 
-کار فوری، تکمیل صلاحیت‌سنجی است نه توسعهٔ قابلیت تازه: پس از اعتماد دادن CA خصوصی در محیط
-خودکارسازی، مرورگر تازه روی انتشار زنده آزموده شود؛ سپس reboot ترتیبی VMها و سناریوی قطع و بازیابی
+کار فوری، تکمیل صلاحیت‌سنجی است نه توسعهٔ قابلیت تازه: گردش کامل و احرازهویت‌شدهٔ مرورگر روی
+انتشار زنده آزموده شود؛ سپس reboot ترتیبی VMها و سناریوی قطع و بازیابی
 وابستگی ویژهٔ مرحلهٔ دو اجرا شوند. هر سه دروازه `not_run` هستند و از شواهد مرحلهٔ یک استنتاج
 نمی‌شوند. پس از آن، مرحلهٔ توسعه‌ای بعدی مهندسی بازیابی است: مقصد پشتیبان مستقل، مسیرهای جداگانهٔ
 پشتیبان و WAL آگاه از PostgreSQL، پشتیبان artifact مجاز، PITR و restore ایزوله، RPO/RTO اندازه‌گیری‌شده
@@ -218,7 +219,7 @@ WAN مسدود موفق بوده و CI سبز است. این پیاده‌ساز
 - مرورگر تازه با WAN مسدود، بازگشت برنامه و محیط اجرا و مدل، لغو، قطع وابستگی، مدل مفقود/خراب،
   کمبود فضای ایزوله، بار پنج‌دقیقه‌ای و بازیابی منطقی هر دو پایگاه؛ جزئیات در
   [گزارش تکمیل مرحلهٔ ۱](fa/STAGE_1_COMPLETION_REPORT.md)؛
-- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۲۸ آزمون غیر‌یکپارچه، کارهای یکپارچگی PostgreSQL 16 و 17،
+- عبور Ruff، بررسی سخت‌گیرانهٔ mypy، ۱۲۹ آزمون غیر‌یکپارچه، کارهای یکپارچگی PostgreSQL 16 و 17،
   fixture واقعی مرورگر و پویش راز.
 
 ترتیب مستقیم کار بعدی چنین است:
@@ -241,9 +242,9 @@ WAN مسدود موفق بوده و CI سبز است. این پیاده‌ساز
 7. **پیاده‌سازی مرحلهٔ دو تکمیل شد؛ سه دروازهٔ صلاحیت‌سنجی باقی است:** انتشار تغییرناپذیر برنامه و
    اتصال‌دهنده، افزودن دقیق `history.get` و `event.get`، چهار مقصد Linux با فرمان اجباری، بررسی
    ترکیبی و ماندگار، پاسخ دوزبانهٔ مدل محلی، منشأ و سقف و نشان نقص، راه‌اندازی مجدد سرویس، بازگشت
-   انتشار و قطع محافظت‌شدهٔ WAN در مسیر سرور/API موفق بودند. مرورگر تازهٔ زنده، reboot ترتیبی
-   مرحلهٔ دو و قطع و بازیابی وابستگی مرحلهٔ دو هنوز `not_run` هستند. همهٔ عملیات تغییردهنده
-   همچنان غیرفعال‌اند.
+   انتشار و قطع محافظت‌شدهٔ WAN در مسیر سرور/API موفق بودند. بررسی تازهٔ صفحهٔ ورود OCS روی
+   استقرار زنده موفق بود؛ گردش کامل و احرازهویت‌شدهٔ مرورگر، reboot ترتیبی مرحلهٔ دو و قطع و
+   بازیابی وابستگی مرحلهٔ دو هنوز `not_run` هستند. همهٔ عملیات تغییردهنده همچنان غیرفعال‌اند.
 
 مطالب تفصیلی بعدی منطق طراحی و نقاط پیشین را حفظ می‌کند. هرجا برنامه، PostgreSQL، Zabbix، اتصال یا
 رابط مرورگر را نصب‌نشده می‌نامد، این بخش و [وضعیت پروژه](PROJECT_STATE.md) جای آن عبارت قدیمی را
@@ -261,7 +262,7 @@ WAN مسدود موفق بوده و CI سبز است. این پیاده‌ساز
 
 لایهٔ بسته‌های هر نقش مطابق رکورد باقی است: PostgreSQL 16.15 و Nginx 1.24 روی برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 روی هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 روی connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 روی Zabbix. برش‌های کنترل‌شدهٔ برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix و پایگاه و رابط آن فعال‌اند و آزمون‌های نام‌بردهٔ راه‌اندازی مجدد را گذرانده‌اند. Docker نصب نشد، زیرا طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-62de8d6` است و برنامه و اتصال‌دهنده هر دو انتشار `nextops-0.1.0-e2dad3a` را اجرا می‌کنند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
+محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-62de8d6` است؛ برنامه انتشار `nextops-0.1.0-8d042cf` و اتصال‌دهنده انتشار `nextops-0.1.0-e2dad3a` را اجرا می‌کنند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
 
 دو اجرای مستقلِ چهارموردی، رد درخواست بدون احراز هویت، آمادگی، حفظ شاهد فارسی و انگلیسی و پاسخ ایمن
 بدون ادعای اجرا را هم در بررسی خودکار و هم در بازبینی انسانی گذراندند. آزمون بار اولیه، مرز یک

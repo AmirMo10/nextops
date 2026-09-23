@@ -9,7 +9,11 @@ mark is embedded for offline use, the OCS gold/teal palette now drives a light e
 and the same local artwork supplies the browser icon. General, monitoring and incident behavior,
 evidence/audit identifiers and 128-token bounds are unchanged. The browser fixture passes English
 LTR, Persian RTL, reduced motion, responsive mobile/desktop layouts and zero external asset
-requests. Live promotion remains a separate deployment record.
+requests. The final source passed all five CI jobs and was promoted under change
+`ui-ocs-brand-20260923-02` as immutable application release `nextops-0.1.0-8d042cf`. A fresh deployed
+login check passed English desktop and Persian RTL at 375 pixels with no horizontal overflow,
+external request, failed response or console error. This does not claim the still-unrun
+authenticated Phase 2 live-browser gate.
 
 Deployed Phase 2A under change `phase2a-incident-context-20260923-01` as immutable app and connector
 release `nextops-0.1.0-1ab6586`. The Zabbix reader now permits exactly `host.get`, `item.get`,
@@ -74,7 +78,11 @@ Windows session because no local server or working container runtime was availab
 مرورگر نیز از همان تصویر محلی استفاده می‌کند. رفتار دستیار عمومی، پایش و بررسی رخداد، شناسه‌های
 شاهد و ممیزی و سقف ۱۲۸ توکن تغییری نکرده است. آزمون مرورگر، چیدمان چپ‌به‌راست انگلیسی،
 راست‌به‌چپ فارسی، کاهش حرکت، نمایش واکنش‌گرا در موبایل و دسکتاپ و نبود درخواست دارایی بیرونی را
-تأیید می‌کند. ارتقای زنده در رکورد استقرار جدا ثبت خواهد شد.
+تأیید می‌کند. کد نهایی هر پنج کار CI را گذراند و با شناسهٔ تغییر
+`ui-ocs-brand-20260923-02` به‌صورت انتشار تغییرناپذیر برنامه `nextops-0.1.0-8d042cf` مستقر شد.
+بررسی تازهٔ صفحهٔ ورود مستقرشده، نمای رومیزی انگلیسی و فارسی راست‌به‌چپ با عرض ۳۷۵ پیکسل را بدون
+سرریز افقی، درخواست بیرونی، پاسخ ناموفق یا خطای console گذراند. این نتیجه به‌معنای اجرای دروازهٔ
+کامل و احرازهویت‌شدهٔ مرورگر در مرحلهٔ دو نیست.
 
 گام 2A با شناسهٔ تغییر `phase2a-incident-context-20260923-01` و انتشار تغییرناپذیر
 `nextops-0.1.0-1ab6586` روی برنامه و اتصال‌دهنده مستقر شد. خوانشگر Zabbix اکنون دقیقاً پنج روش
