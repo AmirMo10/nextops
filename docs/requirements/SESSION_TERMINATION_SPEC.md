@@ -1,6 +1,6 @@
 # Server-side session termination / پایان‌دادن نشست در سمت سرور
 
-Status: **source implemented; PostgreSQL CI and controlled deployment pending.** Date: 2026-09-23.
+Status: **accepted for controlled deployment; not production acceptance.** Date: 2026-09-23.
 
 ## English
 
@@ -52,6 +52,15 @@ acceptance additionally requires a real login/logout, rejection of the former to
 protected API, persistence of exactly one sanitized audit event, service health, and immutable
 rollback. Rollback restores the prior application release only; no schema rollback is needed.
 
+Commit `eb57241` passed all five hosted CI jobs and was promoted as immutable application release
+`nextops-0.1.0-eb57241` under change `session-termination-20260923-01`; release
+`nextops-0.1.0-54c8bb4` remains the rollback. Two simultaneous live sessions were issued. Browser
+and API logout returned empty `204`; the former tokens then received structured `401`, the other
+session remained valid, replay remained `204`, and exactly one empty-detail correlated audit event
+was found. The real browser used normal TLS verification, made no external application request and
+returned to login without unexpected console errors. Independent recovery and production gates are
+unchanged.
+
 ## فارسی
 
 <div dir="rtl">
@@ -101,5 +110,13 @@ cookie مرورگر یا چرخش گواهی را پیاده نمی‌کند. mi
 و خروج واقعی، رد توکن قبلی در یک API محافظت‌شده، ثبت دقیق یک رویداد ممیزی پالایش‌شده، سلامت سرویس
 و بازگشت تغییرناپذیر را ثابت کند. بازگشت فقط انتشار پیشین برنامه را فعال می‌کند و rollback پایگاه
 لازم نیست.
+
+commit `eb57241` هر پنج کار CI میزبانی‌شده را گذراند و با شناسهٔ تغییر
+`session-termination-20260923-01` به‌عنوان انتشار تغییرناپذیر `nextops-0.1.0-eb57241` برنامه ارتقا
+یافت؛ `nextops-0.1.0-54c8bb4` برای بازگشت باقی است. دو نشست زندهٔ هم‌زمان صادر شد. خروج مرورگر و
+API پاسخ خالی `204` داد؛ توکن‌های قبلی سپس `401` ساخت‌یافته گرفتند، نشست دیگر معتبر ماند، تکرار
+همچنان `204` بود و دقیقاً یک رویداد ممیزی دارای شناسهٔ هم‌بستگی و جزئیات خالی یافت شد. مرورگر واقعی
+با اعتبارسنجی عادی TLS، بدون درخواست بیرونی برنامه و بدون خطای غیرمنتظرهٔ console به صفحهٔ ورود
+بازگشت. دروازه‌های بازیابی مستقل و تولید تغییری نکرده‌اند.
 
 </div>

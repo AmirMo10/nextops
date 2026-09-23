@@ -4,13 +4,18 @@
 
 ### English
 
-Closed a source-level session-termination gap. The panel now calls an audited server-side logout
+Closed and deployed the session-termination gap. The panel now calls an audited server-side logout
 endpoint before clearing its tab-local bearer. PostgreSQL revokes exactly the presented session
 under a row lock, emits one correlated append-only event, leaves other sessions valid and treats
 replay or an unknown token idempotently without exposing a token-existence oracle. API, integration
 and real-browser coverage verifies denial without a bearer, empty `204`, single-session isolation,
-one audit event, local-token removal and localized return to login. Controlled deployment and live
-former-token rejection remain pending; no schema migration is required.
+one audit event, local-token removal and localized return to login. All five hosted CI jobs passed;
+immutable application release `nextops-0.1.0-eb57241` then passed live API and normal-TLS browser
+logout, former-token rejection, second-session preservation and idempotent replay. Release
+`nextops-0.1.0-54c8bb4` remains available for rollback; no schema migration was required.
+A fresh full Phase 2 browser rerun on the promoted release also passed bilingual incident
+generation, combined evidence provenance, durable audit identifiers, RTL mobile layout, audited
+logout, new-tab isolation and zero external page requests under the WAN-deny proxy.
 
 Added the guarded source contract for the next recovery phase without changing serving VMs. ADR
 0008 proposes separate pgBackRest repositories for the application and Zabbix PostgreSQL 16
@@ -123,13 +128,18 @@ Windows session because no local server or working container runtime was availab
 
 ### فارسی
 
-شکاف منبع در پایان‌دادن نشست بسته شد. پنل اکنون پیش از پاک‌کردن bearer محلی برگه، مسیر ممیزی‌شدهٔ
+شکاف پایان‌دادن نشست بسته و مستقر شد. پنل اکنون پیش از پاک‌کردن bearer محلی برگه، مسیر ممیزی‌شدهٔ
 خروج در سمت سرور را فراخوانی می‌کند. PostgreSQL فقط همان نشست ارائه‌شده را زیر قفل سطر لغو، یک
 رویداد فقط‌افزودنی و دارای شناسهٔ هم‌بستگی ثبت و نشست‌های دیگر را معتبر نگه می‌دارد؛ تکرار درخواست
 یا توکن ناشناخته نیز بدون افشای وجود توکن به‌صورت idempotent پاسخ می‌گیرند. پوشش API، یکپارچگی و
 مرورگر واقعی، رد درخواست بدون bearer، پاسخ خالی `204`، جداسازی یک نشست، یک رویداد ممیزی، حذف توکن
-محلی و بازگشت بومی‌شده به ورود را می‌سنجد. استقرار کنترل‌شده و رد زندهٔ توکن پیشین هنوز باقی است
-و migration پایگاه لازم نیست.
+محلی و بازگشت بومی‌شده به ورود را می‌سنجد. هر پنج کار CI میزبانی‌شده موفق شدند؛ سپس انتشار
+تغییرناپذیر `nextops-0.1.0-eb57241` خروج زنده در API و مرورگر با TLS عادی، رد توکن پیشین، حفظ
+نشست دوم و تکرار بدون اثر اضافی را گذراند. انتشار `nextops-0.1.0-54c8bb4` برای بازگشت حفظ شده است
+و migration پایگاه لازم نبود.
+بازاجرای کامل و تازهٔ مرورگر مرحلهٔ دو روی انتشار ترویج‌شده نیز تولید دوزبانهٔ رخداد، منشأ ترکیبی
+شواهد، شناسه‌های ماندگار ممیزی، چیدمان موبایل راست‌به‌چپ، خروج ممیزی‌شده، جداسازی برگهٔ تازه و نبود
+درخواست بیرونی صفحه زیر پراکسی مسدودکنندهٔ WAN را گذراند.
 
 قرارداد محافظت‌شدهٔ مرحلهٔ بعدی بازیابی بدون تغییر VMهای سرویس‌دهنده افزوده شد. ADR 0008 برای دو
 خوشهٔ PostgreSQL 16 برنامه و Zabbix مخزن‌های جداگانهٔ pgBackRest پیشنهاد می‌کند و restic را به

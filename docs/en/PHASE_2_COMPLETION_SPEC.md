@@ -3,7 +3,7 @@
 [فارسی](../fa/PHASE_2_COMPLETION_SPEC.md) · [Architecture decision](../adr/0007-forced-command-linux-connector.md) · [Current state](../PROJECT_STATE.md)
 
 **Status: implementation and controlled qualification complete.** Application release
-`nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` implement the durable incident
+`nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` implement the durable incident
 workflow and bounded Linux/Zabbix evidence boundary. It is live for controlled user testing, not
 production-accepted.
 
@@ -11,7 +11,7 @@ production-accepted.
 
 | Gate | Status | Evidence |
 |---|---|---|
-| Source quality and security CI | `passed` | Formatting, lint, strict typing, 128 non-integration tests, PostgreSQL 16/17 jobs, real-browser fixture and secret scan passed |
+| Source quality and security CI | `passed` | Formatting, lint, strict typing, 137 non-integration tests, PostgreSQL 16/17 jobs, real-browser fixture and secret scan passed |
 | Authorization and target boundary | `passed` | Unauthenticated requests returned `401`; unknown/unapproved target returned `403`; the browser and model received no target credentials |
 | Four direct Linux collectors | `passed` | Each fixed target returned a schema-valid, bounded, redacted snapshot through its distinct forced-command key; generic shell execution was denied |
 | Four composite connector paths | `passed` | Each target returned bounded Zabbix history/events plus direct Linux evidence with explicit partial/truncation metadata |

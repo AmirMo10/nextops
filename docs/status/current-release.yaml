@@ -1,17 +1,17 @@
 ---
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
-release_identifier: nextops-phase2-controlled-2026-09-23
+release_identifier: nextops-session-termination-controlled-2026-09-23
 observed_at: '2026-09-23'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: f6a60659e31cb956df8cb5bfee3763370cf14bda
+  inspected_baseline_commit: eb572410b345202cfbf0384d7f847c5495026132
 components:
   application:
-    release: nextops-0.1.0-54c8bb4
-    source_commit: 54c8bb4ec4db23a03eeba4aa7b35c81bd28d1bc2
+    release: nextops-0.1.0-eb57241
+    source_commit: eb572410b345202cfbf0384d7f847c5495026132
   connector:
     release: nextops-0.1.0-e2dad3a
     source_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
@@ -105,7 +105,7 @@ capabilities:
       - tests/unit/test_recovery_profile.py
       - docs/adr/0008-independent-recovery-repositories.md
   - id: server_side_session_termination
-    status: implemented_unaccepted
+    status: accepted_controlled
     evidence:
       - docs/requirements/SESSION_TERMINATION_SPEC.md
       - packages/nextops/application/service.py
@@ -216,3 +216,12 @@ acceptance_gates:
       - docs/PROJECT_STATE.md
       - docs/en/TESTING.md
       - docs/en/PHASE_2_COMPLETION_SPEC.md
+  - id: session_termination_live
+    status: passed
+    evidence:
+      - docs/requirements/SESSION_TERMINATION_SPEC.md
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+      - tests/api/test_app.py
+      - tests/integration/test_durable_app_postgresql.py
+      - tests/browser/test_phase2_panel.py

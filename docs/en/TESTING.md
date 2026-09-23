@@ -15,7 +15,7 @@ WAL/PITR and production acceptance remain open. Source: master specification sec
 ## Phase 2 current qualification — 2026-09-23
 
 Phase 2 connector release `nextops-0.1.0-e2dad3a` and current application release
-`nextops-0.1.0-54c8bb4` passed the source quality/unit job, PostgreSQL 16 and 17 integration jobs,
+`nextops-0.1.0-eb57241` passed the source quality/unit job, PostgreSQL 16 and 17 integration jobs,
 real-browser fixture job and secret scan. The source suite includes forced-command parsing,
 private-target validation, strict host-key/identity construction, provenance mismatch, output limits,
 redaction, authentication, scope denial, unknown targets, safe dependency errors, prompt-injection
@@ -29,6 +29,10 @@ server/API WAN denial, authenticated live browser, Phase 2 serial VM reboot and 
 loss/recovery passed. The OCS frontend passed English desktop and Persian RTL mobile views with no
 external request, failed response, console error or horizontal overflow. See the
 [Phase 2 qualification record](PHASE_2_COMPLETION_SPEC.md).
+
+The same release also passed the controlled session-termination gate. Direct API and normal-TLS
+browser logout returned `204`, former tokens received `401`, a second session stayed valid, replay
+was idempotent, and exactly one sanitized correlated audit event was present.
 
 ## Historical Phase 2A controlled deployment evidence
 

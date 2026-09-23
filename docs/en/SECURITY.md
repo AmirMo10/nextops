@@ -39,8 +39,9 @@ The source now implements an audited, server-side `POST /api/v1/logout` boundary
 presented bearer, row-locks and revokes only that durable session, and records one correlated
 append-only event. Replay is idempotent and an unknown bearer receives the same empty result as an
 already-revoked session, avoiding a token-existence oracle. The offline panel always removes its
-tab-local copy after attempting revocation. Controlled deployment acceptance is still pending; see
-the [session termination specification](../requirements/SESSION_TERMINATION_SPEC.md).
+tab-local copy after attempting revocation. Hosted PostgreSQL 16/17 CI and controlled live
+application/browser acceptance pass; see the
+[session termination specification](../requirements/SESSION_TERMINATION_SPEC.md).
 
 SQL tools use predefined bounded diagnostic queries and narrow database identities. `SELECT` alone does not prove safety. Stored functions, output-to-file operations, locks, costly queries and execution-oriented EXPLAIN variants require their actual semantics to be considered.
 

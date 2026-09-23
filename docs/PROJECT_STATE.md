@@ -1,7 +1,7 @@
 # Project state / وضعیت پروژه
 
 Updated: 2026-09-23 — Phase 2 is deployed for controlled user testing with application release
-`nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a`. An authenticated operator can
+`nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a`. An authenticated operator can
 select one of four deployment-owned
 targets and receive a durable English or Persian incident explanation grounded in bounded Zabbix
 history/events and a direct read-only Linux snapshot. The model and browser receive no target
@@ -30,13 +30,15 @@ recovery, and passed isolated/offline/negative restore gates. The profile is int
 but `BLOCKED`; no backup package or job was installed on the serving VMs and production readiness
 is not claimed.
 
-The next source hardening increment closes browser-only logout. `POST /api/v1/logout` now revokes
+The next source hardening increment closed browser-only logout. `POST /api/v1/logout` now revokes
 exactly the presented durable PostgreSQL session under a row lock and writes one correlated,
 append-only audit event without token material. Replay and unknown tokens are idempotent and do not
 create an existence oracle; another session for the same identity remains valid. The offline panel
-attempts server revocation before clearing `sessionStorage`, with fail-safe local cleanup. API and
-real-browser tests pass locally, while PostgreSQL 16/17 CI and controlled live deployment are still
-pending, so the release manifest records this capability as implemented but unaccepted.
+attempts server revocation before clearing `sessionStorage`, with fail-safe local cleanup. Commit
+`eb57241` passed all five CI jobs and immutable release `nextops-0.1.0-eb57241` passed live API and
+normal-TLS browser logout, former-token rejection, other-session preservation, idempotent replay and
+exactly one sanitized audit-event verification. Release `nextops-0.1.0-54c8bb4` remains available
+for rollback.
 
 ## English
 
@@ -58,7 +60,7 @@ destination outside the serving guest, datastore and hypervisor failure domains,
 offline bundle verification and real independent restore drills.
 
 The authenticated application and bilingual panel are deployed as immutable release
-`nextops-0.1.0-54c8bb4` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
+`nextops-0.1.0-eb57241` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
 application identity and session state on
 its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
 application listener are not exposed through Nginx. The browser receives neither the AI service
@@ -235,7 +237,7 @@ Six repository-scoped Codex skills under `.agents/skills` route project context,
 | 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; the reader sees all four approved Phase 1 hosts with fresh items, while the full failure matrix remains |
 | 1D | New evidence-linked Zabbix answer with audit | English/Persian grounded answers pass; every started live investigation now has a durable scoped run, bounded evidence snapshot/hash, model result, safe failure outcome and append-only audit linkage verified in isolated PostgreSQL and the live path |
 | 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh login, bilingual general Q&A, live evidence and audit passed while all four guests were WAN-blocked. A separately WAN-denied fresh browser, revocation, cancellation, dependency/artifact/low-space recovery and five-minute capacity profile pass. After correcting database-cluster ordering, all four guests passed the serial clean-reboot matrix. Production backup/PITR acceptance remains open |
-| 2 | Read-only Linux/Zabbix incident investigation | Application release `nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` are live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, restart, rollback, server/API WAN denial, authenticated WAN-denied browser, dependency loss/recovery and a fresh four-VM serial reboot all pass. Production recovery gates remain separate |
+| 2 | Read-only Linux/Zabbix incident investigation | Application release `nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` are live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, restart, rollback, server/API WAN denial, authenticated WAN-denied browser, dependency loss/recovery, a fresh four-VM serial reboot and audited session termination all pass. Production recovery gates remain separate |
 
 The user may perform provisioning independently; verify their actual state before claiming a VM either exists or does not exist. A screenshot of VM settings is not proof of an accepted application workflow. Resume from the next evidenced, authorized incomplete stage rather than resetting progress.
 
@@ -264,7 +266,7 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 
 ## فارسی
 
-مرحلهٔ دو با انتشار تغییرناپذیر برنامه `nextops-0.1.0-54c8bb4` و انتشار اتصال‌دهنده
+مرحلهٔ دو با انتشار تغییرناپذیر برنامه `nextops-0.1.0-eb57241` و انتشار اتصال‌دهنده
 `nextops-0.1.0-e2dad3a` برای ارزیابی کنترل‌شدهٔ کاربران مستقر شده است. بهره‌بردار احرازهویت‌شده
 می‌تواند یکی از چهار مقصد منطقی و ازپیش‌تعریف‌شده را برگزیند
 و توضیحی ماندگار به فارسی یا انگلیسی دریافت کند که هم به تاریخچه و رویدادهای محدود Zabbix و هم به
@@ -288,13 +290,14 @@ WAL پایگاه به restic و هر ادعای صلاحیت بدون مقصد �
 معتبر، بازیابی کلید و موفقیت آزمون‌های جدا، آفلاین و منفی را رد می‌کند. پروفایل عمداً معتبر اما
 `BLOCKED` است؛ هیچ بسته یا job پشتیبان روی VMهای سرویس‌دهنده نصب نشده و آمادگی تولید ادعا نمی‌شود.
 
-increment بعدی سخت‌سازی منبع، خروج صرفاً مرورگری را اصلاح می‌کند. مسیر `POST /api/v1/logout`
+increment بعدی سخت‌سازی، خروج صرفاً مرورگری را اصلاح کرد. مسیر `POST /api/v1/logout`
 اکنون فقط همان نشست ماندگار PostgreSQL را زیر قفل سطر لغو می‌کند و یک رویداد ممیزیِ فقط‌افزودنی و
 دارای شناسهٔ هم‌بستگی، بدون مادهٔ توکن، می‌نویسد. تکرار درخواست و توکن ناشناخته idempotent هستند و
 نشست دیگر همان هویت معتبر می‌ماند. پنل آفلاین پیش از پاک‌کردن `sessionStorage` برای لغو سروری تلاش
-می‌کند و پاک‌سازی محلی در حالت خطا نیز انجام می‌شود. آزمون API و مرورگر واقعی در محیط محلی موفق
-است؛ اما CI مربوط به PostgreSQL 16/17 و استقرار کنترل‌شدهٔ زنده هنوز باقی است، بنابراین مانیفست
-این قابلیت را پیاده‌شده اما پذیرفته‌نشده ثبت می‌کند.
+می‌کند و پاک‌سازی محلی در حالت خطا نیز انجام می‌شود. commit `eb57241` هر پنج کار CI را گذراند و
+انتشار تغییرناپذیر `nextops-0.1.0-eb57241` در API زنده و مرورگر دارای TLS عادی، خروج، رد توکن
+قبلی، حفظ نشست دیگر، تکرار idempotent و وجود دقیقاً یک رویداد ممیزی پالایش‌شده را با موفقیت
+آزمود. انتشار `nextops-0.1.0-54c8bb4` برای بازگشت باقی است.
 
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 
@@ -326,7 +329,7 @@ PITR، مخزن فایل با restic و تأیید نهایی بازیابی ب�
 مصوب و خارج از دامنهٔ خرابی مهمان، datastore و hypervisor سرویس‌دهنده نیاز دارد؛ پس از آن بسته‌های
 دقیق آفلاین و تمرین واقعی بازیابی مستقل را می‌توان راستی‌آزمایی کرد.
 
-برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-54c8bb4` روی مهمان برنامه و پشت TLS خصوصی
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-eb57241` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
 می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
 نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.

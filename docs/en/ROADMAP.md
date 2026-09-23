@@ -7,10 +7,13 @@
 **Phase 1 delivered the first Zabbix answer; Phase 2 now adds bounded direct Linux evidence.** The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
 **Phase 2 implementation and qualification are complete for controlled user testing.** Application
-release `nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` combine the bounded authenticated Zabbix incident context with fixed-target,
+release `nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` combine the bounded authenticated Zabbix incident context with fixed-target,
 forced-command Linux snapshots, durable audit/evidence linkage and bilingual model output. Source
 CI, live English/Persian API requests, service restart, rollback, guarded WAN isolation,
 authenticated browser, serial reboot and dependency recovery pass.
+The current application release additionally passes audited server-side session termination in
+hosted CI, the live API and a normal-TLS browser while preserving a second session and the prior
+rollback release.
 
 ## Create these VMs first
 

@@ -53,11 +53,11 @@ must not be represented as a complete screen library.
 
 The real-browser fixture covers the branded login, authenticated workspace, composite incident
 evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width without horizontal
-overflow or external requests. The source passed all five CI jobs and was promoted as immutable
-application release `nextops-0.1.0-54c8bb4`. A fresh deployed login check passed English desktop and
-Persian RTL at 375 pixels with no overflow, external request, failed response or console error. The
-later authenticated Phase 2 live-browser workflow also passed English/Persian incident evidence,
-normal TLS, WAN denial, mobile RTL, logout and new-tab isolation.
+overflow or external requests. The visual foundation was first promoted as immutable application
+release `nextops-0.1.0-54c8bb4`; current release `nextops-0.1.0-eb57241` preserves it and adds
+server-side session termination. A fresh authenticated Phase 2 browser workflow on the current
+release passed English/Persian incident evidence, normal TLS, WAN denial, mobile RTL, audited
+logout and new-tab isolation without an external page request.
 
 ## Persian and English behavior
 
