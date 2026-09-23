@@ -10,17 +10,16 @@ deterministic application/connector controls.
 
 Live English and Persian API investigations passed with the local CPU model, composite evidence and
 run/evidence/audit identifiers. All four direct Linux collectors and all four composite connector
-paths passed; unauthenticated and unknown-target requests failed closed. App and connector restart,
-immutable rollback/forward, and a server/API path with direct WAN access denied passed. The four
-guests ended `running`, with zero failed units and no reboot requirement. CI passed formatting,
-lint, strict typing, 129 non-integration tests, PostgreSQL 16 and 17 integration jobs, the real-browser
-fixture and secret scanning. The Figma-founded OCS visual refinement was promoted as an
-application-only change; a fresh
-deployed login check passed English desktop and Persian RTL mobile without overflow, external
-requests, failed responses or console errors. The full authenticated Phase 2 live-browser run,
-Phase 2-specific serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`; prior Stage
-1 evidence does not substitute for them. Production acceptance remains blocked by independent
-off-datastore backup, WAL/PITR, certificate lifecycle and disaster-recovery sign-off.
+paths passed; unauthenticated and unknown-target requests failed closed. App/connector restart,
+immutable rollback/forward, server/API WAN denial, the authenticated live browser, Phase 2
+dependency loss/recovery and a fresh serial reboot of all four VMs now pass. The browser used normal
+TLS verification and denied WAN access, returned bilingual combined evidence and completed RTL,
+logout and new-tab isolation checks. The connector outage returned a safe `503` while general AI
+remained available, then a fresh audited incident succeeded after recovery. All guests ended
+`running`, with zero failed units and no reboot requirement. The live run exposed and corrected an
+Nginx route timeout for Phase 2 incident requests; the route now has the bounded 180-second assistant
+window and regression coverage. Production acceptance remains blocked by independent off-datastore
+backup, WAL/PITR, certificate lifecycle and disaster-recovery sign-off.
 
 ## English
 
@@ -31,9 +30,9 @@ logical target IDs from deployment configuration, permits only named read operat
 Zabbix history/events and every Linux diagnostic category. Live provenance, authentication,
 partial markers, direct collection, durable model/audit integration, immutable release rollback,
 service restart and guarded server/API WAN isolation passed. The browser fixture passed English
-LTR, Persian RTL, responsive layout and reduced-motion behavior. The deployed OCS login passed a
-fresh unauthenticated English/Persian desktop/mobile browser check. The authenticated live-browser
-workflow, a Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`.
+LTR, Persian RTL, responsive layout and reduced-motion behavior. The full deployed authenticated
+browser, Phase 2 dependency loss/recovery and serial VM reboot gates now also pass. The next
+engineering checkpoint is recovery infrastructure, not another Phase 2 feature increment.
 
 The authenticated application and bilingual panel are deployed as immutable release
 `nextops-0.1.0-54c8bb4` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
@@ -213,7 +212,7 @@ Six repository-scoped Codex skills under `.agents/skills` route project context,
 | 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; the reader sees all four approved Phase 1 hosts with fresh items, while the full failure matrix remains |
 | 1D | New evidence-linked Zabbix answer with audit | English/Persian grounded answers pass; every started live investigation now has a durable scoped run, bounded evidence snapshot/hash, model result, safe failure outcome and append-only audit linkage verified in isolated PostgreSQL and the live path |
 | 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh login, bilingual general Q&A, live evidence and audit passed while all four guests were WAN-blocked. A separately WAN-denied fresh browser, revocation, cancellation, dependency/artifact/low-space recovery and five-minute capacity profile pass. After correcting database-cluster ordering, all four guests passed the serial clean-reboot matrix. Production backup/PITR acceptance remains open |
-| 2 | Read-only Linux/Zabbix incident investigation | Application release `nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` are live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, restart, rollback and server/API WAN-denied checks pass; the OCS login smoke check passes while the authenticated live-browser, Phase 2 reboot and dependency-recovery gates remain `not_run` |
+| 2 | Read-only Linux/Zabbix incident investigation | Application release `nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` are live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, restart, rollback, server/API WAN denial, authenticated WAN-denied browser, dependency loss/recovery and a fresh four-VM serial reboot all pass. Production recovery gates remain separate |
 
 The user may perform provisioning independently; verify their actual state before claiming a VM either exists or does not exist. A screenshot of VM settings is not proof of an accepted application workflow. Resume from the next evidenced, authorized incomplete stage rather than resetting progress.
 
@@ -233,10 +232,9 @@ scanning passed. The earlier Stage 1 fresh-browser/offline, failure-recovery, lo
 records remain historical evidence, not inferred Phase 2 reruns. Dependency/license approval,
 independent backup/PITR and production promotion remain separate gates.
 
-The next engineering checkpoint in [NEXT_TASK](NEXT_TASK.md) is to close the three explicitly
-unexecuted Phase 2 gates—authenticated live-browser use, serial reboot and dependency
-loss/recovery—without
-rebuilding the accepted implementation. Production promotion remains blocked on an approved
+The next engineering checkpoint in [NEXT_TASK](NEXT_TASK.md) is recovery engineering; the three
+previously unexecuted Phase 2 qualification gates are now closed without rebuilding the accepted
+implementation. Production promotion remains blocked on an approved
 off-datastore recovery destination, PostgreSQL-aware repositories/WAL archiving, permitted artifact
 backup, independent PITR, recorded RPO/RTO and key recovery, and operational sign-off.
 
@@ -250,16 +248,14 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 انتخاب مقصد، فرمان اجباری، هش شواهد و ممیزی خارج از مدل و به‌صورت قطعی اعمال می‌شوند.
 
 بررسی زندهٔ API به هر دو زبان، گردآوری مستقیم Linux و مسیر ترکیبی اتصال‌دهنده برای هر چهار مقصد،
-رد درخواست بدون احرازهویت و مقصد ناشناخته، راه‌اندازی مجدد سرویس‌های برنامه و اتصال‌دهنده، بازگشت
-و بازگردانی انتشار و مسیر سرور/API با WAN مسدود موفق بودند. CI نیز قالب و lint، نوع‌سنجی
-سخت‌گیرانه، ۱۲۹ آزمون غیر‌یکپارچه، یکپارچگی PostgreSQL 16 و 17، آزمون واقعی مرورگر با fixture و
-پویش راز را با موفقیت گذراند. بهبود بصری OCS بر پایهٔ مبنای طراحی Figma، تنها در لایهٔ برنامه
-مستقر شد. رابط OCS در بررسی تازهٔ صفحهٔ ورود مستقرشده، نمای رومیزی انگلیسی و
-فارسی راست‌به‌چپ با عرض ۳۷۵ پیکسل را بدون سرریز، درخواست بیرونی، پاسخ ناموفق یا خطای console
-گذراند. آزمون کامل و احرازهویت‌شدهٔ مرورگر، راه‌اندازی مجدد ترتیبی VMها ویژهٔ مرحلهٔ دو و قطع و
-بازیابی وابستگی در مرحلهٔ دو همچنان `not_run` هستند؛ شاهد مرحلهٔ یک جای اجرای دوبارهٔ آن‌ها را
-نمی‌گیرد. پذیرش تولید نیز تا پشتیبان مستقل، WAL/PITR، چرخهٔ عمر گواهی و تأیید بازیابی بحران مسدود
-می‌ماند.
+رد درخواست بدون احرازهویت و مقصد ناشناخته، راه‌اندازی مجدد سرویس‌ها، بازگشت انتشار و مسیر سرور/API
+با WAN مسدود موفق بودند. اکنون مرورگر کامل و احرازهویت‌شده با اعتبارسنجی عادی TLS و WAN مسدود،
+قطع و بازیابی اتصال‌دهنده و reboot ترتیبیِ تازهٔ هر چهار VM نیز پذیرفته شده‌اند. هنگام قطع
+اتصال‌دهنده، بررسی رخداد خطای امن `503` داد، اما دستیار عمومی محلی فعال ماند؛ پس از بازیابی نیز
+بررسی تازه و ممیزی‌شده موفق شد. هر چهار مهمان در پایان `running`، بدون واحد خراب و بی‌نیاز از
+reboot بودند. اجرای زنده، نقص مهلت مسیر رخداد در Nginx را آشکار کرد؛ مسیر اکنون سقف محدود
+۱۸۰ثانیه‌ای و آزمون بازگشت دارد. پذیرش تولید همچنان تا پشتیبان مستقل، WAL/PITR، چرخهٔ عمر گواهی و
+تأیید بازیابی بحران مسدود می‌ماند.
 
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 
@@ -282,9 +278,9 @@ PITR، مخزن فایل با restic و تأیید نهایی بازیابی ب�
 را تنها از پیکربندی استقرار می‌گیرد، فقط خواندن‌های نام‌دار را می‌پذیرد و تاریخچه و رویداد Zabbix
 و همهٔ دسته‌های عیب‌یابی Linux را محدود می‌کند. منشأ زنده، احرازهویت، نشان نتیجهٔ ناقص، گردآوری
 مستقیم، پیوند ماندگار مدل و ممیزی، بازگشت انتشار، راه‌اندازی مجدد سرویس و قطع WAN در مسیر سرور/API
-پذیرفته شدند. fixture مرورگر، چیدمان انگلیسی LTR، فارسی RTL، نمایش واکنش‌گرا و کاهش حرکت را گذراند
-و صفحهٔ ورود OCS نیز در بررسی تازهٔ سامانهٔ زنده به هر دو زبان موفق بود؛ اما گردش کامل و
-احرازهویت‌شدهٔ مرورگر، reboot ترتیبی مرحلهٔ دو و قطع و بازیابی وابستگی هنوز `not_run` هستند.
+پذیرفته شدند. افزون بر fixture مرورگر، گردش کامل و احرازهویت‌شدهٔ سامانهٔ زنده، چیدمان فارسی RTL،
+جداسازی نشست، reboot ترتیبی مرحلهٔ دو و قطع و بازیابی وابستگی نیز پذیرفته شده‌اند. گام بعدی، مهندسی
+بازیابی مستقل است، نه افزودن قابلیت تازه به مرحلهٔ دو.
 
 برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-54c8bb4` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
@@ -449,7 +445,7 @@ pgBackRest/WAL، مخزن restic، آزمون PITR و بستهٔ بازیابی 
 مرورگر آفلاین، بازیابی خطا، بار و restore سابقه‌اند و به‌عنوان اجرای دوبارهٔ مرحلهٔ دو تلقی
 نمی‌شوند. بررسی وابستگی و مجوز، پشتیبان مستقل/PITR و ارتقا به تولید همچنان دروازه‌اند.
 
-نقطهٔ مهندسی بعدی در [کار بعدی](NEXT_TASK.md)، بستن سه دروازهٔ صریحاً اجرا‌نشدهٔ مرحلهٔ دو است:
-مرورگر تازه روی سامانهٔ زنده، reboot ترتیبی و قطع و بازیابی وابستگی؛ پیاده‌سازی پذیرفته‌شده نباید
-از نو ساخته شود. هم‌زمان، ارتقا به تولید تا تصویب مقصد پشتیبان مستقل، مخزن و WAL آگاه از
+نقطهٔ مهندسی بعدی در [کار بعدی](NEXT_TASK.md)، مهندسی بازیابی است؛ سه دروازهٔ پیش‌تر اجرا‌نشدهٔ
+مرحلهٔ دو، یعنی مرورگر تازهٔ زنده، reboot ترتیبی و قطع و بازیابی وابستگی، اکنون بسته شده‌اند و
+پیاده‌سازی پذیرفته‌شده نباید از نو ساخته شود. ارتقا به تولید تا تصویب مقصد پشتیبان مستقل، مخزن و WAL آگاه از
 PostgreSQL، پشتیبان فایل مجاز، PITR مستقل، ثبت RPO/RTO و بازیابی کلید و تأیید عملیات متوقف می‌ماند.

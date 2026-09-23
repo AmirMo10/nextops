@@ -4,8 +4,8 @@
 
 **The bounded Linux/Zabbix Phase 2 slice is deployed for controlled user testing.** Four fixed Linux
 targets, bounded Zabbix history/events, durable bilingual model output and evidence/audit linkage
-are live. Fresh live-browser, Phase 2 reboot and dependency-recovery qualification remain
-`not_run`. The other nine integration families remain planned. Source: original specification sections 5 and
+are live. Fresh authenticated browser, Phase 2 reboot and dependency-recovery qualification pass.
+The other nine integration families remain planned. Source: original specification sections 5 and
 11–21; enhanced specification section 15. The rows preserve requirements, not claims that every
 vendor API exposes every field.
 
@@ -40,8 +40,8 @@ application routes are deployed. Exact role expansion, live bounded retrieval, r
 WAN isolation pass. Each of four deployment-owned target IDs now adds a bounded, redacted Linux
 snapshot through a distinct key and forced command. The application combines both sources in a
 durable investigation, hashes the canonical evidence, records append-only audit and produces a
-local English or Persian answer. Fresh live-browser, serial-reboot and dependency-recovery checks
-remain separate `not_run` gates.
+local English or Persian answer. Fresh authenticated browser, serial-reboot and dependency-recovery
+checks now pass as separate controlled qualification gates.
 
 ## Cross-system investigations
 

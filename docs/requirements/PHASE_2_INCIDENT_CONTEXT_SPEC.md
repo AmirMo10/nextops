@@ -74,7 +74,8 @@ markers mitigate these threats. The browser and model still receive no Zabbix cr
 - More than eight points, 25 events or four numeric items is truncated and visibly marked partial.
 - Malformed or over-limit upstream responses fail with the existing safe dependency error boundary.
 - A live Zabbix 7.0.30 call and guarded WAN-denied server-path check passed under change
-  `phase2a-incident-context-20260923-01`. Authenticated browser use and VM reboot remain `not_run`.
+  `phase2a-incident-context-20260923-01`. Authenticated browser use and VM reboot were `not_run` at
+  that historical checkpoint; the current release manifest records their later qualification.
 
 ## Rollback, recovery and documentation
 

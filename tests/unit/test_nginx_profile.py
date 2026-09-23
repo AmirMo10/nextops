@@ -16,7 +16,7 @@ def test_app_proxy_requires_tls_and_only_targets_loopback() -> None:
     assert "Strict-Transport-Security" in profile
     assert "limit_req zone=nextops_login" in profile
     assert "limit_req zone=nextops_assistant" in profile
-    assert "assistant/generate|investigate" in profile
+    assert "assistant/generate|investigate|incidents/investigate" in profile
     assert "api/v1/(bootstrap|recovery)" in profile
     assert "docs|redoc|openapi" in profile
     assert "192.168." not in profile

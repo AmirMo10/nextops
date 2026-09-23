@@ -15,9 +15,8 @@ the local CPU-only model in English or Persian.
 The deployed slice is suitable for supervised user testing, not production acceptance. It covers
 four approved hosts, a five-method Zabbix reader and four forced-command Linux identities with
 distinct keys. Phase 2 source CI, live bilingual API investigations, durable evidence/audit linkage,
-service restart, rollback and guarded server/API WAN denial pass. A fresh live browser against this
-release, Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`; earlier
-Stage 1 evidence is preserved separately. Independent off-datastore backup, WAL/PITR, certificate
+service restart, rollback, guarded WAN denial, authenticated live browser, serial VM reboot and
+dependency loss/recovery pass. Independent off-datastore backup, WAL/PITR, certificate
 lifecycle and disaster-recovery sign-off remain open.
 
 ## Status at a glance
@@ -28,8 +27,8 @@ lifecycle and disaster-recovery sign-off remain open.
 | Application and database | Live for controlled testing | Immutable application release, PostgreSQL 16, local identity, private TLS, bilingual panel, rollback and socket-only logical restore passed | Establish independent backup, WAL/PITR and production observability |
 | Local CPU inference | Live and integrated | Pinned llama.cpp/Qwen, authenticated generation, cold restart, artifact rollback, cancellation/dependency recovery and five-minute bounded load passed | Complete independent artifact recovery and production SLO approval |
 | Zabbix | Live with restricted scope | Zabbix 7.0.30, separate PostgreSQL, restricted reader and socket-only logical restore passed | Complete retention, independent backup and WAL/PITR |
-| Read-only connector | Live and least-privilege | Rootless loopback service, protected Zabbix credential, strict TLS, four distinct forced-command Linux keys and bounded composite evidence; denial, restart, rollback and guarded WAN cases passed | Complete fresh live-browser, Phase 2 reboot/dependency recovery, then production monitoring and recovery sign-off |
-| End-to-end user path | Phase 2 API path passed for controlled testing | Fresh English/Persian local answers with Zabbix/Linux evidence and durable run/evidence/audit identifiers passed | Fresh live-browser acceptance on this release plus independent recovery and production promotion |
+| Read-only connector | Live and least-privilege | Rootless loopback service, protected Zabbix credential, strict TLS, four distinct forced-command Linux keys and bounded composite evidence; denial, restart, rollback, guarded WAN and dependency-recovery cases passed | Complete production monitoring and independent recovery sign-off |
+| End-to-end user path | Phase 2 controlled qualification passed | Fresh English/Persian browser answers with Zabbix/Linux evidence, durable run/evidence/audit identifiers, WAN denial, RTL and session isolation passed | Independent recovery and production promotion |
 
 ## Delivered user-testing capability
 

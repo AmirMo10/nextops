@@ -180,17 +180,20 @@ acceptance_gates:
       - docs/fa/UI.md
       - tests/browser/test_phase2_panel.py
   - id: phase2_authenticated_live_browser
-    status: not_run
+    status: passed
     evidence:
       - docs/PROJECT_STATE.md
       - docs/en/TESTING.md
+      - docs/en/PHASE_2_COMPLETION_SPEC.md
   - id: phase2_vm_reboot
-    status: not_run
+    status: passed
     evidence:
       - docs/PROJECT_STATE.md
       - docs/en/TESTING.md
+      - docs/en/PHASE_2_COMPLETION_SPEC.md
   - id: phase2_dependency_recovery
-    status: not_run
+    status: passed
     evidence:
       - docs/PROJECT_STATE.md
       - docs/en/TESTING.md
+      - docs/en/PHASE_2_COMPLETION_SPEC.md

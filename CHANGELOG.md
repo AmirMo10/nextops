@@ -4,6 +4,22 @@
 
 ### English
 
+Completed controlled Phase 2 qualification against the live four-VM deployment. A fresh Edge
+context used normal TLS verification and a deny proxy limited to the private application origin;
+English and Persian incident investigations returned combined Zabbix/Linux provenance and durable
+run/evidence/audit identifiers, with RTL mobile, logout, new-tab isolation and no application WAN
+requests. A guarded connector outage returned a safe localized `503` while general local AI stayed
+available, then monitoring and a fresh audited incident recovered. Zabbix, connector, AI and app
+rebooted serially, returned their role health with zero failed units, and a fresh post-reboot
+bilingual browser investigation passed.
+
+The first live incident request exposed a reverse-proxy timeout defect: the Phase 2 endpoint fell
+through to Nginx's 30-second default while CPU inference was still active. The versioned Nginx
+profile now includes `/api/v1/incidents/investigate` in the bounded 180-second assistant location,
+and the static proxy test prevents regression. Nginx validation and reload passed before the live
+gate was repeated. Phase 2 is qualified for controlled user testing, not production; independent
+backup, WAL/PITR, certificate lifecycle and disaster-recovery acceptance remain open.
+
 Refined the controlled user-testing console from a development-only Figma foundation containing
 the exact OCS palette, 48 design variables, 11 bilingual text styles and two elevation styles. The
 implemented workspace now uses the shared spacing/radius scale, numbered answer-mode cards, compact
@@ -89,6 +105,22 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو روی استقرار زندهٔ چهارماشینی تکمیل شد. یک نشست تازهٔ Edge با
+اعتبارسنجی عادی TLS و پراکسیِ مسدودکننده‌ای اجرا شد که فقط مبدأ خصوصی برنامه را مستثنا می‌کرد.
+بررسی رخداد به فارسی و انگلیسی، منشأ ترکیبی Zabbix/Linux و شناسه‌های ماندگار اجرا، شاهد و ممیزی را
+برگرداند؛ نمایش موبایل راست‌به‌چپ، خروج، جداسازی برگهٔ تازه و نبود درخواست WAN از برنامه نیز موفق
+بود. هنگام توقف محافظت‌شدهٔ اتصال‌دهنده، بررسی رخداد خطای امن و بومی‌شدهٔ `503` داد و دستیار عمومی
+محلی فعال ماند؛ سپس پایش و بررسی تازهٔ ممیزی‌شده بازیابی شدند. Zabbix، اتصال‌دهنده، هوش مصنوعی و
+برنامه یکی‌یکی reboot شدند، سلامت هر نقش با صفر واحد خراب بازگشت و بررسی دوزبانهٔ تازه پس از reboot
+موفق بود.
+
+نخستین درخواست زندهٔ رخداد یک نقص مهلت در پراکسی معکوس را آشکار کرد: مسیر مرحلهٔ دو هنگام ادامهٔ
+استنتاج CPU به مهلت پیش‌فرض ۳۰ثانیه‌ای Nginx می‌افتاد. پروفایل نسخه‌دار اکنون
+`/api/v1/incidents/investigate` را در محل محدود ۱۸۰ثانیه‌ای دستیار قرار می‌دهد و آزمون ایستای
+پراکسی از بازگشت نقص جلوگیری می‌کند. اعتبارسنجی و بارگذاری مجدد Nginx پیش از تکرار دروازهٔ زنده
+موفق بود. مرحلهٔ دو برای ارزیابی کنترل‌شدهٔ کاربران واجد شرایط است، نه تولید؛ پشتیبان مستقل،
+WAL/PITR، چرخهٔ عمر گواهی و پذیرش بازیابی بحران همچنان بازند.
 
 ظاهر کنسول ارزیابی کنترل‌شده با تکیه بر یک مبنای طراحی در Figma بهبود یافت. این مبنا رنگ‌های دقیق
 OCS، چهل‌وهشت متغیر طراحی، یازده سبک نوشتاری دوزبانه و دو سبک سایه را ثبت می‌کند. فضای کاری اکنون

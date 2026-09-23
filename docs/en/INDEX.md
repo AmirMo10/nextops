@@ -2,7 +2,7 @@
 
 [فارسی](../fa/INDEX.md) · [Home](../../README.md) · [Start here](START_HERE.md)
 
-**Updated: 2026-09-23. Status: the controlled bilingual Phase 2 path is deployed across four guests.** Four fixed Linux targets, bounded Zabbix history/events, durable local-CPU answers and evidence/audit linkage are live. Source CI, live API, restart, rollback and server/API WAN-denied checks pass; three Phase 2 qualification gates remain `not_run`. Production acceptance, independent backup, WAL/PITR and disaster recovery remain open. See the [machine-readable release status](../status/current-release.yaml).
+**Updated: 2026-09-23. Status: the controlled bilingual Phase 2 path is deployed and qualified across four guests.** Four fixed Linux targets, bounded Zabbix history/events, durable local-CPU answers and evidence/audit linkage are live. Source CI, live API, restart, rollback, WAN denial, authenticated browser, dependency recovery and serial reboot checks pass. Production acceptance, independent backup, WAL/PITR and disaster recovery remain open. See the [machine-readable release status](../status/current-release.yaml).
 
 > **Current new-server profile:** three NextOps VMs plus `zabbix-server` (4 vCPU / 16 GiB / 200 GiB) = **4 VMs / 40 vCPU / 184 GiB RAM / 980 GiB virtual disks**. Do not add the earlier small lab VM as well. [START_HERE](START_HERE.md) defines the order and Stage 1A–1E; [ZABBIX_SERVER](ZABBIX_SERVER.md) defines the monitoring VM, LVM and read-only integration.
 

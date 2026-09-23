@@ -24,12 +24,10 @@ text, durable composite evidence, reversible scope migration and Persian/English
 On the controlled guests, each of the four direct Linux collectors and each composite connector
 path returned schema-valid bounded evidence. Generic shell execution, unauthenticated access and an
 unknown target were denied. Fresh English and Persian application API investigations returned local
-CPU answers and durable run/evidence/audit IDs. App/connector restart, immutable rollback/forward and
-server/API use while direct WAN access was denied passed. Fresh live-browser use against this
-release with authentication, Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain
-`not_run`. The OCS frontend additionally passed a fresh unauthenticated deployed-login check in
-English desktop and Persian RTL mobile views with no external request, failed response, console
-error or horizontal overflow; that narrower check does not replace the authenticated gate. See the
+CPU answers and durable run/evidence/audit IDs. App/connector restart, immutable rollback/forward,
+server/API WAN denial, authenticated live browser, Phase 2 serial VM reboot and Phase 2 dependency
+loss/recovery passed. The OCS frontend passed English desktop and Persian RTL mobile views with no
+external request, failed response, console error or horizontal overflow. See the
 [Phase 2 qualification record](PHASE_2_COMPLETION_SPEC.md).
 
 ## Historical Phase 2A controlled deployment evidence
@@ -134,6 +132,34 @@ bilingual model-only Q&A and/or eight fresh monitoring metrics, then removed all
 files and restored direct HTTPS. A final durable investigation passed after the application reboot.
 The server/API portion of clean offline-reboot acceptance passed at this checkpoint. The later
 `stage1-completion-20260922-01` campaign closed the fresh-browser subcase recorded above.
+
+## Phase 2 live qualification
+
+On 2026-09-23 a fresh Microsoft Edge context reached only the private application origin while a
+deny proxy blocked WAN traffic and normal TLS verification remained enabled. Fresh English and
+Persian incident requests selected deployment-owned `app` and `ai` targets, returned combined
+Zabbix/Linux provenance and new durable run, evidence and audit identifiers, and passed RTL mobile,
+logout and new-tab isolation checks. The application made no external page request.
+
+The first attempt returned HTTP `504` after 30 seconds even though llama.cpp was still generating.
+The request path `/api/v1/incidents/investigate` was missing from Nginx's bounded 180-second
+assistant location and fell through to the 30-second default. The versioned profile and its static
+test were corrected, `nginx -t` passed before reload, and the complete live-browser gate then
+passed twice, including once after the VM reboot sequence.
+
+For dependency recovery, a five-minute automatic restart guard was armed before the read-only
+connector stopped. The incident route returned a safe localized `503` with
+`dependency_unavailable`, while a general local-AI question returned `200`. After connector
+`/healthz` recovered, monitoring returned `200` and a fresh combined incident with durable audit
+identifiers passed. The guard was removed and the connector ended active.
+
+Zabbix, connector, AI and app then rebooted serially. Every accepted reboot changed its boot ID,
+returned the role-specific services and local health checks, reached `running`, reported zero
+failed units and cleared the reboot-required marker. Connector, AI and app recovery took 15.109,
+29.031 and 19.531 seconds respectively. The initial Zabbix verifier used the wrong PostgreSQL unit
+and web bind; the actual `postgresql@16-zabbix` cluster, Zabbix listener and CA-verified TLS frontend
+passed the corrected post-reboot checks, so no artificial Zabbix latency is reported. A final fresh
+bilingual browser investigation passed across the restarted stack.
 
 ## Test layers
 

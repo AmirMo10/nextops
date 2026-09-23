@@ -2,15 +2,15 @@
 
 [فارسی](../fa/ROADMAP.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
 
-**Status: the sequence is accepted and the controlled Phase 2 implementation is deployed across four guests.** Four fixed targets now combine bounded Zabbix history/events with direct read-only Linux snapshots in a durable bilingual local-CPU investigation. Live API, restart, rollback and server/API WAN-denied checks pass. Fresh live-browser, Phase 2 serial-reboot and Phase 2 dependency-recovery checks remain `not_run`. This is not production acceptance; independent backup, WAL/PITR and disaster recovery remain open. The [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md) are authoritative.
+**Status: the sequence is accepted and the controlled Phase 2 implementation is deployed and qualified across four guests.** Four fixed targets now combine bounded Zabbix history/events with direct read-only Linux snapshots in a durable bilingual local-CPU investigation. Live API, restart, rollback, server/API WAN denial, authenticated browser, serial reboot and dependency-recovery checks pass. This is not production acceptance; independent backup, WAL/PITR and disaster recovery remain open. The [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md) are authoritative.
 
 **Phase 1 delivered the first Zabbix answer; Phase 2 now adds bounded direct Linux evidence.** The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
-**Phase 2 implementation is complete for controlled user testing.** Release
-`nextops-0.1.0-e2dad3a` combines the bounded authenticated Zabbix incident context with fixed-target,
+**Phase 2 implementation and qualification are complete for controlled user testing.** Application
+release `nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` combine the bounded authenticated Zabbix incident context with fixed-target,
 forced-command Linux snapshots, durable audit/evidence linkage and bilingual model output. Source
-CI, live English/Persian API requests, service restart, rollback and guarded server/API WAN isolation
-pass. Fresh live-browser, Phase 2 serial-reboot and dependency-recovery gates remain `not_run`.
+CI, live English/Persian API requests, service restart, rollback, guarded WAN isolation,
+authenticated browser, serial reboot and dependency recovery pass.
 
 ## Create these VMs first
 

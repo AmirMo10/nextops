@@ -2,9 +2,10 @@
 
 [فارسی](../fa/PHASE_2_COMPLETION_SPEC.md) · [Architecture decision](../adr/0007-forced-command-linux-connector.md) · [Current state](../PROJECT_STATE.md)
 
-**Status: implementation complete; controlled qualification partial.** Application and connector
-release `nextops-0.1.0-e2dad3a` implements the durable incident workflow and bounded Linux/Zabbix
-evidence boundary. It is live for controlled user testing, not production-accepted.
+**Status: implementation and controlled qualification complete.** Application release
+`nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` implement the durable incident
+workflow and bounded Linux/Zabbix evidence boundary. It is live for controlled user testing, not
+production-accepted.
 
 ## Qualification record — 2026-09-23
 
@@ -18,14 +19,20 @@ evidence boundary. It is live for controlled user testing, not production-accept
 | App/connector restart | `passed` | Both services returned healthy on the promoted release after restart |
 | Immutable rollback/forward | `passed` | App and connector each ran the prior release, then returned to `e2dad3a`; the additive migration remained compatible |
 | Server/API WAN-denied path | `passed` | Direct public-network access was denied on all four guests while local connector evidence and model generation remained available |
-| Fresh live browser on this release | `not_run` | The automation browser did not trust the private CA; no TLS bypass was used. The fixture-backed real-browser test passed but does not substitute for live acceptance |
-| Phase 2 serial VM reboot | `not_run` | Stage 1 reboot evidence is preserved but is not counted as a Phase 2 rerun |
-| Phase 2 dependency loss/recovery | `not_run` | Stage 1 recovery evidence is preserved but is not counted as a Phase 2 rerun |
+| Fresh live browser on this release | `passed` | A fresh Edge context used normal TLS verification and a deny proxy with only the private application origin bypassed. English and Persian incident requests returned combined Zabbix/Linux provenance plus durable run/evidence/audit IDs; RTL mobile, logout, new-tab isolation and zero application WAN requests passed |
+| Phase 2 serial VM reboot | `passed` | Zabbix, connector, AI and app rebooted one at a time with changed boot IDs. Correct role services and local health returned, final system state was `running`, failed-unit count was zero and a fresh post-reboot bilingual browser investigation passed. Measured connector/AI/app recovery was 15.109/29.031/19.531 seconds; the corrected Zabbix role checks passed without inventing a latency from the first misdeclared probe |
+| Phase 2 dependency loss/recovery | `passed` | With a five-minute automatic recovery guard armed, stopping the read-only connector produced a safe localized incident `503` while general local AI remained `200`. Connector health, monitoring and a fresh audited incident returned after restart |
 
 All four guests ended `running`, with zero failed units and no reboot requirement. A local
 pre-migration PostgreSQL dump passed checksum/list validation, but it is not an independent backup
 or restore proof. Independent backup, WAL/PITR, certificate lifecycle and disaster recovery remain
 production blockers.
+
+The first live incident-browser attempt exposed a reverse-proxy defect: the Phase 2 incident route
+fell through to Nginx's 30-second default while CPU generation was still active. The versioned
+profile now places `/api/v1/incidents/investigate` under the bounded 180-second assistant limit, a
+static regression test covers the route, Nginx configuration validation passed before reload, and
+the complete browser qualification subsequently passed.
 
 ## Problem and outcome
 

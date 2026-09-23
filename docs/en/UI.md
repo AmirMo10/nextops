@@ -56,7 +56,8 @@ evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width wi
 overflow or external requests. The source passed all five CI jobs and was promoted as immutable
 application release `nextops-0.1.0-54c8bb4`. A fresh deployed login check passed English desktop and
 Persian RTL at 375 pixels with no overflow, external request, failed response or console error. The
-authenticated Phase 2 live-browser workflow remains a separate `not_run` acceptance gate.
+later authenticated Phase 2 live-browser workflow also passed English/Persian incident evidence,
+normal TLS, WAN denial, mobile RTL, logout and new-tab isolation.
 
 ## Persian and English behavior
 

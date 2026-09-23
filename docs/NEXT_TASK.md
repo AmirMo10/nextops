@@ -1,18 +1,17 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-23 — Phase 2 implementation is complete. Application release
+Updated: 2026-09-23 — Phase 2 implementation and controlled qualification are complete. Application release
 `nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` are active. Four fixed targets now
 provide bounded Zabbix history/events plus direct, redacted and forced-command Linux evidence to a
 durable bilingual investigation workflow. Live English/Persian API investigations, authorization,
-all four collectors, restart, rollback and server/API WAN-denied checks passed; source CI is green.
+all four collectors, restart, rollback, server/API WAN denial, authenticated WAN-denied browser,
+dependency loss/recovery and serial VM reboot checks passed; source CI is green.
 Do not rebuild or repeat this accepted implementation.
 
-The immediate work is qualification, not new feature development: run the full authenticated browser
-workflow against the live release, then execute a
-Phase 2 serial VM reboot and Phase 2 dependency loss/recovery campaign. These three gates are
-`not_run`, not inferred from Stage 1. Afterward, the next development phase is recovery engineering:
-an approved off-datastore destination, separate PostgreSQL-aware backup/WAL paths, permitted artifact
-backup, isolated PITR/restore, measured RPO/RTO and disaster-recovery sign-off.
+The immediate work is recovery engineering: obtain an approved off-datastore destination, then
+implement separate PostgreSQL-aware backup/WAL paths, permitted artifact backup, isolated
+PITR/restore, measured RPO/RTO and disaster-recovery sign-off. Do not describe local dumps or a
+same-datastore copy as an independent backup.
 
 ## English — harden the live user-testing slice
 
@@ -69,13 +68,12 @@ The immediate implementation sequence is:
 6. **Next external prerequisite:** approve a recovery destination independent of the serving guest,
    DS-C/G10 and host; define RPO/RTO, retention and key custody; then implement separate pgBackRest
    repositories/WAL archiving, restic for permitted files, independent PITR and operational sign-off.
-7. **Phase 2 implementation completed; three qualification gates remain:** immutable app/connector
+7. **Completed:** Phase 2 implementation and controlled qualification. Immutable app/connector
    release, exact `history.get`/`event.get` role expansion, four forced-command Linux targets,
    composite durable investigation, bilingual local-model answers, provenance/limits/partial
-   behavior, service restart, release rollback and guarded server/API WAN denial passed. Fresh live
-   authenticated browser workflow, Phase 2 serial VM reboot and Phase 2 dependency loss/recovery
-   remain `not_run`. The fresh deployed OCS login smoke check has passed. All
-   mutation remains disabled.
+   behavior, service restart, release rollback, guarded server/API WAN denial, fresh authenticated
+   browser workflow, dependency loss/recovery and the Phase 2 serial VM reboot passed. All mutation
+   remains disabled.
 
 The detailed material below preserves design rationale and earlier checkpoints. Where it describes
 the app, PostgreSQL, Zabbix, connector or browser as not deployed, this authoritative checkpoint and
@@ -178,18 +176,17 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 ### نقطهٔ فعلی و ملاک ادامه
 
-پیاده‌سازی مرحلهٔ دو تکمیل شده است؛ انتشار برنامه `nextops-0.1.0-54c8bb4` و انتشار اتصال‌دهنده
+پیاده‌سازی و صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو تکمیل شده است؛ انتشار برنامه `nextops-0.1.0-54c8bb4` و انتشار اتصال‌دهنده
 `nextops-0.1.0-e2dad3a` فعال‌اند. چهار مقصد ثابت اکنون تاریخچه و رویداد محدود Zabbix را همراه شواهد مستقیم،
 پالایش‌شده و مبتنی بر فرمان اجباری Linux به گردش ماندگار بررسی دوزبانه می‌رسانند. بررسی زندهٔ API
-به فارسی و انگلیسی، مجوزدهی، هر چهار گردآورنده، راه‌اندازی مجدد، بازگشت انتشار و مسیر سرور/API با
-WAN مسدود موفق بوده و CI سبز است. این پیاده‌سازی پذیرفته‌شده نباید از نو ساخته شود.
+به فارسی و انگلیسی، مجوزدهی، هر چهار گردآورنده، راه‌اندازی مجدد، بازگشت انتشار، مسیر سرور/API با
+WAN مسدود، مرورگر احرازهویت‌شده، قطع و بازیابی وابستگی و reboot ترتیبی VMها موفق بوده و CI سبز
+است. این پیاده‌سازی پذیرفته‌شده نباید از نو ساخته شود.
 
-کار فوری، تکمیل صلاحیت‌سنجی است نه توسعهٔ قابلیت تازه: گردش کامل و احرازهویت‌شدهٔ مرورگر روی
-انتشار زنده آزموده شود؛ سپس reboot ترتیبی VMها و سناریوی قطع و بازیابی
-وابستگی ویژهٔ مرحلهٔ دو اجرا شوند. هر سه دروازه `not_run` هستند و از شواهد مرحلهٔ یک استنتاج
-نمی‌شوند. پس از آن، مرحلهٔ توسعه‌ای بعدی مهندسی بازیابی است: مقصد پشتیبان مستقل، مسیرهای جداگانهٔ
-پشتیبان و WAL آگاه از PostgreSQL، پشتیبان artifact مجاز، PITR و restore ایزوله، RPO/RTO اندازه‌گیری‌شده
-و تأیید بازیابی بحران.
+کار فوری، مهندسی بازیابی است: مقصد پشتیبان مستقل و مصوب تعیین شود؛ سپس مسیرهای جداگانهٔ پشتیبان و
+WAL آگاه از PostgreSQL، پشتیبان مجاز artifact، PITR و restore ایزوله، RPO/RTO اندازه‌گیری‌شده و
+تأیید بازیابی بحران پیاده شوند. dump محلی یا نسخه‌ای روی همان datastore نباید پشتیبان مستقل
+نامیده شود.
 
 عامل یا بهره‌بردار بعدی باید موارد زیر را تکمیل‌شده بداند و بدون دلیل دوباره نسازد:
 
@@ -239,12 +236,11 @@ WAN مسدود موفق بوده و CI سبز است. این پیاده‌ساز
 6. **پیش‌نیاز بیرونی بعدی:** مقصدی مستقل از مهمان سرویس‌دهنده، DS-C/G10 و میزبان تصویب شود؛ سپس
    RPO/RTO، نگه‌داری و متولی کلید تعیین، مخزن‌های جداگانهٔ pgBackRest و WAL، پشتیبان فایل مجاز با
    restic، PITR روی میزبان مستقل و تأیید نهایی عملیات اجرا شوند.
-7. **پیاده‌سازی مرحلهٔ دو تکمیل شد؛ سه دروازهٔ صلاحیت‌سنجی باقی است:** انتشار تغییرناپذیر برنامه و
+7. **تکمیل شد:** پیاده‌سازی و صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو. انتشار تغییرناپذیر برنامه و
    اتصال‌دهنده، افزودن دقیق `history.get` و `event.get`، چهار مقصد Linux با فرمان اجباری، بررسی
    ترکیبی و ماندگار، پاسخ دوزبانهٔ مدل محلی، منشأ و سقف و نشان نقص، راه‌اندازی مجدد سرویس، بازگشت
-   انتشار و قطع محافظت‌شدهٔ WAN در مسیر سرور/API موفق بودند. بررسی تازهٔ صفحهٔ ورود OCS روی
-   استقرار زنده موفق بود؛ گردش کامل و احرازهویت‌شدهٔ مرورگر، reboot ترتیبی مرحلهٔ دو و قطع و
-   بازیابی وابستگی مرحلهٔ دو هنوز `not_run` هستند. همهٔ عملیات تغییردهنده همچنان غیرفعال‌اند.
+   انتشار، قطع محافظت‌شدهٔ WAN در مسیر سرور/API، گردش کامل و احرازهویت‌شدهٔ مرورگر، reboot ترتیبی
+   مرحلهٔ دو و قطع و بازیابی وابستگی موفق بودند. همهٔ عملیات تغییردهنده همچنان غیرفعال‌اند.
 
 مطالب تفصیلی بعدی منطق طراحی و نقاط پیشین را حفظ می‌کند. هرجا برنامه، PostgreSQL، Zabbix، اتصال یا
 رابط مرورگر را نصب‌نشده می‌نامد، این بخش و [وضعیت پروژه](PROJECT_STATE.md) جای آن عبارت قدیمی را

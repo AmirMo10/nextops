@@ -80,6 +80,13 @@ For every target, prove:
 Record raw infrastructure output only in the private change record. The public release manifest may
 record sanitized results, timestamps, release identifiers, and pass/fail state.
 
+The 2026-09-23 controlled campaign completed this checklist: the authenticated WAN-denied browser,
+safe connector loss/general-AI containment/recovery, serial four-VM reboot and fresh post-reboot
+bilingual incident all passed. The incident endpoint was also added to Nginx's bounded 180-second
+assistant location after the first live run exposed the missing route. These results qualify the
+read-only Phase 2 slice; they do not satisfy independent backup, PITR, certificate lifecycle or
+disaster-recovery acceptance.
+
 ## Rollback
 
 Rollback the application and connector release links together, downgrade migration
