@@ -1,10 +1,18 @@
 """Deterministic certificate-lifecycle checker tests."""
 
+import sys
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 
-from scripts.check_certificate_expiry import CertificateCheckError, parse_openssl_output
+ROOT = Path(__file__).parents[2]
+sys.path.insert(0, str(ROOT))
+
+from scripts.check_certificate_expiry import (  # noqa: E402
+    CertificateCheckError,
+    parse_openssl_output,
+)
 
 NOW = datetime(2026, 9, 23, 12, 0, tzinfo=UTC)
 FINGERPRINT = ":".join(["AB"] * 32)
