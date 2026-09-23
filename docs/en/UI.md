@@ -42,6 +42,15 @@ logo is embedded locally and also supplies the browser icon; system fonts, CSS a
 icons are local, so the page issues no runtime request to LinkedIn, a font host or a CDN. The light
 enterprise layout keeps semantic success, warning and failure colors separate from the brand.
 
+A development-only [Figma design source](https://www.figma.com/design/fXtpP4xBQg3qovTDcchuHx)
+now records the OCS cover, 48 primitive/semantic/dimension variables, 11 bilingual text styles and
+two elevation styles. The implemented workspace mirrors its spacing, radii and brand tokens, with
+numbered answer-mode cards, a high-contrast evidence boundary, compact service-status pills and a
+branded result accent. Figma is not a runtime dependency or an authority for application behavior;
+the reviewed source, tests and documentation remain authoritative. Full product-screen composition
+inside Figma was not completed because the Starter-plan MCP call quota was reached, so the file
+must not be represented as a complete screen library.
+
 The real-browser fixture covers the branded login, authenticated workspace, composite incident
 evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width without horizontal
 overflow or external requests. The source passed all five CI jobs and was promoted as immutable

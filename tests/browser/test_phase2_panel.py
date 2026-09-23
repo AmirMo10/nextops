@@ -283,6 +283,13 @@ def test_phase2_panel_supports_incident_evidence_and_persian_rtl(
         page = browser.new_page(viewport={"width": 1280, "height": 900})
         _login(page, base_url)
 
+        assert page.locator(".mode-choice.active").evaluate(
+            "element => element.getBoundingClientRect().height >= 44"
+        )
+        assert page.locator(".boundary-card").evaluate(
+            "element => getComputedStyle(element).color === 'rgb(255, 255, 255)'"
+        )
+
         page.get_by_role("button", name="Incident investigation").click()
         target = page.get_by_label("Investigation target")
         expect(target).to_be_visible()

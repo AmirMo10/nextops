@@ -503,6 +503,9 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
     assert "محیط کنترل‌شدهٔ ارزیابی کاربران" in javascript.text
     assert "شرکت رایانه خدمات امید سیستم" in javascript.text
     assert "data:image/jpeg;base64," in stylesheet.text
+    assert "--size-content-max: 1280px" in stylesheet.text
+    assert ".mode-field .mode-choice.active" in stylesheet.text
+    assert "linear-gradient(145deg, #0b3b42, #082d33 72%)" in stylesheet.text
     assert "installBrandIcon" in javascript.text
     assert "max_output_tokens: 128" in javascript.text
     assert "زمان پردازش مدل محلی به پایان رسید" in javascript.text

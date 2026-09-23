@@ -4,6 +4,16 @@
 
 ### English
 
+Refined the controlled user-testing console from a development-only Figma foundation containing
+the exact OCS palette, 48 design variables, 11 bilingual text styles and two elevation styles. The
+implemented workspace now uses the shared spacing/radius scale, numbered answer-mode cards, compact
+status pills, a high-contrast protected evidence boundary and a branded result accent. Application
+behavior, authorization, evidence contracts and offline delivery are unchanged; no package or
+external runtime asset was added. Focused API and real-browser checks pass for English desktop,
+composite incident evidence, Persian RTL, reduced motion and 375-pixel mobile width. The Figma
+Starter-plan MCP quota stopped complete product-screen composition, which is recorded without
+claiming a finished Figma screen library; reviewed source remains authoritative.
+
 Redesigned the controlled user-testing frontend around the verified OCS identity: the exact company
 mark is embedded for offline use, the OCS gold/teal palette now drives a light enterprise console,
 and the same local artwork supplies the browser icon. General, monitoring and incident behavior,
@@ -72,6 +82,16 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+ظاهر کنسول ارزیابی کنترل‌شده با تکیه بر یک مبنای طراحی در Figma بهبود یافت. این مبنا رنگ‌های دقیق
+OCS، چهل‌وهشت متغیر طراحی، یازده سبک نوشتاری دوزبانه و دو سبک سایه را ثبت می‌کند. فضای کاری اکنون
+مقیاس مشترک فاصله و گوشه‌گردی، کارت‌های شماره‌دار برای شیوهٔ پاسخ، نشان‌های فشردهٔ وضعیت، مرز
+محافظت‌شدهٔ شاهد با تضاد بالا و نوار هویتی نتیجه را به کار می‌گیرد. رفتار برنامه، مجوزدهی، قرارداد
+شواهد و ارائهٔ آفلاین تغییر نکرده و هیچ بسته یا دارایی بیرونیِ زمان اجرا افزوده نشده است. آزمون‌های
+متمرکز API و مرورگر واقعی، نمای رومیزی انگلیسی، شاهد ترکیبی رخداد، چیدمان راست‌به‌چپ فارسی، کاهش
+حرکت و عرض ۳۷۵ پیکسل را می‌پوشانند و موفق‌اند. سقف فراخوانی MCP در طرح Starter مانع تکمیل آرایش
+همهٔ صفحه‌ها در Figma شد؛ این محدودیت ثبت شده است و ادعایی دربارهٔ کتابخانهٔ کامل صفحه‌ها وجود
+ندارد. کد بازبینی‌شده همچنان مرجع است.
 
 رابط ارزیابی کنترل‌شده بر پایهٔ هویت تأییدشدهٔ OCS بازطراحی شد: نشان اصلی شرکت برای کار آفلاین
 درون برنامه قرار گرفت، رنگ‌های طلایی و فیروزه‌ای OCS مبنای کنسول روشن و سازمانی شدند و آیکون برگهٔ
