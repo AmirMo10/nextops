@@ -16,8 +16,12 @@ def test_connector_loads_protected_credentials_and_linux_registry(
     ca_file.write_text("test-ca", encoding="utf-8")
     targets_file = tmp_path / "linux-targets.json"
     targets_file.write_text("{}", encoding="utf-8")
-    (tmp_path / "zabbix-api-token").write_text("z" * 32, encoding="utf-8")
-    (tmp_path / "connector-service-secret").write_text("s" * 32, encoding="utf-8")
+    token_file = tmp_path / "zabbix-api-token"
+    service_secret_file = tmp_path / "connector-service-secret"
+    token_file.write_text("z" * 32, encoding="utf-8")
+    service_secret_file.write_text("s" * 32, encoding="utf-8")
+    token_file.chmod(0o600)
+    service_secret_file.chmod(0o600)
     monkeypatch.setenv("CREDENTIALS_DIRECTORY", str(tmp_path))
     monkeypatch.setenv("NEXTOPS_ZABBIX_API_URL", "https://zabbix.local/api_jsonrpc.php")
     monkeypatch.setenv("NEXTOPS_ZABBIX_CA_FILE", str(ca_file))
