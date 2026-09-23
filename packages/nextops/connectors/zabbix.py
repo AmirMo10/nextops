@@ -32,6 +32,7 @@ INCIDENT_LOOKBACK_MINUTES = 60
 MAX_HISTORY_METRICS = 4
 MAX_HISTORY_POINTS_PER_METRIC = 8
 MAX_INCIDENT_EVENTS = 25
+MAX_METRIC_VALUE_CHARACTERS = 256
 NUMERIC_HISTORY_TYPES = frozenset({0, 3})
 PREFERRED_KEYS = (
     "system.cpu.util[,idle]",
@@ -376,7 +377,9 @@ class ZabbixReadClient:
         usable: list[dict[str, Any]] = [
             item
             for item in raw_items
-            if int(item.get("lastclock", "0")) > 0 and str(item.get("lastvalue", ""))
+            if int(item.get("lastclock", "0")) > 0
+            and str(item.get("lastvalue", ""))
+            and len(str(item.get("lastvalue", ""))) <= MAX_METRIC_VALUE_CHARACTERS
         ]
         priority = {key: index for index, key in enumerate(PREFERRED_KEYS)}
         return sorted(

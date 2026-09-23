@@ -109,6 +109,46 @@ def test_connector_marks_missing_usable_metrics_partial() -> None:
     assert summary.partial_reasons == ("no_usable_metrics",)
 
 
+def test_connector_skips_over_limit_metric_values_and_marks_partial() -> None:
+    class LongValueTransport(FakeTransport):
+        async def call(self, method: str, params: dict[str, Any]) -> Any:
+            if method != "item.get":
+                return await super().call(method, params)
+            self.methods.append(method)
+            return [
+                {
+                    "itemid": "20001",
+                    "name": "CPU idle time",
+                    "key_": "system.cpu.util[,idle]",
+                    "value_type": "0",
+                    "lastvalue": "88.2",
+                    "units": "%",
+                    "lastclock": "1789999999",
+                    "status": "0",
+                    "state": "0",
+                },
+                {
+                    "itemid": "20002",
+                    "name": "Filesystem discovery payload",
+                    "key_": "vfs.fs.get",
+                    "value_type": "4",
+                    "lastvalue": "{" + ("x" * 300) + "}",
+                    "units": "",
+                    "lastclock": "1790000000",
+                    "status": "0",
+                    "state": "0",
+                },
+            ]
+
+    summary = __import__("asyncio").run(
+        ZabbixReadClient("Zabbix server", LongValueTransport()).summary()
+    )
+
+    assert [metric.key for metric in summary.metrics] == ["system.cpu.util[,idle]"]
+    assert summary.is_partial is True
+    assert summary.partial_reasons == ("metrics_truncated",)
+
+
 def test_connector_rejects_malformed_monitoring_text_with_safe_typed_error() -> None:
     class MalformedTransport(FakeTransport):
         async def call(self, method: str, params: dict[str, Any]) -> Any:
