@@ -4,14 +4,16 @@
 
 **Status: specification plus a delivered controlled user-testing subset.** Source: master specification sections 3, 7 and 17 plus original sections 3 and 30.
 
-The deployed subset provides authenticated English/Persian login, genuine RTL/LTR switching,
-AI and monitoring readiness and a bounded question form with two explicit answer modes. General
+The controlled subset provides authenticated English/Persian login, genuine RTL/LTR switching,
+AI and monitoring readiness and a bounded question form with three explicit answer modes. General
 assistant is the default: it answers through the local model without retrieving or displaying live
 monitoring evidence. Live monitoring is opt-in: it returns an evidence-grounded answer and a source
 panel showing Zabbix version, host, collection time, measurement time, freshness and active-problem
-count. The result badge always identifies whether live evidence was used. A completed monitoring
-answer also shows its durable run, evidence reference and audit-event identifiers; the full evidence
-SHA-256 is available as the evidence-reference tooltip. Assets are served locally without a CDN.
+count. Incident investigation adds one deployment-approved target and combines bounded Zabbix
+history/events with the direct read-only Linux snapshot. The result badge always identifies whether
+live evidence was used. A completed evidence-backed answer also shows its durable run, evidence
+reference and audit-event identifiers; the full evidence SHA-256 is available as the
+evidence-reference tooltip. Assets are served locally without a CDN.
 The broader operations console described below—inventory, incident timelines, topology, approvals,
 audit search and settings—remains specification work.
 
@@ -31,6 +33,19 @@ An investigation view shows affected assets, time window, permission scope, task
 Define semantic tokens for spacing, typography, colors, borders and component states before building many pages. Use reusable navigation, tables, filters, timelines, evidence cards, status badges, dialogs and approval panels. Status meaning must not rely on color alone. Keep labels, keyboard interaction, focus behavior and contrast accessible.
 
 Use responsive layouts with long device names, mixed-language text, overflowing commands and dense operational data in mind. Prefer locally hosted licensed assets; runtime must not depend on font, icon or JavaScript CDNs.
+
+### Current OCS visual identity
+
+The current source redesign uses the company mark supplied through the owner's public OCS profile
+reference and the observed OCS gold (`#D0A840`) and teal (`#0090A0`) as brand accents. The exact
+logo is embedded locally and also supplies the browser icon; system fonts, CSS artwork and interface
+icons are local, so the page issues no runtime request to LinkedIn, a font host or a CDN. The light
+enterprise layout keeps semantic success, warning and failure colors separate from the brand.
+
+The real-browser fixture covers the branded login, authenticated workspace, composite incident
+evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width without horizontal
+overflow or external requests. This is source/fixture evidence; live promotion and a fresh deployed
+browser check must be recorded separately.
 
 ## Persian and English behavior
 

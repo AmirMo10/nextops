@@ -4,6 +4,13 @@
 
 ### English
 
+Redesigned the controlled user-testing frontend around the verified OCS identity: the exact company
+mark is embedded for offline use, the OCS gold/teal palette now drives a light enterprise console,
+and the same local artwork supplies the browser icon. General, monitoring and incident behavior,
+evidence/audit identifiers and 128-token bounds are unchanged. The browser fixture passes English
+LTR, Persian RTL, reduced motion, responsive mobile/desktop layouts and zero external asset
+requests. Live promotion remains a separate deployment record.
+
 Deployed Phase 2A under change `phase2a-incident-context-20260923-01` as immutable app and connector
 release `nextops-0.1.0-1ab6586`. The Zabbix reader now permits exactly `host.get`, `item.get`,
 `problem.get`, `history.get` and `event.get`; unrelated methods and all mutations remain denied. A
@@ -61,6 +68,13 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+رابط ارزیابی کنترل‌شده بر پایهٔ هویت تأییدشدهٔ OCS بازطراحی شد: نشان اصلی شرکت برای کار آفلاین
+درون برنامه قرار گرفت، رنگ‌های طلایی و فیروزه‌ای OCS مبنای کنسول روشن و سازمانی شدند و آیکون برگهٔ
+مرورگر نیز از همان تصویر محلی استفاده می‌کند. رفتار دستیار عمومی، پایش و بررسی رخداد، شناسه‌های
+شاهد و ممیزی و سقف ۱۲۸ توکن تغییری نکرده است. آزمون مرورگر، چیدمان چپ‌به‌راست انگلیسی،
+راست‌به‌چپ فارسی، کاهش حرکت، نمایش واکنش‌گرا در موبایل و دسکتاپ و نبود درخواست دارایی بیرونی را
+تأیید می‌کند. ارتقای زنده در رکورد استقرار جدا ثبت خواهد شد.
 
 گام 2A با شناسهٔ تغییر `phase2a-incident-context-20260923-01` و انتشار تغییرناپذیر
 `nextops-0.1.0-1ab6586` روی برنامه و اتصال‌دهنده مستقر شد. خوانشگر Zabbix اکنون دقیقاً پنج روش

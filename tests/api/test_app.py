@@ -494,10 +494,16 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
 
     response = client.get("/")
     javascript = client.get("/assets/app.js")
+    stylesheet = client.get("/assets/app.css")
 
     assert response.status_code == 200
     assert "NextOps" in response.text
-    assert "محیط کنترل‌شده ارزیابی کاربران" in javascript.text
+    assert "NextOps by OCS" in response.text
+    assert 'id="appIcon"' in response.text
+    assert "محیط کنترل‌شدهٔ ارزیابی کاربران" in javascript.text
+    assert "شرکت رایانه خدمات امید سیستم" in javascript.text
+    assert "data:image/jpeg;base64," in stylesheet.text
+    assert "installBrandIcon" in javascript.text
     assert "max_output_tokens: 128" in javascript.text
     assert "زمان پردازش مدل محلی به پایان رسید" in javascript.text
     assert 'data-mode="general"' in response.text
@@ -515,8 +521,10 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
     assert "result.evidence_reference" in javascript.text
     assert "https://" not in response.text
     assert "https://" not in javascript.text
+    assert "https://" not in stylesheet.text
     assert response.headers["x-frame-options"] == "DENY"
     assert "default-src 'self'" in response.headers["content-security-policy"]
+    assert "img-src 'self' data:" in response.headers["content-security-policy"]
 
 
 def test_assistant_requires_local_session_and_labels_model_only_output() -> None:

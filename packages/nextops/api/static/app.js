@@ -3,30 +3,35 @@
 const translations = {
   en: {
     skipMain: "Skip to main content",
-    brandTagline: "Private infrastructure intelligence", localEnvironment: "Local environment",
-    logout: "Sign out", evaluationLabel: "CONTROLLED USER EVALUATION",
+    brandTagline: "Local operations intelligence", localEnvironment: "Private local environment",
+    languageToggleAria: "Switch interface language", logout: "Sign out",
+    companyLabel: "AN OCS TECHNOLOGY PLATFORM", companyName: "Omid System Computer Services",
+    evaluationLabel: "CONTROLLED USER EVALUATION",
     loginHeadline: "Operational insight,<br><span>kept inside your network.</span>",
-    loginLead: "Sign in to evaluate the local bilingual AI service. Requests remain within the NextOps environment.",
+    loginLead: "A private, bilingual operations workspace for evidence-grounded infrastructure intelligence.",
     trustOne: "Local identity", trustTwo: "Encrypted access", trustThree: "CPU-only inference",
-    welcome: "Welcome", credentialsPrompt: "Enter your evaluation credentials.", username: "Username",
+    trustOneText: "Organization-controlled access", trustTwoText: "Protected application path", trustThreeText: "No cloud AI fallback",
+    secureAccess: "SECURE ACCESS", welcome: "Welcome to NextOps", credentialsPrompt: "Enter your evaluation credentials.", username: "Username",
     password: "Password", signIn: "Sign in securely", privacyNote: "Your session is stored only in this browser tab.",
-    workspaceLabel: "USER EVALUATION WORKSPACE", workspaceHeadline: "Ask the local assistant",
-    workspaceLead: "Evaluate bilingual response quality and the protected application-to-AI path.",
+    workspaceLabel: "NEXTOPS OPERATIONS WORKSPACE", workspaceHeadline: "Ask the local assistant",
+    workspaceLead: "Move from a direct question to evidence-grounded investigation without exposing infrastructure credentials.",
+    serviceStatus: "Service status",
     appReady: "Application ready", aiChecking: "Checking AI", aiReady: "AI ready", aiUnavailable: "AI unavailable",
     monitoringChecking: "Checking monitoring", monitoringReady: "Monitoring ready", monitoringUnavailable: "Monitoring unavailable",
-    newQuestion: "New question", questionHelp: "Ask in English or Persian. The answer follows the selected language.",
+    assistantLabel: "LOCAL AI ASSISTANT", newQuestion: "New question", questionHelp: "Ask in English or Persian. The answer follows the selected language.",
     answerMode: "Answer mode", generalMode: "General assistant", monitoringMode: "Live monitoring", incidentMode: "Incident investigation",
     generalModeHelp: "Answers the question directly without attaching Zabbix status.",
     monitoringModeHelp: "Uses current read-only Zabbix observations and shows the supporting evidence.",
     incidentModeHelp: "Combines bounded Zabbix history and events with direct read-only Linux diagnostics for one approved host.",
     incidentTarget: "Investigation target", incidentTargetHelp: "Choose one approved host. NextOps will retrieve bounded Zabbix and direct read-only Linux evidence.",
     noIncidentTargets: "No approved investigation target is available.",
-    question: "Question", questionPlaceholder: "Explain a safe first response to a high CPU alert.", askAssistant: "Ask assistant",
-    evidenceBoundary: "EVIDENCE BOUNDARY", liveEvidenceTitle: "Live evidence evaluation",
-    liveEvidenceBody: "The read-only connector supplies current Zabbix observations and their timestamps to the local model.",
+    answerLanguage: "Answer language", question: "Question", questionPlaceholder: "Explain a safe first response to a high CPU alert.", askAssistant: "Ask assistant",
+    evidenceBoundary: "EVIDENCE BOUNDARY", liveEvidenceTitle: "Intelligence with a clear source",
+    liveEvidenceBody: "NextOps keeps model generation, evidence access, and credentials inside separate protected boundaries.",
     boundaryLocal: "Local processing", boundaryLocalText: "No external model API is used.",
     boundaryAuth: "Authenticated path", boundaryAuthText: "The browser never receives the AI service credential.",
-    boundaryZabbix: "Live Zabbix evidence", boundaryZabbixText: "Read-only, source-qualified and timestamped.",
+    boundaryZabbix: "Qualified evidence", boundaryZabbixText: "Read-only, source-qualified and timestamped.",
+    readOnlyTitle: "Read-only by design", readOnlyText: "This evaluation workspace cannot execute infrastructure changes.",
     assistantResponse: "ASSISTANT RESPONSE", generalResponseTitle: "Direct local answer", responseTitle: "Evidence-grounded result",
     modelOnlyBadge: "Local model · no live evidence", liveEvidenceBadge: "Live Zabbix evidence", incidentEvidenceBadge: "Live Zabbix + Linux evidence",
     source: "Source", host: "Host", collected: "Collected", problems: "Active problems", coverage: "Evidence coverage",
@@ -37,7 +42,7 @@ const translations = {
     uptime: "Uptime", filesystems: "Filesystems", services: "Allowlisted services", recentEvents: "Recent Zabbix events",
     criticalJournal: "High-priority journal", noEntries: "No entries in the bounded window", partialReasons: "Partial reasons",
     available: "available", historyPoints: "history points", eventRecords: "events",
-    footer: "Controlled local evaluation environment", invalidLogin: "The username or password is incorrect.",
+    footer: "Private, controlled user-evaluation environment", invalidLogin: "The username or password is incorrect.",
     genericError: "The request could not be completed. Try again.", timeoutError: "The local model took too long. Please try a shorter question.",
     overloadedError: "The local model is busy. Please wait a moment and try again.", dependencyError: "A local service is temporarily unavailable. Please try again.",
     sessionExpired: "Your session expired. Please sign in again.",
@@ -45,30 +50,35 @@ const translations = {
   },
   fa: {
     skipMain: "رفتن به محتوای اصلی",
-    brandTagline: "هوشمندی امن برای عملیات زیرساخت", localEnvironment: "محیط داخلی",
-    logout: "خروج", evaluationLabel: "محیط کنترل‌شده ارزیابی کاربران",
-    loginHeadline: "بینش عملیاتی؛<br><span>درون شبکه سازمان شما.</span>",
-    loginLead: "برای ارزیابی سرویس هوش مصنوعی دوزبانه و داخلی وارد شوید. همه درخواست‌ها در محیط NextOps باقی می‌مانند.",
+    brandTagline: "هوشمندی داخلی برای عملیات", localEnvironment: "محیط خصوصی و داخلی",
+    languageToggleAria: "تغییر زبان رابط", logout: "خروج",
+    companyLabel: "یک راهکار فناورانه از OCS", companyName: "شرکت رایانه خدمات امید سیستم",
+    evaluationLabel: "محیط کنترل‌شدهٔ ارزیابی کاربران",
+    loginHeadline: "شفافیت در عملیات؛<br><span>درون شبکهٔ سازمان شما.</span>",
+    loginLead: "فضای کاری خصوصی و دوزبانه برای تحلیل زیرساخت بر پایهٔ شواهد قابل‌ردیابی.",
     trustOne: "هویت داخلی", trustTwo: "دسترسی رمزنگاری‌شده", trustThree: "پردازش صرفاً با CPU",
-    welcome: "خوش آمدید", credentialsPrompt: "مشخصات دسترسی محیط ارزیابی را وارد کنید.", username: "نام کاربری",
+    trustOneText: "دسترسی تحت کنترل سازمان", trustTwoText: "مسیر محافظت‌شدهٔ برنامه", trustThreeText: "بدون جایگزین ابری برای هوش مصنوعی",
+    secureAccess: "دسترسی امن", welcome: "به NextOps خوش آمدید", credentialsPrompt: "مشخصات دسترسی محیط ارزیابی را وارد کنید.", username: "نام کاربری",
     password: "گذرواژه", signIn: "ورود امن", privacyNote: "نشست شما فقط در همین برگه مرورگر نگهداری می‌شود.",
-    workspaceLabel: "فضای ارزیابی کاربران", workspaceHeadline: "از دستیار داخلی بپرسید",
-    workspaceLead: "کیفیت پاسخ‌های فارسی و انگلیسی و مسیر امن ارتباط برنامه با سرویس هوش مصنوعی را ارزیابی کنید.",
+    workspaceLabel: "فضای عملیات NextOps", workspaceHeadline: "از دستیار داخلی بپرسید",
+    workspaceLead: "بدون افشای اطلاعات ورود زیرساخت، از یک پرسش مستقیم به بررسی مستند بر پایهٔ شواهد بروید.",
+    serviceStatus: "وضعیت سرویس‌ها",
     appReady: "برنامه آماده است", aiChecking: "در حال بررسی سرویس هوش مصنوعی", aiReady: "سرویس هوش مصنوعی آماده است", aiUnavailable: "سرویس هوش مصنوعی در دسترس نیست",
     monitoringChecking: "در حال بررسی سامانه پایش", monitoringReady: "سامانه پایش آماده است", monitoringUnavailable: "سامانه پایش در دسترس نیست",
-    newQuestion: "پرسش جدید", questionHelp: "پرسش را به فارسی یا انگلیسی بنویسید؛ پاسخ به زبان انتخاب‌شده ارائه می‌شود.",
+    assistantLabel: "دستیار هوش مصنوعی داخلی", newQuestion: "پرسش جدید", questionHelp: "پرسش را به فارسی یا انگلیسی بنویسید؛ پاسخ به زبان انتخاب‌شده ارائه می‌شود.",
     answerMode: "شیوهٔ پاسخ", generalMode: "دستیار عمومی", monitoringMode: "پایش زنده", incidentMode: "بررسی رخداد",
     generalModeHelp: "بدون افزودن وضعیت Zabbix، مستقیماً به همان پرسش پاسخ می‌دهد.",
     monitoringModeHelp: "از دادهٔ جاری و فقط‌خواندنی Zabbix استفاده می‌کند و شاهد را نیز نشان می‌دهد.",
     incidentModeHelp: "تاریخچه و رویدادهای محدودشدهٔ Zabbix را با داده‌های تشخیصی مستقیم و فقط‌خواندنی Linux برای یک میزبان مجاز ترکیب می‌کند.",
     incidentTarget: "میزبان بررسی", incidentTargetHelp: "یک میزبان مجاز را انتخاب کنید؛ NextOps شواهد محدودشدهٔ Zabbix و Linux را گردآوری می‌کند.",
     noIncidentTargets: "هیچ میزبان مجاز برای بررسی تعریف نشده است.",
-    question: "پرسش", questionPlaceholder: "برای هشدار مصرف بالای پردازنده، یک اقدام اولیه ایمن پیشنهاد کنید.", askAssistant: "ارسال به دستیار",
-    evidenceBoundary: "مرز شواهد", liveEvidenceTitle: "ارزیابی مبتنی بر شواهد زنده",
-    liveEvidenceBody: "کانکتور فقط‌خواندنی، مشاهدات جاری Zabbix و زمان ثبت آن‌ها را در اختیار مدل داخلی قرار می‌دهد.",
+    answerLanguage: "زبان پاسخ", question: "پرسش", questionPlaceholder: "برای هشدار مصرف بالای پردازنده، یک اقدام اولیه ایمن پیشنهاد کنید.", askAssistant: "ارسال به دستیار",
+    evidenceBoundary: "مرز شواهد", liveEvidenceTitle: "هوشمندی با منبع روشن",
+    liveEvidenceBody: "NextOps تولید پاسخ، دسترسی به شواهد و اطلاعات ورود را در مرزهای محافظت‌شده و جدا از هم نگه می‌دارد.",
     boundaryLocal: "پردازش داخلی", boundaryLocalText: "هیچ سرویس مدل بیرونی فراخوانی نمی‌شود.",
     boundaryAuth: "مسیر احراز هویت‌شده", boundaryAuthText: "اعتبارنامه سرویس هوش مصنوعی هرگز در اختیار مرورگر قرار نمی‌گیرد.",
-    boundaryZabbix: "شواهد زنده Zabbix", boundaryZabbixText: "فقط‌خواندنی، دارای منبع مشخص و مُهر زمانی.",
+    boundaryZabbix: "شواهد دارای اصالت", boundaryZabbixText: "فقط‌خواندنی، دارای منبع مشخص و مُهر زمانی.",
+    readOnlyTitle: "فقط‌خواندنی، از ابتدا", readOnlyText: "این فضای ارزیابی امکان اجرای تغییر روی زیرساخت را ندارد.",
     assistantResponse: "پاسخ دستیار", generalResponseTitle: "پاسخ مستقیم مدل محلی", responseTitle: "نتیجه مبتنی بر شواهد",
     modelOnlyBadge: "مدل محلی · بدون شاهد زنده", liveEvidenceBadge: "شواهد زنده Zabbix", incidentEvidenceBadge: "شواهد زنده Zabbix و Linux",
     source: "منبع", host: "میزبان", collected: "زمان گردآوری", problems: "مسائل فعال", coverage: "پوشش شواهد",
@@ -79,7 +89,7 @@ const translations = {
     uptime: "مدت کارکرد", filesystems: "فایل‌سیستم‌ها", services: "سرویس‌های مجاز", recentEvents: "رویدادهای اخیر Zabbix",
     criticalJournal: "رخدادهای پراهمیت سامانه", noEntries: "در بازهٔ محدودشده موردی ثبت نشده است", partialReasons: "دلایل ناقص بودن شاهد",
     available: "در دسترس", historyPoints: "نقطهٔ تاریخی", eventRecords: "رویداد",
-    footer: "محیط کنترل‌شده و داخلی ارزیابی", invalidLogin: "نام کاربری یا گذرواژه صحیح نیست.",
+    footer: "محیط خصوصی و کنترل‌شدهٔ ارزیابی کاربران", invalidLogin: "نام کاربری یا گذرواژه صحیح نیست.",
     genericError: "انجام درخواست ممکن نشد. دوباره تلاش کنید.", timeoutError: "زمان پردازش مدل محلی به پایان رسید. لطفاً پرسش کوتاه‌تری مطرح کنید.",
     overloadedError: "مدل محلی در حال پردازش درخواست دیگری است. لطفاً کمی بعد دوباره تلاش کنید.", dependencyError: "یکی از سرویس‌های داخلی موقتاً در دسترس نیست. لطفاً دوباره تلاش کنید.",
     sessionExpired: "نشست شما پایان یافته است. دوباره وارد شوید.",
@@ -96,12 +106,20 @@ const state = {
 };
 const byId = id => document.getElementById(id);
 
+function installBrandIcon() {
+  const background = getComputedStyle(document.querySelector(".ocs-logo")).backgroundImage;
+  if (background.startsWith('url("data:image/jpeg;base64,')) {
+    byId("appIcon").href = background.slice(5, -2);
+  }
+}
+
 function applyLanguage(language) {
   state.language = language;
   localStorage.setItem("nextops-language", language);
   document.documentElement.lang = language;
   document.documentElement.dir = language === "fa" ? "rtl" : "ltr";
   byId("languageButton").textContent = language === "fa" ? "English" : "فارسی";
+  byId("languageButton").setAttribute("aria-label", translations[language].languageToggleAria);
   document.querySelectorAll("[data-i18n]").forEach(node => {
     const value = translations[language][node.dataset.i18n];
     if (value !== undefined) node.innerHTML = value;
@@ -109,6 +127,9 @@ function applyLanguage(language) {
   document.querySelectorAll("[data-i18n-placeholder]").forEach(node => {
     node.placeholder = translations[language][node.dataset.i18nPlaceholder];
   });
+  document.querySelector(".mode-field .segmented-control").setAttribute("aria-label", translations[language].answerMode);
+  document.querySelector(".locale-control").setAttribute("aria-label", translations[language].answerLanguage);
+  document.querySelector(".status-panel").setAttribute("aria-label", translations[language].serviceStatus);
 }
 
 async function api(path, options = {}) {
@@ -170,10 +191,13 @@ async function checkAi() {
   try {
     const ready = await api("/api/v1/assistant/ready");
     const ok = ready.state === "ready";
+    const statusKey = ok ? "aiReady" : "aiUnavailable";
     pill.className = `status-pill ${ok ? "ready" : "failed"}`;
-    pill.querySelector("span").textContent = translations[state.language][ok ? "aiReady" : "aiUnavailable"];
+    pill.querySelector("span").dataset.i18n = statusKey;
+    pill.querySelector("span").textContent = translations[state.language][statusKey];
   } catch (_) {
     pill.className = "status-pill failed";
+    pill.querySelector("span").dataset.i18n = "aiUnavailable";
     pill.querySelector("span").textContent = translations[state.language].aiUnavailable;
   }
 }
@@ -183,10 +207,13 @@ async function checkMonitoring() {
   try {
     const summary = await api("/api/v1/monitoring/summary");
     const ok = summary.source === "zabbix";
+    const statusKey = ok ? "monitoringReady" : "monitoringUnavailable";
     pill.className = `status-pill ${ok ? "ready" : "failed"}`;
-    pill.querySelector("span").textContent = translations[state.language][ok ? "monitoringReady" : "monitoringUnavailable"];
+    pill.querySelector("span").dataset.i18n = statusKey;
+    pill.querySelector("span").textContent = translations[state.language][statusKey];
   } catch (_) {
     pill.className = "status-pill failed";
+    pill.querySelector("span").dataset.i18n = "monitoringUnavailable";
     pill.querySelector("span").textContent = translations[state.language].monitoringUnavailable;
   }
 }
@@ -426,7 +453,8 @@ byId("assistantForm").addEventListener("submit", async event => {
       byId("auditEventId").title = result.audit_event_id;
     }
     byId("resultCard").classList.remove("hidden");
-    byId("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    byId("resultCard").scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
   } catch (error) {
     if (error.status === 401) showLogin(translations[state.language].sessionExpired);
     else if (error.message === "incident.target_missing") errorNode.textContent = translations[state.language].noIncidentTargets;
@@ -439,5 +467,6 @@ byId("assistantForm").addEventListener("submit", async event => {
 });
 
 applyLanguage(state.language);
+installBrandIcon();
 setAnswerMode(state.answerMode);
 if (state.token) showWorkspace().catch(() => showLogin(translations[state.language].sessionExpired));

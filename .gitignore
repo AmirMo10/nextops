@@ -38,5 +38,6 @@ htmlcov/
 node_modules/
 dist/
 build/
+work/
 .DS_Store
 Thumbs.db

@@ -172,7 +172,8 @@ def create_app(
         response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; base-uri 'none'; frame-ancestors 'none'; "
-            "form-action 'self'; object-src 'none'; script-src 'self'; style-src 'self'"
+            "form-action 'self'; object-src 'none'; script-src 'self'; style-src 'self'; "
+            "img-src 'self' data:"
         )
         return response
 

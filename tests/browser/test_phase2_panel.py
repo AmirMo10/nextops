@@ -244,6 +244,17 @@ def browser_server() -> Iterator[tuple[str, FastAPI]]:
 
 def _login(page: Page, base_url: str) -> None:
     page.goto(base_url, wait_until="networkidle")
+    expect(page.locator(".ocs-logo-header")).to_be_visible()
+    expect(page.get_by_text("Omid System Computer Services")).to_be_visible()
+    logo_background = str(
+        page.locator(".ocs-logo-header").evaluate(
+            "element => getComputedStyle(element).backgroundImage"
+        )
+    )
+    assert logo_background.startswith('url("data:image/jpeg;base64,')
+    icon_href = page.locator("#appIcon").get_attribute("href")
+    assert icon_href is not None
+    assert icon_href.startswith("data:image/jpeg;base64,")
     page.get_by_label("Username").fill("owner")
     page.get_by_label("Password").fill("test-password")
     page.get_by_role("button", name="Sign in securely").click()
@@ -280,9 +291,11 @@ def test_phase2_panel_supports_incident_evidence_and_persian_rtl(
 
         page.locator("#languageButton").click()
         expect(page.get_by_role("button", name="بررسی رخداد")).to_be_visible()
+        expect(page.get_by_text("شرکت رایانه خدمات امید سیستم")).to_be_hidden()
+        expect(page.locator(".brand").get_by_text("هوشمندی داخلی برای عملیات")).to_be_visible()
         assert page.locator("html").get_attribute("dir") == "rtl"
 
-        page.set_viewport_size({"width": 390, "height": 844})
+        page.set_viewport_size({"width": 375, "height": 812})
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth") is True
         assert page.get_by_role("button", name="بررسی رخداد").evaluate(
             "element => element.getBoundingClientRect().height >= 44"
