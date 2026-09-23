@@ -23,14 +23,15 @@ normal-TLS browser and direct API logout, former-token `401`, other-session pres
 idempotent replay and exactly one sanitized correlated audit event. This does not bypass the
 independent-recovery prerequisite for production.
 
-The next source increment is certificate-expiry detection. The repository now contains a
-deterministic local checker, a no-network least-privilege systemd service/timer, guarded installer,
-focused tests and a bilingual rotation/rollback contract. Direct-source preflight found both live
-frontend certificates healthy under the 90-day policy and their keys root-only; isolated expiring
-and malformed fixtures returned the required non-zero states. Require green hosted CI before
-installing this source on the app and Zabbix frontends. Controlled acceptance must then prove timer
-persistence and inability of the checker identity to read either private key. Alert delivery plus
-an observed rotation/rollback drill remain separate production gates.
+The certificate-expiry detection increment is accepted in the controlled deployment. Commit
+`f540a9d` passed all five hosted CI jobs, and change `certificate-lifecycle-20260923-01` installed
+the no-network least-privilege checker and persistent timer on both TLS frontends. Both live
+certificates are healthy under the 90-day policy; isolated expiring and malformed fixtures failed
+as designed; both private keys remained root-only and unreadable to the checker. Four Zabbix active
+items and six tagged triggers observe checker result, timer state and missing data. A guarded timer
+outage produced the expected local problem and recovery returned it to healthy. Complete an
+approved operator notification route and an observed offline rotation/rollback drill before
+promoting the certificate lifecycle gate beyond partial.
 
 ## English — harden the live user-testing slice
 
@@ -138,7 +139,7 @@ Remaining production gates after the Stage 1 campaign:
 - configure separate pgBackRest repositories, continuous WAL, retention and repository checks;
 - configure restic only for permitted non-database artifacts and verify hash-preserving restore;
 - perform independent-host PITR, corrupt/missing-WAL and key-recovery drills with measured RPO/RTO;
-- close certificate-expiry/rotation, alerting and final operational sign-off.
+- close certificate rotation/rollback, operator notification delivery and final operational sign-off.
 
 ### Already supplied
 
@@ -192,7 +193,7 @@ Apply the retained project ceiling and every per-datastore capacity check: exist
 
 Use dependency-aware service readiness, not fixed sleeps or an Internet test. The databases precede their dependants; model/gateway can start independently. Zabbix failure must not prevent general local Q&A when its own dependencies are healthy. A host failure affects both systems; independent host-outage detection and backups are separate requirements.
 
-After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and four-host Zabbix path is live for user testing. It is not production-accepted: independent backup/PITR, certificate lifecycle, dependency/license approval and complete disaster recovery remain open.
+After each increment, update PROJECT_STATE with actual work, exact versions/results, failed/skipped/not-run cases, remaining blockers and the next checkpoint. The controlled application, AI, connector and four-host Zabbix path is live for user testing. It is not production-accepted: independent backup/PITR, certificate rotation and operator notification, dependency/license approval and complete disaster recovery remain open.
 
 ## فارسی — سخت‌سازی مسیر زندهٔ ارزیابی کاربران
 
@@ -219,13 +220,14 @@ TLS عادی و API مستقیم، خروج، `401` برای توکن قبلی،
 یک رویداد ممیزی پالایش‌شده و دارای شناسهٔ هم‌بستگی را ثابت کرد. این کار پیش‌نیاز بازیابی مستقل برای
 تولید را کنار نمی‌زند.
 
-increment بعدی منبع، تشخیص انقضای گواهی است. checker قطعی و محلی، واحد و timer بدون شبکه و
-کم‌اختیار systemd، installer محافظت‌شده، آزمون‌های متمرکز و قرارداد دوزبانهٔ چرخش و بازگشت اکنون
-در مخزنند. پیش‌بررسی مستقیم منبع، هر دو گواهی زنده را با سیاست ۹۰روزه سالم و کلیدها را فقط برای
-root حفاظت‌شده یافت؛ fixture جداگانهٔ نزدیک انقضا و ورودی خراب نیز وضعیت غیرصفر لازم را دادند. پیش
-از نصب این منبع روی رابط برنامه و Zabbix، CI میزبانی‌شده باید سبز باشد. پذیرش کنترل‌شده سپس باید
-ماندگاری timer و ناتوانی هویت checker در خواندن هر دو کلید خصوصی را ثابت کند. تحویل هشدار و تمرین
-مشاهده‌شدهٔ چرخش و بازگشت دروازه‌های جداگانهٔ تولید باقی می‌مانند.
+increment تشخیص انقضای گواهی در استقرار کنترل‌شده پذیرفته شد. commit `f540a9d` هر پنج کار CI را
+گذراند و تغییر `certificate-lifecycle-20260923-01`، checker کم‌اختیار و بدون شبکه و timer ماندگار
+را روی هر دو رابط TLS نصب کرد. گواهی‌های زنده با سیاست ۹۰روزه سالم‌اند؛ fixtureهای نزدیک انقضا و
+خراب طبق قرارداد شکست خوردند؛ کلیدها فقط برای root ماندند و هویت checker نتوانست آن‌ها را بخواند.
+چهار item فعال و شش trigger برچسب‌دار Zabbix، نتیجهٔ checker، وضعیت timer و نبود داده را می‌سنجند.
+قطع محافظت‌شدهٔ timer مشکل مورد انتظار را ساخت و بازیابی آن trigger را سالم کرد. پیش از ارتقای
+دروازهٔ چرخهٔ گواهی از حالت ناقص، مسیر اعلان مصوب بهره‌بردار و تمرین مشاهده‌شدهٔ چرخش/بازگشت را
+تکمیل کنید.
 
 عامل یا بهره‌بردار بعدی باید موارد زیر را تکمیل‌شده بداند و بدون دلیل دوباره نسازد:
 
@@ -324,7 +326,7 @@ root حفاظت‌شده یافت؛ fixture جداگانهٔ نزدیک انقض
 - مخزن‌های جداگانهٔ pgBackRest، WAL پیوسته، نگه‌داری و راستی‌آزمایی مخزن؛
 - restic فقط برای فایل‌های غیرپایگاهی مجاز و بازیابی منطبق با hash؛
 - PITR روی میزبان مستقل، خرابی یا فقدان WAL و بازیابی کلید با RPO/RTO اندازه‌گیری‌شده؛
-- چرخهٔ عمر گواهی، هشدار و تأیید نهایی بهره‌برداری.
+- چرخش/بازگشت گواهی، تحویل اعلان به بهره‌بردار و تأیید نهایی بهره‌برداری.
 
 ### اطلاعات موجود
 
@@ -372,4 +374,4 @@ LVM پیشنهادی `vg_zabbix`: بیرون LVM یک GiB برای EFI و دو G
 
 شروع سرویس تابع وابستگی باشد، نه تأخیر ثابت یا تست اینترنت. پایگاه پیش از وابسته بالا بیاید و مدل و درگاه بتوانند مستقل شروع شوند. قطع Zabbix مانع سؤال عمومی محلی با وابستگی سالم نشود. خرابی میزبان هر دو سامانه را قطع می‌کند؛ پشتیبان و بررسی قطعی مستقل نیاز جدا هستند.
 
-پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر چهارمیزبانی برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. مرورگر تازه، پایداری و بازیابی منطقی جدا شاهد دارند؛ پشتیبان مستقل، WAL/PITR، چرخهٔ عمر گواهی و بازیابی کامل بحران همچنان بازند.
+پس از هر گام، کار واقعی، نسخه و نتیجهٔ آزمون، موارد شکست‌خورده یا اجرا‌نشده، مانع و گام بعد در وضعیت پروژه ثبت شوند. مسیر چهارمیزبانی برای ارزیابی کنترل‌شده زنده است، اما پذیرش تولیدی ندارد. مرورگر تازه، پایداری، بازیابی منطقی جدا و تشخیص محلی گواهی شاهد دارند؛ پشتیبان مستقل، WAL/PITR، چرخش/اعلان گواهی و بازیابی کامل بحران همچنان بازند.

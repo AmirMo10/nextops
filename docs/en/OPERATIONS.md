@@ -46,9 +46,11 @@ the certificate with the key-derived public key, verifies the local CA chain and
 and preserves the exact prior pair. Validate Nginx before atomic promotion; reload rather than stop;
 then prove an ordinary TLS handshake, fresh offline login and Zabbix HTTPS/API access. On any
 failure, restore the preserved pair, revalidate Nginx, reload and repeat the client checks. Do not
-disable hostname/expiry validation or fetch a certificate during runtime. A successful timer is
-only detection: production sign-off still requires an owned local alert plus an observed rotation
-and rollback exercise.
+disable hostname/expiry validation or fetch a certificate during runtime. The controlled deployment
+feeds service result and timer state to four one-minute active-agent items and six tagged local
+Zabbix triggers; a guarded timer outage and recovery passed. This proves local detection and problem
+state, not operator delivery. Production sign-off still requires an approved notification route
+plus an observed rotation and rollback exercise.
 
 ## Degraded operation
 

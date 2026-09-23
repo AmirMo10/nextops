@@ -47,7 +47,9 @@ Certificate-expiry detection is local and read-only. The dedicated checker recei
 certificate path, has no network address family or Linux capability, and cannot read the root-only
 private key. It emits no subject/SAN or endpoint identifier. Detection does not authorize renewal;
 the [certificate lifecycle contract](../requirements/CERTIFICATE_LIFECYCLE_SPEC.md) keeps promotion,
-rollback and alert ownership as explicit reviewed gates.
+rollback and alert ownership as explicit reviewed gates. Tagged local Zabbix items/triggers and a
+guarded failure/recovery exercise now prove local detection; notification delivery and live-pair
+rotation remain separate unaccepted controls.
 
 SQL tools use predefined bounded diagnostic queries and narrow database identities. `SELECT` alone does not prove safety. Stored functions, output-to-file operations, locks, costly queries and execution-oriented EXPLAIN variants require their actual semantics to be considered.
 

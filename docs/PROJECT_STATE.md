@@ -19,7 +19,8 @@ remained available, then a fresh audited incident succeeded after recovery. All 
 `running`, with zero failed units and no reboot requirement. The live run exposed and corrected an
 Nginx route timeout for Phase 2 incident requests; the route now has the bounded 180-second assistant
 window and regression coverage. Production acceptance remains blocked by independent off-datastore
-backup, WAL/PITR, certificate lifecycle and disaster-recovery sign-off.
+backup, WAL/PITR, the remaining certificate rotation/operator-notification gates and
+disaster-recovery sign-off.
 
 Recovery source readiness now has an explicit claim boundary. ADR 0008 and the schema-validated
 public profile select separate pgBackRest repositories for the application and Zabbix PostgreSQL
@@ -40,16 +41,18 @@ normal-TLS browser logout, former-token rejection, other-session preservation, i
 exactly one sanitized audit-event verification. Release `nextops-0.1.0-54c8bb4` remains available
 for rollback.
 
-The next bounded source increment addresses certificate-expiry detection without adding a runtime
-network dependency. A deterministic checker, hardened daily systemd timer, dedicated non-login
-identity, guarded installer, focused state/parser tests and bilingual rotation/rollback contract are
-now in the repository. The checker accepts only a public certificate path and emits bounded public
-metadata; it cannot accept a private-key path. A read-only direct-source preflight found both
-current frontend certificates healthy under the 90-day policy through 2027-10-24, with both keys
-still `root:root` mode `0600`. An isolated one-day certificate returned `expiring`; malformed input
-returned the distinct error status. Hosted CI, controlled installation and checker-identity/timer
-validation, owned local alert and rotation/rollback drill are pending, so the manifest records this
-capability as implemented but unaccepted.
+The bounded certificate-expiry detection increment is accepted in the controlled deployment without
+adding a runtime network dependency. Commit `f540a9d` passed all five hosted CI jobs. Its guarded
+installer deployed the deterministic checker and hardened persistent daily timer to both TLS
+frontends under change `certificate-lifecycle-20260923-01`. Each checker has a `2.7 OK` systemd
+security score, can read only the public certificate, and cannot read the root-owned mode-`0600`
+private key. Both live certificates are healthy under the 90-day policy through 2027-10-24;
+isolated one-day and malformed fixtures returned the required distinct failures. Four active-agent
+items and six tagged triggers now monitor service result, timer state and missing data in local
+Zabbix. A guarded application-timer outage changed the expected trigger to problem, and recovery
+returned it to healthy with fresh values from both hosts. Normal application TLS and pinned-CA
+Zabbix HTTPS still pass with no external frontend requests. Production status remains partial until
+an approved operator delivery route and an observed certificate rotation/rollback drill pass.
 
 ## English
 
@@ -156,7 +159,8 @@ startup ordering, all four guests passed serial clean reboots under the early WA
 returned to `running` with zero failed units. A fresh Microsoft Edge context subsequently passed
 with a deny proxy allowing only the private application origin. Cancellation, provider loss,
 missing/corrupt artifacts, an isolated `ENOSPC` staging case, sustained load and logical isolated
-restores also passed. Certificate-expiry, independent off-datastore backup, WAL/PITR recovery and
+restores also passed. Certificate detection and local alert recovery now pass; independent
+off-datastore backup, WAL/PITR recovery, operator notification, certificate rotation/rollback and
 disaster-recovery promotion remain open. Private addresses, tokens, passwords, host keys and raw
 evidence remain outside Git.
 
@@ -291,8 +295,8 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 اتصال‌دهنده، بررسی رخداد خطای امن `503` داد، اما دستیار عمومی محلی فعال ماند؛ پس از بازیابی نیز
 بررسی تازه و ممیزی‌شده موفق شد. هر چهار مهمان در پایان `running`، بدون واحد خراب و بی‌نیاز از
 reboot بودند. اجرای زنده، نقص مهلت مسیر رخداد در Nginx را آشکار کرد؛ مسیر اکنون سقف محدود
-۱۸۰ثانیه‌ای و آزمون بازگشت دارد. پذیرش تولید همچنان تا پشتیبان مستقل، WAL/PITR، چرخهٔ عمر گواهی و
-تأیید بازیابی بحران مسدود می‌ماند.
+۱۸۰ثانیه‌ای و آزمون بازگشت دارد. پذیرش تولید همچنان تا پشتیبان مستقل، WAL/PITR، چرخش/بازگشت
+گواهی، تحویل اعلان به بهره‌بردار و تأیید بازیابی بحران مسدود می‌ماند.
 
 آمادگی کد و سند بازیابی اکنون مرز ادعای صریح دارد. ADR 0008 و پروفایل عمومیِ دارای schema برای
 دو خوشهٔ PostgreSQL 16 برنامه و Zabbix مخزن‌های جداگانهٔ pgBackRest را انتخاب و restic را به
@@ -310,15 +314,16 @@ increment بعدی سخت‌سازی، خروج صرفاً مرورگری را �
 قبلی، حفظ نشست دیگر، تکرار idempotent و وجود دقیقاً یک رویداد ممیزی پالایش‌شده را با موفقیت
 آزمود. انتشار `nextops-0.1.0-54c8bb4` برای بازگشت باقی است.
 
-increment محدود بعدی، تشخیص انقضای گواهی را بدون وابستگی شبکه‌ای زمان اجرا هدف گرفته است. checker
-قطعی، timer روزانه و سخت‌سازی‌شدهٔ systemd، هویت مستقل و بدون ورود، installer محافظت‌شده، آزمون‌های
-متمرکز وضعیت و parser و قرارداد دوزبانهٔ چرخش و بازگشت اکنون در مخزنند. ابزار فقط مسیر گواهی عمومی
-را می‌پذیرد و فرادادهٔ عمومی و محدود می‌نویسد؛ مسیری برای پذیرش کلید خصوصی ندارد. پیش‌بررسی
-مستقیم منبع، هر دو گواهی فعلی را با سیاست ۹۰روزه تا ۲۴ اکتبر ۲۰۲۷ سالم یافت و هر دو کلید همچنان با
-مالکیت `root:root` و mode برابر `0600` حفاظت می‌شوند. گواهی یک‌روزهٔ جدا وضعیت `expiring` و ورودی
-خراب کد خطای مستقل گرفت. CI میزبانی‌شده، نصب کنترل‌شده و آزمون هویت checker و timer، هشدار محلی
-با مالک مشخص و تمرین چرخش و بازگشت هنوز باقی‌اند؛ ازاین‌رو مانیفست این قابلیت را پیاده‌شده اما
-پذیرفته‌نشده ثبت می‌کند.
+increment محدود تشخیص انقضای گواهی بدون وابستگی شبکه‌ای زمان اجرا در استقرار کنترل‌شده پذیرفته
+شد. commit `f540a9d` هر پنج کار CI را گذراند و تغییر `certificate-lifecycle-20260923-01`، checker
+قطعی و timer ماندگار و سخت‌سازی‌شده را روی هر دو رابط TLS نصب کرد. امتیاز امنیتی هر دو سرویس
+`2.7 OK` است؛ هویت checker فقط گواهی عمومی را می‌خواند و به کلید متعلق به root با mode برابر
+`0600` دسترسی ندارد. هر دو گواهی زنده با سیاست ۹۰روزه تا ۲۴ اکتبر ۲۰۲۷ سالم‌اند؛ fixture یک‌روزه
+و ورودی خراب خطاهای متمایز لازم را دادند. چهار item فعال و شش trigger برچسب‌دار Zabbix، نتیجهٔ
+سرویس، وضعیت timer و نبود داده را پایش می‌کنند. قطع محافظت‌شدهٔ timer برنامه trigger را به مشکل
+برد و بازیابی آن، دادهٔ تازه و حالت سالم را برگرداند. TLS عادی برنامه و HTTPS زبیکس با CA ثابت نیز
+بدون درخواست بیرونی موفق‌اند. تا تحویل اعلان از مسیر مصوب بهره‌بردار و تمرین مشاهده‌شدهٔ
+چرخش/بازگشت، دروازهٔ تولید همچنان ناقص است.
 
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 

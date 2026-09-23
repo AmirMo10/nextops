@@ -1,13 +1,13 @@
 ---
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
-release_identifier: nextops-session-termination-controlled-2026-09-23
+release_identifier: nextops-certificate-monitoring-controlled-2026-09-23
 observed_at: '2026-09-23'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: eb572410b345202cfbf0384d7f847c5495026132
+  inspected_baseline_commit: f540a9da9857e661d0d1f56e453035661a299420
 components:
   application:
     release: nextops-0.1.0-eb57241
@@ -114,7 +114,7 @@ capabilities:
       - tests/integration/test_durable_app_postgresql.py
       - tests/browser/test_phase2_panel.py
   - id: local_certificate_lifecycle_check
-    status: implemented_unaccepted
+    status: accepted_controlled
     evidence:
       - docs/requirements/CERTIFICATE_LIFECYCLE_SPEC.md
       - scripts/check_certificate_expiry.py
@@ -234,8 +234,9 @@ acceptance_gates:
       - tests/integration/test_durable_app_postgresql.py
       - tests/browser/test_phase2_panel.py
   - id: certificate_lifecycle_live
-    status: not_run
+    status: partial
     evidence:
       - docs/requirements/CERTIFICATE_LIFECYCLE_SPEC.md
       - docs/PROJECT_STATE.md
       - docs/en/OPERATIONS.md
+      - docs/en/TESTING.md

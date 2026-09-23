@@ -16,8 +16,9 @@ The deployed slice is suitable for supervised user testing, not production accep
 four approved hosts, a five-method Zabbix reader and four forced-command Linux identities with
 distinct keys. Phase 2 source CI, live bilingual API investigations, durable evidence/audit linkage,
 service restart, rollback, guarded WAN denial, authenticated live browser, serial VM reboot and
-dependency loss/recovery pass. Independent off-datastore backup, WAL/PITR, certificate
-lifecycle and disaster-recovery sign-off remain open.
+dependency loss/recovery pass. Certificate-expiry detection and the local Zabbix problem/recovery
+path also pass on both TLS frontends. Independent off-datastore backup, WAL/PITR, certificate
+rotation/operator notification and disaster-recovery sign-off remain open.
 
 ## Status at a glance
 
@@ -26,7 +27,7 @@ lifecycle and disaster-recovery sign-off remain open.
 | Architecture and governance | Accepted baseline | Four-server, CPU-only, local-inference and read-only-first boundaries remain enforced | Complete operation-specific audit and the remaining recovery gates |
 | Application and database | Live for controlled testing | Immutable application release, PostgreSQL 16, local identity, private TLS, bilingual panel, rollback and socket-only logical restore passed | Establish independent backup, WAL/PITR and production observability |
 | Local CPU inference | Live and integrated | Pinned llama.cpp/Qwen, authenticated generation, cold restart, artifact rollback, cancellation/dependency recovery and five-minute bounded load passed | Complete independent artifact recovery and production SLO approval |
-| Zabbix | Live with restricted scope | Zabbix 7.0.30, separate PostgreSQL, restricted reader and socket-only logical restore passed | Complete retention, independent backup and WAL/PITR |
+| Zabbix | Live with restricted scope | Zabbix 7.0.30, separate PostgreSQL, restricted reader, socket-only logical restore and certificate lifecycle triggers passed | Complete retention, independent backup, WAL/PITR and operator notification delivery |
 | Read-only connector | Live and least-privilege | Rootless loopback service, protected Zabbix credential, strict TLS, four distinct forced-command Linux keys and bounded composite evidence; denial, restart, rollback, guarded WAN and dependency-recovery cases passed | Complete production monitoring and independent recovery sign-off |
 | End-to-end user path | Phase 2 controlled qualification passed | Fresh English/Persian browser answers with Zabbix/Linux evidence, durable run/evidence/audit identifiers, WAN denial, RTL and session isolation passed | Independent recovery and production promotion |
 
@@ -47,15 +48,18 @@ lifecycle and disaster-recovery sign-off remain open.
 ## Acceptance evidence
 
 - Repository checks passed: Ruff formatting and lint, strict mypy, documentation, deployment,
-  inference and release-status validators, 128 non-integration tests, PostgreSQL 16 and 17 CI,
+  inference and release-status validators, 152 unit/API tests, PostgreSQL 16 and 17 CI,
   real-browser fixture acceptance and secret scanning.
 - Connector verification returned bounded Zabbix and direct Linux evidence for each of four fixed
   targets; generic shell, unauthenticated and unknown-target requests were denied.
 - Authenticated Phase 2 application API checks passed composite evidence and grounded local
   generation in both languages, with durable run/evidence/audit identifiers.
-- In the earlier Stage 1 campaign, a fresh Edge context behind a WAN-deny proxy passed the complete
-  authenticated HTTPS workflow, English LTR, Persian RTL, general and monitoring modes, provenance,
-  sign-out and new-tab login. This is not counted as the unexecuted Phase 2 live-browser gate.
+- A fresh Phase 2 Edge context behind a WAN-deny proxy passed the authenticated HTTPS workflow,
+  English LTR, Persian RTL, composite incident evidence, provenance, audited sign-out and new-tab
+  isolation with no external page requests.
+- The local certificate checker passed on both frontends with hardened timers and key denial. A
+  guarded timer outage produced the expected Zabbix problem and recovery returned all triggers to
+  healthy; operator notification delivery and live-pair rotation were not run.
 - Application/runtime/model rollback, cancellation, dependency/artifact recovery, isolated
   low-space behavior and a five-minute two-client load passed; detailed measurements are in the
   [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
@@ -76,22 +80,20 @@ endpoint are allowed by the relevant host firewalls.
 
 ## Remaining work before production acceptance
 
-1. Complete the fresh live-browser, Phase 2 serial-reboot and Phase 2 dependency-recovery gates;
-   keep any unexecuted result explicit.
-2. Approve storage independent of the serving guest, DS-C/G10 and host; define RPO/RTO, retention
+1. Approve storage independent of the serving guest, DS-C/G10 and host; define RPO/RTO, retention
    and key custody.
-3. Establish separate pgBackRest repositories with continuous WAL and restic for permitted
+2. Establish separate pgBackRest repositories with continuous WAL and restic for permitted
    non-database artifacts, then perform independent-host PITR and key-recovery drills.
-4. Complete certificate expiry/rotation, dependency/license approval, alerting and operational
-   sign-off without weakening the offline contract.
-5. Add further production hosts, templates and service-level evidence only through explicit scope
+3. Complete certificate rotation/rollback, operator notification delivery, dependency/license
+   approval and operational sign-off without weakening the offline contract.
+4. Add further production hosts, templates and service-level evidence only through explicit scope
    review; do not broaden connector methods or credentials implicitly.
-6. Add operational dashboards, alerting, log retention, certificate/key rotation and a documented
+5. Add operational dashboards, log retention, certificate/key rotation and a documented
    user-test feedback and defect workflow.
 
 ## Presentation conclusion
 
 NextOps now has a functioning, security-bounded product slice rather than only prepared
 infrastructure. It is ready for supervised user testing of the bilingual, read-only investigation
-experience. Production readiness must wait for independently stored backup, WAL/PITR, certificate
-lifecycle and disaster-recovery evidence.
+experience. Production readiness must wait for independently stored backup, WAL/PITR, the remaining
+certificate rotation/notification controls and disaster-recovery evidence.

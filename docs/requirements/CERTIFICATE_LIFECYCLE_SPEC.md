@@ -1,6 +1,6 @@
 # Local certificate lifecycle / چرخهٔ محلی گواهی
 
-Status: **source implemented; controlled deployment pending.** Date: 2026-09-23.
+Status: **controlled expiry detection and local Zabbix alert accepted; production gate partial.** Date: 2026-09-23.
 
 ## English
 
@@ -65,6 +65,21 @@ human-reviewed rotation record.
    root-only.
 5. Connect the failed/expiring state to Zabbix or another approved local notification path, then
    perform a staged rotation and rollback exercise.
+
+### Controlled acceptance result — 2026-09-23
+
+Commit `f540a9d` passed every hosted CI job. Change
+`certificate-lifecycle-20260923-01` installed the reviewed artifacts on the application and Zabbix
+frontends. Both timers are enabled and active; both immediate checks are healthy; both hardened
+services scored `2.7 OK`; and the checker identities can read the public certificates but not the
+root-owned mode-`0600` keys. Isolated one-day and malformed certificates produced `expiring` and
+`error` respectively without touching the live pairs. Local Zabbix now receives four one-minute
+active-agent items and evaluates six tagged triggers for result, timer state and missing data. A
+five-minute automatic recovery guard was armed before stopping the application timer; the timer
+trigger changed to problem, the timer was restored, fresh `active` data arrived, and all triggers
+returned healthy. Ordinary application TLS and pinned-CA Zabbix HTTPS remained valid with no
+external frontend requests. No live certificate was rotated. Operator notification delivery and
+the staged rotation/rollback drill therefore remain unaccepted.
 
 ### Acceptance criteria and tests
 
@@ -147,6 +162,20 @@ keep only sanitized capability status in the repository.
 ۳. همان artifact بازبینی‌شده با تنظیم غیرمحرمانهٔ هر میزبان روی رابط برنامه و Zabbix مستقر شود.
 ۴. حالت سالم، نزدیک انقضا و خراب ثابت، سخت‌سازی واحد بررسی و دسترسی‌ناپذیری کلید تأیید شود.
 ۵. وضعیت ناموفق به Zabbix یا مسیر اعلان محلی مصوب متصل و سپس تمرین مرحله‌ای چرخش و بازگشت اجرا شود.
+
+### نتیجهٔ پذیرش کنترل‌شده — ۱ مهر ۱۴۰۵
+
+commit `f540a9d` همهٔ کارهای CI میزبانی‌شده را گذراند. در تغییر
+`certificate-lifecycle-20260923-01`، artifactهای بازبینی‌شده روی رابط برنامه و Zabbix نصب شدند.
+هر دو timer فعال و enabled هستند، اجرای فوری هر دو checker سالم است، سخت‌سازی هر دو سرویس امتیاز
+`2.7 OK` دارد و هویت checker می‌تواند گواهی عمومی را بخواند اما به کلید متعلق به root با مجوز
+`0600` دسترسی ندارد. گواهی آزمایشی یک‌روزه و ورودی خراب، بدون تماس با جفت زنده، به‌ترتیب
+`expiring` و `error` برگرداندند. Zabbix محلی اکنون چهار item فعال یک‌دقیقه‌ای و شش trigger برچسب‌دار
+برای نتیجهٔ checker، وضعیت timer و نبود داده دارد. پیش از توقف timer برنامه، محافظ بازگشت خودکار
+پنج‌دقیقه‌ای فعال شد؛ trigger متناظر به وضعیت مشکل رفت، timer بازیابی شد، دادهٔ تازهٔ `active`
+رسید و همهٔ triggerها دوباره سالم شدند. TLS عادی برنامه و HTTPS زبیکس با CA ثابت نیز بدون درخواست
+بیرونی موفق ماندند. هیچ گواهی زنده‌ای چرخانده نشد؛ بنابراین تحویل اعلان به بهره‌بردار و تمرین
+مرحله‌ای چرخش/بازگشت هنوز پذیرفته نشده‌اند.
 
 ### معیار پذیرش و آزمون
 

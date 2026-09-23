@@ -4,17 +4,22 @@
 
 ### English
 
-Started the bounded local certificate-lifecycle increment. A dependency-free Python checker uses
+Completed controlled acceptance of the bounded local certificate-lifecycle detection increment. A dependency-free Python checker uses
 the pinned local OpenSSL binary and system clock to classify healthy, warning-window, expired and
 not-yet-valid certificates, emitting only bounded public metadata. A hardened daily systemd timer
 runs as a dedicated non-login identity with no network access and read permission for the public
 certificate only; the private key remains root-only. The guarded installer verifies the
 certificate/key match without printing either, installs non-secret configuration and fails unless
 the timer and immediate check succeed. Thirteen focused parser/state tests and static unit/installer
-checks are present. Point-in-time direct-source preflight classified both live frontend certificates
-healthy under the 90-day policy and kept their keys root-only; an isolated one-day certificate
-returned `expiring`, while malformed input returned the distinct error status. Hosted CI,
-controlled installation and checker-identity/timer validation, alert delivery, rotation and rollback
+checks are present. Commit `f540a9d` passed all five hosted CI jobs; change
+`certificate-lifecycle-20260923-01` then installed the artifacts on both TLS frontends. Both timers
+are enabled and active, both services scored `2.7 OK`, and the checker identities can read the
+public certificates but not either root-owned mode-`0600` key. Both live certificates are healthy
+under the 90-day policy; isolated one-day and malformed certificates returned `expiring` and
+`error`. Four active-agent items and six tagged local Zabbix triggers now observe service result,
+timer state and missing data. A guarded timer outage produced a problem and its recovery returned
+all triggers to healthy with fresh values from both hosts. Normal TLS remained valid with no
+external frontend requests. Operator notification delivery and an observed rotation/rollback drill
 remain pending, so production acceptance is unchanged.
 
 Closed and deployed the session-termination gap. The panel now calls an audited server-side logout
@@ -141,16 +146,19 @@ Windows session because no local server or working container runtime was availab
 
 ### فارسی
 
-increment محدود چرخهٔ محلی گواهی آغاز شد. ابزار Python بدون وابستگی تازه، با OpenSSL ثابت و محلی
+پذیرش کنترل‌شدهٔ increment محدود تشخیص چرخهٔ محلی گواهی تکمیل شد. ابزار Python بدون وابستگی تازه، با OpenSSL ثابت و محلی
 و ساعت سامانه، گواهی را در یکی از حالت‌های سالم، واردشده به بازهٔ هشدار، منقضی یا هنوز نامعتبر
 قرار می‌دهد و فقط فرادادهٔ عمومی و محدود می‌نویسد. timer روزانه و سخت‌سازی‌شده با هویت مستقل و
 بدون ورود یا دسترسی شبکه اجرا می‌شود؛ این هویت فقط گواهی عمومی را می‌خواند و کلید خصوصی فقط برای
 root می‌ماند. installer محافظت‌شده، بدون چاپ محتوا تطبیق گواهی و کلید را بررسی، تنظیم غیرمحرمانه
 را نصب و در صورت موفق‌نبودن timer و اجرای فوری متوقف می‌شود. سیزده آزمون متمرکز parser و وضعیت و
-کنترل‌های ایستای واحد و installer افزوده شدند. پیش‌بررسی مستقیم منبع، هر دو گواهی زنده را با سیاست
-۹۰روزه سالم یافت و کلیدها فقط برای root ماندند؛ گواهی یک‌روزهٔ جدا وضعیت `expiring` و ورودی خراب
-کد خطای مستقل گرفت. CI میزبانی‌شده، نصب کنترل‌شده و آزمون هویت checker و timer، تحویل هشدار و
-تمرین چرخش و بازگشت هنوز باقی‌اند؛ پذیرش تولید تغییری نکرده است.
+کنترل‌های ایستای واحد و installer افزوده شدند. commit `f540a9d` هر پنج کار CI را گذراند و تغییر
+`certificate-lifecycle-20260923-01` آن را روی هر دو رابط TLS نصب کرد. هر دو timer فعال و enabled،
+امتیاز سخت‌سازی هر دو سرویس `2.7 OK` و دسترسی هویت checker به هر دو کلید خصوصی رد است. گواهی‌های
+زنده با سیاست ۹۰روزه سالم‌اند و fixture یک‌روزه و ورودی خراب به‌ترتیب `expiring` و `error` دادند.
+چهار item فعال و شش trigger برچسب‌دار Zabbix وضعیت سرویس، timer و نبود داده را پایش می‌کنند؛ قطع
+محافظت‌شدهٔ timer مشکل ساخت و بازیابی آن همهٔ triggerها را سالم کرد. TLS عادی بدون درخواست بیرونی
+معتبر ماند. تحویل اعلان به بهره‌بردار و تمرین چرخش/بازگشت هنوز باقی‌اند؛ پذیرش تولید تغییری نکرد.
 
 شکاف پایان‌دادن نشست بسته و مستقر شد. پنل اکنون پیش از پاک‌کردن bearer محلی برگه، مسیر ممیزی‌شدهٔ
 خروج در سمت سرور را فراخوانی می‌کند. PostgreSQL فقط همان نشست ارائه‌شده را زیر قفل سطر لغو، یک

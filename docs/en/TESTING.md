@@ -34,6 +34,16 @@ The same release also passed the controlled session-termination gate. Direct API
 browser logout returned `204`, former tokens received `401`, a second session stayed valid, replay
 was idempotent, and exactly one sanitized correlated audit event was present.
 
+The certificate-detection source at `f540a9d` passed all five hosted CI jobs: quality/unit,
+PostgreSQL 16, PostgreSQL 17, browser fixture and secret scan. Controlled installation on both TLS
+frontends passed immediate and persistent-timer checks, public-certificate-only access, private-key
+denial, `2.7 OK` systemd security review, healthy 90-day classification, isolated expiring and
+malformed fixtures, Nginx validation, normal application TLS and pinned-CA Zabbix HTTPS. Four local
+Zabbix active-agent items received fresh one-minute values and six tagged triggers were healthy. A
+five-minute recovery guard preceded an application-timer stop; its trigger entered problem, the
+timer was restored, fresh `active` data arrived and the trigger recovered. Operator notification
+delivery and live-pair rotation/rollback were not run.
+
 ## Historical Phase 2A controlled deployment evidence
 
 The bounded incident-context contract is implemented and tested at connector and application API
