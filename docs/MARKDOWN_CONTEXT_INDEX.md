@@ -129,6 +129,7 @@ Markdown file is added, renamed, or removed.
 - `docs/requirements/DEPLOYMENT_UPDATE.md` — Active four-server deployment amendment.
 - `docs/requirements/NEXTOPS_MASTER_PROMPT.md` — Active engineering requirements and precedence.
 - `docs/requirements/nextops-threat-model.md` — Repository-grounded threat model and mitigations.
+- `docs/requirements/PHASE_2_INCIDENT_CONTEXT_SPEC.md` — Bounded Phase 2 Zabbix history/event feature packet.
 - `docs/requirements/PROMPT_CHANGELOG.md` — Prompt version and precedence history.
 - `docs/requirements/SERVER_DEPENDENCY_DOSSIER_SPEC.md` — Per-server dossier and package-layer specification.
 - `docs/requirements/SOURCES.md` — Source provenance and archive identities.

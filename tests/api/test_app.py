@@ -27,7 +27,13 @@ from nextops.contracts.durable import (
 )
 from nextops.contracts.errors import ErrorCode
 from nextops.contracts.models import ActorContext, Role
-from nextops.contracts.monitoring import MonitoringMetric, MonitoringSummary
+from nextops.contracts.monitoring import (
+    MonitoringEvent,
+    MonitoringHistoryPoint,
+    MonitoringIncidentContext,
+    MonitoringMetric,
+    MonitoringSummary,
+)
 from nextops.inference.contracts import FinishReason, InferenceReadiness, ReadinessState
 
 NOW = datetime(2026, 9, 21, 9, 0, tzinfo=UTC)
@@ -277,6 +283,37 @@ class FakeMonitoringGateway:
             partial_reasons=(),
         )
 
+    async def incident_context(self) -> MonitoringIncidentContext:
+        summary = await self.summary()
+        return MonitoringIncidentContext(
+            source_version=summary.source_version,
+            host=summary.host,
+            collected_at=summary.collected_at,
+            window_started_at=NOW - timedelta(hours=1),
+            window_ended_at=NOW,
+            summary=summary,
+            history=(
+                MonitoringHistoryPoint(
+                    name="CPU idle time",
+                    key="system.cpu.util[,idle]",
+                    value="89.5",
+                    units="%",
+                    measured_at=NOW - timedelta(minutes=5),
+                ),
+            ),
+            events=(
+                MonitoringEvent(
+                    event_id="30001",
+                    name="CPU pressure observed",
+                    severity=3,
+                    occurred_at=NOW - timedelta(minutes=2),
+                    state="problem",
+                    acknowledged=False,
+                    suppressed=False,
+                ),
+            ),
+        )
+
 
 class FailingMonitoringGateway:
     """Controlled connector failure for durable failure-route coverage."""
@@ -285,6 +322,13 @@ class FailingMonitoringGateway:
         raise ApplicationError(
             ErrorCode.DEPENDENCY_UNAVAILABLE,
             "connector.summary_unavailable",
+            retryable=True,
+        )
+
+    async def incident_context(self) -> MonitoringIncidentContext:
+        raise ApplicationError(
+            ErrorCode.DEPENDENCY_UNAVAILABLE,
+            "connector.incident_context_unavailable",
             retryable=True,
         )
 
@@ -412,6 +456,40 @@ def test_investigation_requires_session_and_returns_exact_live_evidence() -> Non
     assert inference.last_request.max_output_tokens == 128
 
 
+def test_incident_context_requires_session_and_preserves_timeline_provenance() -> None:
+    client = TestClient(create_app(FakeService(), FakeInferenceGateway(), FakeMonitoringGateway()))
+
+    unauthenticated = client.get("/api/v1/monitoring/incident-context")
+    response = client.get(
+        "/api/v1/monitoring/incident-context",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+    )
+
+    assert unauthenticated.status_code == 401
+    assert response.status_code == 200
+    body = response.json()
+    assert body["source"] == "zabbix"
+    assert body["history"][0]["key"] == "system.cpu.util[,idle]"
+    assert body["events"][0]["event_id"] == "30001"
+    assert body["events"][0]["state"] == "problem"
+    assert body["window_ended_at"] == NOW.isoformat().replace("+00:00", "Z")
+
+
+def test_monitoring_routes_require_explicit_zabbix_read_scope() -> None:
+    service = FakeService()
+    service.actor = service.actor.model_copy(update={"scopes": frozenset({"runs.read"})})
+    client = TestClient(create_app(service, FakeInferenceGateway(), FakeMonitoringGateway()))
+    headers = {"Authorization": "Bearer valid-bearer-token-that-is-long-enough"}
+
+    summary = client.get("/api/v1/monitoring/summary", headers=headers)
+    incident = client.get("/api/v1/monitoring/incident-context", headers=headers)
+
+    assert summary.status_code == 403
+    assert summary.json()["error"]["message_key"] == "monitoring.scope_denied"
+    assert incident.status_code == 403
+    assert incident.json()["error"]["message_key"] == "monitoring.scope_denied"
+
+
 def test_untrusted_monitoring_text_and_stale_partial_evidence_are_preserved() -> None:
     class InjectedMonitoringGateway:
         async def summary(self) -> MonitoringSummary:
@@ -433,6 +511,9 @@ def test_untrusted_monitoring_text_and_stale_partial_evidence_are_preserved() ->
                 is_partial=True,
                 partial_reasons=("metrics_truncated",),
             )
+
+        async def incident_context(self) -> MonitoringIncidentContext:
+            raise AssertionError("summary-only test must not request incident context")
 
     service = FakeService()
     inference = FakeInferenceGateway()

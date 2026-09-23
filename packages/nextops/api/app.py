@@ -34,7 +34,11 @@ from nextops.contracts.durable import (
 )
 from nextops.contracts.errors import ErrorCode, ErrorDetail
 from nextops.contracts.models import ActorContext
-from nextops.contracts.monitoring import InvestigationResponse, MonitoringSummary
+from nextops.contracts.monitoring import (
+    InvestigationResponse,
+    MonitoringIncidentContext,
+    MonitoringSummary,
+)
 from nextops.inference.contracts import InferenceReadiness, ReadinessState
 from nextops.persistence.database import create_database_engine, create_session_factory
 
@@ -184,6 +188,10 @@ def create_app(
             raise ApplicationError(ErrorCode.UNAUTHENTICATED, "auth.session_required")
         return service.authenticate(credentials.credentials)
 
+    def require_monitoring_read(actor: ActorContext) -> None:
+        if "zabbix.read" not in actor.scopes:
+            raise ApplicationError(ErrorCode.POLICY_DENIED, "monitoring.scope_denied")
+
     @app.get("/healthz")
     def health() -> dict[str, str]:
         return {"status": "ok", "service": "nextops-app"}
@@ -305,7 +313,7 @@ def create_app(
     async def monitoring_summary(
         actor: Annotated[ActorContext, Depends(current_actor)],
     ) -> MonitoringSummary:
-        del actor
+        require_monitoring_read(actor)
         if monitoring_gateway is None:
             raise ApplicationError(
                 ErrorCode.DEPENDENCY_UNAVAILABLE,
@@ -313,6 +321,22 @@ def create_app(
                 retryable=True,
             )
         return await monitoring_gateway.summary()
+
+    @app.get(
+        "/api/v1/monitoring/incident-context",
+        response_model=MonitoringIncidentContext,
+    )
+    async def monitoring_incident_context(
+        actor: Annotated[ActorContext, Depends(current_actor)],
+    ) -> MonitoringIncidentContext:
+        require_monitoring_read(actor)
+        if monitoring_gateway is None:
+            raise ApplicationError(
+                ErrorCode.DEPENDENCY_UNAVAILABLE,
+                "monitoring.not_configured",
+                retryable=True,
+            )
+        return await monitoring_gateway.incident_context()
 
     @app.post("/api/v1/runs", response_model=RunRecord, status_code=201)
     def create_run(

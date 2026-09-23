@@ -51,3 +51,21 @@ def test_gateway_relabels_shared_transport_failure_as_connector_failure() -> Non
         assert error.retryable is True
     else:
         raise AssertionError("connector transport failure was not propagated")
+
+
+def test_gateway_relabels_incident_transport_failure() -> None:
+    gateway = LoopbackMonitoringGateway(
+        "http://127.0.0.1:18100",
+        "service-secret-that-is-long-enough",
+        5.0,
+        FailingTransport(),
+    )
+
+    try:
+        asyncio.run(gateway.incident_context())
+    except ApplicationError as error:
+        assert error.code is ErrorCode.DEPENDENCY_UNAVAILABLE
+        assert error.message_key == "connector.incident_context_unavailable"
+        assert error.retryable is True
+    else:
+        raise AssertionError("incident-context transport failure was not propagated")

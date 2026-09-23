@@ -8,7 +8,7 @@ from pydantic import ValidationError
 
 from nextops.application.errors import ApplicationError
 from nextops.contracts.errors import ErrorCode
-from nextops.contracts.monitoring import MonitoringSummary
+from nextops.contracts.monitoring import MonitoringIncidentContext, MonitoringSummary
 from nextops.inference.llama_cpp import JsonTransport, UrllibJsonTransport
 
 
@@ -16,6 +16,8 @@ class MonitoringGateway(Protocol):
     """Narrow monitoring boundary used by the application API."""
 
     async def summary(self) -> MonitoringSummary: ...
+
+    async def incident_context(self) -> MonitoringIncidentContext: ...
 
 
 class LoopbackMonitoringGateway:
@@ -52,5 +54,25 @@ class LoopbackMonitoringGateway:
             raise ApplicationError(
                 ErrorCode.DEPENDENCY_UNAVAILABLE,
                 "connector.summary_invalid",
+                retryable=True,
+            ) from error
+
+    async def incident_context(self) -> MonitoringIncidentContext:
+        try:
+            raw = await self._transport.get_json(
+                "/api/v1/zabbix/incident-context", self._headers, self._timeout_seconds
+            )
+        except ApplicationError as error:
+            raise ApplicationError(
+                error.code,
+                "connector.incident_context_unavailable",
+                retryable=error.retryable,
+            ) from error
+        try:
+            return MonitoringIncidentContext.model_validate(raw)
+        except ValidationError as error:
+            raise ApplicationError(
+                ErrorCode.DEPENDENCY_UNAVAILABLE,
+                "connector.incident_context_invalid",
                 retryable=True,
             ) from error

@@ -13,7 +13,7 @@ from nextops.application.errors import ApplicationError
 from nextops.connectors.configuration import ConnectorSettings
 from nextops.connectors.zabbix import HttpsZabbixTransport, ZabbixReadClient
 from nextops.contracts.errors import ErrorCode
-from nextops.contracts.monitoring import MonitoringSummary
+from nextops.contracts.monitoring import MonitoringIncidentContext, MonitoringSummary
 
 BearerCredentials = Annotated[
     HTTPAuthorizationCredentials | None,
@@ -25,6 +25,8 @@ class MonitoringClient(Protocol):
     """Narrow connector boundary for API tests."""
 
     async def summary(self) -> MonitoringSummary: ...
+
+    async def incident_context(self) -> MonitoringIncidentContext: ...
 
 
 def create_connector_app(client: MonitoringClient, service_secret: str) -> FastAPI:
@@ -68,6 +70,14 @@ def create_connector_app(client: MonitoringClient, service_secret: str) -> FastA
     async def zabbix_summary() -> MonitoringSummary:
         return await client.summary()
 
+    @app.get(
+        "/api/v1/zabbix/incident-context",
+        response_model=MonitoringIncidentContext,
+        dependencies=[Depends(authenticate)],
+    )
+    async def zabbix_incident_context() -> MonitoringIncidentContext:
+        return await client.incident_context()
+
     return app
 
 
@@ -82,6 +92,10 @@ def create_runtime_connector_app() -> FastAPI:
         settings.request_timeout_seconds,
     )
     return create_connector_app(
-        ZabbixReadClient(settings.zabbix_host, transport),
+        ZabbixReadClient(
+            settings.zabbix_host,
+            transport,
+            incident_lookback_minutes=settings.incident_lookback_minutes,
+        ),
         settings.service_auth_secret.get_secret_value(),
     )

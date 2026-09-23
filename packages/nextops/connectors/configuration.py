@@ -23,6 +23,7 @@ class ConnectorSettings(BaseModel):
     service_auth_secret: SecretStr = Field(min_length=32, max_length=512)
     zabbix_host: str = Field(min_length=1, max_length=128)
     request_timeout_seconds: float = Field(default=15.0, ge=1.0, le=60.0)
+    incident_lookback_minutes: int = Field(default=60, ge=15, le=1_440)
 
     @model_validator(mode="after")
     def validate_boundary(self) -> Self:
@@ -61,5 +62,8 @@ class ConnectorSettings(BaseModel):
             zabbix_host=os.environ.get("NEXTOPS_ZABBIX_HOST", "Zabbix server"),
             request_timeout_seconds=float(
                 os.environ.get("NEXTOPS_CONNECTOR_TIMEOUT_SECONDS", "15")
+            ),
+            incident_lookback_minutes=int(
+                os.environ.get("NEXTOPS_INCIDENT_LOOKBACK_MINUTES", "60")
             ),
         )
