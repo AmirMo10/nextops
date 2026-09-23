@@ -15,7 +15,7 @@ WAL/PITR and production acceptance remain open. Source: master specification sec
 ## Phase 2 current qualification — 2026-09-23
 
 Phase 2 connector release `nextops-0.1.0-e2dad3a` and current application release
-`nextops-0.1.0-8d042cf` passed the source quality/unit job, PostgreSQL 16 and 17 integration jobs,
+`nextops-0.1.0-54c8bb4` passed the source quality/unit job, PostgreSQL 16 and 17 integration jobs,
 real-browser fixture job and secret scan. The source suite includes forced-command parsing,
 private-target validation, strict host-key/identity construction, provenance mismatch, output limits,
 redaction, authentication, scope denial, unknown targets, safe dependency errors, prompt-injection

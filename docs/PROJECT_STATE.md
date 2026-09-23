@@ -1,7 +1,7 @@
 # Project state / وضعیت پروژه
 
 Updated: 2026-09-23 — Phase 2 is deployed for controlled user testing with application release
-`nextops-0.1.0-8d042cf` and connector release `nextops-0.1.0-e2dad3a`. An authenticated operator can
+`nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a`. An authenticated operator can
 select one of four deployment-owned
 targets and receive a durable English or Persian incident explanation grounded in bounded Zabbix
 history/events and a direct read-only Linux snapshot. The model and browser receive no target
@@ -14,7 +14,8 @@ paths passed; unauthenticated and unknown-target requests failed closed. App and
 immutable rollback/forward, and a server/API path with direct WAN access denied passed. The four
 guests ended `running`, with zero failed units and no reboot requirement. CI passed formatting,
 lint, strict typing, 129 non-integration tests, PostgreSQL 16 and 17 integration jobs, the real-browser
-fixture and secret scanning. The OCS frontend was promoted as an application-only change; a fresh
+fixture and secret scanning. The Figma-founded OCS visual refinement was promoted as an
+application-only change; a fresh
 deployed login check passed English desktop and Persian RTL mobile without overflow, external
 requests, failed responses or console errors. The full authenticated Phase 2 live-browser run,
 Phase 2-specific serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`; prior Stage
@@ -35,7 +36,7 @@ fresh unauthenticated English/Persian desktop/mobile browser check. The authenti
 workflow, a Phase 2 serial VM reboot and Phase 2 dependency loss/recovery remain `not_run`.
 
 The authenticated application and bilingual panel are deployed as immutable release
-`nextops-0.1.0-8d042cf` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
+`nextops-0.1.0-54c8bb4` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
 application identity and session state on
 its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
 application listener are not exposed through Nginx. The browser receives neither the AI service
@@ -212,7 +213,7 @@ Six repository-scoped Codex skills under `.agents/skills` route project context,
 | 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; the reader sees all four approved Phase 1 hosts with fresh items, while the full failure matrix remains |
 | 1D | New evidence-linked Zabbix answer with audit | English/Persian grounded answers pass; every started live investigation now has a durable scoped run, bounded evidence snapshot/hash, model result, safe failure outcome and append-only audit linkage verified in isolated PostgreSQL and the live path |
 | 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh login, bilingual general Q&A, live evidence and audit passed while all four guests were WAN-blocked. A separately WAN-denied fresh browser, revocation, cancellation, dependency/artifact/low-space recovery and five-minute capacity profile pass. After correcting database-cluster ordering, all four guests passed the serial clean-reboot matrix. Production backup/PITR acceptance remains open |
-| 2 | Read-only Linux/Zabbix incident investigation | Application release `nextops-0.1.0-8d042cf` and connector release `nextops-0.1.0-e2dad3a` are live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, restart, rollback and server/API WAN-denied checks pass; the OCS login smoke check passes while the authenticated live-browser, Phase 2 reboot and dependency-recovery gates remain `not_run` |
+| 2 | Read-only Linux/Zabbix incident investigation | Application release `nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` are live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, restart, rollback and server/API WAN-denied checks pass; the OCS login smoke check passes while the authenticated live-browser, Phase 2 reboot and dependency-recovery gates remain `not_run` |
 
 The user may perform provisioning independently; verify their actual state before claiming a VM either exists or does not exist. A screenshot of VM settings is not proof of an accepted application workflow. Resume from the next evidenced, authorized incomplete stage rather than resetting progress.
 
@@ -241,7 +242,7 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 
 ## فارسی
 
-مرحلهٔ دو با انتشار تغییرناپذیر برنامه `nextops-0.1.0-8d042cf` و انتشار اتصال‌دهنده
+مرحلهٔ دو با انتشار تغییرناپذیر برنامه `nextops-0.1.0-54c8bb4` و انتشار اتصال‌دهنده
 `nextops-0.1.0-e2dad3a` برای ارزیابی کنترل‌شدهٔ کاربران مستقر شده است. بهره‌بردار احرازهویت‌شده
 می‌تواند یکی از چهار مقصد منطقی و ازپیش‌تعریف‌شده را برگزیند
 و توضیحی ماندگار به فارسی یا انگلیسی دریافت کند که هم به تاریخچه و رویدادهای محدود Zabbix و هم به
@@ -252,7 +253,8 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 رد درخواست بدون احرازهویت و مقصد ناشناخته، راه‌اندازی مجدد سرویس‌های برنامه و اتصال‌دهنده، بازگشت
 و بازگردانی انتشار و مسیر سرور/API با WAN مسدود موفق بودند. CI نیز قالب و lint، نوع‌سنجی
 سخت‌گیرانه، ۱۲۹ آزمون غیر‌یکپارچه، یکپارچگی PostgreSQL 16 و 17، آزمون واقعی مرورگر با fixture و
-پویش راز را با موفقیت گذراند. رابط OCS در بررسی تازهٔ صفحهٔ ورود مستقرشده، نمای رومیزی انگلیسی و
+پویش راز را با موفقیت گذراند. بهبود بصری OCS بر پایهٔ مبنای طراحی Figma، تنها در لایهٔ برنامه
+مستقر شد. رابط OCS در بررسی تازهٔ صفحهٔ ورود مستقرشده، نمای رومیزی انگلیسی و
 فارسی راست‌به‌چپ با عرض ۳۷۵ پیکسل را بدون سرریز، درخواست بیرونی، پاسخ ناموفق یا خطای console
 گذراند. آزمون کامل و احرازهویت‌شدهٔ مرورگر، راه‌اندازی مجدد ترتیبی VMها ویژهٔ مرحلهٔ دو و قطع و
 بازیابی وابستگی در مرحلهٔ دو همچنان `not_run` هستند؛ شاهد مرحلهٔ یک جای اجرای دوبارهٔ آن‌ها را
@@ -284,7 +286,7 @@ PITR، مخزن فایل با restic و تأیید نهایی بازیابی ب�
 و صفحهٔ ورود OCS نیز در بررسی تازهٔ سامانهٔ زنده به هر دو زبان موفق بود؛ اما گردش کامل و
 احرازهویت‌شدهٔ مرورگر، reboot ترتیبی مرحلهٔ دو و قطع و بازیابی وابستگی هنوز `not_run` هستند.
 
-برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-8d042cf` روی مهمان برنامه و پشت TLS خصوصی
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-54c8bb4` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
 می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
 نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.

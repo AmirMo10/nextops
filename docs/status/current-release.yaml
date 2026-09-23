@@ -7,11 +7,11 @@ deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: 8d042cf47c41ae4a895475b3887de08c83d3a806
+  inspected_baseline_commit: 54c8bb4ec4db23a03eeba4aa7b35c81bd28d1bc2
 components:
   application:
-    release: nextops-0.1.0-8d042cf
-    source_commit: 8d042cf47c41ae4a895475b3887de08c83d3a806
+    release: nextops-0.1.0-54c8bb4
+    source_commit: 54c8bb4ec4db23a03eeba4aa7b35c81bd28d1bc2
   connector:
     release: nextops-0.1.0-e2dad3a
     source_commit: e2dad3a0d76b18f5066b8834230337ad6c162263

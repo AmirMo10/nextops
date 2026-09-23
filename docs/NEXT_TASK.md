@@ -1,7 +1,7 @@
 # Next task / کار بعدی
 
 Updated: 2026-09-23 — Phase 2 implementation is complete. Application release
-`nextops-0.1.0-8d042cf` and connector release `nextops-0.1.0-e2dad3a` are active. Four fixed targets now
+`nextops-0.1.0-54c8bb4` and connector release `nextops-0.1.0-e2dad3a` are active. Four fixed targets now
 provide bounded Zabbix history/events plus direct, redacted and forced-command Linux evidence to a
 durable bilingual investigation workflow. Live English/Persian API investigations, authorization,
 all four collectors, restart, rollback and server/API WAN-denied checks passed; source CI is green.
@@ -93,7 +93,7 @@ A sanitized read-only preflight reached all four clean replacement guests after 
 
 The role package layers remain as recorded: PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The controlled application/database/proxy, AI, connector and Zabbix/database/frontend slices are active and passed the named reboot checks. Docker was not installed because the native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-62de8d6`; the active user application is `nextops-0.1.0-8d042cf` and the connector remains `nextops-0.1.0-e2dad3a`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
+The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-62de8d6`; the active user application is `nextops-0.1.0-54c8bb4` and the connector remains `nextops-0.1.0-e2dad3a`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
 
 Two independent four-case qualification runs passed unauthenticated denial, readiness, Persian and
 English evidence preservation, and safe non-execution responses under both automated checks and
@@ -178,7 +178,7 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 ### نقطهٔ فعلی و ملاک ادامه
 
-پیاده‌سازی مرحلهٔ دو تکمیل شده است؛ انتشار برنامه `nextops-0.1.0-8d042cf` و انتشار اتصال‌دهنده
+پیاده‌سازی مرحلهٔ دو تکمیل شده است؛ انتشار برنامه `nextops-0.1.0-54c8bb4` و انتشار اتصال‌دهنده
 `nextops-0.1.0-e2dad3a` فعال‌اند. چهار مقصد ثابت اکنون تاریخچه و رویداد محدود Zabbix را همراه شواهد مستقیم،
 پالایش‌شده و مبتنی بر فرمان اجباری Linux به گردش ماندگار بررسی دوزبانه می‌رسانند. بررسی زندهٔ API
 به فارسی و انگلیسی، مجوزدهی، هر چهار گردآورنده، راه‌اندازی مجدد، بازگشت انتشار و مسیر سرور/API با
@@ -262,7 +262,7 @@ WAN مسدود موفق بوده و CI سبز است. این پیاده‌ساز
 
 لایهٔ بسته‌های هر نقش مطابق رکورد باقی است: PostgreSQL 16.15 و Nginx 1.24 روی برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 روی هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 روی connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 روی Zabbix. برش‌های کنترل‌شدهٔ برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix و پایگاه و رابط آن فعال‌اند و آزمون‌های نام‌بردهٔ راه‌اندازی مجدد را گذرانده‌اند. Docker نصب نشد، زیرا طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-62de8d6` است؛ برنامه انتشار `nextops-0.1.0-8d042cf` و اتصال‌دهنده انتشار `nextops-0.1.0-e2dad3a` را اجرا می‌کنند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
+محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-62de8d6` است؛ برنامه انتشار `nextops-0.1.0-54c8bb4` و اتصال‌دهنده انتشار `nextops-0.1.0-e2dad3a` را اجرا می‌کنند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
 
 دو اجرای مستقلِ چهارموردی، رد درخواست بدون احراز هویت، آمادگی، حفظ شاهد فارسی و انگلیسی و پاسخ ایمن
 بدون ادعای اجرا را هم در بررسی خودکار و هم در بازبینی انسانی گذراندند. آزمون بار اولیه، مرز یک

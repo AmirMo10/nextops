@@ -13,6 +13,13 @@ external runtime asset was added. Focused API and real-browser checks pass for E
 composite incident evidence, Persian RTL, reduced motion and 375-pixel mobile width. The Figma
 Starter-plan MCP quota stopped complete product-screen composition, which is recorded without
 claiming a finished Figma screen library; reviewed source remains authoritative.
+All five jobs in GitHub Actions run `35838156738` passed. The exact source was promoted under change
+`ui-figma-foundation-20260923-01` as immutable application release
+`nextops-0.1.0-54c8bb4`; the prior `nextops-0.1.0-8d042cf` release remains available for rollback.
+The deployed English desktop and Persian RTL mobile login checks passed with no horizontal
+overflow, external request, failed response or console error. Application, AI tunnel, Nginx and
+PostgreSQL 16 services were active with zero failed units and no post-promotion warnings. This
+narrow deployed-login smoke check does not claim the still-unrun authenticated Phase 2 browser gate.
 
 Redesigned the controlled user-testing frontend around the verified OCS identity: the exact company
 mark is embedded for offline use, the OCS gold/teal palette now drives a light enterprise console,
@@ -92,6 +99,13 @@ OCS، چهل‌وهشت متغیر طراحی، یازده سبک نوشتاری
 حرکت و عرض ۳۷۵ پیکسل را می‌پوشانند و موفق‌اند. سقف فراخوانی MCP در طرح Starter مانع تکمیل آرایش
 همهٔ صفحه‌ها در Figma شد؛ این محدودیت ثبت شده است و ادعایی دربارهٔ کتابخانهٔ کامل صفحه‌ها وجود
 ندارد. کد بازبینی‌شده همچنان مرجع است.
+هر پنج کار اجرای `35838156738` در GitHub Actions موفق بودند. همین کد با شناسهٔ تغییر
+`ui-figma-foundation-20260923-01` به‌صورت انتشار تغییرناپذیر برنامه
+`nextops-0.1.0-54c8bb4` مستقر شد و انتشار پیشین `nextops-0.1.0-8d042cf` برای بازگشت نگه داشته
+شد. بررسی صفحهٔ ورودِ مستقرشده در نمای رومیزی انگلیسی و فارسی راست‌به‌چپ موبایل، بدون سرریز
+افقی، درخواست بیرونی، پاسخ ناموفق یا خطای console موفق بود. سرویس‌های برنامه، تونل هوش مصنوعی،
+Nginx و PostgreSQL 16 فعال بودند؛ واحد خراب یا هشدار پس از استقرار مشاهده نشد. این آزمون محدود
+صفحهٔ ورود، جای دروازهٔ هنوز اجرا‌نشدهٔ مرورگر احرازهویت‌شدهٔ مرحلهٔ دو را نمی‌گیرد.
 
 رابط ارزیابی کنترل‌شده بر پایهٔ هویت تأییدشدهٔ OCS بازطراحی شد: نشان اصلی شرکت برای کار آفلاین
 درون برنامه قرار گرفت، رنگ‌های طلایی و فیروزه‌ای OCS مبنای کنسول روشن و سازمانی شدند و آیکون برگهٔ
