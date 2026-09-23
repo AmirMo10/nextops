@@ -20,6 +20,7 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 | [Engineering upgrade plan](ENGINEERING_UPGRADE_PLAN.md) | Controlled adoption, evaluation, and deferral matrix for reliability, documentation, testing, and security work |
 | [Specification workflow](SPECIFICATION_WORKFLOW.md) | Brownfield, specification-driven workflow for bounded NextOps features without regenerating the product |
 | [Backup and restore specification](BACKUP_RESTORE_SPEC.md) | PostgreSQL-aware and file-artifact recovery requirements, threats, acceptance gates, and rollback |
+| [Production blocker runbook](PRODUCTION_BLOCKERS_RUNBOOK.md) | Exact owner actions, commands, private handoff fields and exit criteria for every remaining production gate |
 | [Phase 0 report](PHASE_0_REPORT.md) | Repository findings, architecture, gaps, threat summary, resource plan and the approval checkpoint |
 | [Start here](START_HERE.md) | Creation order, four-VM profile, Phase 1A–1E, boundaries and restart dependencies |
 | [Dedicated Zabbix server](ZABBIX_SERVER.md) | 4 vCPU / 16 GiB / 200 GiB, detailed LVM, software, retention, read-only API, self-monitoring and combined budgets |

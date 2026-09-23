@@ -31,6 +31,13 @@ recovery, and passed isolated/offline/negative restore gates. The profile is int
 but `BLOCKED`; no backup package or job was installed on the serving VMs and production readiness
 is not claimed.
 
+A paired English/Persian production-blocker runbook now converts every remaining external decision
+into an owner-action checklist with exact safe commands, private-record fields, stop conditions and
+handoff evidence. It recommends an independent recovery host plus isolated restore lab, records
+recovery objectives and two-person key custody, defines the local notification and certificate
+handoff, and names the supply-chain/final approval gates. This is operator guidance only; it does
+not turn any blocked, partial or unexecuted gate into a pass.
+
 The next source hardening increment closed browser-only logout. `POST /api/v1/logout` now revokes
 exactly the presented durable PostgreSQL session under a row lock and writes one correlated,
 append-only audit event without token material. Replay and unknown tokens are idempotent and do not
@@ -304,6 +311,12 @@ reboot بودند. اجرای زنده، نقص مهلت مسیر رخداد د�
 WAL پایگاه به restic و هر ادعای صلاحیت بدون مقصد مستقل، RPO/RTO و نگه‌داری مصوب، بستهٔ آفلاین
 معتبر، بازیابی کلید و موفقیت آزمون‌های جدا، آفلاین و منفی را رد می‌کند. پروفایل عمداً معتبر اما
 `BLOCKED` است؛ هیچ بسته یا job پشتیبان روی VMهای سرویس‌دهنده نصب نشده و آمادگی تولید ادعا نمی‌شود.
+
+راهنمای جفت انگلیسی و فارسیِ موانع تولید، همهٔ تصمیم‌های بیرونی باقی‌مانده را به checklist مالک با
+فرمان‌های امن دقیق، فیلدهای پروندهٔ خصوصی، شرط توقف و شاهد تحویل تبدیل کرده است. این راهنما میزبان
+مستقل بازیابی و آزمایشگاه restore جدا را پیشنهاد، اهداف بازیابی و حضانت دونفرهٔ کلید را ثبت و
+تحویل اعلان محلی، گواهی، زنجیرهٔ تأمین و تأیید نهایی را مشخص می‌کند. این فقط راهنمای بهره‌بردار
+است و وضعیت هیچ دروازهٔ مسدود، ناقص یا اجرا‌نشده‌ای را به موفق تغییر نمی‌دهد.
 
 increment بعدی سخت‌سازی، خروج صرفاً مرورگری را اصلاح کرد. مسیر `POST /api/v1/logout`
 اکنون فقط همان نشست ماندگار PostgreSQL را زیر قفل سطر لغو می‌کند و یک رویداد ممیزیِ فقط‌افزودنی و

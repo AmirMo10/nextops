@@ -4,6 +4,15 @@
 
 ### English
 
+Added paired English/Persian owner runbooks for every remaining production blocker. The guides map
+the four machine-readable recovery blockers plus certificate delivery/rotation, supply-chain
+approval and final production sign-off to explicit owner and engineering responsibilities. They
+include a private decision template, independent recovery-host and restore-lab requirements, safe
+capacity and SSH identity commands, recommended RPO/RTO/retention values, two-person key custody,
+local Zabbix notification setup, protected certificate handoff, SBOM/license policy, stop
+conditions and the exact sanitized checklist to return. No live infrastructure changed and no gate
+was promoted by this documentation.
+
 Completed controlled acceptance of the bounded local certificate-lifecycle detection increment. A dependency-free Python checker uses
 the pinned local OpenSSL binary and system clock to classify healthy, warning-window, expired and
 not-yet-valid certificates, emitting only bounded public metadata. A hardened daily systemd timer
@@ -145,6 +154,13 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+راهنمای جفت انگلیسی و فارسی برای همهٔ موانع باقی‌ماندهٔ تولید افزوده شد. این راهنما چهار مانع
+ماشین‌خوان بازیابی را همراه تحویل و چرخش گواهی، تأیید زنجیرهٔ تأمین و امضای نهایی تولید به مسئولیت
+روشن مالک و مهندسی نگاشت می‌کند. قالب تصمیم خصوصی، نیاز میزبان مستقل و آزمایشگاه restore، فرمان‌های
+امن ظرفیت و هویت SSH، مقدارهای پیشنهادی RPO/RTO و نگه‌داری، حضانت دونفرهٔ کلید، اعلان محلی Zabbix،
+تحویل محافظت‌شدهٔ گواهی، سیاست SBOM/مجوز، شرط توقف و checklist پالایش‌شدهٔ پاسخ در آن آمده است.
+هیچ زیرساخت زنده‌ای تغییر نکرد و این مستندسازی وضعیت هیچ دروازه‌ای را ارتقا نداد.
 
 پذیرش کنترل‌شدهٔ increment محدود تشخیص چرخهٔ محلی گواهی تکمیل شد. ابزار Python بدون وابستگی تازه، با OpenSSL ثابت و محلی
 و ساعت سامانه، گواهی را در یکی از حالت‌های سالم، واردشده به بازهٔ هشدار، منقضی یا هنوز نامعتبر

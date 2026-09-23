@@ -104,6 +104,7 @@ capabilities:
       - scripts/check_recovery_profile.py
       - tests/unit/test_recovery_profile.py
       - docs/adr/0008-independent-recovery-repositories.md
+      - docs/en/PRODUCTION_BLOCKERS_RUNBOOK.md
   - id: server_side_session_termination
     status: accepted_controlled
     evidence:

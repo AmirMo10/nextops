@@ -1,6 +1,6 @@
 # NextOps Markdown context index
 
-Updated: 2026-09-21
+Updated: 2026-09-23
 
 This is the durable inventory and routing map for project-owned Markdown. It lets an agent remember
 that every document exists without flooding each task with every file. The documentation validator
@@ -31,7 +31,7 @@ remaining task-specific sources. The repository skill
 | Documentation | use `nextops-bilingual-documentation`; read the source requirement plus both language versions and update state/traceability when capability changes |
 | Substantial feature or architecture change | use `nextops-change-planner`; read `docs/en/SPECIFICATION_WORKFLOW.md`, the current release manifest, applicable ADRs, and the feature specification |
 | Phase 2 Linux/Zabbix investigation | `docs/en/PHASE_2_COMPLETION_SPEC.md`, `docs/en/PHASE_2_OPERATIONS.md`, Persian pairs, ADR 0007, current release manifest, and the connector/systemd deployment profiles |
-| Backup, restore, or disaster recovery | `docs/en/BACKUP_RESTORE_SPEC.md`, Persian pair, ADR 0008, `deploy/recovery/README.md`, recovery profile, current release manifest, operations guide, and private destination/restore evidence |
+| Backup, restore, or disaster recovery | `docs/en/BACKUP_RESTORE_SPEC.md`, `PRODUCTION_BLOCKERS_RUNBOOK.md`, Persian pairs, ADR 0008, `deploy/recovery/README.md`, recovery profile, current release manifest, operations guide, and private destination/restore evidence |
 | Acceptance or release review | use `nextops-acceptance-reviewer`; read the feature specification, current release manifest, test evidence, offline contract, and security guide |
 | Documentation consistency review | use `nextops-doc-reviewer` plus `nextops-bilingual-documentation`; compare current guidance with the release manifest, source, tests, and paired language files |
 | Release or GitHub workflow | `CONTRIBUTING.md`, `CHANGELOG.md`, `SECURITY.md`, `docs/en/DEVELOPMENT.md`, test guide, and GitHub templates |
@@ -87,6 +87,7 @@ Markdown file is added, renamed, or removed.
 - `docs/en/PHASE_0_REPORT.md` — Dated English Phase 0 evidence and decision report.
 - `docs/en/PHASE_2_COMPLETION_SPEC.md` — English bounded specification for completing the Linux/Zabbix incident phase.
 - `docs/en/PHASE_2_OPERATIONS.md` — English deployment, acceptance, and rollback guide for the Phase 2 forced-command connector.
+- `docs/en/PRODUCTION_BLOCKERS_RUNBOOK.md` — English owner-action runbook for closing recovery, certificate, supply-chain, and production gates.
 - `docs/en/PROJECT_STATUS_BRIEF.md` — Presentation-ready English summary of verified progress and remaining delivery gates.
 - `docs/en/ROADMAP.md` — English phased roadmap and acceptance gates.
 - `docs/en/SECURITY.md` — English identity, policy, approval, and threat controls.
@@ -121,6 +122,7 @@ Markdown file is added, renamed, or removed.
 - `docs/fa/PHASE_0_REPORT.md` — Dated Persian Phase 0 evidence and decision report.
 - `docs/fa/PHASE_2_COMPLETION_SPEC.md` — Persian bounded specification for completing the Linux/Zabbix incident phase.
 - `docs/fa/PHASE_2_OPERATIONS.md` — Persian deployment, acceptance, and rollback guide for the Phase 2 forced-command connector.
+- `docs/fa/PRODUCTION_BLOCKERS_RUNBOOK.md` — Persian owner-action runbook for closing recovery, certificate, supply-chain, and production gates.
 - `docs/fa/PROJECT_STATUS_BRIEF.md` — Presentation-ready native-Persian summary of verified progress and remaining delivery gates.
 - `docs/fa/ROADMAP.md` — Persian phased roadmap and acceptance gates.
 - `docs/fa/SECURITY.md` — Persian identity, policy, approval, and threat controls.

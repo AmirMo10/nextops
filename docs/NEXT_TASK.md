@@ -17,6 +17,12 @@ offline bundles, separate backup/WAL paths, permitted artifact backup, isolated 
 measured RPO/RTO and disaster-recovery sign-off be executed. Do not describe local dumps or a
 same-datastore copy as an independent backup.
 
+The paired [production blocker runbook](en/PRODUCTION_BLOCKERS_RUNBOOK.md) now gives the owner the
+exact private decision template, recovery-host access procedure, safe capacity/preflight commands,
+notification and certificate handoff, supply-chain approvals, stop conditions and sanitized
+checklist required to unblock the remaining work. It performs no infrastructure change and closes
+no acceptance gate by itself.
+
 The first post-Phase-2 security increment is also accepted in the controlled deployment. Commit
 `eb57241` passed all five hosted CI jobs; immutable app release `nextops-0.1.0-eb57241` then passed
 normal-TLS browser and direct API logout, former-token `401`, other-session preservation,
@@ -213,6 +219,11 @@ restic را فقط برای فایل‌های غیرپایگاهی مصوب می
 و hypervisor سرویس‌دهنده است. پس از آن بسته‌های آفلاین، مسیرهای جداگانهٔ پشتیبان و WAL، پشتیبان
 artifact مجاز، PITR و restore ایزوله، RPO/RTO اندازه‌گیری‌شده و تأیید بازیابی بحران اجرا می‌شوند.
 dump محلی یا نسخه‌ای روی همان datastore نباید پشتیبان مستقل نامیده شود.
+
+[راهنمای دوزبانهٔ رفع موانع تولید](fa/PRODUCTION_BLOCKERS_RUNBOOK.md) اکنون قالب دقیق تصمیم خصوصی،
+روش دسترسی میزبان بازیابی، فرمان‌های امن ظرفیت و پیش‌بررسی، تحویل اعلان و گواهی، تأییدهای زنجیرهٔ
+تأمین، شرط توقف و checklist پالایش‌شدهٔ لازم برای ادامه را در اختیار مالک می‌گذارد. این سند هیچ
+تغییر زیرساختی اجرا نمی‌کند و به‌تنهایی هیچ دروازهٔ پذیرشی را نمی‌بندد.
 
 نخستین increment امنیتی پس از مرحلهٔ دو نیز در استقرار کنترل‌شده پذیرفته شد. commit `eb57241` هر
 پنج کار CI میزبانی‌شده را گذراند؛ سپس انتشار تغییرناپذیر `nextops-0.1.0-eb57241` در مرورگر دارای
