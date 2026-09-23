@@ -4,6 +4,19 @@
 
 ### English
 
+Started Phase 2 with a specification-bounded Zabbix incident-context increment. The connector now
+builds a typed current-summary, recent numeric-history and trigger-event response for its single
+configured host, with a 15–1,440-minute deployment window, four-metric/eight-point/25-event public
+ceilings, source timestamps and explicit partial reasons. Authenticated connector and application
+routes are additive; no arbitrary method, host selector, write operation, credential exposure,
+direct Linux access or database migration was introduced.
+
+Focused connector/API tests, Ruff and strict mypy pass. English and Persian state, API,
+configuration, integration, testing and roadmap documents distinguish this source-tested increment
+from live acceptance. Zabbix role expansion, immutable deployment, durable model/browser linkage,
+WAN/reboot/rollback qualification and direct Linux diagnostics remain not run. The independent
+Phase 1 recovery destination and WAL/PITR blocker is unchanged.
+
 Completed the executable controlled Stage 1 qualification under change
 `stage1-completion-20260922-01`: a fresh WAN-denied Edge workflow, application and runtime/model
 rollback, cancellation and dependency recovery, fail-closed missing/corrupt model behavior, an
@@ -38,6 +51,18 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+مرحلهٔ دو با گام محدود «بافت رخداد» Zabbix آغاز شد. اتصال‌دهنده برای تنها میزبان
+پیکربندی‌شده، خلاصهٔ جاری، تاریخچهٔ عددی اخیر و رویدادهای trigger را در قرارداد دارای نوع
+برمی‌گرداند. بازهٔ استقرار میان ۱۵ تا ۱۴۴۰ دقیقه است و خروجی عمومی به چهار سنجه، هشت نقطه برای
+هر سنجه و ۲۵ رویداد محدود می‌شود؛ زمان منبع و دلیل صریحِ ناقص‌بودن نیز حفظ می‌گردد. مسیرهای
+احرازهویت‌شدهٔ اتصال‌دهنده و برنامه افزوده شده‌اند، بی‌آنکه روش یا میزبان دلخواه، عملیات نوشتن،
+افشای اطلاعات ورود، دسترسی مستقیم Linux یا migration پایگاه ایجاد شود.
+
+آزمون‌های متمرکز اتصال و API، Ruff و mypy سخت‌گیرانه موفق‌اند. مستندات متناظر انگلیسی و فارسی،
+این گام آزموده‌شده در کد را از پذیرش زنده جدا می‌کنند. گسترش نقش Zabbix، استقرار تغییرناپذیر،
+پیوند ماندگار با مدل و مرورگر، آزمون WAN و راه‌اندازی مجدد و بازگشت، و عیب‌یابی مستقیم Linux هنوز
+اجرا نشده‌اند. مانع مقصد مستقل بازیابی و WAL/PITR مرحلهٔ یک نیز بدون تغییر باز است.
 
 همهٔ دروازه‌های اجراییِ صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ ۱ با شناسهٔ
 `stage1-completion-20260922-01` تکمیل شدند: مرورگر تازه با WAN مسدود، بازگشت برنامه و محیط

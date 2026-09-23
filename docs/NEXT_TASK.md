@@ -5,9 +5,10 @@ gate. Fresh-browser WAN denial, application/runtime/model rollback, cancellation
 recovery, missing/corrupt artifact behavior, isolated low-space staging, five-minute bounded load
 and logical isolated restores of both PostgreSQL 16 databases passed. App release
 `nextops-0.1.0-13a3369` and connector release `nextops-0.1.0-3d7d725` remain active, and every guest
-ended `running` with zero failed units. The only blocking next task is to supply and verify an
-off-datastore disaster-recovery destination, then implement WAL/PITR and independent artifact
-recovery. Do not rebuild or repeat the accepted slice.
+ended `running` with zero failed units. Independent recovery still requires a verified off-datastore
+destination, WAL/PITR and artifact recovery. At the owner's direction, Phase 2 has started in
+parallel with a bounded Zabbix incident-context source increment; it is tested in the repository but
+not deployed or accepted live. Do not rebuild or repeat the accepted slice.
 
 ## English — harden the live user-testing slice
 
@@ -64,6 +65,10 @@ The immediate implementation sequence is:
 6. **Next external prerequisite:** approve a recovery destination independent of the serving guest,
    DS-C/G10 and host; define RPO/RTO, retention and key custody; then implement separate pgBackRest
    repositories/WAL archiving, restic for permitted files, independent PITR and operational sign-off.
+7. **Phase 2A in progress:** deploy the source-tested bounded incident-context contract, extend the
+   API reader with exactly `history.get` and `event.get`, qualify live provenance/limits/partial
+   behavior and rollback with WAN denied, then connect it to the durable investigation workflow.
+   Direct read-only Linux diagnostics follow as Phase 2B; all mutation remains disabled.
 
 The detailed material below preserves design rationale and earlier checkpoints. Where it describes
 the app, PostgreSQL, Zabbix, connector or browser as not deployed, this authoritative checkpoint and
@@ -214,6 +219,10 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 6. **پیش‌نیاز بیرونی بعدی:** مقصدی مستقل از مهمان سرویس‌دهنده، DS-C/G10 و میزبان تصویب شود؛ سپس
    RPO/RTO، نگه‌داری و متولی کلید تعیین، مخزن‌های جداگانهٔ pgBackRest و WAL، پشتیبان فایل مجاز با
    restic، PITR روی میزبان مستقل و تأیید نهایی عملیات اجرا شوند.
+7. **گام 2A در حال انجام:** قرارداد آزموده‌شده و محدود «بافت رخداد» مستقر شود، نقش خوانشگر API
+   دقیقاً با `history.get` و `event.get` گسترش یابد، منشأ و سقف و نقص و بازگشت آن در حالت WAN
+   مسدود به‌صورت زنده سنجیده شود و سپس به گردش ماندگار بررسی وصل شود. عیب‌یابی مستقیم و
+   فقط‌خواندنی Linux در گام 2B می‌آید و همهٔ عملیات تغییردهنده همچنان غیرفعال‌اند.
 
 مطالب تفصیلی بعدی منطق طراحی و نقاط پیشین را حفظ می‌کند. هرجا برنامه، PostgreSQL، Zabbix، اتصال یا
 رابط مرورگر را نصب‌نشده می‌نامد، این بخش و [وضعیت پروژه](PROJECT_STATE.md) جای آن عبارت قدیمی را

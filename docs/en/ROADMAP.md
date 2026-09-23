@@ -6,6 +6,12 @@
 
 **First delivery remains Phase 1: a new question → authorized read-only Zabbix data → local CPU-generated answer → source/time references and audit, with Internet blocked.** Linux enrichment follows in Phase 2. The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
+**Phase 2 has started in source, not in the live deployment.** Increment 2A adds a bounded,
+authenticated Zabbix incident-context read for the configured host: current summary, recent numeric
+history and trigger events with fixed limits and explicit partial markers. Repository tests pass;
+reader-role expansion, deployment, durable/model/browser integration and offline acceptance have not
+run. Direct read-only Linux diagnostics are the next bounded increment after this contract is live-qualified.
+
 ## Create these VMs first
 
 After separate provisioning authorization, create **`nextops-app` → `nextops-ai` → `nextops-connectors-ro`**. Their proposed allocations are respectively **8/32/200**, **24/128/500** and **4/8/80**, expressed as vCPU / RAM GiB / disk GiB. Total: **3 VMs, 36 vCPU, 168 GiB RAM and 780 GiB disk**. PostgreSQL initially runs as a separate restricted service inside the app VM. Do not create the dedicated database or write-execution VM yet.

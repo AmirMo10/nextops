@@ -10,9 +10,21 @@ reboot requirement. The [paired Stage 1 report](en/STAGE_1_COMPLETION_REPORT.md)
 results. Production acceptance remains blocked by the lack of a verified off-datastore backup
 destination, WAL/PITR recovery and disaster-recovery sign-off.
 
+Phase 2 has now started with a bounded source increment. The repository implements authenticated
+incident-context reads for the configured Zabbix host: the accepted current summary plus limited
+numeric history and trigger events, preserving source timestamps and explicit partial markers.
+Focused repository tests pass. This increment is not deployed or live-accepted, does not yet enter
+the durable model/browser workflow, and does not include direct Linux diagnostics. The open Phase 1
+recovery blocker remains unchanged.
+
 ## English
 
 ### Current controlled user-testing checkpoint
+
+Phase 2A is implemented only in the repository at this checkpoint. Its contract fixes the target and
+bounded lookback at deployment, permits only named read operations, and enforces four-metric,
+eight-point-per-metric and 25-event response ceilings. Live Zabbix role expansion, deployment,
+offline/reboot/rollback qualification and direct Linux collection remain not run.
 
 The authenticated application and bilingual panel are deployed as immutable release
 `nextops-0.1.0-13a3369` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
@@ -200,13 +212,20 @@ This state records Phase 0 acceptance, the deployed controlled Stage 1A applicat
 
 The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`; Playwright 1.63 is now a locked development-only browser dependency. The CI workflow defines digest-pinned PostgreSQL 16.15 and 17.6 jobs. Fresh browser automation, live rollback/failure recovery, five-minute load and temporary PostgreSQL 16.15 restores ran in the controlled environment. The temporary restore clusters and staging copies were removed. Dependency/license approval, independent backup/PITR and production promotion remain separate gates.
 
-The next checkpoint in [NEXT_TASK](NEXT_TASK.md) is no longer application work: it requires an
-approved off-datastore recovery destination and recovery-policy decisions. Configure separate
-PostgreSQL-aware repositories and WAL archiving, back up permitted non-database artifacts, perform
-PITR on an independent host, record RPO/RTO and key recovery, then obtain operational sign-off.
-Production promotion remains blocked until those results exist.
+The next engineering checkpoint in [NEXT_TASK](NEXT_TASK.md) is the controlled Phase 2A deployment:
+grant exactly two additional read methods, verify the bounded live contract, rollback and offline
+behavior, then connect accepted context to the durable investigation path. In parallel, production
+promotion remains blocked on an approved off-datastore recovery destination, PostgreSQL-aware
+repositories/WAL archiving, permitted artifact backup, independent PITR, recorded RPO/RTO and key
+recovery, and operational sign-off.
 
 ## فارسی
+
+مرحلهٔ دو با یک گام محدود در کد منبع آغاز شده است. مخزن اکنون برای میزبان پیکربندی‌شدهٔ Zabbix،
+خواندن احرازهویت‌شدهٔ «بافت رخداد» را پیاده می‌کند: خلاصهٔ جاریِ پذیرفته‌شده به‌همراه تاریخچهٔ
+عددی و رویدادهای trigger با سقف ثابت، زمان منبع و نشان صریحِ نتیجهٔ ناقص. آزمون‌های متمرکز مخزن
+موفق‌اند؛ اما این گام هنوز مستقر یا به‌صورت زنده پذیرفته نشده، وارد گردش ماندگار مدل و مرورگر نشده
+و عیب‌یابی مستقیم Linux را در بر ندارد. مانع بازیابیِ باقی‌مانده از مرحلهٔ یک نیز بدون تغییر باز است.
 
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 
@@ -224,6 +243,11 @@ PITR، مخزن فایل با restic و تأیید نهایی بازیابی ب�
 سوابق مرحله‌ای هستند و این جمع‌بندی و مانیفست وضعیت انتشار بر ادعاهای آمادگی پیشین مقدم‌اند.
 
 ### نقطهٔ فعلی برای ارزیابی کنترل‌شدهٔ کاربران
+
+گام 2A در این نقطه فقط در مخزن پیاده شده است. قرارداد آن مقصد و بازهٔ محدود را در استقرار ثابت
+می‌کند، فقط خواندن‌های نام‌دار را می‌پذیرد و خروجی را به چهار سنجه، هشت نقطه برای هر سنجه و ۲۵
+رویداد محدود می‌سازد. گسترش نقش زندهٔ Zabbix، استقرار، آزمون آفلاین و راه‌اندازی مجدد و بازگشت، و
+گردآوری مستقیم Linux هنوز اجرا نشده‌اند.
 
 برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-13a3369` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
@@ -378,6 +402,9 @@ pgBackRest/WAL، مخزن restic، آزمون PITR و بستهٔ بازیابی 
 
 این وضعیت پذیرش مرحلهٔ صفر، برش مستقرشدهٔ 1A، هوش مصنوعی صلاحیت‌سنجی‌شدهٔ 1B، اتصال زنده و فقط‌خواندنی 1C و مسیر ماندگار و مستند به شاهد 1D را ثبت می‌کند. نیازهای منبع، پرامپت بایگانی‌شده، نمودارها و پرونده‌های تحویل حفظ شده‌اند. این رکورد به‌معنای ممیزی امنیت میزبان، پذیرش تولیدی یا اثبات بازیابی مستقل نیست.
 
-برش‌های منبع با Python 3.12.10، uv 0.12.17 و زنجیرهٔ قفل‌شده آزموده شدند؛ Playwright 1.63 نیز وابستگی صرفاً توسعه‌ای است. Ruff، mypy سخت‌گیرانه و ۱۰۳ آزمون غیر‌یکپارچه موفق‌اند. مرورگر تازه، بازگشت و بازیابی خطا، بار پنج‌دقیقه‌ای و خوشه‌های موقت PostgreSQL 16.15 در محیط کنترل‌شده اجرا شدند و خوشه‌ها و نسخه‌های موقت پاک شدند. بررسی وابستگی و مجوز، پشتیبان مستقل/PITR و ارتقا به تولید همچنان دروازه‌اند.
+برش‌های منبع با Python 3.12.10، uv 0.12.17 و زنجیرهٔ قفل‌شده آزموده شدند؛ Playwright 1.63 نیز وابستگی صرفاً توسعه‌ای است. Ruff، mypy سخت‌گیرانه و ۱۱۱ آزمون غیر‌یکپارچه موفق‌اند. مرورگر تازه، بازگشت و بازیابی خطا، بار پنج‌دقیقه‌ای و خوشه‌های موقت PostgreSQL 16.15 در محیط کنترل‌شده اجرا شدند و خوشه‌ها و نسخه‌های موقت پاک شدند. بررسی وابستگی و مجوز، پشتیبان مستقل/PITR و ارتقا به تولید همچنان دروازه‌اند.
 
-نقطهٔ بعد در [کار بعدی](NEXT_TASK.md) به ورودی بیرونی نیاز دارد: مقصد پشتیبان مستقل و تصمیم‌های RPO/RTO، نگه‌داری و متولی کلید. پس از آن مخزن‌های جداگانه، WAL، restic، PITR روی میزبان مستقل و تأیید عملیات اجرا می‌شوند. ارتقا به تولید تا آن زمان متوقف است.
+نقطهٔ مهندسی بعدی در [کار بعدی](NEXT_TASK.md)، استقرار کنترل‌شدهٔ گام 2A است: افزودن دقیق دو
+روش خواندن، بررسی زندهٔ قرارداد محدود و بازگشت و رفتار آفلاین، و سپس پیوند با مسیر ماندگار بررسی.
+هم‌زمان، ارتقا به تولید تا تصویب مقصد پشتیبان مستقل، مخزن و WAL آگاه از PostgreSQL، پشتیبان
+فایل مجاز، PITR مستقل، ثبت RPO/RTO و بازیابی کلید و تأیید عملیات متوقف می‌ماند.

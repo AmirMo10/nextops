@@ -22,7 +22,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 14 | Juniper MCP / اتصال جونیپر | `connectors/juniper` | 3 | Junos contract/diff/commit-state tests / قرارداد و وضعیت تنظیمات | P |
 | 15 | FortiGate MCP / اتصال فورتی‌گیت | `connectors/fortigate` | 4 | Scoped VPN/routing/policy evidence / شواهد محدود شبکه و سیاست | P |
 | 16 | Sophos MCP / اتصال سوفوس | `connectors/sophos` | 4 | Verified API coverage and explicit limits / پوشش و محدودیت روشن API | P |
-| 17 | Zabbix MCP / اتصال زبیکس | `connectors/zabbix` | 1–2 | Phase 1 status reads; Phase 2 bounded history correlation / خواندن وضعیت در مرحلهٔ یک و تاریخچه در مرحلهٔ دو | P |
+| 17 | Zabbix MCP / اتصال زبیکس | `connectors/zabbix` | 1–2 | Phase 1 status reads are live; bounded Phase 2 history/events are source-tested and await deployment / خواندن وضعیت مرحلهٔ یک زنده است؛ تاریخچه و رویداد محدود مرحلهٔ دو در کد آزموده و منتظر استقرار است | I |
 | 18 | Grafana MCP / اتصال گرافانا | `connectors/grafana` | 3 | Authorized datasource queries / پرس‌وجوی منبع مجاز | P |
 | 19 | SQL Server MCP / اتصال SQL Server | `connectors/sqlserver` | 5 | Read-only identity, DMV/limits tests / هویت فقط‌خواندنی و محدودیت | P |
 | 20 | MySQL MCP / اتصال MySQL | `connectors/mysql` | 5 | Engine/version and bounded SQL tests / موتور و نسخه و SQL محدود | P |
@@ -41,7 +41,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 33 | Health checks / بررسی سلامت | `packages/nextops/api`, `packages/nextops/inference` | 1–5 | App liveness and safe inference readiness states tested; deployed dependency health remains / سلامت برنامه و آمادگی امن inference آزموده؛ استقرار باقی است | I |
 | 34 | Error handling / مدیریت خطا | `packages/nextops/contracts`, `application`, `api` | 1–5 | Typed application/API errors, correlation and dependency failure tested; broader retry/isolation remains / خطا و correlation آزموده؛ retry گسترده باقی است | I |
 | 35 | Observability / مشاهده‌پذیری | `observability` | 1,8 | Metrics/logs and audit distinction / تفکیک متریک و لاگ و ممیزی | P |
-| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 71 unit/API/schema/installer/context plus 5 real-PostgreSQL cases and CI quality/security gates; browser/model/evals remain / ۷۱ آزمون محلی و ۵ PostgreSQL؛ مدل و مرورگر باقی است | I |
+| 36 | Testing / آزمون | `tests`, future `evals` | 1–8 | 111 non-integration tests plus 6 isolated PostgreSQL cases and CI quality/security gates; broader Phase 2 live/evaluation cases remain / ۱۱۱ آزمون غیر‌یکپارچه و ۶ مورد PostgreSQL؛ آزمون زنده و ارزیابی گستردهٔ مرحلهٔ دو باقی است | I |
 | 37 | Docker / کانتینر | `deploy/compose` | 1,8 | Restricted clean install and offline test / نصب محدود و آفلاین | P |
 | 38 | Installation docs / مستندات نصب | `docs/en/INSTALL.md`, `docs/fa/INSTALL.md`, paired `DEPLOYMENT_DOSSIERS.md`, `deploy/server-dependencies`, `deploy/installers` | 0–8 | Four validated handoffs and guarded offline OS-package workflows exist; approved role bundles, complete application installers and clean-server evidence remain / چهار پرونده و نصب بستهٔ محافظت‌شده موجود؛ bundle و نصب کامل و شاهد سرور تمیز باقی است | I |
 | 39 | Native Persian docs / مستندات فارسی طبیعی | `docs/fa`, `docs/en` | 0–8 | Paired guides and language review / همتای دو زبان و بازبینی | D |

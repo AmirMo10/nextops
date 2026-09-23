@@ -7,7 +7,7 @@ deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: b25280d96c92db0cfffa55b7d31f047060d0d7a8
+  inspected_baseline_commit: ae99bbeec26e99c3026d74e15c332783b05aa221
 components:
   application:
     release: nextops-0.1.0-13a3369
@@ -54,6 +54,12 @@ capabilities:
     status: accepted_controlled
     evidence:
       - docs/PROJECT_STATE.md
+      - tests/unit/test_zabbix_connector.py
+  - id: zabbix_incident_context
+    status: implemented_unaccepted
+    evidence:
+      - docs/requirements/PHASE_2_INCIDENT_CONTEXT_SPEC.md
+      - packages/nextops/connectors/zabbix.py
       - tests/unit/test_zabbix_connector.py
   - id: durable_investigation_audit
     status: accepted_controlled

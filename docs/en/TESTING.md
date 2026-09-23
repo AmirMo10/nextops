@@ -12,6 +12,16 @@ logical isolated restores of both PostgreSQL 16 databases. Independent off-datas
 WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
 21–23.
 
+## Phase 2A repository evidence
+
+The bounded incident-context contract is implemented and tested at connector and application API
+boundaries. Deterministic tests verify the exact configured host, 15–1440-minute configuration
+validation, fixed `history.get`/`event.get` parameters, four-metric/eight-point/25-event public
+limits, timestamp provenance, partial-result markers, bearer authentication and safe dependency
+errors. These are source/fixture results only. The Zabbix reader-role expansion, live deployment,
+durable model workflow, browser path, WAN-disconnected operation, reboot and rollback have not yet
+run for Phase 2A.
+
 ## Stage 1 controlled completion qualification
 
 The [dated completion report](STAGE_1_COMPLETION_REPORT.md) is the evidence summary. Its browser
