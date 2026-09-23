@@ -10,6 +10,7 @@
   <script src="/assets/app.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#mainContent" data-i18n="skipMain">Skip to main content</a>
   <div class="ambient ambient-one" aria-hidden="true"></div>
   <div class="ambient ambient-two" aria-hidden="true"></div>
   <header class="topbar">
@@ -24,7 +25,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="mainContent">
     <section id="loginView" class="login-layout">
       <div class="intro">
         <p class="eyebrow" data-i18n="evaluationLabel">CONTROLLED USER EVALUATION</p>
@@ -65,14 +66,20 @@
           <div class="mode-field">
             <span class="field-label" data-i18n="answerMode">Answer mode</span>
             <div class="language-choice" role="group" aria-label="Answer mode">
-              <button type="button" class="choice mode-choice active" data-mode="general" data-i18n="generalMode">General assistant</button>
-              <button type="button" class="choice mode-choice" data-mode="monitoring" data-i18n="monitoringMode">Live monitoring</button>
+              <button type="button" class="choice mode-choice active" data-mode="general" data-i18n="generalMode" aria-pressed="true">General assistant</button>
+              <button type="button" class="choice mode-choice" data-mode="monitoring" data-i18n="monitoringMode" aria-pressed="false">Live monitoring</button>
+              <button type="button" class="choice mode-choice" data-mode="incident" data-i18n="incidentMode" aria-pressed="false">Incident investigation</button>
             </div>
             <p id="modeHelp" class="mode-help" data-i18n="generalModeHelp">Answers the question directly without attaching Zabbix status.</p>
           </div>
+          <div id="incidentTargetField" class="target-field hidden">
+            <label for="incidentTarget" data-i18n="incidentTarget">Investigation target</label>
+            <select id="incidentTarget" name="incident_target" disabled></select>
+            <p id="incidentTargetHelp" data-i18n="incidentTargetHelp">Choose one approved host. NextOps will retrieve bounded Zabbix and direct read-only Linux evidence.</p>
+          </div>
           <div class="language-choice" role="group" aria-label="Answer language">
-            <button type="button" class="choice locale-choice active" data-locale="en">English</button>
-            <button type="button" class="choice locale-choice" data-locale="fa">فارسی</button>
+            <button type="button" class="choice locale-choice active" data-locale="en" aria-pressed="true">English</button>
+            <button type="button" class="choice locale-choice" data-locale="fa" aria-pressed="false">فارسی</button>
           </div>
           <label class="prompt-label"><span data-i18n="question">Question</span><textarea id="question" maxlength="4000" required data-i18n-placeholder="questionPlaceholder" placeholder="Explain a safe first response to a high CPU alert."></textarea></label>
           <div class="prompt-footer"><span id="characterCount">0 / 4000</span><button id="askButton" class="primary-button compact-button" type="submit"><span data-i18n="askAssistant">Ask assistant</span><span aria-hidden="true">→</span></button></div>
@@ -95,6 +102,7 @@
         <div id="evidencePanel" class="evidence-panel hidden">
           <div class="evidence-summary"><span><small data-i18n="source">Source</small><strong id="evidenceSource">—</strong></span><span><small data-i18n="host">Host</small><strong id="evidenceHost">—</strong></span><span><small data-i18n="collected">Collected</small><strong id="evidenceCollected">—</strong></span><span><small data-i18n="problems">Active problems</small><strong id="problemCount">—</strong></span><span><small data-i18n="coverage">Evidence coverage</small><strong id="evidenceCoverage">—</strong></span></div>
           <div id="metricList" class="metric-list"></div>
+          <div id="incidentDetail" class="incident-detail hidden"></div>
         </div>
         <div class="result-meta">
           <span><small data-i18n="model">Model</small><strong id="modelId">—</strong></span>

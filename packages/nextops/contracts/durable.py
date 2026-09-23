@@ -8,6 +8,7 @@ from pydantic import AwareDatetime, Field, JsonValue, SecretStr
 
 from nextops.contracts.assistant import AssistantResponse
 from nextops.contracts.errors import ErrorCode, ErrorDetail
+from nextops.contracts.incidents import IncidentEvidence
 from nextops.contracts.models import (
     ActionName,
     ActorContext,
@@ -152,6 +153,25 @@ class LiveInvestigationResult(FrozenContract):
     audit_event_id: UUID
 
 
+class LiveIncidentResult(FrozenContract):
+    """Durable Phase 2 result linked to exact Zabbix and Linux evidence."""
+
+    result_type: Literal["live_incident"] = "live_incident"
+    run_id: UUID
+    status: RunStatus
+    locale: Literal["en", "fa"]
+    assistant: AssistantResponse
+    evidence: IncidentEvidence
+    evidence_reference: str = Field(pattern=r"^run-evidence:[0-9a-f-]{36}$")
+    evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    organization_id: UUID
+    environment_id: UUID
+    target_id: UUID
+    is_partial: bool
+    is_stale: bool
+    audit_event_id: UUID
+
+
 class RunFailure(FrozenContract):
     """Safe durable failure metadata without raw exceptions or dependency payloads."""
 
@@ -170,7 +190,7 @@ class RunRecord(FrozenContract):
     locale: Literal["en", "fa"]
     created_at: AwareDatetime
     updated_at: AwareDatetime
-    result: FixtureResult | LiveInvestigationResult | None = None
+    result: FixtureResult | LiveInvestigationResult | LiveIncidentResult | None = None
     error: RunFailure | None = None
 
 

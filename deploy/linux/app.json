@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0.0",
+  "target_id": "app",
+  "filesystems": ["/", "/var/lib/postgresql", "/srv/nextops"],
+  "services": ["nextops-app.service", "postgresql@16-nextops.service", "nginx.service"]
+}

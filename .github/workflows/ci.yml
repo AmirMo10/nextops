@@ -43,7 +43,7 @@ jobs:
         run: uv run mypy packages tests scripts deploy/installers
 
       - name: Run unit, contract, and API tests
-        run: uv run pytest -m "not integration" -q
+        run: uv run pytest -m "not integration and not browser" -q
 
       - name: Validate documentation and deployment dossiers
         env:
@@ -55,10 +55,12 @@ jobs:
           uv run python scripts/check_inference_artifacts.py
           uv run python scripts/check_server_installers.py
           bash -n deploy/installers/install-*.sh
+          bash -n deploy/linux/install-linux-readonly.sh
           test -x deploy/installers/install-nextops-app.sh
           test -x deploy/installers/install-nextops-ai.sh
           test -x deploy/installers/install-nextops-connectors-ro.sh
           test -x deploy/installers/install-zabbix-server.sh
+          test -x deploy/linux/install-linux-readonly.sh
 
       - name: Build the locked package
         run: uv build --no-sources
@@ -114,6 +116,30 @@ jobs:
         env:
           NEXTOPS_TEST_DATABASE_URL: postgresql+psycopg://postgres@localhost:5432/nextops_test
         run: uv run pytest -m integration -q
+
+  browser:
+    name: Browser acceptance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install locked environment and browser
+        run: |
+          python -m pip install uv==0.12.17
+          uv sync --extra dev --frozen
+          uv run playwright install --with-deps chromium
+
+      - name: Run real-browser acceptance
+        run: uv run pytest -m browser -q
 
   secret-scan:
     name: Secret scan

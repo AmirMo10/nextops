@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "target_id": "zabbix",
+  "filesystems": ["/", "/var/lib/postgresql", "/var/log/zabbix"],
+  "services": [
+    "zabbix-server.service",
+    "zabbix-agent2.service",
+    "postgresql@16-zabbix.service",
+    "nginx.service"
+  ]
+}

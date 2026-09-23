@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0.0",
+  "target_id": "connector",
+  "filesystems": ["/", "/srv/nextops", "/var/lib/nextops"],
+  "services": ["nextops-connector.service"]
+}

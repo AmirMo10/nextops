@@ -48,6 +48,17 @@ def test_settings_accept_only_a_loopback_inference_origin() -> None:
         )
 
 
+@pytest.mark.parametrize("targets", [("app", "app"), ("App",), ("a",), ("app/../../root",)])
+def test_settings_reject_duplicate_or_unsafe_incident_targets(targets: tuple[str, ...]) -> None:
+    with pytest.raises(ValidationError, match="incident_target_ids"):
+        AppSettings(
+            database_url="postgresql+psycopg://nextops_app@db.internal/nextops",
+            bootstrap_secret="b" * 32,
+            recovery_secret="r" * 32,
+            incident_target_ids=targets,
+        )
+
+
 def test_runtime_settings_load_protected_systemd_credentials(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
@@ -71,8 +82,10 @@ def test_runtime_settings_load_protected_systemd_credentials(
         monkeypatch.delenv(variable, raising=False)
     monkeypatch.setenv("CREDENTIALS_DIRECTORY", str(tmp_path))
     monkeypatch.setenv("NEXTOPS_INFERENCE_BASE_URL", "http://127.0.0.1:18090")
+    monkeypatch.setenv("NEXTOPS_INCIDENT_TARGET_IDS", "app,ai,connector,zabbix")
 
     settings = AppSettings.from_environment()
 
     assert settings.database_url.get_secret_value().endswith("/nextops")
     assert settings.inference_base_url == "http://127.0.0.1:18090"
+    assert settings.incident_target_ids == ("app", "ai", "connector", "zabbix")

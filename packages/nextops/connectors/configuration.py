@@ -24,6 +24,8 @@ class ConnectorSettings(BaseModel):
     zabbix_host: str = Field(min_length=1, max_length=128)
     request_timeout_seconds: float = Field(default=15.0, ge=1.0, le=60.0)
     incident_lookback_minutes: int = Field(default=60, ge=15, le=1_440)
+    linux_targets_file: Path | None = None
+    linux_timeout_seconds: float = Field(default=15.0, ge=1.0, le=30.0)
 
     @model_validator(mode="after")
     def validate_boundary(self) -> Self:
@@ -40,6 +42,10 @@ class ConnectorSettings(BaseModel):
             raise ValueError("zabbix_api_url must be a plain HTTPS /api_jsonrpc.php URL")
         if not self.zabbix_ca_file.is_absolute() or not self.zabbix_ca_file.is_file():
             raise ValueError("zabbix_ca_file must be an existing absolute file")
+        if self.linux_targets_file is not None and (
+            not self.linux_targets_file.is_absolute() or not self.linux_targets_file.is_file()
+        ):
+            raise ValueError("linux_targets_file must be an existing absolute file")
         return self
 
     @classmethod
@@ -66,4 +72,8 @@ class ConnectorSettings(BaseModel):
             incident_lookback_minutes=int(
                 os.environ.get("NEXTOPS_INCIDENT_LOOKBACK_MINUTES", "60")
             ),
+            linux_targets_file=(
+                Path(value) if (value := os.environ.get("NEXTOPS_LINUX_TARGETS_FILE")) else None
+            ),
+            linux_timeout_seconds=float(os.environ.get("NEXTOPS_LINUX_TIMEOUT_SECONDS", "15")),
         )

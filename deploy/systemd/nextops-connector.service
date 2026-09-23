@@ -6,6 +6,8 @@ Wants=network-online.target
 ConditionFileIsExecutable=/srv/nextops/releases/current/venv/bin/uvicorn
 ConditionPathExists=/etc/nextops/nextops-connector.env
 ConditionPathExists=/etc/nextops/tls/zabbix-ca.crt
+ConditionPathExists=/etc/nextops/linux-targets.json
+ConditionPathExists=/etc/nextops/ssh/linux_known_hosts
 
 [Service]
 Type=simple
@@ -14,6 +16,10 @@ Group=nextops-connector
 UMask=0027
 LoadCredential=zabbix-api-token:/etc/nextops/credentials/zabbix-api-token
 LoadCredential=connector-service-secret:/etc/nextops/credentials/connector-service-secret
+LoadCredential=linux-app-key:/etc/nextops/credentials/linux-app-key
+LoadCredential=linux-ai-key:/etc/nextops/credentials/linux-ai-key
+LoadCredential=linux-connector-key:/etc/nextops/credentials/linux-connector-key
+LoadCredential=linux-zabbix-key:/etc/nextops/credentials/linux-zabbix-key
 EnvironmentFile=/etc/nextops/nextops-connector.env
 Environment=HOME=/var/lib/nextops/connector
 Environment=HTTP_PROXY=

@@ -26,7 +26,13 @@ from nextops.contracts.durable import (
     RunStatus,
 )
 from nextops.contracts.errors import ErrorCode
-from nextops.contracts.monitoring import MonitoringMetric, MonitoringSummary
+from nextops.contracts.incidents import IncidentEvidence, IncidentInvestigationRequest
+from nextops.contracts.linux import LinuxDiagnosticSnapshot, LinuxFilesystem, LinuxService
+from nextops.contracts.monitoring import (
+    MonitoringIncidentContext,
+    MonitoringMetric,
+    MonitoringSummary,
+)
 from nextops.inference.contracts import FinishReason
 from nextops.persistence.models import AuditEvent, Environment, Identity, Run, Target
 
@@ -381,3 +387,155 @@ def test_live_investigation_persists_bounded_evidence_result_and_failure_audit(
         "investigation.completed",
         "investigation.failed",
     }
+
+
+def test_phase2_incident_persists_composite_evidence_and_target_scope(
+    app_session_factory: sessionmaker[Session], settings: AppSettings
+) -> None:
+    service = DurableAppService(app_session_factory, settings)
+    bootstrap = service.bootstrap(bootstrap_request(), BOOTSTRAP_SECRET, uuid4())
+    actor = bootstrap.authenticated_session.actor
+    correlation_id = uuid4()
+    request = IncidentInvestigationRequest(
+        target_id="app",
+        locale="en",
+        question="Explain the current application condition.",
+    )
+    created = service.create_incident_investigation(
+        actor,
+        request,
+        correlation_id,
+        ("app", "ai", "connector", "zabbix"),
+    )
+    summary = MonitoringSummary(
+        source_version="7.0.30",
+        host="NextOps App",
+        collected_at=datetime(2026, 9, 23, 10, 0, tzinfo=UTC),
+        metrics=(
+            MonitoringMetric(
+                name="CPU idle time",
+                key="system.cpu.util[,idle]",
+                value="92.1",
+                units="%",
+                measured_at=datetime(2026, 9, 23, 9, 59, tzinfo=UTC),
+                stale=False,
+            ),
+        ),
+        active_problems=(),
+    )
+    evidence = IncidentEvidence.combine(
+        "app",
+        MonitoringIncidentContext(
+            source_version=summary.source_version,
+            host=summary.host,
+            collected_at=summary.collected_at,
+            window_started_at=datetime(2026, 9, 23, 9, 0, tzinfo=UTC),
+            window_ended_at=summary.collected_at,
+            summary=summary,
+            history=(),
+            events=(),
+        ),
+        LinuxDiagnosticSnapshot(
+            target_id="app",
+            hostname="nextops-app",
+            operating_system="Ubuntu 24.04.3 LTS",
+            collected_at=datetime(2026, 9, 23, 10, 0, tzinfo=UTC),
+            uptime_seconds=7200,
+            logical_cpu_count=8,
+            load_1m=0.1,
+            load_5m=0.2,
+            load_15m=0.3,
+            memory_total_bytes=34_359_738_368,
+            memory_available_bytes=30_064_771_072,
+            swap_total_bytes=0,
+            swap_free_bytes=0,
+            filesystems=(
+                LinuxFilesystem(
+                    path="/",
+                    total_bytes=100_000,
+                    available_bytes=75_000,
+                    used_percent=25.0,
+                ),
+            ),
+            processes=(),
+            services=(
+                LinuxService(
+                    unit="nextops-app.service",
+                    load_state="loaded",
+                    active_state="active",
+                    sub_state="running",
+                ),
+            ),
+            journal=(),
+            local_user_count=1,
+            logged_in_user_count=0,
+            installed_package_count=850,
+            listening_sockets=(),
+            routes=(),
+            nameservers=(),
+        ),
+    )
+    assistant = AssistantResponse(
+        request_id=uuid4(),
+        correlation_id=correlation_id,
+        locale="en",
+        answer="Both sources show a healthy application host; no root cause is established.",
+        model_id="nextops-qwen3-8b-q4-k-m",
+        prompt_tokens=400,
+        completion_tokens=40,
+        finish_reason=FinishReason.STOP,
+        started_at=datetime(2026, 9, 23, 10, 1, tzinfo=UTC),
+        completed_at=datetime(2026, 9, 23, 10, 2, tzinfo=UTC),
+        queue_ms=0,
+        cpu_only_required=True,
+    )
+
+    completed = service.complete_incident_investigation(
+        actor,
+        created.run_id,
+        assistant,
+        evidence,
+    )
+    fetched = service.get_run(actor, created.run_id)
+
+    assert completed.evidence.target_id == "app"
+    assert completed.evidence.linux.services[0].unit == "nextops-app.service"
+    assert fetched.result == completed
+    with app_session_factory() as session:
+        target = session.scalar(
+            select(Target).where(Target.name == "incident:app", Target.kind == "linux-zabbix")
+        )
+        events = set(
+            session.scalars(
+                select(AuditEvent.event_type).where(AuditEvent.run_id == created.run_id)
+            ).all()
+        )
+    assert target is not None
+    assert events == {"incident.started", "incident.completed"}
+
+
+def test_phase2_scope_migration_is_reversible_for_existing_admin(
+    app_session_factory: sessionmaker[Session],
+    migrated_postgres: tuple[str, Engine],
+    alembic_config: Config,
+    settings: AppSettings,
+) -> None:
+    _, admin_engine = migrated_postgres
+    service = DurableAppService(app_session_factory, settings)
+    bootstrap = service.bootstrap(bootstrap_request(), BOOTSTRAP_SECRET, uuid4())
+
+    command.downgrade(alembic_config, "0001_durable_app")
+    with admin_engine.connect() as connection:
+        downgraded = connection.scalar(
+            text("SELECT scopes FROM identities WHERE id = :identity_id"),
+            {"identity_id": bootstrap.admin_identity_id},
+        )
+    assert "linux.read" not in downgraded
+
+    command.upgrade(alembic_config, "head")
+    with admin_engine.connect() as connection:
+        upgraded = connection.scalar(
+            text("SELECT scopes FROM identities WHERE id = :identity_id"),
+            {"identity_id": bootstrap.admin_identity_id},
+        )
+    assert "linux.read" in upgraded

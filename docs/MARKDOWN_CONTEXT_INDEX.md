@@ -28,6 +28,7 @@ remaining task-specific sources. The repository skill
 | Zabbix or connector work | Zabbix guide, integration guide, MCP/security/data contracts, matching dossiers, ZBX/OFF acceptance cases, and target-specific private evidence |
 | Documentation | use `nextops-bilingual-documentation`; read the source requirement plus both language versions and update state/traceability when capability changes |
 | Substantial feature or architecture change | use `nextops-change-planner`; read `docs/en/SPECIFICATION_WORKFLOW.md`, the current release manifest, applicable ADRs, and the feature specification |
+| Phase 2 Linux/Zabbix investigation | `docs/en/PHASE_2_COMPLETION_SPEC.md`, `docs/en/PHASE_2_OPERATIONS.md`, Persian pairs, ADR 0007, current release manifest, and the connector/systemd deployment profiles |
 | Acceptance or release review | use `nextops-acceptance-reviewer`; read the feature specification, current release manifest, test evidence, offline contract, and security guide |
 | Documentation consistency review | use `nextops-doc-reviewer` plus `nextops-bilingual-documentation`; compare current guidance with the release manifest, source, tests, and paired language files |
 | Release or GitHub workflow | `CONTRIBUTING.md`, `CHANGELOG.md`, `SECURITY.md`, `docs/en/DEVELOPMENT.md`, test guide, and GitHub templates |
@@ -51,12 +52,14 @@ Markdown file is added, renamed, or removed.
 - `CONTRIBUTING.md` — Contribution, review, and verification requirements.
 - `deploy/installers/README.md` — Offline OS-package bundle and installer operator guide.
 - `deploy/systemd/README.md` — Native Stage 1B systemd source profile, installed layout, and deployment gates.
+- `deploy/linux/README.md` — Forced-command Phase 2 Linux collector assets and operational boundary.
 - `docs/adr/0001-modular-single-host.md` — ADR for the modular core and initial single-host topology.
 - `docs/adr/0002-local-cpu-only.md` — ADR for mandatory local CPU-only AI.
 - `docs/adr/0003-security-before-execution.md` — ADR for policy and safety before execution.
 - `docs/adr/0004-postgresql-first.md` — ADR for PostgreSQL authoritative state.
 - `docs/adr/0005-incremental-delivery.md` — ADR for incremental complete-flow delivery.
 - `docs/adr/0006-evidence-and-bilingual-ui.md` — ADR for evidence-qualified answers and bilingual UI.
+- `docs/adr/0007-forced-command-linux-connector.md` — ADR for forced-command, read-only Linux diagnostics.
 - `docs/adr/README.md` — ADR status and navigation.
 - `docs/en/ARCHITECTURE.md` — English architecture and repository boundaries.
 - `docs/en/BACKUP_RESTORE_SPEC.md` — English bounded specification for independent backup and isolated restore.
@@ -77,6 +80,8 @@ Markdown file is added, renamed, or removed.
 - `docs/en/OFFLINE_RUNTIME.md` — English mandatory offline-runtime contract.
 - `docs/en/OPERATIONS.md` — English observability, backup, recovery, and rollback design.
 - `docs/en/PHASE_0_REPORT.md` — Dated English Phase 0 evidence and decision report.
+- `docs/en/PHASE_2_COMPLETION_SPEC.md` — English bounded specification for completing the Linux/Zabbix incident phase.
+- `docs/en/PHASE_2_OPERATIONS.md` — English deployment, acceptance, and rollback guide for the Phase 2 forced-command connector.
 - `docs/en/PROJECT_STATUS_BRIEF.md` — Presentation-ready English summary of verified progress and remaining delivery gates.
 - `docs/en/ROADMAP.md` — English phased roadmap and acceptance gates.
 - `docs/en/SECURITY.md` — English identity, policy, approval, and threat controls.
@@ -109,6 +114,8 @@ Markdown file is added, renamed, or removed.
 - `docs/fa/OFFLINE_RUNTIME.md` — Persian mandatory offline-runtime contract.
 - `docs/fa/OPERATIONS.md` — Persian observability, backup, recovery, and rollback design.
 - `docs/fa/PHASE_0_REPORT.md` — Dated Persian Phase 0 evidence and decision report.
+- `docs/fa/PHASE_2_COMPLETION_SPEC.md` — Persian bounded specification for completing the Linux/Zabbix incident phase.
+- `docs/fa/PHASE_2_OPERATIONS.md` — Persian deployment, acceptance, and rollback guide for the Phase 2 forced-command connector.
 - `docs/fa/PROJECT_STATUS_BRIEF.md` — Presentation-ready native-Persian summary of verified progress and remaining delivery gates.
 - `docs/fa/ROADMAP.md` — Persian phased roadmap and acceptance gates.
 - `docs/fa/SECURITY.md` — Persian identity, policy, approval, and threat controls.

@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from nextops.application.errors import ApplicationError
 from nextops.contracts.errors import ErrorCode
+from nextops.contracts.incidents import IncidentEvidence
 from nextops.contracts.monitoring import MonitoringIncidentContext, MonitoringSummary
 from nextops.inference.llama_cpp import JsonTransport, UrllibJsonTransport
 
@@ -18,6 +19,8 @@ class MonitoringGateway(Protocol):
     async def summary(self) -> MonitoringSummary: ...
 
     async def incident_context(self) -> MonitoringIncidentContext: ...
+
+    async def incident_evidence(self, target_id: str) -> IncidentEvidence: ...
 
 
 class LoopbackMonitoringGateway:
@@ -74,5 +77,27 @@ class LoopbackMonitoringGateway:
             raise ApplicationError(
                 ErrorCode.DEPENDENCY_UNAVAILABLE,
                 "connector.incident_context_invalid",
+                retryable=True,
+            ) from error
+
+    async def incident_evidence(self, target_id: str) -> IncidentEvidence:
+        try:
+            raw = await self._transport.get_json(
+                f"/api/v1/incidents/{target_id}/evidence",
+                self._headers,
+                self._timeout_seconds,
+            )
+        except ApplicationError as error:
+            raise ApplicationError(
+                error.code,
+                "connector.incident_evidence_unavailable",
+                retryable=error.retryable,
+            ) from error
+        try:
+            return IncidentEvidence.model_validate(raw)
+        except ValidationError as error:
+            raise ApplicationError(
+                ErrorCode.DEPENDENCY_UNAVAILABLE,
+                "connector.incident_evidence_invalid",
                 retryable=True,
             ) from error

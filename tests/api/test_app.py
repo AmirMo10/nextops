@@ -16,6 +16,7 @@ from nextops.contracts.durable import (
     EvidenceSource,
     FixtureResult,
     LeaseGrant,
+    LiveIncidentResult,
     LiveInvestigationResult,
     LoginRequest,
     RecoveryRequest,
@@ -26,6 +27,14 @@ from nextops.contracts.durable import (
     SessionToken,
 )
 from nextops.contracts.errors import ErrorCode
+from nextops.contracts.incidents import IncidentEvidence, IncidentInvestigationRequest
+from nextops.contracts.linux import (
+    LinuxDiagnosticSnapshot,
+    LinuxFilesystem,
+    LinuxProcess,
+    LinuxRoute,
+    LinuxService,
+)
 from nextops.contracts.models import ActorContext, Role
 from nextops.contracts.monitoring import (
     MonitoringEvent,
@@ -53,7 +62,7 @@ class FakeService:
             organization_id=ORG_ID,
             environment_id=ENV_ID,
             roles=frozenset({Role.ADMIN}),
-            scopes=frozenset({"runs.read", "zabbix.read"}),
+            scopes=frozenset({"linux.read", "runs.read", "zabbix.read"}),
         )
         self.created_with_actor: ActorContext | None = None
         self.raise_on_create: ApplicationError | None = None
@@ -62,6 +71,8 @@ class FakeService:
         self.live_failure: ApplicationError | None = None
         self.live_correlation_id = uuid4()
         self.live_locale = "en"
+        self.incident_completed = False
+        self.incident_failure: ApplicationError | None = None
 
     def bootstrap(
         self, request: BootstrapRequest, supplied_secret: str, correlation_id: UUID
@@ -179,6 +190,63 @@ class FakeService:
         assert actor == self.actor
         assert run_id == RUN_ID
         self.live_failure = error
+
+    def create_incident_investigation(
+        self,
+        actor: ActorContext,
+        request: IncidentInvestigationRequest,
+        correlation_id: UUID,
+        allowed_target_ids: tuple[str, ...],
+    ) -> RunRecord:
+        assert actor == self.actor
+        assert request.target_id in allowed_target_ids
+        self.live_correlation_id = correlation_id
+        self.live_locale = request.locale
+        return RunRecord(
+            run_id=RUN_ID,
+            request_id=uuid4(),
+            correlation_id=correlation_id,
+            status=RunStatus.RUNNING,
+            locale=request.locale,
+            created_at=NOW,
+            updated_at=NOW,
+        )
+
+    def complete_incident_investigation(
+        self,
+        actor: ActorContext,
+        run_id: UUID,
+        assistant: AssistantResponse,
+        evidence: IncidentEvidence,
+    ) -> LiveIncidentResult:
+        assert actor == self.actor
+        assert run_id == RUN_ID
+        self.incident_completed = True
+        return LiveIncidentResult(
+            run_id=run_id,
+            status=RunStatus.SUCCEEDED,
+            locale=assistant.locale,
+            assistant=assistant,
+            evidence=evidence,
+            evidence_reference=f"run-evidence:{run_id}",
+            evidence_sha256="b" * 64,
+            organization_id=ORG_ID,
+            environment_id=ENV_ID,
+            target_id=TARGET_ID,
+            is_partial=evidence.is_partial,
+            is_stale=any(metric.stale for metric in evidence.zabbix.summary.metrics),
+            audit_event_id=UUID("60000000-0000-4000-8000-000000000002"),
+        )
+
+    def fail_incident_investigation(
+        self,
+        actor: ActorContext,
+        run_id: UUID,
+        error: ApplicationError,
+    ) -> None:
+        assert actor == self.actor
+        assert run_id == RUN_ID
+        self.incident_failure = error
 
     def _session(self) -> AuthenticatedSession:
         return AuthenticatedSession(
@@ -314,6 +382,13 @@ class FakeMonitoringGateway:
             ),
         )
 
+    async def incident_evidence(self, target_id: str) -> IncidentEvidence:
+        return IncidentEvidence.combine(
+            target_id,
+            await self.incident_context(),
+            _linux_snapshot(target_id),
+        )
+
 
 class FailingMonitoringGateway:
     """Controlled connector failure for durable failure-route coverage."""
@@ -331,6 +406,62 @@ class FailingMonitoringGateway:
             "connector.incident_context_unavailable",
             retryable=True,
         )
+
+    async def incident_evidence(self, target_id: str) -> IncidentEvidence:
+        del target_id
+        raise ApplicationError(
+            ErrorCode.DEPENDENCY_UNAVAILABLE,
+            "connector.incident_evidence_unavailable",
+            retryable=True,
+        )
+
+
+def _linux_snapshot(target_id: str) -> LinuxDiagnosticSnapshot:
+    return LinuxDiagnosticSnapshot(
+        target_id=target_id,
+        hostname=f"nextops-{target_id}",
+        operating_system="Ubuntu 24.04.3 LTS",
+        collected_at=NOW,
+        uptime_seconds=3600,
+        logical_cpu_count=8,
+        load_1m=0.1,
+        load_5m=0.2,
+        load_15m=0.3,
+        memory_total_bytes=34_359_738_368,
+        memory_available_bytes=30_064_771_072,
+        swap_total_bytes=0,
+        swap_free_bytes=0,
+        filesystems=(
+            LinuxFilesystem(
+                path="/",
+                total_bytes=100_000,
+                available_bytes=75_000,
+                used_percent=25.0,
+            ),
+        ),
+        processes=(LinuxProcess(pid=101, name="uvicorn", rss_bytes=120_000_000),),
+        services=(
+            LinuxService(
+                unit="nextops-app.service",
+                load_state="loaded",
+                active_state="active",
+                sub_state="running",
+            ),
+        ),
+        journal=(),
+        local_user_count=1,
+        logged_in_user_count=0,
+        installed_package_count=850,
+        listening_sockets=(),
+        routes=(
+            LinuxRoute(
+                interface="ens192",
+                destination="0.0.0.0/0",
+                gateway="10.0.0.1",
+            ),
+        ),
+        nameservers=("10.0.0.1",),
+    )
 
 
 def test_monitoring_contract_accepts_pre_partial_marker_connector_during_rolling_update() -> None:
@@ -371,7 +502,10 @@ def test_panel_is_local_bilingual_and_sets_browser_security_headers() -> None:
     assert "زمان پردازش مدل محلی به پایان رسید" in javascript.text
     assert 'data-mode="general"' in response.text
     assert 'data-mode="monitoring"' in response.text
+    assert 'data-mode="incident"' in response.text
+    assert 'id="incidentTarget"' in response.text
     assert '"/api/v1/assistant/generate"' in javascript.text
+    assert '"/api/v1/incidents/investigate"' in javascript.text
     assert "بدون افزودن وضعیت Zabbix" in javascript.text
     assert 'id="runId"' in response.text
     assert 'id="evidenceReference"' in response.text
@@ -475,6 +609,89 @@ def test_incident_context_requires_session_and_preserves_timeline_provenance() -
     assert body["window_ended_at"] == NOW.isoformat().replace("+00:00", "Z")
 
 
+def test_phase2_incident_investigation_is_target_scoped_and_evidence_linked() -> None:
+    service = FakeService()
+    inference = FakeInferenceGateway()
+    client = TestClient(
+        create_app(
+            service,
+            inference,
+            FakeMonitoringGateway(),
+            incident_target_ids=("app", "ai", "connector", "zabbix"),
+        )
+    )
+    headers = {"Authorization": "Bearer valid-bearer-token-that-is-long-enough"}
+
+    targets = client.get("/api/v1/incidents/targets", headers=headers)
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers=headers,
+        json={
+            "target_id": "app",
+            "locale": "en",
+            "question": "Explain the current application condition.",
+        },
+    )
+
+    assert targets.status_code == 200
+    assert targets.json()["targets"] == ["app", "ai", "connector", "zabbix"]
+    assert response.status_code == 200
+    body = response.json()
+    assert body["evidence_mode"] == "live_zabbix_linux"
+    assert body["evidence"]["target_id"] == "app"
+    assert body["evidence"]["zabbix"]["events"][0]["event_id"] == "30001"
+    assert body["evidence"]["linux"]["services"][0]["unit"] == "nextops-app.service"
+    assert body["evidence_sha256"] == "b" * 64
+    assert service.incident_completed is True
+    assert service.incident_failure is None
+    assert inference.last_request is not None
+    assert len(inference.last_request.question) <= 4_000
+    assert "Separate verified observations" in inference.last_request.question
+    assert "Do not propose a mutating command" in inference.last_request.question
+
+
+def test_phase2_incident_routes_require_both_read_scopes() -> None:
+    service = FakeService()
+    service.actor = service.actor.model_copy(update={"scopes": frozenset({"zabbix.read"})})
+    client = TestClient(
+        create_app(
+            service,
+            FakeInferenceGateway(),
+            FakeMonitoringGateway(),
+            incident_target_ids=("app",),
+        )
+    )
+    headers = {"Authorization": "Bearer valid-bearer-token-that-is-long-enough"}
+
+    response = client.get("/api/v1/incidents/targets", headers=headers)
+
+    assert response.status_code == 403
+    assert response.json()["error"]["message_key"] == "incident.scope_denied"
+
+
+def test_phase2_dependency_failure_is_persisted_safely() -> None:
+    service = FakeService()
+    client = TestClient(
+        create_app(
+            service,
+            FakeInferenceGateway(),
+            FailingMonitoringGateway(),
+            incident_target_ids=("app",),
+        )
+    )
+
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"target_id": "app", "locale": "en", "question": "Explain this incident."},
+    )
+
+    assert response.status_code == 503
+    assert service.incident_completed is False
+    assert service.incident_failure is not None
+    assert service.incident_failure.message_key == "connector.incident_evidence_unavailable"
+
+
 def test_monitoring_routes_require_explicit_zabbix_read_scope() -> None:
     service = FakeService()
     service.actor = service.actor.model_copy(update={"scopes": frozenset({"runs.read"})})
@@ -514,6 +731,10 @@ def test_untrusted_monitoring_text_and_stale_partial_evidence_are_preserved() ->
 
         async def incident_context(self) -> MonitoringIncidentContext:
             raise AssertionError("summary-only test must not request incident context")
+
+        async def incident_evidence(self, target_id: str) -> IncidentEvidence:
+            del target_id
+            raise AssertionError("summary-only test must not request incident evidence")
 
     service = FakeService()
     inference = FakeInferenceGateway()

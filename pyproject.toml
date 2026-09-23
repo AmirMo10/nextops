@@ -44,6 +44,7 @@ where = ["packages"]
 addopts = "-ra --strict-config --strict-markers"
 testpaths = ["tests"]
 markers = [
+  "browser: requires a provisioned Playwright browser",
   "integration: requires an isolated PostgreSQL database",
 ]
 

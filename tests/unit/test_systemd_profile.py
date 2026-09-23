@@ -109,6 +109,14 @@ def test_connector_is_rootless_authenticated_and_connector_tunnel_is_pinned() ->
     assert "User=nextops-connector" in connector
     assert "LoadCredential=zabbix-api-token:" in connector
     assert "LoadCredential=connector-service-secret:" in connector
+    assert "LoadCredential=linux-app-key:" in connector
+    assert "LoadCredential=linux-ai-key:" in connector
+    assert "LoadCredential=linux-connector-key:" in connector
+    assert "LoadCredential=linux-zabbix-key:" in connector
+    assert "ConditionPathExists=/etc/nextops/linux-targets.json" in connector
+    assert "ConditionPathExists=/etc/nextops/ssh/linux_known_hosts" in connector
+    assert "NEXTOPS_LINUX_TARGETS_FILE=/etc/nextops/linux-targets.json" in environment
+    assert "NEXTOPS_LINUX_TIMEOUT_SECONDS=15" in environment
     assert "--host 127.0.0.1" in connector
     assert "NEXTOPS_ZABBIX_API_TOKEN=" not in environment
     assert "NEXTOPS_CONNECTOR_SERVICE_SECRET=" not in environment
@@ -118,3 +126,10 @@ def test_connector_is_rootless_authenticated_and_connector_tunnel_is_pinned() ->
     assert "UserKnownHostsFile=/etc/nextops/ssh/connector_known_hosts" in tunnel
     assert "-L 127.0.0.1:18100:127.0.0.1:8100" in tunnel
     assert "192.168." not in tunnel
+
+
+def test_phase2_app_exposes_only_logical_incident_target_ids() -> None:
+    environment = (SYSTEMD / "nextops-app.env").read_text(encoding="utf-8")
+
+    assert "NEXTOPS_INCIDENT_TARGET_IDS=app,ai,connector,zabbix" in environment
+    assert "192.168." not in environment

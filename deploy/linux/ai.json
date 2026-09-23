@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0.0",
+  "target_id": "ai",
+  "filesystems": ["/", "/srv/nextops", "/srv/nextops/models"],
+  "services": ["nextops-ai.service", "nextops-llama.service"]
+}

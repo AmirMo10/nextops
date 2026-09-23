@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from typing import Self
 from urllib.parse import urlsplit
 
@@ -27,6 +28,7 @@ class AppSettings(BaseModel):
     connector_base_url: str | None = None
     connector_service_secret: SecretStr | None = Field(default=None, min_length=32, max_length=512)
     connector_timeout_seconds: float = Field(default=20.0, ge=1.0, le=60.0)
+    incident_target_ids: tuple[str, ...] = Field(default_factory=tuple, max_length=8)
 
     @model_validator(mode="after")
     def validate_security_boundaries(self) -> Self:
@@ -75,6 +77,11 @@ class AppSettings(BaseModel):
                 raise ValueError(
                     "connector_base_url must be an undecorated http://127.0.0.1:<port> origin"
                 )
+        if len(set(self.incident_target_ids)) != len(self.incident_target_ids) or any(
+            re.fullmatch(r"[a-z][a-z0-9-]{1,31}", target_id) is None
+            for target_id in self.incident_target_ids
+        ):
+            raise ValueError("incident_target_ids must be unique normalized target identifiers")
         return self
 
     @classmethod
@@ -124,5 +131,10 @@ class AppSettings(BaseModel):
             ),
             connector_timeout_seconds=float(
                 os.environ.get("NEXTOPS_CONNECTOR_TIMEOUT_SECONDS", "20")
+            ),
+            incident_target_ids=tuple(
+                target_id.strip()
+                for target_id in os.environ.get("NEXTOPS_INCIDENT_TARGET_IDS", "").split(",")
+                if target_id.strip()
             ),
         )

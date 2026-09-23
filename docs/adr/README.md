@@ -12,5 +12,6 @@ All records below were **accepted by the owner on 2026-09-21** with the Phase 0 
 | [0004](0004-postgresql-first.md) | PostgreSQL as initial authority / PostgreSQL به‌عنوان مرجع اولیه |
 | [0005](0005-incremental-delivery.md) | Complete flows and controlled release / جریان کامل و انتشار کنترل‌شده |
 | [0006](0006-evidence-and-bilingual-ui.md) | Evidence-qualified RCA and bilingual UI / علت‌یابی مستند و رابط دوزبانه |
+| [0007](0007-forced-command-linux-connector.md) | Forced-command Linux diagnostics / عیب‌یابی Linux با فرمان اجباری |
 
 A later decision should record context, options, consequences, evidence, status and superseded records in both languages. / تصمیم بعدی باید زمینه، گزینه، پیامد، شاهد، وضعیت و سند جایگزین‌شده را به هر دو زبان ثبت کند.

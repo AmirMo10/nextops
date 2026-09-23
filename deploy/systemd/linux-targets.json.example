@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "known_hosts_file": "/etc/nextops/ssh/linux_known_hosts",
+  "targets": [
+    {
+      "target_id": "app",
+      "display_name": "NextOps application",
+      "zabbix_host": "NextOps App",
+      "ssh_destination": "nextops-linux-ro@10.0.0.47",
+      "identity_file": "/run/credentials/nextops-connector.service/linux-app-key"
+    },
+    {
+      "target_id": "ai",
+      "display_name": "NextOps AI",
+      "zabbix_host": "NextOps AI",
+      "ssh_destination": "nextops-linux-ro@10.0.0.48",
+      "identity_file": "/run/credentials/nextops-connector.service/linux-ai-key"
+    },
+    {
+      "target_id": "connector",
+      "display_name": "NextOps connector",
+      "zabbix_host": "NextOps Connectors",
+      "ssh_destination": "nextops-linux-ro@10.0.0.49",
+      "identity_file": "/run/credentials/nextops-connector.service/linux-connector-key"
+    },
+    {
+      "target_id": "zabbix",
+      "display_name": "Zabbix server",
+      "zabbix_host": "Zabbix server",
+      "ssh_destination": "nextops-linux-ro@10.0.0.50",
+      "identity_file": "/run/credentials/nextops-connector.service/linux-zabbix-key"
+    }
+  ]
+}
