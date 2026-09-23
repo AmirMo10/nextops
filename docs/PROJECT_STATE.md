@@ -4,30 +4,34 @@ Updated: 2026-09-23 — the controlled user-testing path is live. The fresh-brow
 application/runtime/model rollback, live cancellation and dependency recovery, missing/corrupt
 artifact handling, isolated low-space staging case, five-minute bounded load and socket-only logical
 restores of both PostgreSQL 16 databases passed under change
-`stage1-completion-20260922-01`. App release `nextops-0.1.0-13a3369` and connector release
-`nextops-0.1.0-3d7d725` remain active; all four guests ended `running`, with zero failed units and no
+`stage1-completion-20260922-01`. App and connector release `nextops-0.1.0-1ab6586` is now active;
+all four guests ended `running`, with zero failed units and no
 reboot requirement. The [paired Stage 1 report](en/STAGE_1_COMPLETION_REPORT.md) contains measured
 results. Production acceptance remains blocked by the lack of a verified off-datastore backup
 destination, WAL/PITR recovery and disaster-recovery sign-off.
 
-Phase 2 has now started with a bounded source increment. The repository implements authenticated
-incident-context reads for the configured Zabbix host: the accepted current summary plus limited
-numeric history and trigger events, preserving source timestamps and explicit partial markers.
-Focused repository tests pass. This increment is not deployed or live-accepted, does not yet enter
-the durable model/browser workflow, and does not include direct Linux diagnostics. The open Phase 1
-recovery blocker remains unchanged.
+Phase 2A is deployed as a bounded controlled increment. The app and connector run the same immutable
+release, the Zabbix reader role now allows exactly `host.get`, `item.get`, `problem.get`,
+`history.get` and `event.get`, and a live 60-minute request returned eight current metrics and 32
+history points with explicit truncation markers. Connector authentication, the protected app tunnel,
+release rollback/forward, role rollback/forward and a guarded WAN-denied server path passed under
+change `phase2a-incident-context-20260923-01`. A full authenticated browser request, durable
+model/audit integration, Phase 2A reboot and direct Linux diagnostics remain not run. The open
+Phase 1 recovery blocker is unchanged.
 
 ## English
 
 ### Current controlled user-testing checkpoint
 
-Phase 2A is implemented only in the repository at this checkpoint. Its contract fixes the target and
-bounded lookback at deployment, permits only named read operations, and enforces four-metric,
-eight-point-per-metric and 25-event response ceilings. Live Zabbix role expansion, deployment,
-offline/reboot/rollback qualification and direct Linux collection remain not run.
+Phase 2A is deployed for controlled server-path testing at this checkpoint. Its contract fixes the
+target and bounded lookback at deployment, permits only named read operations, and enforces
+four-metric, eight-point-per-metric and 25-event response ceilings. Live provenance, authentication,
+partial markers, immutable release rollback, exact reader-role rollback and guarded WAN isolation
+passed. Authenticated browser/session acceptance, durable model/audit use of the new context, VM
+reboot and direct Linux collection remain not run.
 
 The authenticated application and bilingual panel are deployed as immutable release
-`nextops-0.1.0-13a3369` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
+`nextops-0.1.0-1ab6586` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
 application identity and session state on
 its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
 application listener are not exposed through Nginx. The browser receives neither the AI service
@@ -35,11 +39,12 @@ credential nor the Zabbix token.
 
 The dedicated Zabbix guest now runs Zabbix 7.0.30, PostgreSQL 16, Nginx/PHP-FPM and Agent 2. The
 default administrator password was rotated. A separate API-only reader has no frontend access, an
-allowlist limited to `host.get`, `item.get` and `problem.get`, read permission for one approved host
-group and a token stored only on the connector guest. It now sees exactly four approved hosts: the
-Zabbix guest plus app, AI and connector. An unlisted read and a mutation were both denied. The
-connector uses verified TLS, bypasses inherited proxies, exposes only a named summary operation on
-loopback and has no generic URL, JSON-RPC, shell or write surface.
+allowlist limited to `host.get`, `item.get`, `problem.get`, `history.get` and `event.get`, read
+permission for one approved host group and a token stored only on the connector guest. It now sees
+exactly four approved hosts: the Zabbix guest plus app, AI and connector. An unrelated read and a
+mutation remain denied. The
+connector uses verified TLS, bypasses inherited proxies, exposes only named summary and bounded
+incident-context operations on loopback and has no generic URL, JSON-RPC, shell or write surface.
 
 The app, AI and connector guests run the exact cached Agent 2 package
 `1:7.0.30-1+ubuntu24.04`. Each has a distinct PSK and sends active checks to the source-restricted
@@ -212,20 +217,23 @@ This state records Phase 0 acceptance, the deployed controlled Stage 1A applicat
 
 The source slices use Python 3.12.10, uv 0.12.17, Pydantic 2.13.5, FastAPI 0.141.1, SQLAlchemy 2.0.54, Alembic 1.20.0, Psycopg 3.3.6, Ruff 0.16.8, mypy 1.20.2 and pytest 9.1.1 with a generated `uv.lock`; Playwright 1.63 is now a locked development-only browser dependency. The CI workflow defines digest-pinned PostgreSQL 16.15 and 17.6 jobs. Fresh browser automation, live rollback/failure recovery, five-minute load and temporary PostgreSQL 16.15 restores ran in the controlled environment. The temporary restore clusters and staging copies were removed. Dependency/license approval, independent backup/PITR and production promotion remain separate gates.
 
-The next engineering checkpoint in [NEXT_TASK](NEXT_TASK.md) is the controlled Phase 2A deployment:
-grant exactly two additional read methods, verify the bounded live contract, rollback and offline
-behavior, then connect accepted context to the durable investigation path. In parallel, production
+The next engineering checkpoint in [NEXT_TASK](NEXT_TASK.md) is to connect the deployed Phase 2A
+context to the durable investigation/model/browser path, then run authenticated browser and reboot
+acceptance before starting the separately scoped read-only Linux increment. In parallel, production
 promotion remains blocked on an approved off-datastore recovery destination, PostgreSQL-aware
 repositories/WAL archiving, permitted artifact backup, independent PITR, recorded RPO/RTO and key
 recovery, and operational sign-off.
 
 ## فارسی
 
-مرحلهٔ دو با یک گام محدود در کد منبع آغاز شده است. مخزن اکنون برای میزبان پیکربندی‌شدهٔ Zabbix،
-خواندن احرازهویت‌شدهٔ «بافت رخداد» را پیاده می‌کند: خلاصهٔ جاریِ پذیرفته‌شده به‌همراه تاریخچهٔ
-عددی و رویدادهای trigger با سقف ثابت، زمان منبع و نشان صریحِ نتیجهٔ ناقص. آزمون‌های متمرکز مخزن
-موفق‌اند؛ اما این گام هنوز مستقر یا به‌صورت زنده پذیرفته نشده، وارد گردش ماندگار مدل و مرورگر نشده
-و عیب‌یابی مستقیم Linux را در بر ندارد. مانع بازیابیِ باقی‌مانده از مرحلهٔ یک نیز بدون تغییر باز است.
+گام 2A مرحلهٔ دو به‌صورت محدود و کنترل‌شده مستقر شده است. برنامه و اتصال‌دهنده یک انتشار
+تغییرناپذیر مشترک را اجرا می‌کنند و نقش خوانشگر Zabbix دقیقاً پنج روش `host.get`، `item.get`،
+`problem.get`، `history.get` و `event.get` را مجاز می‌داند. یک خواندن زنده در بازهٔ ۶۰ دقیقه، هشت
+سنجهٔ جاری و ۳۲ نقطهٔ تاریخی را همراه نشان صریحِ محدودشدن نتیجه برگرداند. احرازهویت اتصال‌دهنده،
+تونل محافظت‌شدهٔ برنامه، بازگشت و بازگردانی انتشار و نقش، و مسیر سروری با WAN مسدود در تغییر
+`phase2a-incident-context-20260923-01` موفق بودند. آزمون کامل با نشست مرورگر، پیوند با مدل و ممیزی
+ماندگار، راه‌اندازی مجدد ویژهٔ 2A و عیب‌یابی مستقیم Linux هنوز اجرا نشده‌اند. مانع بازیابی مرحلهٔ
+یک نیز بدون تغییر باز است.
 
 ### جمع‌بندی کنترل‌شدهٔ مرحلهٔ ۱ در ۱۴۰۵/۰۷/۰۱
 
@@ -244,24 +252,26 @@ PITR، مخزن فایل با restic و تأیید نهایی بازیابی ب�
 
 ### نقطهٔ فعلی برای ارزیابی کنترل‌شدهٔ کاربران
 
-گام 2A در این نقطه فقط در مخزن پیاده شده است. قرارداد آن مقصد و بازهٔ محدود را در استقرار ثابت
-می‌کند، فقط خواندن‌های نام‌دار را می‌پذیرد و خروجی را به چهار سنجه، هشت نقطه برای هر سنجه و ۲۵
-رویداد محدود می‌سازد. گسترش نقش زندهٔ Zabbix، استقرار، آزمون آفلاین و راه‌اندازی مجدد و بازگشت، و
-گردآوری مستقیم Linux هنوز اجرا نشده‌اند.
+گام 2A در این نقطه برای آزمون کنترل‌شدهٔ مسیر سرور مستقر است. قرارداد آن مقصد و بازهٔ محدود را در
+استقرار ثابت می‌کند، فقط خواندن‌های نام‌دار را می‌پذیرد و خروجی را به چهار سنجه، هشت نقطه برای هر
+سنجه و ۲۵ رویداد محدود می‌سازد. منشأ زنده، احرازهویت، نشان نتیجهٔ ناقص، بازگشت انتشار و نقش و قطع
+موقت WAN پذیرفته شدند. آزمون نشست مرورگر، استفادهٔ ماندگار مدل و ممیزی از بافت تازه، راه‌اندازی
+مجدد VM و گردآوری مستقیم Linux هنوز اجرا نشده‌اند.
 
-برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-13a3369` روی مهمان برنامه و پشت TLS خصوصی
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-1ab6586` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
 می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
 نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.
 
 مهمان مستقل پایش اکنون Zabbix 7.0.30، PostgreSQL 16، Nginx/PHP-FPM و Agent 2 را اجرا می‌کند.
-گذرواژهٔ مدیر پیش‌فرض عوض شده است. خوانشگر جداگانهٔ API به رابط کاربری دسترسی ندارد؛ فقط سه روش
-`host.get`، `item.get` و `problem.get` برایش مجاز است و تنها یک گروه میزبان مصوب را می‌بیند. اکنون
+گذرواژهٔ مدیر پیش‌فرض عوض شده است. خوانشگر جداگانهٔ API به رابط کاربری دسترسی ندارد؛ فقط پنج روش
+`host.get`، `item.get`، `problem.get`، `history.get` و `event.get` برایش مجاز است و تنها یک گروه
+میزبان مصوب را می‌بیند. اکنون
 دقیقاً چهار میزبان مصوب، یعنی Zabbix، برنامه، هوش مصنوعی و اتصال، در دامنهٔ دید آن هستند. یک روش
 خواندن خارج از فهرست و یک روش نوشتنی هر دو رد شدند. توکن فقط روی مهمان اتصال نگه‌داری می‌شود.
-اتصال نیز فقط از TLS معتبر استفاده می‌کند، پراکسی موروثی را کنار می‌گذارد و روی رابط محلی صرفاً یک
-عملیات نام‌دار برای خلاصهٔ پایش ارائه می‌دهد؛ نشانی دلخواه، JSON-RPC عمومی، shell یا عملیات نوشتنی
-در اختیار مصرف‌کننده نیست.
+اتصال نیز فقط از TLS معتبر استفاده می‌کند، پراکسی موروثی را کنار می‌گذارد و روی رابط محلی فقط
+عملیات نام‌دارِ خلاصه و بافت رخداد محدود را ارائه می‌دهد؛ نشانی دلخواه، JSON-RPC عمومی، shell یا
+عملیات نوشتنی در اختیار مصرف‌کننده نیست.
 
 روی مهمان‌های برنامه، هوش مصنوعی و اتصال، بستهٔ دقیق Agent 2 با نسخهٔ
 `1:7.0.30-1+ubuntu24.04` نصب است. هر مهمان PSK مستقل دارد و فقط بررسی فعال را به مسیر محدودشدهٔ
@@ -404,7 +414,8 @@ pgBackRest/WAL، مخزن restic، آزمون PITR و بستهٔ بازیابی 
 
 برش‌های منبع با Python 3.12.10، uv 0.12.17 و زنجیرهٔ قفل‌شده آزموده شدند؛ Playwright 1.63 نیز وابستگی صرفاً توسعه‌ای است. Ruff، mypy سخت‌گیرانه و ۱۱۱ آزمون غیر‌یکپارچه موفق‌اند. مرورگر تازه، بازگشت و بازیابی خطا، بار پنج‌دقیقه‌ای و خوشه‌های موقت PostgreSQL 16.15 در محیط کنترل‌شده اجرا شدند و خوشه‌ها و نسخه‌های موقت پاک شدند. بررسی وابستگی و مجوز، پشتیبان مستقل/PITR و ارتقا به تولید همچنان دروازه‌اند.
 
-نقطهٔ مهندسی بعدی در [کار بعدی](NEXT_TASK.md)، استقرار کنترل‌شدهٔ گام 2A است: افزودن دقیق دو
-روش خواندن، بررسی زندهٔ قرارداد محدود و بازگشت و رفتار آفلاین، و سپس پیوند با مسیر ماندگار بررسی.
+نقطهٔ مهندسی بعدی در [کار بعدی](NEXT_TASK.md)، پیوند بافت مستقرشدهٔ 2A با مسیر ماندگار بررسی، مدل و
+مرورگر است؛ سپس پذیرش نشست احرازهویت‌شده و راه‌اندازی مجدد انجام می‌شود و پس از آن گام جداگانه و
+فقط‌خواندنی عیب‌یابی Linux آغاز خواهد شد.
 هم‌زمان، ارتقا به تولید تا تصویب مقصد پشتیبان مستقل، مخزن و WAL آگاه از PostgreSQL، پشتیبان
 فایل مجاز، PITR مستقل، ثبت RPO/RTO و بازیابی کلید و تأیید عملیات متوقف می‌ماند.

@@ -6,9 +6,9 @@
 user testing, but production acceptance remains open.** Zabbix 7.0.30 and the scoped reader are live.
 The Zabbix guest plus the application, AI and connector guests are monitored in the one approved
 host group. The three NextOps guests use Agent 2 active checks with distinct PSKs, no passive
-listener or remote-command permission, and a source-restricted trapper path. The reader still has
-only `host.get`, `item.get` and `problem.get`; it saw exactly four approved hosts, fresh items for
-each newly added host, and denied both an unlisted read and a mutation. Scoped failure, server/API
+listener or remote-command permission, and a source-restricted trapper path. The reader has exactly
+`host.get`, `item.get`, `problem.get`, `history.get` and `event.get`; it saw exactly four approved
+hosts, fresh items for each newly added host, and denied both an unlisted read and a mutation. Scoped failure, server/API
 WAN-block, fresh-browser, serial reboot and logical isolated-restore checks pass. Independent
 backup, WAL/PITR and disaster-recovery acceptance remain open. The sections below retain the design
 and capacity rationale; current evidence in [PROJECT_STATE](../PROJECT_STATE.md) supersedes their

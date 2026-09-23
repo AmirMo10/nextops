@@ -3,12 +3,13 @@
 Updated: 2026-09-23 — the controlled Stage 1 campaign is complete for every currently executable
 gate. Fresh-browser WAN denial, application/runtime/model rollback, cancellation and dependency
 recovery, missing/corrupt artifact behavior, isolated low-space staging, five-minute bounded load
-and logical isolated restores of both PostgreSQL 16 databases passed. App release
-`nextops-0.1.0-13a3369` and connector release `nextops-0.1.0-3d7d725` remain active, and every guest
+and logical isolated restores of both PostgreSQL 16 databases passed. App and connector release
+`nextops-0.1.0-1ab6586` is active, and every guest
 ended `running` with zero failed units. Independent recovery still requires a verified off-datastore
-destination, WAL/PITR and artifact recovery. At the owner's direction, Phase 2 has started in
-parallel with a bounded Zabbix incident-context source increment; it is tested in the repository but
-not deployed or accepted live. Do not rebuild or repeat the accepted slice.
+destination, WAL/PITR and artifact recovery. Phase 2A is deployed on the app and connector with an
+exact five-method Zabbix reader role. Live bounded context, rollback and guarded WAN isolation pass;
+durable model/browser integration, authenticated browser acceptance and Phase 2A reboot remain.
+Do not rebuild or repeat the accepted slice.
 
 ## English — harden the live user-testing slice
 
@@ -19,7 +20,7 @@ The next operator must treat the following as completed and preserve it:
 - the app release, PostgreSQL migration, private TLS reverse proxy and authenticated bilingual panel;
 - the pinned CPU-only AI runtime/model and authenticated application-to-AI tunnel;
 - Zabbix 7.0.30 with its PostgreSQL database, TLS frontend/API, Agent 2 and self-monitoring;
-- an API-only Zabbix reader restricted to three read methods and one approved host group;
+- an API-only Zabbix reader restricted to five named read methods and one approved host group;
 - the rootless read-only connector and pinned application-to-connector tunnel;
 - explicit answer modes: default model-only general assistance and opt-in evidence-grounded live
   monitoring, with the exact `Hi` test returning a direct greeting and no Zabbix content;
@@ -65,9 +66,10 @@ The immediate implementation sequence is:
 6. **Next external prerequisite:** approve a recovery destination independent of the serving guest,
    DS-C/G10 and host; define RPO/RTO, retention and key custody; then implement separate pgBackRest
    repositories/WAL archiving, restic for permitted files, independent PITR and operational sign-off.
-7. **Phase 2A in progress:** deploy the source-tested bounded incident-context contract, extend the
-   API reader with exactly `history.get` and `event.get`, qualify live provenance/limits/partial
-   behavior and rollback with WAN denied, then connect it to the durable investigation workflow.
+7. **Phase 2A server deployment completed; workflow acceptance next:** immutable app/connector
+   release, exact `history.get`/`event.get` role expansion, live provenance/limits/partial behavior,
+   release and role rollback, and guarded WAN denial passed. Now connect the context to the durable
+   investigation/model/browser workflow and run authenticated browser and reboot acceptance.
    Direct read-only Linux diagnostics follow as Phase 2B; all mutation remains disabled.
 
 The detailed material below preserves design rationale and earlier checkpoints. Where it describes
@@ -86,7 +88,7 @@ A sanitized read-only preflight reached all four clean replacement guests after 
 
 The role package layers remain as recorded: PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The controlled application/database/proxy, AI, connector and Zabbix/database/frontend slices are active and passed the named reboot checks. Docker was not installed because the native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-62de8d6`; the active user application and connector are `nextops-0.1.0-13a3369` and `nextops-0.1.0-3d7d725`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
+The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-62de8d6`; the active user application and connector both use `nextops-0.1.0-1ab6586`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
 
 Two independent four-case qualification runs passed unauthenticated denial, readiness, Persian and
 English evidence preservation, and safe non-execution responses under both automated checks and
@@ -176,7 +178,7 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 - انتشار برنامه، مهاجرت PostgreSQL، reverse proxy با TLS خصوصی و پنل دوزبانهٔ احرازهویت‌شده؛
 - محیط اجرا و مدل فقط‌-CPU تثبیت‌شده و تونل احرازهویت‌شدهٔ برنامه به هوش مصنوعی؛
 - Zabbix 7.0.30 با پایگاه PostgreSQL، رابط و API مبتنی بر TLS، Agent 2 و خودپایشی؛
-- خوانشگر مخصوص API با سه روش فقط‌خواندنی و دامنهٔ یک گروه میزبان مصوب؛
+- خوانشگر مخصوص API با پنج روش نام‌دار و فقط‌خواندنی و دامنهٔ یک گروه میزبان مصوب؛
 - اتصال فقط‌خواندنی با هویت بدون امتیاز و تونل ثابت‌شدهٔ برنامه به اتصال؛
 - دو حالت صریح پاسخ: دستیار عمومیِ پیش‌فرض و بدون شاهد پایشی، و پایش زندهٔ انتخابی و مستند به
   شواهد؛ آزمون دقیق `Hi` پاسخ مستقیم و بدون محتوای Zabbix دریافت کرد؛
@@ -219,10 +221,11 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 6. **پیش‌نیاز بیرونی بعدی:** مقصدی مستقل از مهمان سرویس‌دهنده، DS-C/G10 و میزبان تصویب شود؛ سپس
    RPO/RTO، نگه‌داری و متولی کلید تعیین، مخزن‌های جداگانهٔ pgBackRest و WAL، پشتیبان فایل مجاز با
    restic، PITR روی میزبان مستقل و تأیید نهایی عملیات اجرا شوند.
-7. **گام 2A در حال انجام:** قرارداد آزموده‌شده و محدود «بافت رخداد» مستقر شود، نقش خوانشگر API
-   دقیقاً با `history.get` و `event.get` گسترش یابد، منشأ و سقف و نقص و بازگشت آن در حالت WAN
-   مسدود به‌صورت زنده سنجیده شود و سپس به گردش ماندگار بررسی وصل شود. عیب‌یابی مستقیم و
-   فقط‌خواندنی Linux در گام 2B می‌آید و همهٔ عملیات تغییردهنده همچنان غیرفعال‌اند.
+7. **استقرار سروری گام 2A تکمیل شد؛ پذیرش گردش‌کار گام بعدی است:** انتشار تغییرناپذیر برنامه و
+   اتصال‌دهنده، افزودن دقیق `history.get` و `event.get`، منشأ و سقف و نقص زنده، بازگشت انتشار و
+   نقش، و قطع محافظت‌شدهٔ WAN موفق بودند. اکنون بافت به گردش ماندگار بررسی، مدل و مرورگر وصل شود و
+   پذیرش مرورگر احرازهویت‌شده و راه‌اندازی مجدد انجام گیرد. عیب‌یابی مستقیم و فقط‌خواندنی Linux در
+   گام 2B می‌آید و همهٔ عملیات تغییردهنده همچنان غیرفعال‌اند.
 
 مطالب تفصیلی بعدی منطق طراحی و نقاط پیشین را حفظ می‌کند. هرجا برنامه، PostgreSQL، Zabbix، اتصال یا
 رابط مرورگر را نصب‌نشده می‌نامد، این بخش و [وضعیت پروژه](PROJECT_STATE.md) جای آن عبارت قدیمی را
@@ -240,7 +243,7 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 لایهٔ بسته‌های هر نقش مطابق رکورد باقی است: PostgreSQL 16.15 و Nginx 1.24 روی برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 روی هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 روی connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 روی Zabbix. برش‌های کنترل‌شدهٔ برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix و پایگاه و رابط آن فعال‌اند و آزمون‌های نام‌بردهٔ راه‌اندازی مجدد را گذرانده‌اند. Docker نصب نشد، زیرا طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-62de8d6` و انتشارهای فعال برنامه و اتصال به‌ترتیب `nextops-0.1.0-13a3369` و `nextops-0.1.0-3d7d725` هستند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
+محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-62de8d6` است و برنامه و اتصال‌دهنده هر دو انتشار `nextops-0.1.0-1ab6586` را اجرا می‌کنند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
 
 دو اجرای مستقلِ چهارموردی، رد درخواست بدون احراز هویت، آمادگی، حفظ شاهد فارسی و انگلیسی و پاسخ ایمن
 بدون ادعای اجرا را هم در بررسی خودکار و هم در بازبینی انسانی گذراندند. آزمون بار اولیه، مرز یک

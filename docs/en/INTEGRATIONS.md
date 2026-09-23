@@ -2,9 +2,9 @@
 
 [فارسی](../fa/INTEGRATIONS.md) · [Index](INDEX.md)
 
-**The Zabbix status slice is accepted for controlled user testing. Phase 2A now implements and tests
-bounded Zabbix history/event collection in source, but it is not yet deployed or live-accepted.
-The other ten integration families remain planned.** Source: original specification sections 5 and
+**The Zabbix status slice is accepted for controlled user testing. Phase 2A bounded Zabbix
+history/event collection is now deployed and qualified on the server path; durable model/browser
+acceptance remains. The other ten integration families remain planned.** Source: original specification sections 5 and
 11–21; enhanced specification section 15. The rows preserve requirements, not claims that every
 vendor API exposes every field.
 
@@ -28,15 +28,16 @@ For each family, record supported and explicitly unsupported actions, tested OS/
 
 Status vocabulary is strict: **planned** means specified only; **simulated** means tested on fixtures; **lab-verified** requires authorized real equipment and a versioned test record; **production-validated** requires separately authorized deployment evidence. A family-level label never implies every operation or version has that status.
 
-## Phase 2A source increment
+## Phase 2A controlled increment
 
 The additive incident-context operation reuses the configured host and returns its current summary,
 up to four numeric item histories with eight points each, and up to 25 trigger events from a fixed
 60-minute window. It calls only named `history.get` and `event.get` reads, preserves source and
 collection timestamps, and marks truncation or inherited summary gaps explicitly. Callers cannot
 select a different host, arbitrary method or unbounded time range. The authenticated connector and
-application routes are source-tested; live role expansion, deployment, durable investigation/model
-integration, browser acceptance and direct Linux diagnostics remain Phase 2 work.
+application routes are deployed. Exact role expansion, live bounded retrieval, rollback and guarded
+WAN isolation pass; durable investigation/model integration, authenticated browser acceptance,
+reboot and direct Linux diagnostics remain Phase 2 work.
 
 ## Cross-system investigations
 

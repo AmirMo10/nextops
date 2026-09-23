@@ -22,7 +22,7 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 | 14 | Juniper MCP / اتصال جونیپر | `connectors/juniper` | 3 | Junos contract/diff/commit-state tests / قرارداد و وضعیت تنظیمات | P |
 | 15 | FortiGate MCP / اتصال فورتی‌گیت | `connectors/fortigate` | 4 | Scoped VPN/routing/policy evidence / شواهد محدود شبکه و سیاست | P |
 | 16 | Sophos MCP / اتصال سوفوس | `connectors/sophos` | 4 | Verified API coverage and explicit limits / پوشش و محدودیت روشن API | P |
-| 17 | Zabbix MCP / اتصال زبیکس | `connectors/zabbix` | 1–2 | Phase 1 status reads are live; bounded Phase 2 history/events are source-tested and await deployment / خواندن وضعیت مرحلهٔ یک زنده است؛ تاریخچه و رویداد محدود مرحلهٔ دو در کد آزموده و منتظر استقرار است | I |
+| 17 | Zabbix MCP / اتصال زبیکس | `connectors/zabbix` | 1–2 | Phase 1 status reads and bounded Phase 2 history/events are live on the controlled server path; durable model/browser acceptance remains / خواندن وضعیت مرحلهٔ یک و تاریخچه و رویداد محدود مرحلهٔ دو در مسیر کنترل‌شدهٔ سرور زنده‌اند؛ پذیرش ماندگار مدل و مرورگر باقی است | I |
 | 18 | Grafana MCP / اتصال گرافانا | `connectors/grafana` | 3 | Authorized datasource queries / پرس‌وجوی منبع مجاز | P |
 | 19 | SQL Server MCP / اتصال SQL Server | `connectors/sqlserver` | 5 | Read-only identity, DMV/limits tests / هویت فقط‌خواندنی و محدودیت | P |
 | 20 | MySQL MCP / اتصال MySQL | `connectors/mysql` | 5 | Engine/version and bounded SQL tests / موتور و نسخه و SQL محدود | P |

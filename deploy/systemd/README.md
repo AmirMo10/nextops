@@ -22,10 +22,11 @@ Connector-side units:
 - `nextops-connector.service` runs as the non-login `nextops-connector` identity on loopback. It
   reads the Zabbix token and internal service secret through `LoadCredential`, validates Zabbix TLS
   against the deployment CA, bypasses inherited proxies and exposes only named read-only
-  operations. The Phase 1 deployment exposes the current summary. The additive Phase 2A source
-  profile also exposes bounded incident context for the configured host, with a deployment-owned
-  15–1,440-minute lookback (`NEXTOPS_INCIDENT_LOOKBACK_MINUTES`, default 60); this extension is not
-  live-qualified merely because its unit profile exists here.
+  operations. The Phase 1 deployment exposes the current summary. The additive Phase 2A deployment
+  also exposes bounded incident context for the configured host, with a deployment-owned
+  15–1,440-minute lookback (`NEXTOPS_INCIDENT_LOOKBACK_MINUTES`, default 60). The 2026-09-23
+  controlled server-path check qualified live retrieval, rollback and guarded WAN isolation; it did
+  not run the authenticated browser, durable model/audit or VM-reboot gates.
 
 The 2026-09-22 controlled deployment verified all three application-side services and the connector
 service active, with the app, AI and connector listeners confined to loopback. The external browser

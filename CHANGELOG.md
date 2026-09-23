@@ -4,6 +4,16 @@
 
 ### English
 
+Deployed Phase 2A under change `phase2a-incident-context-20260923-01` as immutable app and connector
+release `nextops-0.1.0-1ab6586`. The Zabbix reader now permits exactly `host.get`, `item.get`,
+`problem.get`, `history.get` and `event.get`; unrelated methods and all mutations remain denied. A
+live Zabbix 7.0.30 request returned eight current metrics and 32 bounded history points with explicit
+truncation reasons. Connector/application authentication boundaries, the protected tunnel,
+release/role rollback and forward recovery, and guarded IPv4/IPv6 WAN isolation passed. The
+temporary firewall table and rollback timers were removed and normal outbound state was restored.
+Authenticated browser use, durable model/audit linkage, VM reboot and direct Linux diagnostics were
+not run and are not claimed.
+
 Started Phase 2 with a specification-bounded Zabbix incident-context increment. The connector now
 builds a typed current-summary, recent numeric-history and trigger-event response for its single
 configured host, with a 15–1,440-minute deployment window, four-metric/eight-point/25-event public
@@ -11,11 +21,11 @@ ceilings, source timestamps and explicit partial reasons. Authenticated connecto
 routes are additive; no arbitrary method, host selector, write operation, credential exposure,
 direct Linux access or database migration was introduced.
 
-Focused connector/API tests, Ruff and strict mypy pass. English and Persian state, API,
-configuration, integration, testing and roadmap documents distinguish this source-tested increment
-from live acceptance. Zabbix role expansion, immutable deployment, durable model/browser linkage,
-WAN/reboot/rollback qualification and direct Linux diagnostics remain not run. The independent
-Phase 1 recovery destination and WAL/PITR blocker is unchanged.
+Focused connector/API tests, Ruff and strict mypy passed at the source milestone. English and
+Persian state, API, configuration, integration, testing and roadmap documents distinguished source
+evidence from live acceptance. The later controlled deployment results are recorded above; durable
+model/browser linkage, VM reboot and direct Linux diagnostics remain not run. The independent Phase
+1 recovery destination and WAL/PITR blocker is unchanged.
 
 Completed the executable controlled Stage 1 qualification under change
 `stage1-completion-20260922-01`: a fresh WAN-denied Edge workflow, application and runtime/model
@@ -52,6 +62,16 @@ Windows session because no local server or working container runtime was availab
 
 ### فارسی
 
+گام 2A با شناسهٔ تغییر `phase2a-incident-context-20260923-01` و انتشار تغییرناپذیر
+`nextops-0.1.0-1ab6586` روی برنامه و اتصال‌دهنده مستقر شد. خوانشگر Zabbix اکنون دقیقاً پنج روش
+`host.get`، `item.get`، `problem.get`، `history.get` و `event.get` را مجاز می‌داند؛ روش‌های نامرتبط
+و همهٔ عملیات تغییردهنده همچنان رد می‌شوند. یک درخواست زنده از Zabbix 7.0.30، هشت سنجهٔ جاری و
+۳۲ نقطهٔ تاریخی محدود را با دلیل صریحِ محدودشدن برگرداند. مرزهای احرازهویت برنامه و اتصال‌دهنده،
+تونل محافظت‌شده، بازگشت و بازگردانی انتشار و نقش، و قطع محافظت‌شدهٔ WAN روی IPv4 و IPv6 موفق
+بودند. جدول موقت دیوارهٔ آتش و زمان‌سنج‌های بازگشت حذف و وضعیت عادی دسترسی خروجی بازیابی شد.
+استفادهٔ مرورگر احرازهویت‌شده، پیوند ماندگار مدل و ممیزی، راه‌اندازی مجدد VM و عیب‌یابی مستقیم
+Linux اجرا نشده‌اند و ادعای پذیرش آن‌ها وجود ندارد.
+
 مرحلهٔ دو با گام محدود «بافت رخداد» Zabbix آغاز شد. اتصال‌دهنده برای تنها میزبان
 پیکربندی‌شده، خلاصهٔ جاری، تاریخچهٔ عددی اخیر و رویدادهای trigger را در قرارداد دارای نوع
 برمی‌گرداند. بازهٔ استقرار میان ۱۵ تا ۱۴۴۰ دقیقه است و خروجی عمومی به چهار سنجه، هشت نقطه برای
@@ -59,10 +79,10 @@ Windows session because no local server or working container runtime was availab
 احرازهویت‌شدهٔ اتصال‌دهنده و برنامه افزوده شده‌اند، بی‌آنکه روش یا میزبان دلخواه، عملیات نوشتن،
 افشای اطلاعات ورود، دسترسی مستقیم Linux یا migration پایگاه ایجاد شود.
 
-آزمون‌های متمرکز اتصال و API، Ruff و mypy سخت‌گیرانه موفق‌اند. مستندات متناظر انگلیسی و فارسی،
-این گام آزموده‌شده در کد را از پذیرش زنده جدا می‌کنند. گسترش نقش Zabbix، استقرار تغییرناپذیر،
-پیوند ماندگار با مدل و مرورگر، آزمون WAN و راه‌اندازی مجدد و بازگشت، و عیب‌یابی مستقیم Linux هنوز
-اجرا نشده‌اند. مانع مقصد مستقل بازیابی و WAL/PITR مرحلهٔ یک نیز بدون تغییر باز است.
+آزمون‌های متمرکز اتصال و API، Ruff و mypy سخت‌گیرانه در نقطهٔ تکمیل کد موفق بودند. مستندات متناظر
+انگلیسی و فارسی، شاهد کد را از پذیرش زنده جدا کردند. نتیجهٔ استقرار کنترل‌شدهٔ بعدی در بندهای بالا
+ثبت شده است؛ پیوند ماندگار با مدل و مرورگر، راه‌اندازی مجدد VM و عیب‌یابی مستقیم Linux هنوز اجرا
+نشده‌اند. مانع مقصد مستقل بازیابی و WAL/PITR مرحلهٔ یک نیز بدون تغییر باز است.
 
 همهٔ دروازه‌های اجراییِ صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ ۱ با شناسهٔ
 `stage1-completion-20260922-01` تکمیل شدند: مرورگر تازه با WAN مسدود، بازگشت برنامه و محیط

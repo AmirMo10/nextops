@@ -1,20 +1,20 @@
 ---
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
-release_identifier: nextops-controlled-2026-09-22
+release_identifier: nextops-controlled-2026-09-23
 observed_at: '2026-09-23'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: ae99bbeec26e99c3026d74e15c332783b05aa221
+  inspected_baseline_commit: 1ab6586cd6cb1d67b4aa0c7cf7baf8cbe7959dc9
 components:
   application:
-    release: nextops-0.1.0-13a3369
-    source_commit: 13a3369
+    release: nextops-0.1.0-1ab6586
+    source_commit: 1ab6586cd6cb1d67b4aa0c7cf7baf8cbe7959dc9
   connector:
-    release: nextops-0.1.0-3d7d725
-    source_commit: 3d7d725
+    release: nextops-0.1.0-1ab6586
+    source_commit: 1ab6586cd6cb1d67b4aa0c7cf7baf8cbe7959dc9
   inference_api:
     release: nextops-0.1.0-62de8d6
     source_commit: 62de8d61fb4a841f016732815f75d95ca6c403a9
@@ -117,3 +117,23 @@ acceptance_gates:
     status: not_run
     evidence:
       - docs/PROJECT_STATE.md
+  - id: phase2a_live_connector
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+  - id: phase2a_guarded_wan_isolation
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+  - id: phase2a_authenticated_browser
+    status: not_run
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+  - id: phase2a_vm_reboot
+    status: not_run
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md

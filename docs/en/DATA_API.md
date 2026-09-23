@@ -2,8 +2,8 @@
 
 [فارسی](../fa/DATA_API.md) · [Index](INDEX.md)
 
-**Status: Stage 1A durable foundation plus the deployed Stage 1D live-investigation linkage and a
-source-tested, not-yet-deployed Phase 2A incident-context read.**
+**Status: Stage 1A durable foundation, the deployed Stage 1D live-investigation linkage and a
+deployed, server-path-qualified Phase 2A incident-context read.**
 Source: master specification sections 11, 16–17 and 20. The implemented subset is deliberately
 local, single-organization and read-only. General model-only answers remain separate; live Zabbix
 investigations now use the existing durable run and append-only audit model.
@@ -31,7 +31,7 @@ The implemented HTTP surface is:
 | `GET /api/v1/assistant/ready` | bearer | Returns bounded local inference readiness without exposing its service credential |
 | `POST /api/v1/assistant/generate` | bearer | Returns a model-only general answer with no monitoring evidence |
 | `GET /api/v1/monitoring/summary` | bearer plus server-derived `zabbix.read` scope | Retrieves the current bounded read-only Zabbix summary |
-| `GET /api/v1/monitoring/incident-context` | bearer plus server-derived `zabbix.read` scope | Retrieves the configured host's bounded current summary, recent numeric history and trigger events; source-tested, not yet deployed |
+| `GET /api/v1/monitoring/incident-context` | bearer plus server-derived `zabbix.read` scope | Retrieves the configured host's bounded current summary, recent numeric history and trigger events; deployed, with authenticated browser acceptance still not run |
 | `POST /api/v1/investigate` | bearer | Creates a durable scoped run, retrieves bounded evidence, generates locally, then atomically stores the result/evidence hash and completion audit |
 | `POST /api/v1/runs` | bearer plus `Idempotency-Key` | Authorizes and persists one read-only fixture run, leases it, and returns its explicit fixture result |
 | `GET /api/v1/runs/{run_id}` | bearer | Reads only within the actor's server-derived organization/environment scope |
@@ -61,9 +61,10 @@ per-measurement flag because a freshly fetched summary can contain old source va
 
 `MonitoringIncidentContext` is the additive Phase 2A transport contract. It fixes the target to the
 connector's configured host, bounds the lookback and list sizes, preserves source timestamps, and
-uses explicit partial reasons. This first increment intentionally does not create a new durable run,
-send the context to the model or expose it in the browser workflow; those gates require controlled
-deployment and acceptance evidence.
+uses explicit partial reasons. The route is live on the app and connector and passed the protected
+tunnel and guarded WAN-denied server path. This first increment intentionally does not create a new
+durable run, send the context to the model or expose it in the browser workflow; those acceptance
+gates remain separate.
 
 ## Persistence model
 

@@ -12,15 +12,27 @@ logical isolated restores of both PostgreSQL 16 databases. Independent off-datas
 WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
 21–23.
 
-## Phase 2A repository evidence
+## Phase 2A controlled deployment evidence
 
 The bounded incident-context contract is implemented and tested at connector and application API
 boundaries. Deterministic tests verify the exact configured host, 15–1440-minute configuration
 validation, fixed `history.get`/`event.get` parameters, four-metric/eight-point/25-event public
 limits, timestamp provenance, partial-result markers, bearer authentication and safe dependency
-errors. These are source/fixture results only. The Zabbix reader-role expansion, live deployment,
-durable model workflow, browser path, WAN-disconnected operation, reboot and rollback have not yet
-run for Phase 2A.
+errors. Under change `phase2a-incident-context-20260923-01`, immutable app and connector release
+`nextops-0.1.0-1ab6586` was deployed and its checksums verified. The reader role was expanded by
+exactly `history.get` and `event.get`; unrelated methods remain denied. A live Zabbix 7.0.30 request
+returned eight current metrics and 32 bounded history points, no events in the observed window, and
+the expected truncation reasons. Connector bearer denial, application-session denial, the protected
+app-to-connector tunnel, application and connector release rollback/forward, and reader-role
+rollback/forward passed.
+
+A separately named temporary nftables table, armed with a five-minute automatic rollback timer,
+blocked direct IPv4 and IPv6 WAN traffic on the app, connector and Zabbix guests while the live
+incident-context request continued through the approved private path. The table and timer were then
+removed; direct IPv4 TCP reachability returned, all four guests were `running`, failed-unit counts
+were zero and no reboot was required. This proves the Phase 2A server path under guarded WAN denial,
+not a fresh authenticated browser flow or cold start. Authenticated browser/session use, durable
+model/audit linkage and Phase 2A VM reboot remain `not_run`.
 
 ## Stage 1 controlled completion qualification
 

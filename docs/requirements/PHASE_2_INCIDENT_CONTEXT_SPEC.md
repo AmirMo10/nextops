@@ -1,8 +1,9 @@
 # Phase 2 incident-context specification
 
-**Status:** Increment 2A is implemented and tested in repository source; live connector deployment,
-Zabbix role expansion, durable model synthesis, direct Linux diagnostics and offline acceptance are
-not yet run.
+**Status:** Increment 2A is implemented and deployed as immutable app/connector release
+`nextops-0.1.0-1ab6586`. Exact Zabbix role expansion, live bounded retrieval, release/role rollback
+and guarded WAN isolation pass. Authenticated browser/session acceptance, durable model/audit use,
+VM reboot and direct Linux diagnostics are not yet run.
 
 ## Problem and outcome
 
@@ -72,7 +73,8 @@ markers mitigate these threats. The browser and model still receive no Zabbix cr
   `history.get` and `event.get`, with fixed host, source/object, fields, windows and limits.
 - More than eight points, 25 events or four numeric items is truncated and visibly marked partial.
 - Malformed or over-limit upstream responses fail with the existing safe dependency error boundary.
-- A live Zabbix 7.0.30 call and offline restart remain `not_run` until their dated evidence exists.
+- A live Zabbix 7.0.30 call and guarded WAN-denied server-path check passed under change
+  `phase2a-incident-context-20260923-01`. Authenticated browser use and VM reboot remain `not_run`.
 
 ## Rollback, recovery and documentation
 

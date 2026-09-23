@@ -6,11 +6,12 @@
 
 **First delivery remains Phase 1: a new question → authorized read-only Zabbix data → local CPU-generated answer → source/time references and audit, with Internet blocked.** Linux enrichment follows in Phase 2. The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
-**Phase 2 has started in source, not in the live deployment.** Increment 2A adds a bounded,
-authenticated Zabbix incident-context read for the configured host: current summary, recent numeric
-history and trigger events with fixed limits and explicit partial markers. Repository tests pass;
-reader-role expansion, deployment, durable/model/browser integration and offline acceptance have not
-run. Direct read-only Linux diagnostics are the next bounded increment after this contract is live-qualified.
+**Phase 2A is deployed for controlled server-path testing.** The bounded authenticated Zabbix
+incident-context read returns the configured host's current summary, recent numeric history and
+trigger events with fixed limits and explicit partial markers. Exact reader-role expansion, live
+provenance, release/role rollback and guarded WAN isolation pass. Durable model/audit integration,
+authenticated browser acceptance and VM reboot remain; direct read-only Linux diagnostics are the
+next separately scoped increment after those gates.
 
 ## Create these VMs first
 
