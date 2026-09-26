@@ -60,7 +60,23 @@ def test_automated_case_review_reports_pass_and_safe_failure_details() -> None:
 
     assert passed["passed"] is True
     assert failed["passed"] is False
-    assert failed["checks"][1]["matched_count"] == 1
+    assert failed["checks"][2]["matched_count"] == 1
+
+
+def test_automated_case_review_rejects_prompt_echo() -> None:
+    module = _evaluation_module()
+    prompt = "No live evidence is supplied. Is the service healthy now?"
+    case = {
+        "locale": "en",
+        "prompt": prompt,
+        "must_include_any": [["unknown"]],
+        "must_not_include": ["healthy now"],
+    }
+
+    result = module.evaluate_case(case, {"body": {"answer": prompt}})
+
+    assert result["passed"] is False
+    assert result["checks"][0] == {"id": "prompt_echo_absent", "passed": False}
 
 
 def test_evaluation_report_is_written_to_an_absolute_private_file(tmp_path: Path) -> None:

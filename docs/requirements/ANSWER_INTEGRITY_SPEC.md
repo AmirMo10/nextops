@@ -26,6 +26,8 @@ an operation, and must preserve stale/partial qualifiers even when generated pro
 - The stored completion audit records the integrity outcome and limitations.
 - Qualification remains local, CPU-only and offline-capable. No evaluator may silently call a
   remote model or telemetry service.
+- Returning the user's prompt or instructions as the answer is a failed relevance case, even when
+  the echoed text happens to contain required safety words.
 
 ## Non-goals
 
@@ -68,6 +70,8 @@ warning.
 - Audit, evidence hash/reference and read-only authorization remain intact.
 - The eight-case English/Persian loopback corpus passes deterministic checks; a human reviewer still
   inspects meaning and language quality.
+- Prompt echo fails automatically and semantic review must reject an answer that merely restates the
+  question.
 
 ## Tests and evidence
 

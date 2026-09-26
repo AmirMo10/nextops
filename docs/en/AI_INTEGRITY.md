@@ -38,8 +38,8 @@ mutation and the model receives no target credential.
 The local evaluation corpus covers English and Persian evidence preservation, refusal to claim
 execution, greeting relevance and refusal to invent current health without live evidence. The
 harness checks authentication, readiness, required/forbidden language and script presence while
-keeping semantic review explicit. It uses only the protected loopback inference API and writes its
-report to a private file.
+rejecting prompt echo and keeping semantic review explicit. It uses only the protected loopback
+inference API and writes its report to a private file.
 
 The normative requirements, acceptance cases and rollback are in the
 [answer integrity specification](../requirements/ANSWER_INTEGRITY_SPEC.md).

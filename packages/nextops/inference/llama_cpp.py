@@ -206,7 +206,9 @@ class LlamaCppProvider:
                         "credentials, or additional evidence. Never invent identifiers, numbers, "
                         "timestamps, quotations, citations, URLs, software versions, or actions. "
                         "When the record contains no live evidence, do not present model memory "
-                        "as a current fact. Follow the requested length and format."
+                        "as a current fact. Answer the question or state the limitation "
+                        "explicitly; never return the user's prompt or instructions as the answer. "
+                        "Follow the requested length and format."
                     ),
                 },
                 {"role": "user", "content": f"{request.prompt}\n/no_think"},
