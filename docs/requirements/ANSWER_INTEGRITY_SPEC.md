@@ -1,7 +1,9 @@
 # Answer integrity specification
 
-Status: accepted for controlled user testing on the releases recorded in the current manifest;
-qualification remains revision-specific and is not a guarantee that model-only text is always true.
+Status: the focused app increment is deployed for controlled user testing on release
+`nextops-0.1.0-01755d1`; bounded live API/browser checks passed, while the full held-out semantic
+review is partial. Qualification remains revision-specific and is not a guarantee that model-only
+text is always true.
 
 ## Problem
 

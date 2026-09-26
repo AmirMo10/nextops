@@ -78,16 +78,18 @@ The Phase 2 application route persists a target-scoped run before dependency cal
 bounded composite evidence to the local model, and stores a canonical evidence hash plus the typed
 answer and append-only audit linkage in one completion transaction. Safe dependency failures are
 also stored and audited. The panel exposes logical targets and evidence identifiers, not connector
-credentials. Fresh live-browser acceptance on this release remains a separate `not_run` gate.
+credentials. The original Phase 2 browser gate and the current focused-app browser checks have
+passed on their named releases; neither proves production acceptance.
 
-An unpromoted source candidate adds `answer_focus` (`overview`, `filesystems`, or `file_listing`)
+Controlled application release `nextops-0.1.0-01755d1` adds `answer_focus` (`overview`,
+`filesystems`, or `file_listing`)
 to the incident response. It is derived from question terms: mixed filesystem/service requests
 stay in `overview`, while an explicit file-listing request fails safely even if it also mentions
 another metric. The exact bounded evidence, hash and audit do not change. Focused prompts receive
 only relevant metadata and approved mount observations; displayed focused answers carry
 `deterministic_focus` and are built from typed evidence, or state that file listing is unsupported.
-The existing read scopes and connector capabilities are unchanged. This contract addition requires
-release-specific browser/API qualification before deployment.
+The existing read scopes and connector capabilities are unchanged. Release-specific browser/API
+checks passed; full held-out semantic review and exact-release rollback remain open.
 
 ## Persistence model
 

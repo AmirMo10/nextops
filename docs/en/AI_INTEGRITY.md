@@ -4,20 +4,22 @@
 guarantee that a generative model will never be wrong. It instead prevents the most dangerous
 category error: presenting unsupported model text as live operational fact.
 
-## Source-only answer-completion correction — 2026-09-26
+## Answer-completion correction and controlled promotion — 2026-09-26
 
 A fresh live browser review exposed a 128-token incident answer that appeared unfinished while the
 interface displayed the `evidence_bounded` notice. A controlled repetition of the same question
 returned `finish_reason=length` and `deterministic_fallback`; this confirms output truncation can
 occur while the previous label varied with the model's wording. The existing source checker
-required source and partial-evidence words but did not inspect the model's `finish_reason`. A local,
-**not deployed** candidate now rejects `length`-terminated completions and long question echoes on
-live routes,
+required source and partial-evidence words but did not inspect the model's `finish_reason`.
+Application release `nextops-0.1.0-01755d1` now rejects `length`-terminated completions and long
+question echoes on live routes,
 replaces them with an evidence-only fallback that states it may not answer the full question, and
 asks the model to answer the actual question first in short plain text. The browser notice now
 states that lexical/source checks do not certify factual correctness or relevance. Focused
-API/browser-fixture tests pass; exact-prompt bilingual semantic review and live release
-qualification remain **not run**. The current deployed release is unchanged.
+API/browser-fixture tests and bounded live release checks pass: fresh English/Persian greetings,
+current Zabbix evidence, file questions, provenance, audit and a fresh browser. The owner's exact
+prompt/response pair and full held-out bilingual semantic corpus remain **not run**; automated
+checks do not prove every answer relevant or true.
 
 Fine-tuning is not a substitute for current Zabbix evidence or a release gate based on a single
 example. A versioned set of real, redacted question/answer failures and held-out Persian/English
@@ -41,13 +43,14 @@ The UI distinguishes these outcomes:
 | `deterministic_fallback` | Generated wording failed a mandatory check and was replaced with a safe deterministic response |
 | `deterministic_focus` | A file/filesystem question receives a source-built answer instead of unverified generated detail |
 
-The source-only focused-answer candidate distinguishes allowlisted filesystem capacity from actual
+The deployed focused-answer increment distinguishes allowlisted filesystem capacity from actual
 system-file names and contents. Its prompt excludes unrelated incident fields, and application code
 builds the displayed answer from typed Linux observations or states that file listing is unavailable.
 It preserves partial-evidence disclosure, authorization, complete evidence, provenance and audit.
 The machine-readable `file_listing_unavailable` limitation prevents a generic live-evidence prompt
-from implying that another mode can show file contents. This does not train the model or qualify arbitrary generated answers. Live acceptance of this exact
-candidate remains outstanding.
+from implying that another mode can show file contents. This does not train the model or qualify
+arbitrary generated answers. Live acceptance of this release is bounded to the named checks; full
+semantic review remains outstanding.
 
 ## Deterministic boundary
 

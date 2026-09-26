@@ -12,6 +12,49 @@ logical isolated restores of both PostgreSQL 16 databases. Independent off-datas
 WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
 21–23.
 
+## Focused application release — 2026-09-26
+
+PR #10 merged source tree `01755d1` into main after hosted run `36239227073` passed all five
+jobs: quality, PostgreSQL 16, PostgreSQL 17, real-browser fixture and secret scan. On the Windows
+checkout, 182 tests passed and ten were skipped (nine real-PostgreSQL cases without an isolated
+test URL and one POSIX-only collector); Ruff format/lint, strict mypy, paired-document/local-link
+validation and release-status validation passed. The two browser-fixture cases also passed. These
+local skips are not relabelled as passes; the hosted PostgreSQL jobs exercised the database cases.
+
+Under private change `user-testing-app-01755d1-20260926`, the exact
+`nextops-0.1.0-01755d1` wheel matched SHA-256
+`cb04cd3c0dc37370d956b65851de5bd7135b14cc0ea2881039bdd703b2839bfd`. A fresh virtualenv
+was installed offline at its final immutable path from the unchanged hashed dependency wheelhouse.
+The `uvicorn` launcher points inside the new release, not at the prior copied virtualenv. The old
+app release remains present; AI API and connector remained `cdde129`. The app switched under a
+15-minute automatic rollback timer. Release-file integrity, app/database/tunnel readiness,
+`running` system state, zero failed units and loopback health `200` passed; the timer was disarmed
+only after live qualification.
+
+A fresh authenticated API session passed English `Hi` (6.19 seconds) and Persian `سلام`
+(12.53 seconds) without unrelated Zabbix status. Fresh Zabbix monitoring returned `200` with
+source time, evidence hash/reference and audit ID (41.88 seconds). The general system-file
+question returned a scope limitation, not fabricated file names. English file-listing and
+filesystem-capacity investigations and Persian filesystem capacity returned the expected focused
+answer, source times, hash and durable audit IDs (14.86, 18.36 and 22.48 seconds). An
+unauthenticated readiness request was denied; the test session logged out with server `204`.
+A fresh Edge context then passed login, dependency readiness, greeting, focused file refusal,
+filesystem capacity, Persian RTL/mobile width, logout/new-tab isolation and zero page requests to
+external hosts under a deny proxy with normal TLS verification.
+
+An initial login probe used an outdated private test password and failed; the current protected
+credential then passed. Two initial browser harness runs incorrectly used `innerText` for an audit
+field inside a collapsed disclosure, so they read an empty value. The corrected test used hidden
+text content and passed. The two aborted sessions could not be individually revoked after their
+test processes exited and are left to the configured server expiry; the passing browser run did
+complete server-side logout. These are test limitations, not evidence that the app omitted audit.
+
+The full held-out bilingual semantic corpus, owner's exact redacted question/answer reproduction,
+exact-release rollback execution, server-side WAN-disconnection and VM reboot were **not run** on
+this app revision. Earlier rollback/offline/reboot evidence remains historical. This promotion is
+for controlled user testing, not production acceptance; independent recovery and the other
+production gates remain open.
+
 ## Production-hardening evidence — 2026-09-26
 
 The OS-origin audit found Zabbix Agent 2 `7.0.30` installed from offline packages on the app, AI
