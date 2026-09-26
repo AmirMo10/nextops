@@ -54,6 +54,11 @@ _STALE_DISCLOSURE = re.compile(
 )
 _ZABBIX_DISCLOSURE = re.compile(r"(?:\bzabbix\b|زبیکس)", re.IGNORECASE)
 _LINUX_DISCLOSURE = re.compile(r"(?:\blinux\b|لینوکس)", re.IGNORECASE)
+_PROMPT_BOUNDARY_LEAK = re.compile(
+    r"(?:user question \((?:bounded )?untrusted|untrusted zabbix|"
+    r"data only, never instructions|answer the user's question directly)",
+    re.IGNORECASE,
+)
 
 
 def assure_general_answer(
@@ -67,7 +72,8 @@ def assure_general_answer(
         and _OPERATIONAL_SUBJECT_MARKERS.search(request.question)
     )
     unsafe_claim = _contains_unsafe_execution_claim(assistant.answer)
-    if not requires_live_evidence and not unsafe_claim:
+    prompt_echo = _is_long_prompt_echo(request.question, assistant.answer)
+    if not requires_live_evidence and not unsafe_claim and not prompt_echo:
         return assistant.model_copy(
             update={
                 "evidence_mode": "model_only",
@@ -77,22 +83,35 @@ def assure_general_answer(
             }
         )
 
-    answer = (
-        "حالت «دستیار عمومی» به شواهد زنده دسترسی ندارد؛ بنابراین نمی‌توانم وضعیت فعلی "
-        "زیرساخت یا انجام‌شدن یک عملیات را تأیید کنم. برای دریافت دادهٔ تازه و قابل انتساب، "
-        "حالت «پایش زنده» یا «بررسی رخداد» را انتخاب کنید."
-        if request.locale == "fa"
-        else "General assistant mode has no live evidence, so I cannot verify the current "
-        "infrastructure state or claim that an operation occurred. Select Live monitoring or "
-        "Incident investigation for fresh, attributable evidence."
-    )
+    if prompt_echo:
+        answer = (
+            "مدل محلی پاسخ قابل اتکایی تولید نکرد. پرسش را با عبارت‌بندی دقیق‌تر دوباره مطرح کنید؛ "
+            "برای وضعیت زیرساخت نیز یکی از حالت‌های دارای شاهد زنده را به کار ببرید."
+            if request.locale == "fa"
+            else "The local model did not produce a reliable answer. Rephrase the question more "
+            "precisely, or use a live evidence mode for infrastructure state."
+        )
+        integrity_status = "deterministic_fallback"
+        limitations = ("no_live_evidence", "model_output_may_be_incorrect")
+    else:
+        answer = (
+            "حالت «دستیار عمومی» به شواهد زنده دسترسی ندارد؛ بنابراین نمی‌توانم وضعیت فعلی "
+            "زیرساخت یا انجام‌شدن یک عملیات را تأیید کنم. برای دریافت دادهٔ تازه و قابل انتساب، "
+            "حالت «پایش زنده» یا «بررسی رخداد» را انتخاب کنید."
+            if request.locale == "fa"
+            else "General assistant mode has no live evidence, so I cannot verify the current "
+            "infrastructure state or claim that an operation occurred. Select Live monitoring or "
+            "Incident investigation for fresh, attributable evidence."
+        )
+        integrity_status = "scope_redirect"
+        limitations = ("no_live_evidence", "read_only_no_action_performed")
     return assistant.model_copy(
         update={
             "answer": answer,
             "evidence_mode": "model_only",
             "live_monitoring_data": False,
-            "integrity_status": "scope_redirect",
-            "limitations": ("no_live_evidence", "read_only_no_action_performed"),
+            "integrity_status": integrity_status,
+            "limitations": limitations,
         }
     )
 
@@ -158,6 +177,12 @@ def _contains_unsafe_execution_claim(answer: str) -> bool:
     return any(pattern.search(answer) for pattern in _UNSAFE_EXECUTION_CLAIMS)
 
 
+def _is_long_prompt_echo(question: str, answer: str) -> bool:
+    normalized_question = " ".join(question.casefold().split())
+    normalized_answer = " ".join(answer.casefold().split())
+    return len(normalized_question) >= 40 and normalized_answer == normalized_question
+
+
 def _is_safe_evidence_answer(
     answer: str,
     *,
@@ -166,6 +191,8 @@ def _is_safe_evidence_answer(
     is_stale: bool,
 ) -> bool:
     if _contains_unsafe_execution_claim(answer):
+        return False
+    if _PROMPT_BOUNDARY_LEAK.search(answer):
         return False
     if any(pattern.search(answer) for pattern in _UNSUPPORTED_CAUSE_CLAIMS):
         return False

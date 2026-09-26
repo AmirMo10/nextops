@@ -603,6 +603,23 @@ def test_general_mode_replaces_a_false_execution_claim() -> None:
     assert "successfully restarted" not in response.json()["answer"]
 
 
+def test_general_mode_replaces_a_long_prompt_echo() -> None:
+    question = "Explain carefully why a bounded read-only check should precede any system change."
+    inference = FakeInferenceGateway(question)
+    client = TestClient(create_app(FakeService(), inference))
+
+    response = client.post(
+        "/api/v1/assistant/generate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["integrity_status"] == "deterministic_fallback"
+    assert response.json()["answer"] != question
+    assert "did not produce a reliable answer" in response.json()["answer"]
+
+
 def test_logout_requires_bearer_and_revokes_the_presented_session() -> None:
     service = FakeService()
     client = TestClient(create_app(service))

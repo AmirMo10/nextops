@@ -19,7 +19,7 @@ The UI distinguishes these outcomes:
 | `model_unverified` | Model-only text; no current evidence and no factual guarantee |
 | `scope_redirect` | The question requires live evidence and was not answered from memory |
 | `evidence_bounded` | Mandatory source/freshness/partial/read-only checks passed; exact evidence still governs |
-| `deterministic_fallback` | Generated wording failed a mandatory check and was replaced with an exact-evidence summary |
+| `deterministic_fallback` | Generated wording failed a mandatory check and was replaced with a safe deterministic response |
 
 ## Deterministic boundary
 
@@ -28,6 +28,9 @@ unsupported root-cause assertions, missing evidence-source labels and omitted st
 qualifiers. A failure never retries with a less restrictive prompt. It returns a localized template
 derived from the validated evidence contract. Source-controlled names are excluded from that
 fallback so a hostile metric or problem name cannot become an instruction.
+
+A long answer that merely repeats the general question is also replaced with a localized retry
+notice. This does not reject short natural greeting replies.
 
 These checks are deliberately narrow. They do not certify every sentence as true, judge arbitrary
 general knowledge or replace review of exact evidence. NextOps still performs no infrastructure

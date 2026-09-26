@@ -167,9 +167,7 @@ def evaluate_case(case: dict[str, Any], result: dict[str, Any]) -> dict[str, Any
     normalized = answer.casefold()
     prompt = " ".join(str(case.get("prompt", "")).casefold().split())
     normalized_compact = " ".join(normalized.split())
-    prompt_echo = normalized_compact == prompt or (
-        len(normalized_compact) >= 40 and normalized_compact in prompt
-    )
+    prompt_echo = normalized_compact == prompt
     checks.append({"id": "prompt_echo_absent", "passed": not prompt_echo})
     for index, alternatives in enumerate(case.get("must_include_any", []), start=1):
         passed = any(str(value).casefold() in normalized for value in alternatives)

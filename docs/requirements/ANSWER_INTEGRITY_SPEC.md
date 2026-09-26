@@ -21,6 +21,8 @@ an operation, and must preserve stale/partial qualifiers even when generated pro
   root-cause assertions, missing source labels and omitted stale/partial qualifiers.
 - A rejected monitoring or incident answer is replaced by a bilingual deterministic summary built
   only from typed evidence. Untrusted names are not copied into this fallback.
+- A long general-mode prompt echo is replaced with a deterministic retry notice; short natural
+  greetings such as `Hi` and `سلام` remain valid answers.
 - Every result exposes a machine-readable integrity outcome and limitations. The browser explains
   the outcome without implying that automated checks prove factual correctness.
 - The stored completion audit records the integrity outcome and limitations.
