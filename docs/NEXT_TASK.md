@@ -1,5 +1,32 @@
 # Next task / کار بعدی
 
+Current owner-directed scope, 2026-09-26 — Continue non-recovery delivery. The owner reports daily
+ESXi snapshots of all four VMs and explicitly defers independent backup, WAL/PITR, isolated restore
+and disaster-recovery implementation from this local delivery. This is an unverified safeguard,
+not a passed restore or protection from loss of the serving hypervisor/storage. Preserve the
+blocked recovery profile and historical requirements; do not list its missing destination/lab as
+the first active action. Full production acceptance remains `not_run`, and the validator must
+continue to reject a full-production claim while recovery is unqualified. No additional live
+server mutation, reboot or network-policy change is authorized by this scope decision.
+
+First unfinished in-scope checkpoint: qualify `nextops-0.1.0-01755d1` against a held-out English,
+Persian and mixed-topic semantic corpus using actual user questions, selected mode/target and
+visible answers where available; verify each claim against time/scope/source-qualified evidence
+and record failures without calling deterministic summaries model training. Then, with an
+approved maintenance window and verified rollback access, run the exact-release rollback,
+server-side WAN-disconnection and VM cold-start gates. Independently close the project-license,
+offline signing trust, certificate replacement and local operator-notification, host network
+allowlists and named human approval gates. Do not mark any unrun gate passed.
+
+دامنهٔ جاری به دستور مالک، ۴ مهر ۱۴۰۵ — مالک از snapshot روزانهٔ هر چهار VM در ESXi خبر داده و
+پشتیبان مستقل، WAL/PITR و بازیابی ایزوله را از تحویل محلی فعلی به تعویق انداخته است. این گزارش
+جای آزمون موفق بازیابی یا محافظت در برابر خرابی میزبان و ذخیره‌سازی نیست. پروفایل بازیابی مسدود
+می‌ماند و ادعای پذیرش کامل تولید مجاز نیست؛ بااین‌حال مقصد بازیابی نخستین کار فعال نیست. گام
+ناتمام بعدی، بازبینی معناییِ پاسخ انگلیسی و فارسیِ انتشار `nextops-0.1.0-01755d1` با پرسش و
+پاسخ واقعیِ پالایش‌شده و شاهد منبع/زمان/دامنه است. پس از آن، آزمون بازگشت همین انتشار، قطع WAN
+سمت سرور و شروع سرد در پنجرهٔ مصوب، و دروازه‌های غیربازیابیِ مجوز، امضا، گواهی، اعلان، شبکه و
+تأیید انسانی پیگیری شوند. این تغییر دامنه به‌تنهایی اجازهٔ تغییر سرور یا reboot نیست.
+
 Source-only claim-guard follow-up, 2026-09-26 — The status validator now fails closed if someone
 marks production accepted while any current-app or release gate remains incomplete or the recovery
 profile lacks its independent-destination and restore conditions. This is a contradiction check,

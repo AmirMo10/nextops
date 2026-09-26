@@ -4,6 +4,14 @@
 
 **Status: owner action required; this document does not close any gate.** Updated: 2026-09-26.
 
+Current delivery sequence: the owner reports daily ESXi snapshots of all four servers and has
+deferred independent recovery work for this local deployment. Sections 3–4 below are retained as
+the future recovery handoff, not the next active task. The snapshot claim has not been verified as
+a successful restore or an independent backup. The recovery profile remains blocked; full
+production acceptance is still unavailable. Work first on the exact app's held-out bilingual
+answer review and then the authorized non-recovery release, security and operator gates in
+[NEXT_TASK](../NEXT_TASK.md). The owner's deferral is not approval for a server change.
+
 On 2026-09-26 the owner confirmed that none of the requested independent recovery/restore
 resources, project-license decision, local delivery channel and recipients, replacement CA
 certificate pairs, or named approvers are available. The steps below remain future handoff
@@ -22,10 +30,10 @@ an expected value is missing or different; do not substitute a guessed path or d
 
 | ID | Current state | Owner action | Engineering action after owner handoff | Exit condition |
 |---|---|---|---|---|
-| `independent_destination_not_approved` | Blocked | Provision and approve storage outside every serving VM, its datastore and its hypervisor | Qualify and configure separate pgBackRest/restic repositories | Independence evidence accepted |
-| `recovery_objectives_not_approved` | Blocked | Approve RPO, RTO, retention, restore cadence, owners and key custody | Encode the sanitized values in the recovery profile | Policy is signed and profile validates |
-| `offline_tool_bundles_not_verified` | Blocked | Approve connected build/staging and license policy | Acquire, hash, license-review and offline-test pgBackRest 2.59.1 and restic 0.19.1 | Exact bundles install/remove offline and hashes are recorded |
-| `isolated_restore_not_run` | Blocked | Provide an isolated restore environment with no production route/credentials | Run full/differential/WAL/PITR, file, negative, offline and key-recovery drills | Every recovery gate passes with measured RPO/RTO |
+| `independent_destination_not_approved` | Blocked; owner-deferred | Provision and approve storage outside every serving VM, its datastore and its hypervisor | Qualify and configure separate pgBackRest/restic repositories | Independence evidence accepted |
+| `recovery_objectives_not_approved` | Blocked; owner-deferred | Approve RPO, RTO, retention, restore cadence, owners and key custody | Encode the sanitized values in the recovery profile | Policy is signed and profile validates |
+| `offline_tool_bundles_not_verified` | Blocked; owner-deferred | Approve connected build/staging and license policy | Acquire, hash, license-review and offline-test pgBackRest 2.59.1 and restic 0.19.1 | Exact bundles install/remove offline and hashes are recorded |
+| `isolated_restore_not_run` | Blocked; owner-deferred | Provide an isolated restore environment with no production route/credentials | Run full/differential/WAL/PITR, file, negative, offline and key-recovery drills | Every recovery gate passes with measured RPO/RTO |
 | Certificate operator delivery | Partial | Choose a LAN-local notification route and named primary/backup recipients | Configure Zabbix media, user media, trigger action and recovery messages | Test and real controlled problem/recovery reach both recipients |
 | Certificate rotation/rollback | Not run | Supply two CA-signed replacement pairs and approve a maintenance window | Stage, verify, rotate, test and roll back each frontend under a guard | Both rotation and rollback pass with ordinary TLS validation |
 | Dependency/license/SBOM/release integrity | Open | Name the legal/security approver and approve the acceptance policy | Generate/review SBOMs, license inventory, vulnerability evidence and offline verification material | No unapproved dependency/license or unresolved release-integrity finding |

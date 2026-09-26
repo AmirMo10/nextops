@@ -160,3 +160,30 @@ def test_production_acceptance_gate_cannot_be_omitted() -> None:
     assert module.production_claim_errors(status, False) == [
         "production_acceptance gate is missing"
     ]
+
+
+def test_owner_recovery_deferral_is_explicit_and_cannot_be_reported_as_passed() -> None:
+    module = _status_module()
+    status = _manifest()
+    assert module.deferred_recovery_errors(status) == []
+
+    for gate in status["acceptance_gates"]:
+        if gate["id"] == "independent_backup":
+            gate["status"] = "passed"
+        if gate["id"] == "production_acceptance":
+            gate["status"] = "passed"
+    errors = module.deferred_recovery_errors(status)
+    assert any("independent_backup" in error for error in errors)
+    assert any("full production acceptance" in error for error in errors)
+
+
+def test_schema_requires_explicit_owner_recovery_scope() -> None:
+    schema = json.loads(
+        (ROOT / "docs/status/release-status.schema.json").read_text(encoding="utf-8")
+    )
+    validator = Draft202012Validator(schema)
+    status = _manifest()
+    assert not list(validator.iter_errors(status))
+
+    status.pop("delivery_scope")
+    assert list(validator.iter_errors(status))

@@ -2,7 +2,7 @@
 
 [فارسی](../fa/ROADMAP.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
 
-**Status: the sequence is accepted and the controlled Phase 2 implementation is deployed across four guests.** Four fixed targets combine bounded Zabbix history/events with direct read-only Linux snapshots in a durable bilingual local-CPU investigation. Earlier controlled campaigns passed live API, answer integrity, restart, rollback, server/API WAN denial, authenticated browser, serial reboot and dependency-recovery checks. The current application revision still needs its held-out semantic review, exact rollback, server-side WAN and cold-start gates. This is not production acceptance. Recovery is in scope again, but its independent destination and isolated restore lab are unavailable; its gates remain unaccepted. The [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md) are authoritative.
+**Status: the sequence is accepted and the controlled Phase 2 implementation is deployed across four guests.** Four fixed targets combine bounded Zabbix history/events with direct read-only Linux snapshots in a durable bilingual local-CPU investigation. Earlier controlled campaigns passed live API, answer integrity, restart, rollback, server/API WAN denial, authenticated browser, serial reboot and dependency-recovery checks. The current application revision still needs its held-out semantic review, exact rollback, server-side WAN and cold-start gates. This is not production acceptance. The owner has deferred independent recovery for the present local delivery and reports daily ESXi snapshots; snapshot restoration and independence are unverified, and recovery gates remain unaccepted. The next active work is non-recovery qualification. The [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md) are authoritative.
 
 **Phase 1 delivered the first Zabbix answer; Phase 2 now adds bounded direct Linux evidence.** The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
@@ -49,8 +49,8 @@ Counts cover one serving environment, not physical hosts or connector families. 
 
 Phase 0, the controlled Stage 1A–1E path and the Phase 2 implementation have evidence recorded in
 [PROJECT_STATE](../PROJECT_STATE.md). Three Phase 2 acceptance exercises remain explicit there. The
-next development phase requires an approved independent destination, PostgreSQL-aware backup/WAL,
-file-artifact recovery and independent-host PITR. Later phases remain unaccepted unless an
+previously planned next recovery phase requires an approved independent destination, PostgreSQL-aware backup/WAL,
+file-artifact recovery and independent-host PITR, but is now owner-deferred. Later phases remain unaccepted unless an
 evidence-backed entry says otherwise. Contracts, scaffolding, raw JSON, cached answers or simulators
 alone never complete an acceptance gate.
 

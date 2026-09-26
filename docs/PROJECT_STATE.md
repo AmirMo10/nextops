@@ -1,5 +1,27 @@
 # Project state / وضعیت پروژه
 
+Owner-directed local-delivery scope, 2026-09-26 — The owner reports that ESXi takes daily
+snapshots of all four servers and directs NextOps to continue every non-recovery workstream
+without treating independent recovery as the first active blocker. Snapshot scheduling, retention,
+storage independence and successful restoration were not independently verified. VM snapshots
+share the serving hypervisor/storage failure domain and are not evidence of PostgreSQL-aware
+backup, WAL/PITR, independent disaster recovery or an isolated restore. The recovery profile and
+its `independent_backup`/`isolated_restore` gates remain unqualified, and the full production
+acceptance claim remains prohibited. The machine-readable `delivery_scope` records this explicit
+deferral; it does not approve a host change or sign off the remaining security and release gates.
+The active engineering checkpoint is now the exact serving app's held-out bilingual semantic
+review, followed by its exact-release rollback, server-side WAN and cold-start qualification in
+an authorized window. Licensing, offline signing, certificate rotation/operator delivery, host
+network policy and named sign-off remain separate non-recovery prerequisites.
+
+دامنهٔ فعلی به دستور مالک، ۴ مهر ۱۴۰۵ — مالک می‌گوید از هر چهار سرور هر روز در ESXi ‏snapshot گرفته
+می‌شود و خواسته است کارهای غیربازیابی بدون توقف پشت مقصد مستقل ادامه یابند. برنامهٔ snapshot،
+نگهداری آن و بازیابی موفق مستقلاً تأیید نشده‌اند. این نسخه‌ها جای پشتیبان آگاه از PostgreSQL،
+WAL/PITR یا بازیابی بیرون از دامنهٔ خرابی میزبان را نمی‌گیرند. پروفایل بازیابی و معیارهای پشتیبان
+مستقل و restore ایزوله همچنان پذیرفته نیستند؛ پذیرش کامل تولید نیز ممنوع است. گام فعال، بازبینی
+معناییِ دوزبانهٔ انتشار جاری و سپس آزمون بازگشت، قطع WAN سمت سرور و شروع سردِ همان انتشار در
+پنجرهٔ مجاز است. مجوز پروژه، امضای آفلاین، گواهی و اعلان، سیاست شبکه و تأیید نام‌دار جداگانه بازند.
+
 Source-only production-claim guard, 2026-09-26 — The release-status validator now rejects a
 `production_acceptance: passed` claim unless deployment status agrees, every current-app and
 release gate is `passed`, and the public recovery profile asserts its complete independent

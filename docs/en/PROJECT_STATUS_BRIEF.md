@@ -4,6 +4,12 @@
 
 Updated: 2026-09-26
 
+Current scope note: the owner reports daily ESXi snapshots and has deferred independent recovery
+from this local delivery. Snapshot restoration and protection against loss of the serving host or
+storage are unverified. Recovery work is no longer the first active checkpoint, but its acceptance
+gates remain unpassed and full production acceptance is not claimed. The next work is the serving
+app's held-out bilingual answer review and other non-recovery release/security gates.
+
 ## Executive position
 
 NextOps has reached a controlled user-testing checkpoint. The first complete read-only path is live
@@ -41,6 +47,9 @@ explicitly unverified; current infrastructure state requires live evidence; evid
 provenance, freshness and limitations; unsupported live claims fail closed to a bounded fallback.
 
 ## Status at a glance
+
+Recovery entries in the table retain the full-production evidence contract; they are deferred
+from the present local-delivery work queue, not passed or deleted.
 
 | Workstream | Current status | Verified result | Remaining acceptance |
 |---|---|---|---|
@@ -99,9 +108,10 @@ host identity and one forced command. The model receives normalized evidence, no
 credentials, and has no change or approval capability. Only SSH and the intended private HTTPS
 endpoint are allowed by the relevant host firewalls.
 
-## Remaining work before production acceptance
+## Remaining non-recovery work and deferred risk
 
-The owner confirmed that the following inputs do not yet exist:
+The owner confirmed that the following inputs do not yet exist. Item 1 is deferred from this local
+delivery; items 2–4 and the current-release qualification gates remain active:
 
 1. An independent recovery destination and isolated restore lab for PostgreSQL-aware backup,
    WAL/PITR, file recovery, key recovery and measured RPO/RTO acceptance.
