@@ -1,6 +1,6 @@
 ---
 $schema: ./release-status.schema.json
-schema_version: 1.0.0
+schema_version: 2.0.0
 release_identifier: nextops-focused-app-controlled-2026-09-26
 observed_at: '2026-09-26'
 deployment_status: controlled_user_testing_not_production_accepted
@@ -39,6 +39,36 @@ components:
   zabbix:
     name: Zabbix
     version: '7.0.31'
+current_application_qualification:
+  release: nextops-0.1.0-01755d1
+  source_commit: 01755d1cf3e2343dc49c418f73925d660db7d6a2
+  scope: application_revision_sensitive
+  gates:
+    - id: current_app_bounded_live_functionality
+      status: passed
+      evidence:
+        - docs/en/TESTING.md
+        - docs/fa/TESTING.md
+    - id: current_app_held_out_answer_semantics
+      status: not_run
+      evidence:
+        - docs/en/AI_INTEGRITY.md
+        - docs/NEXT_TASK.md
+    - id: current_app_exact_release_rollback
+      status: not_run
+      evidence:
+        - docs/en/TESTING.md
+        - docs/NEXT_TASK.md
+    - id: current_app_server_side_wan_isolation
+      status: not_run
+      evidence:
+        - docs/en/TESTING.md
+        - docs/NEXT_TASK.md
+    - id: current_app_vm_reboot_cold_start
+      status: not_run
+      evidence:
+        - docs/en/TESTING.md
+        - docs/NEXT_TASK.md
 capabilities:
   - id: authenticated_bilingual_panel
     status: accepted_controlled

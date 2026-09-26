@@ -11,12 +11,13 @@
     "deployment_status",
     "repository",
     "components",
+    "current_application_qualification",
     "capabilities",
     "acceptance_gates"
   ],
   "properties": {
     "$schema": {"type": "string"},
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "2.0.0"},
     "release_identifier": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"},
     "observed_at": {"type": "string", "format": "date"},
     "deployment_status": {
@@ -76,6 +77,21 @@
         "application_database": {"$ref": "#/$defs/versionedComponent"},
         "zabbix_database": {"$ref": "#/$defs/versionedComponent"},
         "zabbix": {"$ref": "#/$defs/versionedComponent"}
+      }
+    },
+    "current_application_qualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["release", "source_commit", "scope", "gates"],
+      "properties": {
+        "release": {"$ref": "#/$defs/releaseComponent/properties/release"},
+        "source_commit": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"},
+        "scope": {"const": "application_revision_sensitive"},
+        "gates": {
+          "type": "array",
+          "minItems": 5,
+          "items": {"$ref": "#/$defs/candidateGate"}
+        }
       }
     },
     "capabilities": {
@@ -138,6 +154,20 @@
         "status": {"enum": ["passed", "partial", "not_run", "failed"]},
         "evidence": {
           "type": "array",
+          "items": {"$ref": "#/$defs/evidencePath"}
+        }
+      }
+    },
+    "candidateGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$"},
+        "status": {"enum": ["passed", "partial", "not_run", "failed"]},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
           "items": {"$ref": "#/$defs/evidencePath"}
         }
       }
