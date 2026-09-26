@@ -134,12 +134,15 @@ def assure_incident_answer(
 
     is_stale = any(metric.stale for metric in evidence.zabbix.summary.metrics)
     limitations = _evidence_limitations(is_partial=evidence.is_partial, is_stale=is_stale)
-    safe = _is_safe_evidence_answer(
-        assistant.answer,
-        require_linux=True,
-        is_partial=evidence.is_partial,
-        is_stale=is_stale,
-    ) and evidence.target_id.casefold() in assistant.answer.casefold()
+    safe = (
+        _is_safe_evidence_answer(
+            assistant.answer,
+            require_linux=True,
+            is_partial=evidence.is_partial,
+            is_stale=is_stale,
+        )
+        and evidence.target_id.casefold() in assistant.answer.casefold()
+    )
     return assistant.model_copy(
         update={
             "answer": assistant.answer if safe else _incident_fallback(request.locale, evidence),
@@ -239,8 +242,7 @@ def _incident_fallback(locale: str, evidence: IncidentEvidence) -> str:
     stale_count = sum(metric.stale for metric in zabbix.summary.metrics)
     partial = ", ".join(evidence.partial_reasons)
     service_states = "; ".join(
-        f"{service.unit}={service.active_state}/{service.sub_state}"
-        for service in linux.services
+        f"{service.unit}={service.active_state}/{service.sub_state}" for service in linux.services
     ) or (
         "no bounded service records"
         if locale == "en"
