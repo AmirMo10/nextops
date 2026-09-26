@@ -6,12 +6,12 @@ import argparse
 import json
 import socketserver
 import threading
+from contextlib import ExitStack
 from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
-from playwright.sync_api import Response, sync_playwright
-from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
+from playwright.sync_api import Browser, BrowserContext, Page, Response, sync_playwright
 
 
 class DenyProxyHandler(socketserver.StreamRequestHandler):
@@ -51,6 +51,17 @@ def check(condition: bool, message: str) -> None:
         raise AssertionError(message)
 
 
+def revoke_test_session(context: BrowserContext, base_url: str, token: str) -> str:
+    """Attempt server-side revocation without adding the token to the evidence report."""
+
+    response = context.request.post(
+        f"{base_url.rstrip('/')}/api/v1/logout",
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=10_000,
+    )
+    return "revoked" if response.status == 204 else "revocation_failed"
+
+
 def main() -> int:
     args = parse_args()
     password = args.password_file.read_text(encoding="utf-8-sig").strip()
@@ -75,12 +86,40 @@ def main() -> int:
     checks: dict[str, object] = result["checks"]  # type: ignore[assignment]
     api_statuses: list[dict[str, object]] = result["api_statuses"]  # type: ignore[assignment]
     request_hosts: set[str] = set()
+    browser: Browser | None = None
+    context: BrowserContext | None = None
+    page: Page | None = None
+    session_token: str | None = None
+
+    def cleanup_browser() -> None:
+        if result["status"] != "PASS" and context is not None:
+            try:
+                token = session_token
+                if not token and page is not None:
+                    token = page.evaluate("sessionStorage.getItem('nextops-session')")
+                if isinstance(token, str) and token:
+                    result["failure_session_cleanup"] = revoke_test_session(
+                        context, args.base_url, token
+                    )
+                else:
+                    result["failure_session_cleanup"] = "no_tab_session"
+            except Exception as cleanup_error:
+                result["failure_session_cleanup"] = "revocation_unverified"
+                result["cleanup_error_type"] = type(cleanup_error).__name__
+        for resource in (context, browser):
+            if resource is not None:
+                try:
+                    resource.close()
+                except Exception as close_error:
+                    result["status"] = "FAIL"
+                    result["resource_close_error_type"] = type(close_error).__name__
 
     proxy = ThreadingDenyProxy()
     proxy_thread = threading.Thread(target=proxy.serve_forever, daemon=True)
     proxy_thread.start()
     try:
-        with sync_playwright() as playwright:
+        with sync_playwright() as playwright, ExitStack() as cleanup_stack:
+            cleanup_stack.callback(cleanup_browser)
             browser = playwright.chromium.launch(
                 channel="msedge",
                 headless=True,
@@ -126,12 +165,10 @@ def main() -> int:
             page.locator("#password").fill(password)
             page.locator("#loginForm button[type=submit]").click()
             page.locator("#workspaceView:not(.hidden)").wait_for()
+            session_token = page.evaluate("sessionStorage.getItem('nextops-session')")
+            check(bool(session_token), "authenticated tab session is missing")
             page.locator("#aiStatus.ready").wait_for()
             page.locator("#monitoringStatus.ready").wait_for()
-            check(
-                bool(page.evaluate("sessionStorage.getItem('nextops-session')")),
-                "authenticated tab session is missing",
-            )
             checks["authenticated_workspace"] = "PASS"
             checks["ai_readiness"] = "PASS"
             checks["monitoring_readiness"] = "PASS"
@@ -208,6 +245,7 @@ def main() -> int:
                 {"path": "/api/v1/logout", "status": 204} in api_statuses,
                 "logout did not receive the expected server revocation response",
             )
+            session_token = None
             checks["client_logout"] = "PASS"
             checks["server_session_revocation"] = "PASS"
 
@@ -222,10 +260,8 @@ def main() -> int:
             checks["no_page_wan_requests"] = "PASS"
             checks["browser_background_wan_blocked"] = "PASS"
             checks["deny_proxy_observed_attempts"] = len(proxy.attempts)
-            context.close()
-            browser.close()
             result["status"] = "PASS"
-    except (AssertionError, PlaywrightTimeoutError, Exception) as exc:
+    except Exception as exc:
         result["error_type"] = type(exc).__name__
         result["error"] = str(exc)
     finally:
