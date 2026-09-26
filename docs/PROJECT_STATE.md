@@ -1,6 +1,40 @@
 # Project state / وضعیت پروژه
 
-Updated: 2026-09-26 — The answer-integrity increment is accepted for controlled user testing.
+Updated: 2026-09-26 — The owner resumed production-hardening and recovery scope. The four serving
+guests received a serial, rollback-protected package maintenance change. Exact installed packages
+were reconstructed before mutation, candidate packages and SHA-256 manifests were retained in
+root-only per-host change directories, and local PostgreSQL safety dumps were verified before the
+two database-host updates. Every guest now reports `running`, zero failed units, zero pending
+packages and no reboot marker. Zabbix is now `7.0.31`; both PostgreSQL deployments remain `16.15`.
+These local rollback copies and dumps are change safety material, not independent disaster-recovery
+backups.
+
+The active application, AI and connector releases are unchanged. A fresh Edge context with public
+WAN denied passed login, English LTR, Persian RTL, general local AI, evidence-grounded monitoring,
+provenance identifiers, server-side logout/revocation and new-tab isolation. The first run exposed
+an acceptance-harness race: it asserted the login view before the asynchronous revocation request
+completed. The harness now waits for the UI transition and requires the actual logout `204`; the
+live rerun passed. Direct authenticated checks also preserved greeting relevance, current-state
+scope redirect, evidence-bounded monitoring and safe composite-incident fallback.
+
+Supply-chain evidence advanced without changing runtime dependencies. Syft `1.52.0`, verified
+against the publisher-provided asset digest, scanned the exact deployed application archive:
+SPDX and CycloneDX outputs recorded 27 packages and 26 components. A production-only
+`pip-audit 2.10.1` input contained 25 dependencies and reported zero known findings. This is not a
+complete operating-system/runtime vulnerability assessment. The inventory also confirmed that the
+NextOps project itself has no declared repository/package license; no agent may choose that legal
+grant. Release signing, an accepted offline trust root, complete vulnerability evidence and named
+legal/security approval remain open.
+
+Production acceptance remains unavailable. No independent recovery destination or isolated restore
+lab exists, so pgBackRest/restic installation and restore drills were not fabricated on serving
+guests. No real local operator-delivery channel with named recipients exists, replacement
+CA-issued certificate pairs/key custody were not supplied, the project license is undecided, and a
+human production approver has not signed the bounded profile. The repository recovery contract
+continues to fail closed until those external inputs exist.
+
+Earlier checkpoint on 2026-09-26 — The answer-integrity increment was accepted for controlled user
+testing.
 Application release `nextops-0.1.0-2397581` and inference API release
 `nextops-0.1.0-fd3c353` are active; the previous immutable releases remain available for rollback.
 General output is explicitly model-only and potentially incorrect, current infrastructure state is
@@ -18,7 +52,8 @@ revocation. Zabbix, connector, AI and app then rebooted serially onto kernel `6.
 Ubuntu base updates remain pending and were not downloaded because the approved proxy/offline bundle
 path was not established in this change; the Zabbix 7.0.31 candidate was not installed or claimed.
 
-The owner explicitly deferred all backup, PITR, restore and disaster-recovery work. The repository
+At that checkpoint, the owner explicitly deferred all backup, PITR, restore and disaster-recovery
+work. The repository
 contract and historical evidence remain, but no recovery package or drill will be performed until
 that scope is resumed; production acceptance therefore remains unavailable. No SMTP host exists.
 Certificate detection and local Zabbix problem visibility remain active, but operator notification
@@ -312,7 +347,36 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 
 ## فارسی
 
-به‌روزرسانی ۴ مهر ۱۴۰۵ — بخش «صحت پاسخ» برای ارزیابی کنترل‌شدهٔ کاربران پذیرفته شد. انتشار برنامه
+به‌روزرسانی ۴ مهر ۱۴۰۵ — مالک دامنهٔ سخت‌سازی تولید و بازیابی را دوباره فعال کرد. به‌روزرسانی
+بسته‌های چهار مهمان سرویس‌دهنده به‌صورت ترتیبی و همراه امکان بازگشت انجام شد. پیش از هر تغییر،
+بسته‌های نصب‌شده با همان نسخه بازسازی و بسته‌های نامزد همراه فهرست SHA-256 در پوشهٔ محافظت‌شدهٔ
+هر میزبان نگه‌داری شدند؛ پیش از تغییر دو میزبان پایگاه نیز dump محلی PostgreSQL ساخته و امکان
+خواندن آن تأیید شد. اکنون هر چهار مهمان `running` هستند، واحد خراب و بستهٔ در انتظار ندارند و
+نیازی به reboot گزارش نمی‌شود. Zabbix به `7.0.31` رسید و هر دو PostgreSQL روی `16.15` ماندند.
+این dumpها و بسته‌های محلی فقط حفاظ تغییرند و پشتیبان مستقل بازیابی بحران نیستند.
+
+انتشارهای فعال برنامه، هوش مصنوعی و اتصال‌دهنده عوض نشدند. یک نشست تازهٔ Edge با WAN عمومی
+مسدود، ورود، چیدمان چپ‌به‌راست انگلیسی و راست‌به‌چپ فارسی، هوش مصنوعی عمومی محلی، پایش مستند به
+شاهد، شناسه‌های منشأ، خروج و لغو نشست در سرور و الزام ورود در برگهٔ تازه را گذراند. اجرای نخست یک
+رقابت زمانی در ابزار پذیرش را آشکار کرد: پیش از پایان درخواست ناهمگام لغو نشست، نمای ورود بررسی
+می‌شد. ابزار اکنون منتظر تغییر رابط می‌ماند و پاسخ واقعی `204` خروج را الزام می‌کند؛ تکرار زنده
+موفق بود. بررسی مستقیم احرازهویت‌شده نیز مرتبط‌بودن سلام، هدایت پرسش وضعیت جاری، پایش محدود به
+شاهد و پاسخ جایگزین ایمن رخداد ترکیبی را حفظ کرد.
+
+شاهد زنجیرهٔ تأمین بدون تغییر وابستگی اجرا پیش رفت. Syft نسخهٔ `1.52.0` پس از تطبیق با digest
+منتشرشده، همان بایگانی مستقر برنامه را بررسی کرد؛ خروجی‌های SPDX و CycloneDX به‌ترتیب ۲۷ بسته و
+۲۶ مؤلفه ثبت کردند. ورودی تولیدی `pip-audit 2.10.1` شامل ۲۵ وابستگی بود و یافتهٔ شناخته‌شده‌ای
+گزارش نکرد. این نتیجه پویش کامل سیستم‌عامل و محیط اجرا نیست. موجودی همچنین نشان داد خود پروژهٔ
+NextOps در مخزن و بسته مجوز اعلام‌شده ندارد؛ عامل نمی‌تواند این تصمیم حقوقی را به‌جای مالک بگیرد.
+امضای انتشار، ریشهٔ اعتماد آفلاین مصوب، شاهد کامل آسیب‌پذیری و تأیید مسئول حقوقی و امنیتی بازند.
+
+پذیرش تولید هنوز ممکن نیست. مقصد مستقل بازیابی و آزمایشگاه restore ایزوله وجود ندارد؛ بنابراین
+نصب pgBackRest/restic و تمرین بازیابی روی مهمان سرویس‌دهنده به‌جای شاهد واقعی انجام نشد. مسیر
+داخلی واقعی تحویل اعلان با گیرندگان نام‌دار، جفت گواهی تازهٔ صادرشده از CA و حضانت کلید نیز فراهم
+نشده، مجوز پروژه تصمیم‌گیری نشده و مسئول انسانی تولید پروفایل محدود را امضا نکرده است. قرارداد
+بازیابی مخزن تا دریافت این ورودی‌های بیرونی همچنان fail-closed می‌ماند.
+
+نقطهٔ پیشین در ۴ مهر ۱۴۰۵ — بخش «صحت پاسخ» برای ارزیابی کنترل‌شدهٔ کاربران پذیرفته شد. انتشار برنامه
 `nextops-0.1.0-2397581` و انتشار API هوش مصنوعی `nextops-0.1.0-fd3c353` فعال‌اند و نسخه‌های
 تغییرناپذیر پیشین برای بازگشت حفظ شده‌اند. پاسخ عمومی به‌روشنی بدون شاهد زنده و دارای احتمال خطا
 معرفی می‌شود؛ وضعیت فعلی زیرساخت از حافظهٔ مدل پاسخ داده نمی‌شود؛ و پاسخ زنده در لایهٔ داخلی و
@@ -327,7 +391,7 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 نشانگر reboot بودند. به‌روزرسانی‌های پایهٔ Ubuntu هنوز در انتظارند و چون مسیر مصوب بسته یا پراکسی
 در این تغییر آماده نبود، دانلود نشدند؛ نامزد Zabbix 7.0.31 نیز نصب یا پذیرفته نشد.
 
-مالک، تمام کارهای پشتیبان، PITR، restore و بازیابی بحران را فعلاً کنار گذاشته است. قرارداد مخزن و
+در آن نقطه، مالک همهٔ کارهای پشتیبان، PITR، restore و بازیابی بحران را موقتاً کنار گذاشته بود. قرارداد مخزن و
 شواهد تاریخی حفظ می‌شوند، اما تا بازگشت این دامنه هیچ بسته یا تمرین بازیابی اجرا نمی‌شود؛ بنابراین
 پذیرش تولید ممکن نیست. میزبان SMTP نیز وجود ندارد. تشخیص گواهی و نمایش مسئله در Zabbix فعال است،
 اما تحویل اعلان به بهره‌بردار همچنان پذیرفته‌نشده و هیچ مسیر ایمیلی ادعا نمی‌شود.

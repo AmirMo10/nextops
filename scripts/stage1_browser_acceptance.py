@@ -198,12 +198,18 @@ def main() -> int:
             page.screenshot(path=args.output_dir / "fresh-browser-qualified.png", full_page=True)
 
             page.locator("#logoutButton").click()
+            page.locator("#loginView:not(.hidden)").wait_for()
             check(page.locator("#loginView").is_visible(), "logout did not return to login")
             check(
                 page.evaluate("sessionStorage.getItem('nextops-session')") is None,
                 "logout did not clear tab session",
             )
+            check(
+                {"path": "/api/v1/logout", "status": 204} in api_statuses,
+                "logout did not receive the expected server revocation response",
+            )
             checks["client_logout"] = "PASS"
+            checks["server_session_revocation"] = "PASS"
 
             clean_page = context.new_page()
             clean_page.goto(args.base_url, wait_until="networkidle")

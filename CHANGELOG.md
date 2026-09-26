@@ -4,6 +4,23 @@
 
 ### English
 
+Completed the safe portion of production hardening on the four existing serving guests under
+change `production-hardening-20260926-01`. Serial updates used root-only exact-version rollback
+packages, candidate-package manifests and verified local PostgreSQL safety dumps. Every guest now
+reports `running`, zero failed units, zero pending packages and no reboot marker; Zabbix is
+`7.0.31` and both PostgreSQL deployments remain `16.15`. A corrected WAN-denied Edge gate passed
+fresh bilingual login, local general AI, evidence-grounded monitoring, provenance, server-side
+session revocation and new-tab isolation. The harness now waits for asynchronous logout completion
+and requires HTTP `204` instead of racing the unchanged deployed UI.
+
+Generated private SPDX/CycloneDX SBOMs from the exact deployed application archive with
+digest-verified Syft `1.52.0`; production dependency audit with `pip-audit 2.10.1` reported zero
+known findings in 25 dependencies. The inventory identified the missing NextOps project license.
+Independent recovery/restore infrastructure, a real named-recipient local notification route,
+replacement CA-issued certificate pairs and custody, complete vulnerability/offline-signature
+evidence, legal/security approval and final human production acceptance remain open. The local
+rollback material is not represented as independent backup.
+
 Added the bounded answer-integrity increment without changing the read-only architecture. General
 answers now carry explicit model-only limitations, and current infrastructure questions cannot be
 answered from model memory. Live monitoring and incident answers use consistent nested evidence
@@ -12,8 +29,9 @@ source identity and omitted stale/partial qualifiers before persistence. A faile
 bilingual deterministic summary from typed evidence and excludes untrusted source names. The UI
 explains unverified, evidence-bounded, fallback and redirect outcomes. The protected local
 evaluation corpus now has eight balanced English/Persian cases with automated lexical safety gates
-and retained human semantic review. The owner deferred all recovery work and confirmed that no SMTP
-host exists; neither recovery nor notification delivery is claimed by this increment.
+and retained human semantic review. At that checkpoint the owner deferred recovery work and
+confirmed that no SMTP host existed; neither recovery nor notification delivery was claimed by that
+increment.
 
 Hosted CI passed all five jobs for the final source. Immutable application release
 `nextops-0.1.0-2397581` and inference API release `nextops-0.1.0-fd3c353` were promoted with prior
@@ -175,6 +193,21 @@ Windows session because no local server or working container runtime was availab
 
 ### فارسی
 
+بخش ایمن سخت‌سازی تولید روی چهار مهمان موجود با تغییر `production-hardening-20260926-01` تکمیل
+شد. به‌روزرسانی ترتیبی با بسته‌های دقیق بازگشت، فهرست بسته‌های نامزد و dump محلی و بررسی‌شدهٔ
+PostgreSQL در مسیرهای فقط‌خواندنی برای root انجام شد. اکنون هر چهار مهمان `running` هستند و واحد
+خراب، بستهٔ در انتظار یا نشانگر reboot ندارند؛ Zabbix نسخهٔ `7.0.31` و هر دو PostgreSQL نسخهٔ
+`16.15` هستند. دروازهٔ اصلاح‌شدهٔ Edge با WAN مسدود، ورود تازهٔ دوزبانه، AI عمومی محلی، پایش
+مستند، منشأ، لغو نشست در سرور و جداسازی برگهٔ تازه را گذراند. ابزار به‌جای رقابت با رابط مستقر و
+بدون تغییر، اکنون پایان خروج ناهمگام و HTTP `204` را الزام می‌کند.
+
+SBOMهای خصوصی SPDX و CycloneDX از بایگانی دقیق برنامهٔ مستقر با Syft نسخهٔ `1.52.0` و digest
+تأییدشده ساخته شدند؛ ممیزی وابستگی تولید با `pip-audit 2.10.1` در ۲۵ وابستگی یافتهٔ شناخته‌شده‌ای
+نداشت. موجودی نبود مجوز پروژهٔ NextOps را روشن کرد. زیرساخت مستقل بازیابی و restore، مسیر واقعی
+اعلان داخلی با گیرندهٔ نام‌دار، جفت گواهی تازهٔ CA و حضانت، شاهد کامل آسیب‌پذیری و امضای آفلاین،
+تأیید حقوقی و امنیتی و پذیرش نهایی انسانی تولید همچنان بازند. مادهٔ بازگشت محلی پشتیبان مستقل
+معرفی نمی‌شود.
+
 بخش محدود «صحت پاسخ» بدون تغییر معماری فقط‌خواندنی افزوده شد. پاسخ عمومی اکنون محدودیت نداشتن
 شاهد زنده را به‌صراحت اعلام می‌کند و پرسش دربارهٔ وضعیت فعلی زیرساخت از حافظهٔ مدل پاسخ داده
 نمی‌شود. برچسب شاهد در پاسخ داخلی حالت پایش و رخداد با پاسخ بیرونی یکسان است و پیش از ذخیره،
@@ -182,9 +215,9 @@ Windows session because no local server or working container runtime was availab
 قطعی بررسی می‌شود. در صورت شکست، متن مدل با خلاصهٔ دوزبانهٔ ساخته‌شده از قرارداد معتبر شاهد
 جایگزین می‌شود و نام‌های تحت کنترل منبع در آن تکرار نمی‌شوند. رابط نتیجهٔ بدون راستی‌آزمایی،
 محدود به شاهد، جایگزین قطعی و هدایت به حالت زنده را توضیح می‌دهد. مجموعهٔ ارزیابی محلی اکنون هشت
-مورد متوازن فارسی و انگلیسی با کنترل واژگانی خودکار و بازبینی معنایی انسانی دارد. مالک همهٔ کارهای
-بازیابی را فعلاً کنار گذاشته و اعلام کرده میزبان SMTP در دسترس نیست؛ این تغییر هیچ ادعایی دربارهٔ
-بازیابی یا تحویل اعلان ندارد.
+مورد متوازن فارسی و انگلیسی با کنترل واژگانی خودکار و بازبینی معنایی انسانی دارد. در آن نقطه مالک
+کارهای بازیابی را موقتاً کنار گذاشته و اعلام کرده بود میزبان SMTP در دسترس نیست؛ آن تغییر هیچ
+ادعایی دربارهٔ بازیابی یا تحویل اعلان نداشت.
 
 هر پنج کار CI برای منبع نهایی موفق بود. انتشار تغییرناپذیر برنامه
 `nextops-0.1.0-2397581` و انتشار API هوش مصنوعی `nextops-0.1.0-fd3c353` با حفظ نسخه‌های قبلی

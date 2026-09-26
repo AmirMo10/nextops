@@ -1,13 +1,18 @@
 # Next task / کار بعدی
 
-Updated: 2026-09-26 — The owner explicitly deferred every recovery, backup, PITR and
-disaster-recovery action. Preserve the recovery contract and its historical evidence, but do not
-install packages, allocate repositories, run drills or report those gates as passed unless the
-owner later resumes that scope. This deferral prevents production acceptance; it does not block
-continued controlled user testing. The owner also confirmed that no SMTP host is available. Do not
-invent or configure email delivery. Certificate detection and Zabbix problem visibility remain
-active, while operator notification delivery remains unaccepted until a real local delivery channel
-is selected and tested.
+Updated: 2026-09-26 — The owner resumed the production-hardening and recovery objective. All work
+that can be completed safely on the existing four serving guests is current: serial package
+maintenance is rollback-protected and complete, Zabbix is `7.0.31`, all guests are `running` with
+zero failed units, zero pending packages and no reboot marker, and the fresh WAN-denied bilingual
+browser gate passes through server-side logout. The active application, inference and connector
+releases remain unchanged.
+
+Do not manufacture the remaining production evidence on the serving guests. The first unfinished
+checkpoint is still an approved recovery destination outside the guest, datastore and hypervisor
+failure domains plus an isolated restore lab. When those real resources and the private owner record
+are available, install the pinned offline pgBackRest/restic bundles, execute full/differential/WAL,
+PITR, file, negative, key-recovery and cold-start drills, and record measured RPO/RTO. Until then,
+the recovery profile must remain `BLOCKED` and production acceptance must remain `not_run`.
 
 The answer-integrity priority is complete for controlled user testing. Application release
 `nextops-0.1.0-2397581` and inference API release `nextops-0.1.0-fd3c353` are active. Hosted CI,
@@ -16,13 +21,13 @@ general/monitoring/incident API checks, immediate test-session revocation and a 
 passed. Preserve the deterministic guard and do not turn this bounded evidence into a claim that
 model-only answers are always true.
 
-Continue only with non-recovery work: qualify a real local non-SMTP operator-delivery channel or
-leave delivery explicitly unaccepted; perform certificate rotation/rollback only if the existing
-CA/key custody and client-trust inputs are available; finish the release SBOM/license/integrity
-review; and apply the six pending Ubuntu base updates (eleven on Zabbix including five Zabbix
-7.0.31 packages) only through an approved proxy or offline bundle with version-specific rollback.
-The current reboot requirement is already cleared on kernel `6.8.0-142`; pending packages are not
-evidence of a failed service and were deliberately not fetched during the answer-integrity change.
+The next external inputs are concrete: provision the independent recovery/restore targets; select a
+real LAN-local non-SMTP operator-delivery channel and name primary/backup recipients; hand over
+replacement CA-issued application and Zabbix certificate pairs with custodians and rollback window;
+choose and approve the NextOps project license; establish the offline release-signing trust root;
+name legal, security and production approvers; and complete their sign-off. Syft SBOM and
+production dependency-audit evidence now exist privately, but the operating-system/runtime scan,
+offline signature verification and human license/security review are not complete.
 
 Historical checkpoint: 2026-09-23 — Phase 2 implementation and controlled qualification were complete. Application release
 `nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` were active. Four fixed targets then
@@ -229,12 +234,18 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 ### نقطهٔ فعلی و ملاک ادامه
 
-به‌روزرسانی ۴ مهر ۱۴۰۵ — مالک پروژه تمام اقدام‌های پشتیبان، PITR و بازیابی بحران را فعلاً از دامنه
-کنار گذاشته است. قرارداد و شواهد تاریخی بازیابی باید حفظ شوند، اما تا زمانی که مالک این دامنه را
-از سر نگیرد، هیچ بسته یا مخزنی نصب، هیچ تمرینی اجرا و هیچ دروازه‌ای قبول‌شده اعلام نشود. در نتیجه
-پذیرش تولید ممکن نیست، ولی ارزیابی کنترل‌شدهٔ کاربران می‌تواند ادامه یابد. همچنین میزبان SMTP در
-اختیار نیست؛ بنابراین تحویل ایمیلی نباید جعل یا پیکربندی شود. تشخیص گواهی و نمایش مسئله در Zabbix
-فعال می‌ماند و تحویل اعلان به بهره‌بردار تا انتخاب و آزمون یک مسیر داخلی واقعی، پذیرفته‌نشده است.
+به‌روزرسانی ۴ مهر ۱۴۰۵ — مالک هدف سخت‌سازی تولید و بازیابی را دوباره فعال کرد. همهٔ کارهایی که روی
+چهار مهمان سرویس‌دهندهٔ موجود با ایمنی قابل انجام بود، جاری است: نگه‌داری بسته‌ها به‌صورت ترتیبی و
+با امکان بازگشت تکمیل شد، Zabbix به `7.0.31` رسید، هر چهار مهمان `running` هستند و واحد خراب، بستهٔ
+در انتظار یا نشانگر reboot ندارند. آزمون مرورگر تازه و دوزبانه با WAN مسدود تا لغو نشست در سرور
+موفق است. انتشار فعال برنامه، استنتاج و اتصال‌دهنده تغییر نکرده است.
+
+شاهد تولید با اجرای نمایشی روی مهمان‌های سرویس‌دهنده ساخته نشود. نخستین گام ناتمام همچنان مقصد
+بازیابی خارج از دامنهٔ خرابی مهمان، datastore و hypervisor همراه آزمایشگاه restore ایزوله است.
+پس از فراهم‌شدن این منابع واقعی و تکمیل رکورد خصوصی مالک، بسته‌های آفلاین و ثابت pgBackRest و
+restic نصب و تمرین‌های full، differential، WAL، PITR، فایل، حالت منفی، بازیابی کلید و cold-start
+اجرا شوند و RPO/RTO اندازه‌گیری‌شده ثبت شود. تا آن زمان پروفایل بازیابی باید `BLOCKED` و پذیرش
+تولید `not_run` بماند.
 
 اولویت صحت پاسخ برای ارزیابی کنترل‌شده تکمیل شد. انتشار برنامه `nextops-0.1.0-2397581` و انتشار
 API هوش مصنوعی `nextops-0.1.0-fd3c353` فعال‌اند. CI میزبانی‌شده، مجموعهٔ نهایی هشت‌موردی فارسی
@@ -242,12 +253,12 @@ API هوش مصنوعی `nextops-0.1.0-fd3c353` فعال‌اند. CI میزبا
 فوری نشست آزمایشی و reboot ترتیبی تازه موفق بودند. این کنترل قطعی باید حفظ شود، اما شاهد محدود آن
 نباید به ادعای «درستی همیشگی پاسخ بدون شاهد» تبدیل شود.
 
-ادامه فقط در دامنهٔ خارج از بازیابی است: یک مسیر واقعی و داخلیِ غیر SMTP برای تحویل اعلان انتخاب و
-صلاحیت‌سنجی شود یا وضعیت تحویل صریحاً پذیرفته‌نشده بماند؛ چرخش و بازگشت گواهی فقط در صورت وجود
-ورودی معتبر CA، حضانت کلید و اعتماد client اجرا شود؛ بازبینی SBOM، مجوز و صحت انتشار تکمیل شود؛ و
-شش به‌روزرسانی پایهٔ Ubuntu ــ و یازده مورد روی Zabbix شامل پنج بستهٔ 7.0.31 ــ فقط از مسیر پراکسی
-یا بستهٔ آفلاین مصوب و همراه بازگشت نسخه‌ای اعمال شوند. نیاز به reboot روی kernel `6.8.0-142`
-برطرف شده است؛ بسته‌های در انتظار به معنی خرابی سرویس نیستند و در تغییر صحت پاسخ دانلود نشدند.
+ورودی‌های بیرونی بعدی روشن‌اند: مقصد مستقل بازیابی و محیط restore ساخته شود؛ مسیر واقعی و داخلی
+غیر SMTP برای تحویل اعلان انتخاب و گیرندگان اصلی و جایگزین نام‌گذاری شوند؛ جفت گواهی تازهٔ برنامه
+و Zabbix از CA همراه متولیان کلید و بازهٔ بازگشت تحویل شود؛ مجوز پروژهٔ NextOps انتخاب و تصویب
+شود؛ ریشهٔ اعتماد آفلاین امضای انتشار شکل بگیرد؛ و مسئولان حقوقی، امنیتی و پذیرش تولید تعیین و
+تأییدشان ثبت شود. شاهد خصوصی SBOM با Syft و ممیزی وابستگی تولید اکنون موجود است، اما پویش کامل
+سیستم‌عامل و محیط اجرا، راستی‌آزمایی آفلاین امضا و بازبینی انسانی مجوز و امنیت تکمیل نشده‌اند.
 
 نقطهٔ تاریخی ۲۳ سپتامبر ۲۰۲۶: پیاده‌سازی و صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو تکمیل شده بود؛ انتشار برنامه `nextops-0.1.0-eb57241` و انتشار اتصال‌دهنده
 `nextops-0.1.0-e2dad3a` فعال بودند. چهار مقصد ثابت در آن زمان تاریخچه و رویداد محدود Zabbix را همراه شواهد مستقیم،

@@ -12,6 +12,35 @@ logical isolated restores of both PostgreSQL 16 databases. Independent off-datas
 WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
 21–23.
 
+## Production-hardening evidence — 2026-09-26
+
+Change `production-hardening-20260926-01` updated the four serving guests serially only after
+reconstructing each installed package, staging every exact candidate package and writing SHA-256
+manifests into root-only per-host rollback directories. The application and Zabbix PostgreSQL
+clusters also received readable local custom-format safety dumps before package mutation. These
+files are rollback inputs for this change, not independent recovery copies.
+
+All four guests ended `running`, with zero failed units, zero pending packages and no reboot marker.
+Application PostgreSQL and Zabbix PostgreSQL remain `16.15`; Zabbix is now `7.0.31`. Application,
+AI/llama and connector services/listeners passed their role checks, and an authenticated request
+through the application confirmed AI readiness and the protected connector path.
+
+A new Microsoft Edge context then ran with a deny proxy for public WAN and a private-host bypass.
+Fresh login, English LTR, Persian RTL, general local-AI output, evidence-grounded monitoring,
+source/run/evidence/audit identifiers, server-side logout `204`, cleared tab state and fresh-tab
+login isolation passed. The initial run failed only because the harness asserted the login view
+before the asynchronous logout handler finished. The harness now waits for that transition and
+requires the server response; the unchanged deployed JavaScript and the corrected live rerun
+passed. Browser background traffic produced blocked proxy attempts, while the page itself requested
+no external host.
+
+The exact deployed application archive was hashed before inspection. Digest-verified Syft `1.52.0`
+generated private SPDX and CycloneDX SBOMs with 27 packages and 26 components. A production-only
+25-dependency input audited with `pip-audit 2.10.1` returned zero known findings. This does not
+replace a full operating-system/runtime scan or human review. The project package and repository
+also lack a declared NextOps license, so license, complete vulnerability, offline-signature and
+named security/legal approval gates remain open.
+
 ## Answer-integrity qualification — 2026-09-26
 
 The final source at `2397581` passed all five hosted jobs: quality/unit, PostgreSQL 16,

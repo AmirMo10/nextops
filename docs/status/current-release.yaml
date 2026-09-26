@@ -1,7 +1,7 @@
 ---
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
-release_identifier: nextops-answer-integrity-controlled-2026-09-26
+release_identifier: nextops-production-hardening-controlled-2026-09-26
 observed_at: '2026-09-26'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
@@ -38,7 +38,7 @@ components:
     version: '16.15'
   zabbix:
     name: Zabbix
-    version: '7.0.30'
+    version: '7.0.31'
 capabilities:
   - id: authenticated_bilingual_panel
     status: accepted_controlled
@@ -253,3 +253,22 @@ acceptance_gates:
     evidence:
       - docs/requirements/ANSWER_INTEGRITY_SPEC.md
       - docs/en/AI_INTEGRITY.md
+  - id: serving_guest_package_maintenance
+    status: passed
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+      - docs/fa/TESTING.md
+  - id: fresh_browser_session_revocation
+    status: passed
+    evidence:
+      - scripts/stage1_browser_acceptance.py
+      - docs/en/TESTING.md
+      - docs/fa/TESTING.md
+  - id: release_supply_chain_review
+    status: partial
+    evidence:
+      - docs/PROJECT_STATE.md
+      - docs/en/TESTING.md
+      - docs/fa/TESTING.md
+      - docs/en/PRODUCTION_BLOCKERS_RUNBOOK.md
