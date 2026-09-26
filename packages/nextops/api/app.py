@@ -13,6 +13,11 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import Response
 
+from nextops.api.answer_integrity import (
+    assure_general_answer,
+    assure_incident_answer,
+    assure_monitoring_answer,
+)
 from nextops.api.inference_gateway import InferenceGateway, LoopbackInferenceGateway
 from nextops.api.monitoring_gateway import LoopbackMonitoringGateway, MonitoringGateway
 from nextops.application.errors import ApplicationError
@@ -317,7 +322,10 @@ def create_app(
                 "assistant.not_configured",
                 retryable=True,
             )
-        return await inference_gateway.generate(_general_prompt(payload), _correlation_id(request))
+        assistant = await inference_gateway.generate(
+            _general_prompt(payload), _correlation_id(request)
+        )
+        return assure_general_answer(payload, assistant)
 
     @app.post("/api/v1/investigate", response_model=InvestigationResponse)
     async def investigate(
@@ -340,6 +348,7 @@ def create_app(
             assistant = await inference_gateway.generate(
                 _grounded_prompt(payload, evidence), correlation_id
             )
+            assistant = assure_monitoring_answer(payload, assistant, evidence)
             result = service.complete_live_investigation(
                 actor,
                 run.run_id,
@@ -423,6 +432,7 @@ def create_app(
             assistant = await inference_gateway.generate(
                 _incident_prompt(payload, evidence), correlation_id
             )
+            assistant = assure_incident_answer(payload, assistant, evidence)
             result = service.complete_incident_investigation(
                 actor,
                 run.run_id,

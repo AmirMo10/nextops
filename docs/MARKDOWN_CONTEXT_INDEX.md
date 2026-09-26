@@ -1,6 +1,6 @@
 # NextOps Markdown context index
 
-Updated: 2026-09-23
+Updated: 2026-09-26
 
 This is the durable inventory and routing map for project-owned Markdown. It lets an agent remember
 that every document exists without flooding each task with every file. The documentation validator
@@ -26,6 +26,7 @@ remaining task-specific sources. The repository skill
 | Authentication or session lifecycle | `docs/requirements/SESSION_TERMINATION_SPEC.md`, `docs/en/SECURITY.md`, `DATA_API.md`, `TESTING.md`, current release manifest, source service/API, and identity integration tests |
 | Certificate lifecycle | `docs/requirements/CERTIFICATE_LIFECYCLE_SPEC.md`, `docs/en/OPERATIONS.md`, Persian operations pair, systemd checker/timer, Nginx profiles, current release manifest, and private rotation/alert evidence |
 | Local CPU inference | `docs/en/CPU_AI.md`, `OFFLINE_RUNTIME.md`, `TESTING.md`, inference manifest, current state/next task, and Persian pairs when human-facing text changes |
+| AI answer integrity | `docs/requirements/ANSWER_INTEGRITY_SPEC.md`, `docs/en/AI_INTEGRITY.md`, Persian pair, assistant contracts, answer-integrity policy, evaluation corpus, current release manifest, and private live evidence |
 | Server, storage, or deployment | use `nextops-server-operations`; read the start checklist, matching dossier, installer guide, storage/offline/server guide, and current private change record |
 | Zabbix or connector work | Zabbix guide, integration guide, MCP/security/data contracts, matching dossiers, ZBX/OFF acceptance cases, and target-specific private evidence |
 | Documentation | use `nextops-bilingual-documentation`; read the source requirement plus both language versions and update state/traceability when capability changes |
@@ -71,6 +72,7 @@ Markdown file is added, renamed, or removed.
 - `docs/en/CONFIGURATION.md` — English configuration contracts and current implemented subset.
 - `docs/en/CPU_AI.md` — English local CPU inference and capacity plan.
 - `docs/en/AI_SYSTEMD.md` — English Stage 1B native systemd service profile and installation hold.
+- `docs/en/AI_INTEGRITY.md` — English answer-integrity labels, deterministic boundary, and qualification guide.
 - `docs/en/DATA_API.md` — English durable data, workflow, evidence, and API contracts.
 - `docs/en/DEPLOYMENT_DOSSIERS.md` — English per-server dossier workflow.
 - `docs/en/DEVELOPMENT.md` — English development, CI, GitHub, and release workflow.
@@ -106,6 +108,7 @@ Markdown file is added, renamed, or removed.
 - `docs/fa/CONFIGURATION.md` — Persian configuration contracts and current implemented subset.
 - `docs/fa/CPU_AI.md` — Persian local CPU inference and capacity plan.
 - `docs/fa/AI_SYSTEMD.md` — Persian Stage 1B native systemd service profile and installation hold.
+- `docs/fa/AI_INTEGRITY.md` — Persian answer-integrity labels, deterministic boundary, and qualification guide.
 - `docs/fa/DATA_API.md` — Persian durable data, workflow, evidence, and API contracts.
 - `docs/fa/DEPLOYMENT_DOSSIERS.md` — Persian per-server dossier workflow.
 - `docs/fa/DEVELOPMENT.md` — Persian development, CI, GitHub, and release workflow.
@@ -141,6 +144,7 @@ Markdown file is added, renamed, or removed.
 - `docs/PROJECT_STATE.md` — Current implemented, tested, proposed, and blocked state.
 - `docs/requirements/archive/NEXTOPS_MASTER_PROMPT_v2.0.md` — Immutable original requirements and Persian appendix.
 - `docs/requirements/CERTIFICATE_LIFECYCLE_SPEC.md` — Bilingual local expiry, alert, rotation, and rollback contract.
+- `docs/requirements/ANSWER_INTEGRITY_SPEC.md` — Bounded model-output truthfulness and evidence-assurance specification.
 - `docs/requirements/DEPLOYMENT_UPDATE.md` — Active four-server deployment amendment.
 - `docs/requirements/NEXTOPS_MASTER_PROMPT.md` — Active engineering requirements and precedence.
 - `docs/requirements/nextops-threat-model.md` — Repository-grounded threat model and mitigations.

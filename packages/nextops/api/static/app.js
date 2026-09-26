@@ -34,6 +34,10 @@ const translations = {
     readOnlyTitle: "Read-only by design", readOnlyText: "This evaluation workspace cannot execute infrastructure changes.",
     assistantResponse: "ASSISTANT RESPONSE", generalResponseTitle: "Direct local answer", responseTitle: "Evidence-grounded result",
     modelOnlyBadge: "Local model · no live evidence", liveEvidenceBadge: "Live Zabbix evidence", incidentEvidenceBadge: "Live Zabbix + Linux evidence",
+    modelIntegrityNotice: "Model-generated text has no live evidence; verify important facts independently.",
+    evidenceIntegrityNotice: "AI synthesis passed the mandatory evidence-boundary checks; verify conclusions against the exact evidence below.",
+    fallbackIntegrityNotice: "The generated wording failed an integrity check, so NextOps replaced it with a deterministic evidence summary.",
+    redirectIntegrityNotice: "The question requires live evidence and was not answered from model memory. Choose a live evidence mode.",
     source: "Source", host: "Host", collected: "Collected", problems: "Active problems", coverage: "Evidence coverage",
     complete: "Complete", partial: "Partial (bounded)", stale: "stale",
     model: "Model", tokens: "Output tokens", completed: "Completed", requestId: "Request",
@@ -81,6 +85,10 @@ const translations = {
     readOnlyTitle: "فقط‌خواندنی، از ابتدا", readOnlyText: "این فضای ارزیابی امکان اجرای تغییر روی زیرساخت را ندارد.",
     assistantResponse: "پاسخ دستیار", generalResponseTitle: "پاسخ مستقیم مدل محلی", responseTitle: "نتیجه مبتنی بر شواهد",
     modelOnlyBadge: "مدل محلی · بدون شاهد زنده", liveEvidenceBadge: "شواهد زنده Zabbix", incidentEvidenceBadge: "شواهد زنده Zabbix و Linux",
+    modelIntegrityNotice: "این متن را مدل و بدون شاهد زنده تولید کرده است؛ اطلاعات مهم را به‌طور مستقل راستی‌آزمایی کنید.",
+    evidenceIntegrityNotice: "جمع‌بندی هوش مصنوعی کنترل‌های الزامی مرز شواهد را گذرانده است؛ نتیجه را با شواهد دقیق زیر تطبیق دهید.",
+    fallbackIntegrityNotice: "متن تولیدشده یکی از کنترل‌های صحت را نگذرانده است؛ بنابراین NextOps آن را با خلاصه‌ای قطعی از شواهد جایگزین کرد.",
+    redirectIntegrityNotice: "این پرسش به شاهد زنده نیاز دارد و از حافظهٔ مدل پاسخ داده نشد؛ یکی از حالت‌های دارای شاهد زنده را انتخاب کنید.",
     source: "منبع", host: "میزبان", collected: "زمان گردآوری", problems: "مسائل فعال", coverage: "پوشش شواهد",
     complete: "کامل", partial: "جزئی (محدودشده)", stale: "قدیمی",
     model: "مدل", tokens: "توکن‌های خروجی", completed: "زمان تکمیل", requestId: "شناسه درخواست",
@@ -443,6 +451,16 @@ byId("assistantForm").addEventListener("submit", async event => {
     byId("tokenCount").textContent = assistant.completion_tokens;
     byId("completedAt").textContent = new Date(assistant.completed_at).toLocaleString(state.language === "fa" ? "fa-IR" : "en-GB");
     byId("requestId").textContent = assistant.request_id;
+    const integrityKeys = {
+      model_unverified: "modelIntegrityNotice",
+      evidence_bounded: "evidenceIntegrityNotice",
+      deterministic_fallback: "fallbackIntegrityNotice",
+      scope_redirect: "redirectIntegrityNotice"
+    };
+    const integrityKey = integrityKeys[assistant.integrity_status] || "modelIntegrityNotice";
+    byId("integrityNotice").dataset.i18n = integrityKey;
+    byId("integrityNotice").textContent = translations[state.language][integrityKey];
+    byId("integrityNotice").classList.toggle("fallback", assistant.integrity_status === "deterministic_fallback");
     const titleKey = evidenceBacked ? "responseTitle" : "generalResponseTitle";
     const badgeKey = incident ? "incidentEvidenceBadge" : monitoring ? "liveEvidenceBadge" : "modelOnlyBadge";
     byId("responseTitle").dataset.i18n = titleKey;

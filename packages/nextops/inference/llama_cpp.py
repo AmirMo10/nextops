@@ -203,8 +203,10 @@ class LlamaCppProvider:
                         "vaguer statement or label a stated past event or outcome as unknown. "
                         "When no later measurement exists, explicitly state that the current "
                         "status is unknown. Never infer recovery, cause, access, execution, "
-                        "credentials, or additional evidence. Follow the requested length and "
-                        "format."
+                        "credentials, or additional evidence. Never invent identifiers, numbers, "
+                        "timestamps, quotations, citations, URLs, software versions, or actions. "
+                        "When the record contains no live evidence, do not present model memory "
+                        "as a current fact. Follow the requested length and format."
                     ),
                 },
                 {"role": "user", "content": f"{request.prompt}\n/no_think"},

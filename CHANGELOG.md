@@ -4,6 +4,17 @@
 
 ### English
 
+Added the bounded answer-integrity increment without changing the read-only architecture. General
+answers now carry explicit model-only limitations, and current infrastructure questions cannot be
+answered from model memory. Live monitoring and incident answers use consistent nested evidence
+labels and pass deterministic checks for fabricated execution, unsupported root cause, missing
+source identity and omitted stale/partial qualifiers before persistence. A failed check produces a
+bilingual deterministic summary from typed evidence and excludes untrusted source names. The UI
+explains unverified, evidence-bounded, fallback and redirect outcomes. The protected local
+evaluation corpus now has eight balanced English/Persian cases with automated lexical safety gates
+and retained human semantic review. The owner deferred all recovery work and confirmed that no SMTP
+host exists; neither recovery nor notification delivery is claimed by this increment.
+
 Added paired English/Persian owner runbooks for every remaining production blocker. The guides map
 the four machine-readable recovery blockers plus certificate delivery/rotation, supply-chain
 approval and final production sign-off to explicit owner and engineering responsibilities. They
@@ -154,6 +165,17 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+بخش محدود «صحت پاسخ» بدون تغییر معماری فقط‌خواندنی افزوده شد. پاسخ عمومی اکنون محدودیت نداشتن
+شاهد زنده را به‌صراحت اعلام می‌کند و پرسش دربارهٔ وضعیت فعلی زیرساخت از حافظهٔ مدل پاسخ داده
+نمی‌شود. برچسب شاهد در پاسخ داخلی حالت پایش و رخداد با پاسخ بیرونی یکسان است و پیش از ذخیره،
+ادعای اجرای عملیات، علت ریشه‌ای بی‌پشتوانه، نبود نام منبع و پنهان‌شدن شاهد قدیمی یا ناقص به‌صورت
+قطعی بررسی می‌شود. در صورت شکست، متن مدل با خلاصهٔ دوزبانهٔ ساخته‌شده از قرارداد معتبر شاهد
+جایگزین می‌شود و نام‌های تحت کنترل منبع در آن تکرار نمی‌شوند. رابط نتیجهٔ بدون راستی‌آزمایی،
+محدود به شاهد، جایگزین قطعی و هدایت به حالت زنده را توضیح می‌دهد. مجموعهٔ ارزیابی محلی اکنون هشت
+مورد متوازن فارسی و انگلیسی با کنترل واژگانی خودکار و بازبینی معنایی انسانی دارد. مالک همهٔ کارهای
+بازیابی را فعلاً کنار گذاشته و اعلام کرده میزبان SMTP در دسترس نیست؛ این تغییر هیچ ادعایی دربارهٔ
+بازیابی یا تحویل اعلان ندارد.
 
 راهنمای جفت انگلیسی و فارسی برای همهٔ موانع باقی‌ماندهٔ تولید افزوده شد. این راهنما چهار مانع
 ماشین‌خوان بازیابی را همراه تحویل و چرخش گواهی، تأیید زنجیرهٔ تأمین و امضای نهایی تولید به مسئولیت

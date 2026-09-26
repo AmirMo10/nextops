@@ -847,6 +847,8 @@ class DurableAppService:
                         "partial_reasons": list(evidence.partial_reasons),
                         "is_stale": result.is_stale,
                         "model_id": assistant.model_id,
+                        "answer_integrity_status": assistant.integrity_status,
+                        "answer_limitations": list(assistant.limitations),
                     },
                     occurred_at=now,
                 )
@@ -1171,6 +1173,8 @@ class DurableAppService:
                         "partial_reasons": list(evidence.partial_reasons),
                         "is_stale": result.is_stale,
                         "model_id": assistant.model_id,
+                        "answer_integrity_status": assistant.integrity_status,
+                        "answer_limitations": list(assistant.limitations),
                     },
                     occurred_at=now,
                 )

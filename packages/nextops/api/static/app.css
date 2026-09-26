@@ -306,6 +306,9 @@ main { position: relative; width: min(var(--size-content-max), calc(100% - 40px)
 .result-heading h2 { margin: 0; font-size: 21px; letter-spacing: -.02em; }
 .evidence-badge { padding: 8px 11px; border: 1px solid #e2cf94; border-radius: 8px; color: var(--brand-gold-dark); background: var(--brand-gold-soft); font-size: 10px; font-weight: 700; }
 .answer { padding: 26px 4px; color: var(--ink-soft); font-size: 15px; line-height: 1.9; white-space: pre-wrap; }
+.integrity-notice { margin: -8px 0 24px; padding: 12px 14px; border-inline-start: 3px solid var(--brand-teal); border-radius: 0 8px 8px 0; color: var(--ink-muted); background: #f2f7f7; font-size: 12px; line-height: 1.65; }
+[dir="rtl"] .integrity-notice { border-radius: 8px 0 0 8px; }
+.integrity-notice.fallback { border-inline-start-color: var(--brand-gold); background: var(--brand-gold-soft); color: var(--brand-gold-dark); }
 .result-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-top: 18px; border-top: 1px solid var(--line); }
 .result-meta span { min-width: 0; padding: 9px 10px; border-radius: 8px; background: var(--surface-subtle); }
 .result-meta small { display: block; margin-bottom: 5px; color: var(--muted); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; }

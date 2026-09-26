@@ -1,5 +1,22 @@
 # Next task / کار بعدی
 
+Updated: 2026-09-26 — The owner explicitly deferred every recovery, backup, PITR and
+disaster-recovery action. Preserve the recovery contract and its historical evidence, but do not
+install packages, allocate repositories, run drills or report those gates as passed unless the
+owner later resumes that scope. This deferral prevents production acceptance; it does not block
+continued controlled user testing. The owner also confirmed that no SMTP host is available. Do not
+invent or configure email delivery. Certificate detection and Zabbix problem visibility remain
+active, while operator notification delivery remains unaccepted until a real local delivery channel
+is selected and tested.
+
+The active non-recovery priority is answer integrity. The bounded implementation is defined in
+[ANSWER_INTEGRITY_SPEC](requirements/ANSWER_INTEGRITY_SPEC.md): truthful nested evidence metadata,
+model-only warnings, deterministic redirect for current-state questions without evidence,
+fail-closed generated-answer checks, bilingual exact-evidence fallbacks, audit fields, browser
+notices and an eight-case offline English/Persian corpus. Source checks must pass before immutable
+application and inference releases are promoted. Live loopback model, direct API and browser
+results must then be recorded for the exact release; source completion alone is not acceptance.
+
 Updated: 2026-09-23 — Phase 2 implementation and controlled qualification are complete. Application release
 `nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` are active. Four fixed targets now
 provide bounded Zabbix history/events plus direct, redacted and forced-command Linux evidence to a
@@ -204,6 +221,19 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 ## فارسی — سخت‌سازی مسیر زندهٔ ارزیابی کاربران
 
 ### نقطهٔ فعلی و ملاک ادامه
+
+به‌روزرسانی ۴ مهر ۱۴۰۵ — مالک پروژه تمام اقدام‌های پشتیبان، PITR و بازیابی بحران را فعلاً از دامنه
+کنار گذاشته است. قرارداد و شواهد تاریخی بازیابی باید حفظ شوند، اما تا زمانی که مالک این دامنه را
+از سر نگیرد، هیچ بسته یا مخزنی نصب، هیچ تمرینی اجرا و هیچ دروازه‌ای قبول‌شده اعلام نشود. در نتیجه
+پذیرش تولید ممکن نیست، ولی ارزیابی کنترل‌شدهٔ کاربران می‌تواند ادامه یابد. همچنین میزبان SMTP در
+اختیار نیست؛ بنابراین تحویل ایمیلی نباید جعل یا پیکربندی شود. تشخیص گواهی و نمایش مسئله در Zabbix
+فعال می‌ماند و تحویل اعلان به بهره‌بردار تا انتخاب و آزمون یک مسیر داخلی واقعی، پذیرفته‌نشده است.
+
+اولویت فعالِ خارج از بازیابی، صحت پاسخ است. پیاده‌سازی محدود در
+[مشخصات صحت پاسخ](requirements/ANSWER_INTEGRITY_SPEC.md) تعریف شده است: هماهنگی برچسب شاهد داخلی و
+بیرونی، هشدار روشن برای پاسخ بدون شاهد، هدایت پرسش وضعیت فعلی به حالت زنده، کنترل قطعی متن مدل،
+پاسخ جایگزین دوزبانه از شواهد دقیق، ثبت ممیزی، پیام روشن در رابط و مجموعهٔ هشت‌موردی ارزیابی آفلاین.
+قبولی منبع به‌تنهایی کافی نیست؛ نتیجهٔ مدل loopback، API و مرورگر باید برای همان انتشار ثبت شود.
 
 پیاده‌سازی و صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو تکمیل شده است؛ انتشار برنامه `nextops-0.1.0-eb57241` و انتشار اتصال‌دهنده
 `nextops-0.1.0-e2dad3a` فعال‌اند. چهار مقصد ثابت اکنون تاریخچه و رویداد محدود Zabbix را همراه شواهد مستقیم،

@@ -152,6 +152,44 @@ def generation_payload(case: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def evaluate_case(case: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
+    """Apply deterministic lexical safety gates without pretending to judge full semantics."""
+
+    body = result.get("body")
+    answer = body.get("answer") if isinstance(body, dict) else None
+    checks: list[dict[str, Any]] = []
+    if not isinstance(answer, str) or not answer.strip():
+        return {
+            "passed": False,
+            "checks": [{"id": "non_empty_answer", "passed": False}],
+        }
+
+    normalized = answer.casefold()
+    for index, alternatives in enumerate(case.get("must_include_any", []), start=1):
+        passed = any(str(value).casefold() in normalized for value in alternatives)
+        checks.append({"id": f"must_include_any_{index}", "passed": passed})
+    forbidden = [
+        str(value)
+        for value in case.get("must_not_include", [])
+        if str(value).casefold() in normalized
+    ]
+    checks.append(
+        {
+            "id": "forbidden_phrases_absent",
+            "passed": not forbidden,
+            "matched_count": len(forbidden),
+        }
+    )
+    locale = case["locale"]
+    script_ok = (
+        any("\u0600" <= character <= "\u06ff" for character in answer)
+        if locale == "fa"
+        else any("a" <= character.casefold() <= "z" for character in answer)
+    )
+    checks.append({"id": f"{locale}_script_present", "passed": script_ok})
+    return {"passed": all(check["passed"] for check in checks), "checks": checks}
+
+
 def main() -> int:
     args = parse_args()
     client = LoopbackClient(args.base_url, read_secret(args.secret_file), args.timeout_seconds)
@@ -192,6 +230,7 @@ def main() -> int:
                 "locale": case["locale"],
                 "review": case["review"],
                 "result": result,
+                "automated_review": evaluate_case(case, result),
             }
         )
 
@@ -224,6 +263,7 @@ def main() -> int:
         report["authentication"].get("status") == 401
         and report["readiness"].get("status") == 200
         and all(item["result"].get("status") == 200 for item in report["quality_cases"])
+        and all(item["automated_review"]["passed"] for item in report["quality_cases"])
     )
     report["automated_boundary_checks_passed"] = automated
     report["completed_at"] = datetime.now(UTC).isoformat()

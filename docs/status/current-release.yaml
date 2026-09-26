@@ -58,6 +58,13 @@ capabilities:
     evidence:
       - docs/PROJECT_STATE.md
       - tests/api/test_app.py
+  - id: deterministic_answer_integrity
+    status: implemented_unaccepted
+    evidence:
+      - docs/requirements/ANSWER_INTEGRITY_SPEC.md
+      - packages/nextops/api/answer_integrity.py
+      - tests/api/test_app.py
+      - tests/unit/test_stage1b_evaluation.py
   - id: zabbix_evidence_investigation
     status: accepted_controlled
     evidence:
@@ -241,3 +248,8 @@ acceptance_gates:
       - docs/PROJECT_STATE.md
       - docs/en/OPERATIONS.md
       - docs/en/TESTING.md
+  - id: answer_integrity_live
+    status: not_run
+    evidence:
+      - docs/requirements/ANSWER_INTEGRITY_SPEC.md
+      - docs/en/AI_INTEGRITY.md

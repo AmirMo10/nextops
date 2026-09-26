@@ -1,9 +1,9 @@
 """Authenticated user-testing contracts for the local assistant panel."""
 
-from typing import Literal
+from typing import Literal, Self
 from uuid import UUID
 
-from pydantic import AwareDatetime, Field
+from pydantic import AwareDatetime, Field, model_validator
 
 from nextops.contracts.models import FrozenContract
 from nextops.inference.contracts import FinishReason
@@ -32,5 +32,37 @@ class AssistantResponse(FrozenContract):
     completed_at: AwareDatetime
     queue_ms: int = Field(ge=0)
     cpu_only_required: Literal[True]
-    evidence_mode: Literal["model_only"] = "model_only"
-    live_monitoring_data: Literal[False] = False
+    evidence_mode: Literal["model_only", "live_zabbix", "live_zabbix_linux"] = "model_only"
+    live_monitoring_data: bool = False
+    integrity_status: Literal[
+        "model_unverified",
+        "evidence_bounded",
+        "deterministic_fallback",
+        "scope_redirect",
+    ] = "model_unverified"
+    limitations: tuple[
+        Literal[
+            "no_live_evidence",
+            "model_output_may_be_incorrect",
+            "read_only_no_action_performed",
+            "stale_evidence",
+            "partial_evidence",
+        ],
+        ...,
+    ] = Field(
+        default=("no_live_evidence", "model_output_may_be_incorrect"),
+        max_length=5,
+    )
+
+    @model_validator(mode="after")
+    def evidence_labels_are_consistent(self) -> Self:
+        """Prevent contradictory truthfulness labels at the application boundary."""
+
+        model_only = self.evidence_mode == "model_only"
+        if model_only == self.live_monitoring_data:
+            raise ValueError("evidence_mode and live_monitoring_data disagree")
+        if model_only and self.integrity_status == "evidence_bounded":
+            raise ValueError("model-only output cannot be evidence-bounded")
+        if not model_only and self.integrity_status in {"model_unverified", "scope_redirect"}:
+            raise ValueError("live-evidence output requires an evidence integrity outcome")
+        return self

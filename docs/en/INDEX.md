@@ -31,6 +31,7 @@ Begin with [START_HERE](START_HERE.md), [ZABBIX_SERVER](ZABBIX_SERVER.md) and th
 | [Suggested stack](TECH_STACK.md) | Core/optional technologies, UI, CPU models and tradeoffs |
 | [Architecture](ARCHITECTURE.md) | Module boundaries, responsibilities and repository layout |
 | [CPU-only AI](CPU_AI.md) | Models, evaluation, thread/concurrency and resource limits |
+| [AI answer integrity](AI_INTEGRITY.md) | Truthfulness labels, live-evidence boundary, deterministic fallback and qualification |
 | [Stage 1B systemd profile](AI_SYSTEMD.md) | Native CPU runtime and authenticated API units, credential handling, hardening, and installation hold |
 | [Security](SECURITY.md) | Identity, credentials, policy, approvals and threat model |
 | [Installation](INSTALL.md) | Current repository setup, guarded OS-package scripts, and future guest deployment gates |
