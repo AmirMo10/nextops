@@ -1,5 +1,13 @@
 # Project state / وضعیت پروژه
 
+Source-only production-claim guard, 2026-09-26 — The release-status validator now rejects a
+`production_acceptance: passed` claim unless deployment status agrees, every current-app and
+release gate is `passed`, and the public recovery profile asserts its complete independent
+destination, objectives, offline bundles, key custody and restore gates. Focused negative tests
+pass; the checked-in blocked profile continues to validate honestly but cannot support a
+production claim. This cross-manifest consistency check is not an off-host backup, isolated
+restore, authorization or production sign-off.
+
 Revision-scoped status checkpoint, 2026-09-26 — The public release manifest now separates
 historical controlled-campaign gates from a required `current_application_qualification` block
 bound to the actual application release and source commit. For `nextops-0.1.0-01755d1`, bounded

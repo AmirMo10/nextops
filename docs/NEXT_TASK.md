@@ -1,5 +1,11 @@
 # Next task / کار بعدی
 
+Source-only claim-guard follow-up, 2026-09-26 — The status validator now fails closed if someone
+marks production accepted while any current-app or release gate remains incomplete or the recovery
+profile lacks its independent-destination and restore conditions. This is a contradiction check,
+not proof of recovery or permission to change the serving hosts. The first real production action
+still needs the approved independent destination and isolated restore lab described below.
+
 Revision-scoped acceptance follow-up, 2026-09-26 — Read
 `docs/status/current-release.yaml` → `current_application_qualification` for the exact serving app
 release. The bounded live path passed, but the held-out bilingual semantic review, exact-release
