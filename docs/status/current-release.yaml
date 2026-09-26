@@ -1,9 +1,15 @@
 ---
 $schema: ./release-status.schema.json
-schema_version: 2.0.0
+schema_version: 2.1.0
 release_identifier: nextops-focused-app-controlled-2026-09-26
 observed_at: '2026-09-26'
 deployment_status: controlled_user_testing_not_production_accepted
+delivery_scope:
+  profile: local_read_only_recovery_deferred
+  recovery_disposition: deferred_by_owner
+  owner_instruction_date: '2026-09-26'
+  snapshot_statement: owner_reports_daily_esxi_vm_snapshots_unverified
+  residual_risk: same_hypervisor_or_storage_failure_and_untested_restore
 repository:
   remote: Omid-NextAI/nextops
   branch: main

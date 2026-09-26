@@ -9,6 +9,7 @@
     "release_identifier",
     "observed_at",
     "deployment_status",
+    "delivery_scope",
     "repository",
     "components",
     "current_application_qualification",
@@ -17,11 +18,23 @@
   ],
   "properties": {
     "$schema": {"type": "string"},
-    "schema_version": {"const": "2.0.0"},
+    "schema_version": {"const": "2.1.0"},
     "release_identifier": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"},
     "observed_at": {"type": "string", "format": "date"},
     "deployment_status": {
       "const": "controlled_user_testing_not_production_accepted"
+    },
+    "delivery_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "recovery_disposition", "owner_instruction_date", "snapshot_statement", "residual_risk"],
+      "properties": {
+        "profile": {"const": "local_read_only_recovery_deferred"},
+        "recovery_disposition": {"const": "deferred_by_owner"},
+        "owner_instruction_date": {"type": "string", "format": "date"},
+        "snapshot_statement": {"const": "owner_reports_daily_esxi_vm_snapshots_unverified"},
+        "residual_risk": {"const": "same_hypervisor_or_storage_failure_and_untested_restore"}
+      }
     },
     "repository": {
       "type": "object",

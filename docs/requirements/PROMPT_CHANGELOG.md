@@ -1,5 +1,22 @@
 # Prompt version history / تاریخچهٔ نسخه‌های پرامپت
 
+## Owner scope amendment — 2026-09-26
+
+The owner reports daily ESXi snapshots of all four local servers and directs the team to complete
+non-recovery work without treating independent recovery as the first active blocker. This later
+instruction changes the current delivery sequence, not the historical v3.0/v2.0 text or the
+meaning of a passed backup/restore test. Snapshot configuration and successful restoration have
+not been verified. The checked-in recovery profile remains blocked, and full production acceptance
+cannot be claimed under its existing contract. Other security, quality, offline and approval gates
+are unchanged. The release manifest records the owner-directed scope explicitly.
+
+مالک اعلام کرده است که از هر چهار سرور محلی هر روز در ESXi snapshot گرفته می‌شود و خواسته است کارهای
+غیربازیابی، بدون قرار دادن مقصد مستقل بازیابی در ابتدای صف، ادامه یابند. این دستورِ جدید ترتیب
+تحویل فعلی را تغییر می‌دهد، نه متن تاریخی نسخه‌های ۳ و ۲ یا معنای آزمون موفق پشتیبان و بازیابی را.
+پیکربندی snapshot و بازیابی موفق آن مستقلاً تأیید نشده‌اند؛ پروفایل بازیابی همچنان مسدود است و
+ادعای پذیرش کامل تولید مجاز نیست. سایر دروازه‌های کیفیت، امنیت، کارکرد آفلاین و تأیید انسانی
+برقرارند. دامنهٔ جدید در مانیفست انتشار ثبت شده است.
+
 ## v3.0 — 2026-09-20
 
 [Active prompt](NEXTOPS_MASTER_PROMPT.md) · [Preserved v2.0](archive/NEXTOPS_MASTER_PROMPT_v2.0.md) · [Source provenance](SOURCES.md)

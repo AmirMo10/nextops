@@ -79,6 +79,27 @@ def recovery_profile_qualified() -> bool:
     return result.returncode == 0
 
 
+def deferred_recovery_errors(status: dict[str, Any]) -> list[str]:
+    """A scope deferral is not backup evidence or full production acceptance."""
+
+    scope = status.get("delivery_scope")
+    if not isinstance(scope, dict) or scope.get("recovery_disposition") != "deferred_by_owner":
+        return []
+    gates = status.get("acceptance_gates")
+    if not isinstance(gates, list):
+        return ["acceptance gates are missing for the recovery deferral"]
+    gate_status = {
+        str(gate.get("id")): gate.get("status") for gate in gates if isinstance(gate, dict)
+    }
+    errors: list[str] = []
+    for gate_id in ("independent_backup", "isolated_restore"):
+        if gate_status.get(gate_id) not in ("partial", "not_run", "failed"):
+            errors.append(f"deferred recovery cannot mark {gate_id} passed or omit it")
+    if gate_status.get("production_acceptance") != "not_run":
+        errors.append("deferred recovery cannot claim full production acceptance")
+    return errors
+
+
 def production_claim_errors(status: dict[str, Any], recovery_qualified: bool) -> list[str]:
     """Reject contradictory production claims; evidence review remains a separate gate."""
 
@@ -132,6 +153,7 @@ def main() -> int:
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors.extend(error.message for error in sorted(validator.iter_errors(status), key=str))
     errors.extend(current_application_errors(status))
+    errors.extend(deferred_recovery_errors(status))
     errors.extend(production_claim_errors(status, recovery_profile_qualified()))
 
     ids: list[str] = []
