@@ -1,27 +1,38 @@
 # Next task / کار بعدی
 
-New source-only UI and relevance candidate, 2026-09-26 — Verify the focused file/filesystem
+Current controlled checkpoint, 2026-09-26 — Application release `nextops-0.1.0-01755d1`
+is deployed for user testing; AI API and connector remain `nextops-0.1.0-cdde129`. PR #10 passed
+five hosted CI jobs and merged into main. The exact app release passed fresh bilingual greeting,
+Zabbix monitoring, focused file/filesystem, evidence/audit, Edge RTL/mobile and browser WAN-denial
+checks. The first unfinished answer-quality work is a held-out bilingual semantic review against
+the owner's exact redacted question/visible answer, mixed-topic and partial/stale cases, followed
+by an exact-release rollback drill and server-side WAN/restart qualification in an authorized
+window. Do not claim general factual correctness from the deterministic focus checks. Production
+remains blocked by the independent recovery/restore destination and the other missing owner inputs
+below; no substitute backup or production sign-off was made.
+
+Historical pre-promotion source checkpoint, 2026-09-26 — Verify the focused file/filesystem
 behavior and simplified bilingual chat-style workspace against held-out real user questions. Check
 ambiguous mixed-topic questions, file-content refusal, approved mount capacity, partial evidence,
 provenance, audit, keyboard/mobile/RTL and true offline operation on the exact candidate release.
 Local checks passed (182 tests, 10 skips, lint, types, JavaScript syntax, paired-doc links/status).
-The code is not deployed; obtain the controlled change authorization and record rollback/live
+The code was not deployed at that checkpoint; obtain the controlled change authorization and record rollback/live
 qualification before promotion. Do not describe deterministic focused summaries as newly trained
 model output. The independent recovery destination/lab and remaining production gates below remain
 open.
 
-New owner-reported answer-quality priority, 2026-09-26 — Capture the exact user question, selected
+Historical owner-reported answer-quality priority, 2026-09-26 — Capture the exact user question, selected
 mode/target/language and visible answer without secrets. Reproduce and classify the mismatch as
 wrong mode, missing/partial evidence, model irrelevance, prompt echo, or output truncation. The
-source-only `codex/answer-completion-guard` candidate now rejects length-limited completions and
-question echoes and clarifies fallback/UI wording; it is **not deployed**. Before any promotion,
+then-source-only `codex/answer-completion-guard` candidate rejects length-limited completions and
+question echoes and clarifies fallback/UI wording; it was **not deployed at that checkpoint**. Before any promotion,
 run held-out English/Persian semantic cases on the exact local CPU runtime/model, verify the
 question-specific answer against the source/time/scope evidence, rerun API/browser tests and record
 latency/quality and rollback evidence. Do not infer that fine-tuning is needed or train on raw
 operational evidence. The independent recovery destination and isolated restore lab remain the
 first outstanding production gate; all other production blockers below remain open.
 
-Latest checkpoint, 2026-09-26 — All three application-layer releases are now
+Historical redirect/SSH checkpoint, 2026-09-26 — All three application-layer releases were then
 `nextops-0.1.0-cdde129`. Credentialed HTTP redirects fail closed; hosted CI and fresh WAN-denied
 browser checks passed. All four guests require key-only, non-root SSH; the AI guest's firewall is
 now active. Preserve these controls. The owner confirmed that none of the required independent
@@ -273,7 +284,17 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 ### نقطهٔ فعلی و ملاک ادامه
 
-آخرین نقطه، ۴ مهر ۱۴۰۵ — هر سه انتشار لایهٔ برنامه اکنون `nextops-0.1.0-cdde129` هستند.
+نقطهٔ کنونی، ۴ مهر ۱۴۰۵ — انتشار برنامه `nextops-0.1.0-01755d1` برای آزمون کاربران مستقر است و
+API هوش مصنوعی و اتصال‌دهنده روی `nextops-0.1.0-cdde129` مانده‌اند. درخواست ادغام شمارهٔ ۱۰ هر
+پنج کار CI را گذراند و به شاخهٔ اصلی رسید. همین انتشارِ برنامه آزمون تازهٔ سلام دوزبانه، پایش
+Zabbix، پرسش متمرکز فایل و فایل‌سیستم، پیوند شاهد و ممیزی، مرورگر Edge با چیدمان راست‌به‌چپ
+موبایل و منع WAN مرورگر را گذراند. گام ناتمامِ کیفیت پاسخ، بازبینی معناییِ پرسش‌های
+کنارگذاشته‌شده با متن دقیق و پالایش‌شدهٔ گزارش مالک، پرسش‌های چندموضوعی و شاهد ناقص یا قدیمی است؛
+پس از آن تمرین بازگشتِ همین انتشار و آزمون منع WAN و راه‌اندازی مجددِ سمت سرور در پنجرهٔ مجاز
+انجام شود. کنترل قطعیِ پاسخ متمرکز، درستی همهٔ پاسخ‌های مدل را اثبات نمی‌کند. مانع تولید همچنان
+مقصد و آزمایشگاه مستقل بازیابی و سایر ورودی‌های غایب مالک است.
+
+نقطهٔ تاریخیِ تغییرمسیر و SSH، ۴ مهر ۱۴۰۵ — هر سه انتشار لایهٔ برنامه در آن زمان `nextops-0.1.0-cdde129` بودند.
 تغییرمسیر HTTP دارای اطلاعات احراز هویت به‌صورت ایمن رد می‌شود؛ CI و مرورگر تازه با WAN مسدود
 موفق بودند. چهار مهمان SSH را فقط با کلید و بدون ورود مستقیم root می‌پذیرند و دیوارهٔ آتش AI
 فعال شده است. این کنترل‌ها حفظ شوند. مالک اعلام کرد مقصد و آزمایشگاه مستقل بازیابی، تصمیم مجوز،

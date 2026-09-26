@@ -1,6 +1,21 @@
 # Project state / وضعیت پروژه
 
-Focused-answer and workspace source candidate, 2026-09-26 — The owner reported that a request to
+Current controlled app checkpoint, 2026-09-26 — PR #10 passed all five hosted CI jobs and merged
+as `b4d2209`. Application release `nextops-0.1.0-01755d1` was built from the same source tree,
+verified by SHA-256, installed from the locked local wheelhouse into a fresh immutable virtualenv,
+and promoted under a 15-minute rollback timer. AI API and connector remain
+`nextops-0.1.0-cdde129`; the CPU model/runtime, database schema, Zabbix and OS packages did not
+change. The exact app release passed fresh protected-login/API checks for English/Persian greetings,
+Zabbix monitoring, the reported system-file limitation, focused filesystem capacity, evidence
+times/hash and durable audit IDs. A fresh Edge browser passed the simplified panel, file focus,
+Persian RTL/mobile layout, server logout/new-tab isolation and zero page WAN requests under a deny
+proxy. App/database/tunnels are active, release-file integrity passes and the rollback timer is
+disarmed. The full held-out semantic corpus, exact-release rollback drill, server-side WAN isolation
+and VM reboot were not rerun on this revision. Two earlier browser harness attempts read a hidden
+audit field with `innerText` and failed; the corrected test passed. Production remains unaccepted
+because independent recovery and the other owner inputs below are unavailable.
+
+Pre-promotion focused-answer and workspace source checkpoint, 2026-09-26 — The owner reported that a request to
 show only system files produced an all-data table and that the panel was too complex. This branch
 now classifies unambiguous file/filesystem questions without expanding connector access. The Linux
 collector exposes approved mount capacity, not arbitrary file names or contents. The model receives
@@ -13,10 +28,10 @@ layout, the file-listing refusal and the collapsed evidence boundary. The final 
 182 tests; 10 were skipped (nine requiring an isolated PostgreSQL URL and one POSIX-only collector
 test). Strict typing, lint/format, JavaScript syntax, Markdown parity/local links and release-status
 validation passed. Live CPU-model relevance, real-server browser, WAN-disconnected and deployment
-qualification for this exact revision remain **not run**. This is **not deployed** and does not imply
-model training or production acceptance.
+qualification for this exact revision were **not run at that source checkpoint**. The later
+controlled promotion is recorded above; it does not imply model training or production acceptance.
 
-Answer-quality source checkpoint, 2026-09-26 — The owner reported that a submitted question did
+Pre-promotion answer-quality source checkpoint, 2026-09-26 — The owner reported that a submitted question did
 not match the AI response and that the result looked fabricated. A fresh browser capture from the
 prior section-by-section audit showed a 128-token incident reply that appeared unfinished while
 the interface displayed an evidence-bounded notice; a Persian monitoring fallback was overly
@@ -411,7 +426,21 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 
 ## فارسی
 
-آخرین نقطهٔ کنترل‌شده، ۴ مهر ۱۴۰۵ — تغییر `cdde129` خطر انتقال اطلاعات احراز هویت در پیِ پاسخ
+نقطهٔ کنترل‌شدهٔ کنونی، ۴ مهر ۱۴۰۵ — درخواست ادغام شمارهٔ ۱۰ هر پنج کار CI را گذراند و با
+`b4d2209` در شاخهٔ اصلی ادغام شد. انتشار برنامه `nextops-0.1.0-01755d1` از همان کد ساخته، با
+SHA-256 سنجیده و از بسته‌های قفل‌شدهٔ محلی در محیط مجازی تازه و تغییرناپذیر نصب شد. جابه‌جایی
+انتشار زیر حفاظت زمان‌سنج پانزده‌دقیقه‌ای بازگشت انجام گرفت. API هوش مصنوعی و اتصال‌دهنده روی
+`nextops-0.1.0-cdde129` مانده‌اند؛ مدل و محیط اجرای CPU، طرح پایگاه داده، Zabbix و بسته‌های سیستم
+تغییر نکردند. ورود تازه و آزمون زندهٔ API، سلام فارسی و انگلیسی، پایش Zabbix، توضیح نداشتن دسترسی
+به نام فایل‌های سیستم، ظرفیت نقاط اتصالِ مجاز، زمان و هش شاهد و شناسهٔ ممیزی را تأیید کرد. مرورگر
+تازهٔ Edge نیز پنل ساده‌شده، پاسخ متمرکز، چیدمان راست‌به‌چپ موبایل، خروج در سرور، جداسازی برگه و
+نبودِ درخواست بیرونیِ صفحه با پراکسی منع WAN را گذراند. سرویس برنامه، پایگاه و تونل‌ها فعال‌اند،
+تمامیت فایل‌های انتشار برقرار است و زمان‌سنج بازگشت پس از پذیرش محدود خاموش شد. مجموعهٔ کامل
+ارزیابی معنایی، تمرین بازگشت همین انتشار، منع WAN سمت سرور و reboot ماشین‌ها برای این نسخه تکرار
+نشده‌اند. دو اجرای آغازین ابزار مرورگر به‌سبب خواندن شناسهٔ ممیزیِ پنهان با `innerText` شکست خورد؛
+اجرای اصلاح‌شده موفق بود. نبود منابع مستقل بازیابی و سایر ورودی‌های مالک همچنان مانع پذیرش تولید است.
+
+نقطهٔ تاریخیِ پیش از این استقرار، ۴ مهر ۱۴۰۵ — تغییر `cdde129` خطر انتقال اطلاعات احراز هویت در پیِ پاسخ
 تغییرمسیر HTTP را در ارتباط برنامه با AI و اتصال‌دهنده و نیز اتصال‌دهنده با Zabbix بست؛ اکنون
 تغییرمسیر رد می‌شود و bearer یا توکن API به مقصد دیگر فرستاده نمی‌شود. آزمون بازگشتِ همین مرز،
 ۱۶۱ آزمون منتخب، بررسی نوع و قالب و هر پنج کار CI موفق بودند. انتشار برنامه، API استنتاج و

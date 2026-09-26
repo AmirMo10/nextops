@@ -22,8 +22,11 @@ rotation/operator notification and disaster-recovery sign-off remain open. The o
 recovery scope, but no independent destination or isolated restore lab exists; no recovery
 acceptance is implied. No SMTP or alternate named-recipient delivery route is configured.
 
-The current application, AI API and connector releases are `nextops-0.1.0-cdde129`. This update
-rejects credential-bearing HTTP redirects; all four guests require key-only, non-root SSH and the
+The current application release is `nextops-0.1.0-01755d1`; AI API and connector remain on
+`nextops-0.1.0-cdde129`. The app-only update focuses file/filesystem answers and simplifies the
+workspace. Fresh API and browser checks passed; a full held-out semantic corpus and exact-release
+rollback drill have not run. The earlier release rejects credential-bearing HTTP redirects;
+all four guests require key-only, non-root SSH and the
 AI host firewall is active. Zabbix Agent 2 is aligned at `7.0.31` on all four guests. The owner confirmed that recovery/restore resources, an approved
 project license, a named-recipient notification channel, replacement CA certificates and named
 approvers are unavailable. The tested offline capability does not imply permanent host egress

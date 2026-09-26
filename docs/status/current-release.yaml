@@ -1,17 +1,17 @@
 ---
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
-release_identifier: nextops-redirect-ssh-controlled-2026-09-26
+release_identifier: nextops-focused-app-controlled-2026-09-26
 observed_at: '2026-09-26'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: cdde129950f60f9f18f3ef109cbf98f4217fc5e1
+  inspected_baseline_commit: b4d22097ad561c32735e4ee0343e755abcf5c7e4
 components:
   application:
-    release: nextops-0.1.0-cdde129
-    source_commit: cdde129950f60f9f18f3ef109cbf98f4217fc5e1
+    release: nextops-0.1.0-01755d1
+    source_commit: 01755d1cf3e2343dc49c418f73925d660db7d6a2
   connector:
     release: nextops-0.1.0-cdde129
     source_commit: cdde129950f60f9f18f3ef109cbf98f4217fc5e1
@@ -285,10 +285,22 @@ acceptance_gates:
       - docs/en/OPERATIONS.md
       - docs/en/TESTING.md
   - id: answer_integrity_live
-    status: passed
+    status: partial
     evidence:
       - docs/requirements/ANSWER_INTEGRITY_SPEC.md
       - docs/en/AI_INTEGRITY.md
+      - docs/en/TESTING.md
+  - id: focused_app_live_qualification
+    status: passed
+    evidence:
+      - docs/en/TESTING.md
+      - docs/fa/TESTING.md
+      - tests/api/test_app.py
+      - tests/browser/test_phase2_panel.py
+  - id: focused_app_exact_rollback_drill
+    status: not_run
+    evidence:
+      - docs/en/TESTING.md
   - id: serving_guest_package_maintenance
     status: passed
     evidence:

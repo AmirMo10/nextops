@@ -4,6 +4,17 @@
 
 ### English
 
+Promoted the cumulative answer-completion and focused-UI work through PR #10 (all five CI jobs
+passed). Immutable application release `nextops-0.1.0-01755d1` now serves controlled user testing;
+AI API, connector, CPU runtime/model, database schema and Zabbix did not change. The release was
+built from a SHA-256-checked wheel and locked offline dependencies in a fresh virtualenv at its
+final path, avoiding the old copied-launcher risk. Under an automatic rollback guard, fresh API
+and Edge checks passed English/Persian greetings, live monitoring, file-listing refusal,
+filesystem-capacity focus, provenance/audit, RTL/mobile layout, logout and browser WAN denial.
+The guard was disarmed after qualification and the prior app release remains available. Full
+held-out semantic review, exact-release rollback, server WAN-disconnection and reboot were not
+rerun; production recovery and approval gates remain open.
+
 Closed credential-bearing HTTP redirect forwarding in the application/connector transports,
 with a local 302 regression test that proves no second request. Commit `cdde129` passed all five
 hosted CI jobs and was deployed as immutable app, AI API and connector releases
@@ -222,6 +233,17 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+کارهای انباشتهٔ اصلاحِ پایان پاسخ و رابط متمرکز از راه درخواست ادغام شمارهٔ ۱۰ گذشتند؛ هر پنج کار
+CI موفق بود. انتشار تغییرناپذیر برنامه `nextops-0.1.0-01755d1` اکنون برای آزمون کنترل‌شدهٔ
+کاربران فعال است. API هوش مصنوعی، اتصال‌دهنده، مدل و محیط اجرای CPU، طرح پایگاه داده و Zabbix
+تغییر نکردند. wheel با SHA-256 بررسی و وابستگی‌های قفل‌شده به‌صورت آفلاین در محیط مجازی تازه و
+مسیر نهایی نصب شدند تا راه‌اندازِ کپی‌شده به انتشار قدیمی اشاره نکند. زیر حفاظت زمان‌سنج بازگشت،
+آزمون تازهٔ API و Edge، سلام فارسی و انگلیسی، پایش زنده، امتناع از فهرست‌کردن فایل‌ها، ظرفیت
+فایل‌سیستم، منشأ و ممیزی، چیدمان راست‌به‌چپ موبایل، خروج و منع WAN مرورگر را گذراند. پس از
+صلاحیت‌سنجی، زمان‌سنج خاموش شد و انتشار پیشین برنامه برای بازگشت باقی ماند. مجموعهٔ کامل معنایی،
+بازگشت همین انتشار، قطع WAN سمت سرور و reboot دوباره اجرا نشده‌اند؛ دروازه‌های بازیابی و تأیید
+تولید همچنان بازند.
 
 انتقال احتمالی اطلاعات احراز هویت در پی تغییرمسیر HTTP برای ارتباط برنامه و اتصال‌دهنده بسته شد؛
 آزمون بازگشت محلی با پاسخ `302` ثابت می‌کند درخواست دوم ساخته نمی‌شود. تغییر `cdde129` هر پنج کار

@@ -22,13 +22,12 @@ the same bound. Timeout, overload and local-dependency failures retain safe mach
 and are presented as distinct actionable messages in both languages. This prevents a stale or
 modified browser from raising the output limit beyond the qualified user-testing profile.
 
-A source-only correction dated 2026-09-26 clarifies the result notice: automated source checks do
+A deployed correction dated 2026-09-26 clarifies the result notice: automated source checks do
 not prove that an answer is true or relevant. A token-limit completion is treated as incomplete
-and displayed through an explicitly limited evidence-only fallback. This correction is not yet in
-the controlled deployment; the current release must not be described as having passed its live
-requalification.
+and displayed through an explicitly limited evidence-only fallback. The app-only release passed
+bounded live API and browser checks; the full held-out semantic corpus remains unrun.
 
-The current source candidate also replaces the dense two-column evaluation workspace with a
+The current controlled application release also replaces the dense two-column evaluation workspace with a
 single-column question/answer flow. Mode, approved target and language remain explicit; the
 submitted question and answer appear together, with source, collection times and scope visible.
 The full authorized evidence and audit identifiers are available in a collapsed disclosure rather
@@ -36,8 +35,8 @@ than an unsolicited all-data table. Each request is independent; the panel does 
 screen content as conversation history. A filesystem-capacity question shows only allowlisted mount
 observations in the answer. A request for system file names or contents is answered as unavailable:
 the read-only collector does not retrieve them. The application labels these focused responses as
-deterministic evidence summaries, not verified AI prose. This source candidate has not been
-deployed or live-qualified.
+deterministic evidence summaries, not verified AI prose. Fresh English/Persian API checks and a
+fresh Edge browser pass for this exact app release; they do not establish production readiness.
 
 ## Information architecture
 
@@ -63,7 +62,7 @@ A development-only [Figma design source](https://www.figma.com/design/fXtpP4xBQg
 now records the OCS cover, 48 primitive/semantic/dimension variables, 11 bilingual text styles and
 two elevation styles. The deployed workspace mirrors its spacing, radii and brand tokens, with
 numbered answer-mode cards, a high-contrast evidence boundary, compact service-status pills and a
-branded result accent. The unpromoted source candidate retains the OCS tokens but replaces the
+branded result accent. The current controlled release retains the OCS tokens but replaces the
 cards and permanent side panel with compact mode choices and optional evidence guidance. Figma is
 not a runtime dependency or an authority for application behavior;
 the reviewed source, tests and documentation remain authoritative. Full product-screen composition
@@ -73,12 +72,15 @@ must not be represented as a complete screen library.
 The real-browser fixture covers the branded login, authenticated workspace, composite incident
 evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width without horizontal
 overflow or external requests. The visual foundation was first promoted as immutable application
-release `nextops-0.1.0-54c8bb4`; deployed release `nextops-0.1.0-cdde129` preserves it, server-side
+release `nextops-0.1.0-54c8bb4`; release `nextops-0.1.0-cdde129` preserved it and server-side
 session termination and explicit localized integrity notices for unverified model-only answers,
 evidence-bounded answers, deterministic fallbacks and monitoring-scope redirects. A fresh
 authenticated Phase 2 browser workflow passed English/Persian incident evidence, normal TLS, WAN
 denial, mobile RTL, audited logout and new-tab isolation without an external page request. The
-2026-09-26 live API qualification also passed all four answer-integrity modes.
+2026-09-26 live API qualification also passed all four answer-integrity modes. The current app
+release `nextops-0.1.0-01755d1` adds the focused, collapsed-detail workspace and passed fresh
+greeting, file-boundary, evidence/audit, RTL/mobile and browser-WAN checks. This did not rerun
+the full semantic corpus or the earlier VM-reboot campaign.
 
 ## Persian and English behavior
 
