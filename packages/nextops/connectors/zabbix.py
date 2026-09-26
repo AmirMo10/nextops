@@ -26,6 +26,7 @@ from nextops.contracts.monitoring import (
     MonitoringProblem,
     MonitoringSummary,
 )
+from nextops.security.http import NoRedirectHandler
 
 MAX_ZABBIX_RESPONSE_BYTES = 1_048_576
 INCIDENT_LOOKBACK_MINUTES = 60
@@ -54,7 +55,9 @@ class HttpsZabbixTransport:
 
     def __init__(self, api_url: str, ca_file: Path, api_token: str, timeout: float) -> None:
         context = ssl.create_default_context(cafile=str(ca_file))
-        self._opener = build_opener(ProxyHandler({}), HTTPSHandler(context=context))
+        self._opener = build_opener(
+            ProxyHandler({}), NoRedirectHandler(), HTTPSHandler(context=context)
+        )
         self._api_url = api_url
         self._api_token = api_token
         self._timeout = timeout

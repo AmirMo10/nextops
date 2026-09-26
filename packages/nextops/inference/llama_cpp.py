@@ -22,6 +22,7 @@ from nextops.inference.contracts import (
     ProviderReadiness,
     ReadinessState,
 )
+from nextops.security.http import NoRedirectHandler
 
 MAX_PROVIDER_RESPONSE_BYTES = 1_048_576
 
@@ -47,7 +48,7 @@ class UrllibJsonTransport:
 
     def __init__(self, base_url: str) -> None:
         self._base_url = base_url.rstrip("/")
-        self._opener = build_opener(ProxyHandler({}))
+        self._opener = build_opener(ProxyHandler({}), NoRedirectHandler())
 
     async def get_json(
         self, path: str, headers: dict[str, str], timeout_seconds: float
