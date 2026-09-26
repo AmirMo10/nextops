@@ -10,6 +10,7 @@
     "observed_at",
     "deployment_status",
     "delivery_scope",
+    "snapshot_restore_owner_attestation",
     "repository",
     "components",
     "current_application_qualification",
@@ -18,7 +19,7 @@
   ],
   "properties": {
     "$schema": {"type": "string"},
-    "schema_version": {"const": "2.1.0"},
+    "schema_version": {"const": "2.2.0"},
     "release_identifier": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"},
     "observed_at": {"type": "string", "format": "date"},
     "deployment_status": {
@@ -33,7 +34,17 @@
         "recovery_disposition": {"const": "deferred_by_owner"},
         "owner_instruction_date": {"type": "string", "format": "date"},
         "snapshot_statement": {"const": "owner_reports_daily_esxi_vm_snapshots_unverified"},
-        "residual_risk": {"const": "same_hypervisor_or_storage_failure_and_untested_restore"}
+        "residual_risk": {"const": "same_hypervisor_or_storage_failure_and_independent_restore_unqualified"}
+      }
+    },
+    "snapshot_restore_owner_attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reported_at", "statement", "evidence_review"],
+      "properties": {
+        "reported_at": {"type": "string", "format": "date"},
+        "statement": {"const": "owner_verified_esxi_snapshot_restore_only"},
+        "evidence_review": {"const": "pending"}
       }
     },
     "repository": {

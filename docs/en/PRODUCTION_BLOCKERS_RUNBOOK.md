@@ -6,11 +6,14 @@
 
 Current delivery sequence: the owner reports daily ESXi snapshots of all four servers and has
 deferred independent recovery work for this local deployment. Sections 3–4 below are retained as
-the future recovery handoff, not the next active task. The snapshot claim has not been verified as
-a successful restore or an independent backup. The recovery profile remains blocked; full
+the future recovery handoff, not the next active task. The snapshot schedule and restore result
+have not been independently reviewed and do not establish an independent backup. The recovery profile remains blocked; full
 production acceptance is still unavailable. Work first on the exact app's held-out bilingual
 answer review and then the authorized non-recovery release, security and operator gates in
 [NEXT_TASK](../NEXT_TASK.md). The owner's deferral is not approval for a server change.
+
+The owner clarified that an ESXi VM snapshot restore **was** tested by the owner; its dated
+evidence was not reviewed here. This does not establish the independent recovery gates.
 
 On 2026-09-26 the owner confirmed that none of the requested independent recovery/restore
 resources, project-license decision, local delivery channel and recipients, replacement CA

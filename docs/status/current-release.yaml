@@ -1,6 +1,6 @@
 ---
 $schema: ./release-status.schema.json
-schema_version: 2.1.0
+schema_version: 2.2.0
 release_identifier: nextops-focused-app-controlled-2026-09-26
 observed_at: '2026-09-26'
 deployment_status: controlled_user_testing_not_production_accepted
@@ -9,7 +9,11 @@ delivery_scope:
   recovery_disposition: deferred_by_owner
   owner_instruction_date: '2026-09-26'
   snapshot_statement: owner_reports_daily_esxi_vm_snapshots_unverified
-  residual_risk: same_hypervisor_or_storage_failure_and_untested_restore
+  residual_risk: same_hypervisor_or_storage_failure_and_independent_restore_unqualified
+snapshot_restore_owner_attestation:
+  reported_at: '2026-09-26'
+  statement: owner_verified_esxi_snapshot_restore_only
+  evidence_review: pending
 repository:
   remote: Omid-NextAI/nextops
   branch: main
@@ -101,6 +105,13 @@ capabilities:
       - packages/nextops/api/answer_integrity.py
       - tests/api/test_app.py
       - tests/unit/test_stage1b_evaluation.py
+  - id: live_semantic_review_capture
+    status: implemented_unaccepted
+    evidence:
+      - scripts/evaluate_live_app_semantics.py
+      - tests/unit/test_live_app_semantics.py
+      - docs/en/TESTING.md
+      - docs/fa/TESTING.md
   - id: zabbix_evidence_investigation
     status: accepted_controlled
     evidence:

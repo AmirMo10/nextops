@@ -4,9 +4,13 @@
 
 Updated: 2026-09-26
 
+Owner clarification: an ESXi VM snapshot restore was tested by the owner; its dated result was
+not reviewed here. This does not qualify independent PostgreSQL backup, WAL/PITR or isolated
+restore. Non-recovery work remains the active delivery sequence.
+
 Current scope note: the owner reports daily ESXi snapshots and has deferred independent recovery
-from this local delivery. Snapshot restoration and protection against loss of the serving host or
-storage are unverified. Recovery work is no longer the first active checkpoint, but its acceptance
+from this local delivery. The owner's snapshot-restore result has not been independently reviewed;
+protection against loss of the serving host or storage is unproven. Recovery work is no longer the first active checkpoint, but its acceptance
 gates remain unpassed and full production acceptance is not claimed. The next work is the serving
 app's held-out bilingual answer review and other non-recovery release/security gates.
 

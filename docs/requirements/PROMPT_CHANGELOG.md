@@ -1,5 +1,17 @@
 # Prompt version history / تاریخچهٔ نسخه‌های پرامپت
 
+## Owner clarification of the recovery claim — 2026-09-26
+
+The owner clarified that the verification was restoration from an ESXi VM snapshot only. It does
+not evidence independent PostgreSQL backup, WAL/PITR, isolated database restore, key/artifact
+recovery or survival of loss of the serving hypervisor/storage. The active non-recovery delivery
+sequence is unchanged, and the full-production recovery gates remain unpassed.
+
+مالک روشن کرد که آزمون انجام‌شده فقط بازیابی از snapshot ماشین ESXi بوده است. این آزمون شاهدِ
+پشتیبان مستقلِ PostgreSQL، ‏WAL/PITR، بازیابی ایزولهٔ پایگاه، بازیابی کلید و فایل یا دوام در برابر
+خرابی میزبان و ذخیره‌سازی نیست. ترتیب تحویل غیربازیابی تغییر نمی‌کند و معیارهای بازیابیِ پذیرش
+کامل تولید همچنان پذیرفته نشده‌اند.
+
 ## Owner scope amendment — 2026-09-26
 
 The owner reports daily ESXi snapshots of all four local servers and directs the team to complete
