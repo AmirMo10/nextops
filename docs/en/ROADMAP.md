@@ -2,18 +2,18 @@
 
 [فارسی](../fa/ROADMAP.md) · [Start here](START_HERE.md) · [Index](INDEX.md) · [G10 server plan](SERVER_PLAN.md)
 
-**Status: the sequence is accepted and the controlled Phase 2 implementation is deployed and qualified across four guests.** Four fixed targets now combine bounded Zabbix history/events with direct read-only Linux snapshots in a durable bilingual local-CPU investigation. Live API, restart, rollback, server/API WAN denial, authenticated browser, serial reboot and dependency-recovery checks pass. This is not production acceptance; independent backup, WAL/PITR and disaster recovery remain open. The [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md) are authoritative.
+**Status: the sequence is accepted and the controlled Phase 2 implementation is deployed and qualified across four guests.** Four fixed targets now combine bounded Zabbix history/events with direct read-only Linux snapshots in a durable bilingual local-CPU investigation. Live API, answer integrity, restart, rollback, server/API WAN denial, authenticated browser, serial reboot and dependency-recovery checks pass. This is not production acceptance. The owner deferred recovery work from the current scope; its gates remain unaccepted rather than silently passed. The [release manifest](../status/current-release.yaml) and [project state](../PROJECT_STATE.md) are authoritative.
 
 **Phase 1 delivered the first Zabbix answer; Phase 2 now adds bounded direct Linux evidence.** The archived prompt is unchanged; older Phase-2-first-answer wording is superseded.
 
 **Phase 2 implementation and qualification are complete for controlled user testing.** Application
-release `nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` combine the bounded authenticated Zabbix incident context with fixed-target,
+release `nextops-0.1.0-2397581`, AI application release `nextops-0.1.0-fd3c353` and connector
+release `nextops-0.1.0-e2dad3a` combine the bounded authenticated Zabbix incident context with fixed-target,
 forced-command Linux snapshots, durable audit/evidence linkage and bilingual model output. Source
 CI, live English/Persian API requests, service restart, rollback, guarded WAN isolation,
 authenticated browser, serial reboot and dependency recovery pass.
-The current application release additionally passes audited server-side session termination in
-hosted CI, the live API and a normal-TLS browser while preserving a second session and the prior
-rollback release.
+The current releases additionally pass audited server-side session termination and deterministic
+misinformation controls in hosted CI and the live API while preserving prior immutable releases.
 
 ## Create these VMs first
 

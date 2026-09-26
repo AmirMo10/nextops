@@ -1,23 +1,23 @@
 ---
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
-release_identifier: nextops-certificate-monitoring-controlled-2026-09-23
-observed_at: '2026-09-23'
+release_identifier: nextops-answer-integrity-controlled-2026-09-26
+observed_at: '2026-09-26'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: f540a9da9857e661d0d1f56e453035661a299420
+  inspected_baseline_commit: 239758160ac71d2e083865de6d2cd29979a16bf8
 components:
   application:
-    release: nextops-0.1.0-eb57241
-    source_commit: eb572410b345202cfbf0384d7f847c5495026132
+    release: nextops-0.1.0-2397581
+    source_commit: 239758160ac71d2e083865de6d2cd29979a16bf8
   connector:
     release: nextops-0.1.0-e2dad3a
     source_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
   inference_api:
-    release: nextops-0.1.0-62de8d6
-    source_commit: 62de8d61fb4a841f016732815f75d95ca6c403a9
+    release: nextops-0.1.0-fd3c353
+    source_commit: fd3c353f85477ed1d7b36bb6722c818f91cd36d9
   inference_runtime:
     name: llama.cpp
     source_tag: v0.4.1
@@ -59,7 +59,7 @@ capabilities:
       - docs/PROJECT_STATE.md
       - tests/api/test_app.py
   - id: deterministic_answer_integrity
-    status: implemented_unaccepted
+    status: accepted_controlled
     evidence:
       - docs/requirements/ANSWER_INTEGRITY_SPEC.md
       - packages/nextops/api/answer_integrity.py
@@ -249,7 +249,7 @@ acceptance_gates:
       - docs/en/OPERATIONS.md
       - docs/en/TESTING.md
   - id: answer_integrity_live
-    status: not_run
+    status: passed
     evidence:
       - docs/requirements/ANSWER_INTEGRITY_SPEC.md
       - docs/en/AI_INTEGRITY.md

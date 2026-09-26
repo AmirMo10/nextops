@@ -15,6 +15,15 @@ evaluation corpus now has eight balanced English/Persian cases with automated le
 and retained human semantic review. The owner deferred all recovery work and confirmed that no SMTP
 host exists; neither recovery nor notification delivery is claimed by this increment.
 
+Hosted CI passed all five jobs for the final source. Immutable application release
+`nextops-0.1.0-2397581` and inference API release `nextops-0.1.0-fd3c353` were promoted with prior
+releases preserved. The final private eight-case loopback corpus passed automated and engineering
+semantic review. Live authenticated application checks passed greeting relevance, deterministic
+current-status redirect, monitoring synthesis, composite incident fallback, evidence metadata and
+test-session revocation. A serial reboot of all four guests loaded kernel `6.8.0-142`; each returned
+running with zero failed units and no reboot marker. Pending Ubuntu and Zabbix 7.0.31 packages were
+not fetched without the approved proxy/offline path.
+
 Added paired English/Persian owner runbooks for every remaining production blocker. The guides map
 the four machine-readable recovery blockers plus certificate delivery/rotation, supply-chain
 approval and final production sign-off to explicit owner and engineering responsibilities. They
@@ -176,6 +185,15 @@ Windows session because no local server or working container runtime was availab
 مورد متوازن فارسی و انگلیسی با کنترل واژگانی خودکار و بازبینی معنایی انسانی دارد. مالک همهٔ کارهای
 بازیابی را فعلاً کنار گذاشته و اعلام کرده میزبان SMTP در دسترس نیست؛ این تغییر هیچ ادعایی دربارهٔ
 بازیابی یا تحویل اعلان ندارد.
+
+هر پنج کار CI برای منبع نهایی موفق بود. انتشار تغییرناپذیر برنامه
+`nextops-0.1.0-2397581` و انتشار API هوش مصنوعی `nextops-0.1.0-fd3c353` با حفظ نسخه‌های قبلی
+ارتقا یافتند. مجموعهٔ خصوصی و نهایی هشت‌موردی loopback، کنترل خودکار و بازبینی معنایی مهندسی را
+گذراند. آزمون زنده و احرازهویت‌شدهٔ برنامه، مرتبط‌بودن سلام، هدایت قطعی پرسش وضعیت فعلی، جمع‌بندی
+پایش، پاسخ جایگزین رخداد ترکیبی، فرادادهٔ شاهد و لغو نشست آزمایشی را تأیید کرد. reboot ترتیبی هر
+چهار مهمان kernel `6.8.0-142` را بار کرد و همه با وضعیت running، صفر واحد خراب و بدون نشانگر reboot
+بازگشتند. بسته‌های در انتظار Ubuntu و Zabbix 7.0.31 بدون مسیر مصوب پراکسی یا بستهٔ آفلاین دریافت
+نشدند.
 
 راهنمای جفت انگلیسی و فارسی برای همهٔ موانع باقی‌ماندهٔ تولید افزوده شد. این راهنما چهار مانع
 ماشین‌خوان بازیابی را همراه تحویل و چرخش گواهی، تأیید زنجیرهٔ تأمین و امضای نهایی تولید به مسئولیت

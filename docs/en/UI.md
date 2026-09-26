@@ -54,10 +54,12 @@ must not be represented as a complete screen library.
 The real-browser fixture covers the branded login, authenticated workspace, composite incident
 evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width without horizontal
 overflow or external requests. The visual foundation was first promoted as immutable application
-release `nextops-0.1.0-54c8bb4`; current release `nextops-0.1.0-eb57241` preserves it and adds
-server-side session termination. A fresh authenticated Phase 2 browser workflow on the current
-release passed English/Persian incident evidence, normal TLS, WAN denial, mobile RTL, audited
-logout and new-tab isolation without an external page request.
+release `nextops-0.1.0-54c8bb4`; current release `nextops-0.1.0-2397581` preserves it, server-side
+session termination and explicit localized integrity notices for unverified model-only answers,
+evidence-bounded answers, deterministic fallbacks and monitoring-scope redirects. A fresh
+authenticated Phase 2 browser workflow passed English/Persian incident evidence, normal TLS, WAN
+denial, mobile RTL, audited logout and new-tab isolation without an external page request. The
+2026-09-26 live API qualification also passed all four answer-integrity modes.
 
 ## Persian and English behavior
 

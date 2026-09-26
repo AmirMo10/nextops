@@ -1,5 +1,29 @@
 # Project state / وضعیت پروژه
 
+Updated: 2026-09-26 — The answer-integrity increment is accepted for controlled user testing.
+Application release `nextops-0.1.0-2397581` and inference API release
+`nextops-0.1.0-fd3c353` are active; the previous immutable releases remain available for rollback.
+General output is explicitly model-only and potentially incorrect, current infrastructure state is
+not answered from model memory, and live answers carry consistent nested evidence labels. Generated
+execution claims, unsupported root cause, missing sources, hidden stale/partial qualifiers and long
+prompt echo fail closed to a localized deterministic response before persistence. Audit details now
+record the integrity outcome and limitations.
+
+All five hosted jobs passed for the final source: quality/unit, PostgreSQL 16, PostgreSQL 17,
+browser fixture and secret scan. The final private loopback report passed eight English/Persian
+cases and engineering semantic review. A live authenticated app exercise passed `Hi` relevance,
+current-status redirect, monitoring evidence, composite incident fallback and immediate test-session
+revocation. Zabbix, connector, AI and app then rebooted serially onto kernel `6.8.0-142`; all returned
+`running`, zero failed units, no warning-or-higher service journal entries and no reboot marker.
+Ubuntu base updates remain pending and were not downloaded because the approved proxy/offline bundle
+path was not established in this change; the Zabbix 7.0.31 candidate was not installed or claimed.
+
+The owner explicitly deferred all backup, PITR, restore and disaster-recovery work. The repository
+contract and historical evidence remain, but no recovery package or drill will be performed until
+that scope is resumed; production acceptance therefore remains unavailable. No SMTP host exists.
+Certificate detection and local Zabbix problem visibility remain active, but operator notification
+delivery is still unaccepted and no email route is claimed.
+
 Updated: 2026-09-23 — Phase 2 is deployed for controlled user testing with application release
 `nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a`. An authenticated operator can
 select one of four deployment-owned
@@ -81,7 +105,7 @@ destination outside the serving guest, datastore and hypervisor failure domains,
 offline bundle verification and real independent restore drills.
 
 The authenticated application and bilingual panel are deployed as immutable release
-`nextops-0.1.0-eb57241` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
+`nextops-0.1.0-2397581` on the app guest behind private TLS and Nginx. PostgreSQL 16 stores
 application identity and session state on
 its dedicated verified mount. Bootstrap and recovery endpoints, API documentation and the direct
 application listener are not exposed through Nginx. The browser receives neither the AI service
@@ -208,7 +232,7 @@ On 2026-09-21, authorized read-only SSH preflight reached all four clean replace
 
 After explicit owner authorization for connected preparation, each host used its existing strict proxy chain to refresh signed repositories and install only its role package layer. No broad OS upgrade ran. Exact observed direct versions are PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The official Zabbix 7.0 Ubuntu 24.04 release bootstrap package was pinned by SHA-256 before repository import. Package post-install starts were blocked and, at that preparation checkpoint, all product/database/web services were inactive and disabled, no PostgreSQL cluster existed, and no listener was added. Since then, the application/database/proxy, AI, connector and Zabbix slices have been deliberately configured and activated for controlled testing, followed by the bounded Agent 2 host-coverage change recorded above. Docker was not installed because the selected native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-Protected non-login service identities and role directories now exist. The pinned llama.cpp commit was built on the qualified AI guest with Release, CPU-native, OpenMP and OpenBLAS settings and no GPU linkage; its promoted binary hash is in the inference manifest. The pinned 5,027,783,488-byte Qwen model matched its expected SHA-256 before and after protected-volume promotion. The active immutable API release is `nextops-0.1.0-62de8d6`; `417d888` remains the tested inference-application rollback. A cold process restart restored both services in 109 seconds. The 2026-09-23 campaign additionally verified protected runtime/model rollback copies, client-cancellation cleanup, dependency recovery, fail-closed missing/corrupt model handling and a five-minute two-client load: 98 of 99 requests succeeded, p95 total latency was 6.114 seconds, peak measured service memory was 4,885,475,328 bytes, and the scheduler never exceeded one active/one queued request. Both services remain enabled, unprivileged, CPU-only and limited to `127.0.0.1:8080` and `127.0.0.1:8090`; `systemd-analyze security` reports `2.7 OK` for each. Raw evidence, credentials, addresses and host keys remain outside Git. Dependency-license approval, an independent backup destination, WAL/PITR and production sign-off remain open.
+Protected non-login service identities and role directories now exist. The pinned llama.cpp commit was built on the qualified AI guest with Release, CPU-native, OpenMP and OpenBLAS settings and no GPU linkage; its promoted binary hash is in the inference manifest. The pinned 5,027,783,488-byte Qwen model matched its expected SHA-256 before and after protected-volume promotion. The active immutable API release is `nextops-0.1.0-fd3c353`; `nextops-0.1.0-62de8d6` and `417d888` remain prior protected releases. A cold process restart restored both services in 109 seconds. The 2026-09-23 campaign additionally verified protected runtime/model rollback copies, client-cancellation cleanup, dependency recovery, fail-closed missing/corrupt model handling and a five-minute two-client load: 98 of 99 requests succeeded, p95 total latency was 6.114 seconds, peak measured service memory was 4,885,475,328 bytes, and the scheduler never exceeded one active/one queued request. Both services remain enabled, unprivileged, CPU-only and limited to `127.0.0.1:8080` and `127.0.0.1:8090`; `systemd-analyze security` reports `2.7 OK` for each. Raw evidence, credentials, addresses and host keys remain outside Git. Dependency-license approval and production sign-off remain open; recovery work is owner-deferred.
 
 ### Current proposed deployment
 
@@ -259,7 +283,7 @@ Six repository-scoped Codex skills under `.agents/skills` route project context,
 | 1C | Real bounded read-only evidence with correct counts | Controlled live connector qualification passed with eight fresh measurements, explicit timestamps/staleness and zero active problems; the reader sees all four approved Phase 1 hosts with fresh items, while the full failure matrix remains |
 | 1D | New evidence-linked Zabbix answer with audit | English/Persian grounded answers pass; every started live investigation now has a durable scoped run, bounded evidence snapshot/hash, model result, safe failure outcome and append-only audit linkage verified in isolated PostgreSQL and the live path |
 | 1E | Offline fresh login/restart, security/failure/capacity tests | Fresh login, bilingual general Q&A, live evidence and audit passed while all four guests were WAN-blocked. A separately WAN-denied fresh browser, revocation, cancellation, dependency/artifact/low-space recovery and five-minute capacity profile pass. After correcting database-cluster ordering, all four guests passed the serial clean-reboot matrix. Production backup/PITR acceptance remains open |
-| 2 | Read-only Linux/Zabbix incident investigation | Application release `nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` are live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, restart, rollback, server/API WAN denial, authenticated WAN-denied browser, dependency loss/recovery, a fresh four-VM serial reboot and audited session termination all pass. Production recovery gates remain separate |
+| 2 | Read-only Linux/Zabbix incident investigation | Application release `nextops-0.1.0-2397581` and connector release `nextops-0.1.0-e2dad3a` are live with four immutable targets, distinct forced-command keys, bounded/redacted Linux snapshots, concurrent composite evidence, durable bilingual answers and audit. Live English/Persian API, answer-integrity controls, restart, rollback, server/API WAN denial, authenticated WAN-denied browser, dependency loss/recovery, a fresh four-VM serial reboot and audited session termination all pass. Production recovery gates remain separate and owner-deferred |
 
 The user may perform provisioning independently; verify their actual state before claiming a VM either exists or does not exist. A screenshot of VM settings is not proof of an accepted application workflow. Resume from the next evidenced, authorized incomplete stage rather than resetting progress.
 
@@ -287,6 +311,26 @@ off-datastore recovery destination, PostgreSQL-aware repositories/WAL archiving,
 backup, independent PITR, recorded RPO/RTO and key recovery, and operational sign-off.
 
 ## فارسی
+
+به‌روزرسانی ۴ مهر ۱۴۰۵ — بخش «صحت پاسخ» برای ارزیابی کنترل‌شدهٔ کاربران پذیرفته شد. انتشار برنامه
+`nextops-0.1.0-2397581` و انتشار API هوش مصنوعی `nextops-0.1.0-fd3c353` فعال‌اند و نسخه‌های
+تغییرناپذیر پیشین برای بازگشت حفظ شده‌اند. پاسخ عمومی به‌روشنی بدون شاهد زنده و دارای احتمال خطا
+معرفی می‌شود؛ وضعیت فعلی زیرساخت از حافظهٔ مدل پاسخ داده نمی‌شود؛ و پاسخ زنده در لایهٔ داخلی و
+بیرونی برچسب شاهد یکسان دارد. ادعای اجرای عملیات، علت ریشه‌ای بی‌پشتوانه، نبود نام منبع، پنهان‌شدن
+شاهد قدیمی یا ناقص و تکرار طولانی پرسش، پیش از ذخیره با پاسخ قطعی و بومی‌سازی‌شده جایگزین می‌شوند.
+
+هر پنج کار CI نهایی شامل کیفیت و واحد، PostgreSQL 16 و 17، fixture مرورگر و پویش راز موفق بودند.
+گزارش خصوصی loopback هر هشت مورد فارسی و انگلیسی و بازبینی معنایی مهندسی را گذراند. مسیر زندهٔ
+برنامه نیز مرتبط‌بودن پاسخ `Hi`، هدایت پرسش وضعیت فعلی، شاهد پایش، پاسخ جایگزین رخداد ترکیبی و لغو
+فوری نشست آزمایشی را تأیید کرد. سپس Zabbix، اتصال‌دهنده، هوش مصنوعی و برنامه به‌ترتیب با kernel
+`6.8.0-142` بالا آمدند؛ همه `running`، بدون واحد خراب، بدون هشدار تازه در journal سرویس و بدون
+نشانگر reboot بودند. به‌روزرسانی‌های پایهٔ Ubuntu هنوز در انتظارند و چون مسیر مصوب بسته یا پراکسی
+در این تغییر آماده نبود، دانلود نشدند؛ نامزد Zabbix 7.0.31 نیز نصب یا پذیرفته نشد.
+
+مالک، تمام کارهای پشتیبان، PITR، restore و بازیابی بحران را فعلاً کنار گذاشته است. قرارداد مخزن و
+شواهد تاریخی حفظ می‌شوند، اما تا بازگشت این دامنه هیچ بسته یا تمرین بازیابی اجرا نمی‌شود؛ بنابراین
+پذیرش تولید ممکن نیست. میزبان SMTP نیز وجود ندارد. تشخیص گواهی و نمایش مسئله در Zabbix فعال است،
+اما تحویل اعلان به بهره‌بردار همچنان پذیرفته‌نشده و هیچ مسیر ایمیلی ادعا نمی‌شود.
 
 مرحلهٔ دو با انتشار تغییرناپذیر برنامه `nextops-0.1.0-eb57241` و انتشار اتصال‌دهنده
 `nextops-0.1.0-e2dad3a` برای ارزیابی کنترل‌شدهٔ کاربران مستقر شده است. بهره‌بردار احرازهویت‌شده
@@ -368,7 +412,7 @@ PITR، مخزن فایل با restic و تأیید نهایی بازیابی ب�
 مصوب و خارج از دامنهٔ خرابی مهمان، datastore و hypervisor سرویس‌دهنده نیاز دارد؛ پس از آن بسته‌های
 دقیق آفلاین و تمرین واقعی بازیابی مستقل را می‌توان راستی‌آزمایی کرد.
 
-برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-eb57241` روی مهمان برنامه و پشت TLS خصوصی
+برنامهٔ احرازهویت‌شده و پنل دوزبانه، در انتشار تغییرناپذیر `nextops-0.1.0-2397581` روی مهمان برنامه و پشت TLS خصوصی
 و Nginx فعال‌اند. PostgreSQL 16 هویت و نشست برنامه را روی فضای ذخیره‌سازی مستقل و تأییدشده نگه
 می‌دارد. مسیرهای راه‌اندازی اولیه و بازیابی، مستندات API و درگاه مستقیم برنامه از Nginx در دسترس
 نیستند. هیچ‌یک از اعتبارنامه‌های سرویس هوش مصنوعی یا Zabbix به مرورگر تحویل نمی‌شود.
@@ -482,7 +526,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 پس از مجوز صریح مالک برای آماده‌سازی متصل، هر میزبان از زنجیرهٔ پراکسی سخت‌گیرانهٔ موجود برای تازه‌سازی مخزن‌های امضاشده و نصب فقط لایهٔ بستهٔ نقش خود استفاده کرد. ارتقای کلی سیستم‌عامل اجرا نشد. نسخه‌های مستقیم مشاهده‌شده عبارت‌اند از PostgreSQL 16.15 و Nginx 1.24 در برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 در هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 در connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 در Zabbix. بستهٔ راه‌انداز رسمی Zabbix 7.0 برای Ubuntu 24.04 پیش از افزودن مخزن با SHA-256 ثابت شد. شروع خودکار پس از نصب مسدود بود و در همان نقطهٔ آماده‌سازی، همهٔ سرویس‌های محصول، پایگاه و وب غیرفعال بودند، خوشهٔ PostgreSQL ساخته نشده بود و درگاه تازه‌ای باز نشد. پس از آن، برش‌های برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix به‌صورت کنترل‌شده تنظیم و فعال شدند و سپس تغییر محدود پوشش چهارمیزبانی Agent 2 اجرا شد. Docker نصب نشد، چون طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-هویت‌های بدون ورود و مسیرهای محافظت‌شدهٔ نقش ساخته شده‌اند. llama.cpp با Release، اجرای بومی CPU، OpenMP و OpenBLAS و بدون GPU ساخته شد و مدل ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایتی با SHA-256 مصوب برابر است. انتشار فعال API، `nextops-0.1.0-62de8d6` است و `417d888` به‌عنوان بازگشت آزموده‌شدهٔ لایهٔ API باقی مانده است. توقف و شروع سرد، بازگشت برنامه و artifact، لغو، قطع وابستگی، مدل خراب/مفقود و تولید پس از بازیابی موفق بودند. در بار پنج‌دقیقه‌ای، ۹۸ درخواست از ۹۹ درخواست موفق، p95 برابر ۶٫۱۱۴ ثانیه و بیشینهٔ زمان‌بند یک فعال/یک صف بود. هر دو سرویس فقط روی CPU و `127.0.0.1:8080` و `127.0.0.1:8090` اجرا می‌شوند و امتیاز systemd آن‌ها `2.7 OK` است. شواهد خام و رازها بیرون Git مانده‌اند. مجوز وابستگی‌ها، پشتیبان مستقل، WAL/PITR و تأیید تولید بازند.
+هویت‌های بدون ورود و مسیرهای محافظت‌شدهٔ نقش ساخته شده‌اند. llama.cpp با Release، اجرای بومی CPU، OpenMP و OpenBLAS و بدون GPU ساخته شد و مدل ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایتی با SHA-256 مصوب برابر است. انتشار فعال API، `nextops-0.1.0-fd3c353` است و `nextops-0.1.0-62de8d6` و `417d888` به‌عنوان انتشارهای محافظت‌شدهٔ پیشین باقی مانده‌اند. توقف و شروع سرد، بازگشت برنامه و artifact، لغو، قطع وابستگی، مدل خراب/مفقود و تولید پس از بازیابی موفق بودند. در بار پنج‌دقیقه‌ای، ۹۸ درخواست از ۹۹ درخواست موفق، p95 برابر ۶٫۱۱۴ ثانیه و بیشینهٔ زمان‌بند یک فعال/یک صف بود. هر دو سرویس فقط روی CPU و `127.0.0.1:8080` و `127.0.0.1:8090` اجرا می‌شوند و امتیاز systemd آن‌ها `2.7 OK` است. شواهد خام و رازها بیرون Git مانده‌اند. مجوز وابستگی‌ها و تأیید تولید بازند و کار بازیابی به درخواست مالک کنار گذاشته شده است.
 
 ### چیدمان فعلیِ پیشنهادی
 

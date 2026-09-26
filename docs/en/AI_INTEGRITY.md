@@ -1,6 +1,6 @@
 # AI answer integrity
 
-**Status: deterministic controls implemented; acceptance is release-specific.** NextOps cannot
+**Status: accepted for controlled user testing; acceptance is release-specific.** NextOps cannot
 guarantee that a generative model will never be wrong. It instead prevents the most dangerous
 category error: presenting unsupported model text as live operational fact.
 
@@ -46,3 +46,20 @@ inference API and writes its report to a private file.
 
 The normative requirements, acceptance cases and rollback are in the
 [answer integrity specification](../requirements/ANSWER_INTEGRITY_SPEC.md).
+
+## Controlled acceptance — 2026-09-26
+
+Application release `nextops-0.1.0-2397581` and inference API release
+`nextops-0.1.0-fd3c353` are active. Their hosted workflow passed quality/unit, PostgreSQL 16,
+PostgreSQL 17, browser fixture and secret-scan jobs. The final private loopback report passed all
+eight automated cases; engineering semantic review accepted every English and Persian answer,
+including direct greetings, explicit unknown current state, preserved timeout evidence and no
+claim of execution. The report still sets `acceptance_claimed=false` because this is a bounded
+quality gate, not production acceptance.
+
+A short-lived server-created test session then exercised the deployed application. `Hi` returned no
+Zabbix content, the current-status question returned `scope_redirect`, live monitoring returned
+`evidence_bounded`, and the composite incident route returned `deterministic_fallback` with exact
+evidence metadata. The session was revoked immediately. A subsequent serial reboot of Zabbix,
+connector, AI and application loaded kernel `6.8.0-142`; every guest returned `running`, zero failed
+units and no reboot marker. No recovery or SMTP-delivery claim is included.

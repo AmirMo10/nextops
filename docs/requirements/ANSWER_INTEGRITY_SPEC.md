@@ -1,6 +1,7 @@
 # Answer integrity specification
 
-Status: implemented in source; live qualification remains revision-specific.
+Status: accepted for controlled user testing on the releases recorded in the current manifest;
+qualification remains revision-specific and is not a guarantee that model-only text is always true.
 
 ## Problem
 

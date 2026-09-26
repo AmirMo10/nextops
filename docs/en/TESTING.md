@@ -12,6 +12,30 @@ logical isolated restores of both PostgreSQL 16 databases. Independent off-datas
 WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
 21–23.
 
+## Answer-integrity qualification — 2026-09-26
+
+The final source at `2397581` passed all five hosted jobs: quality/unit, PostgreSQL 16,
+PostgreSQL 17, real-browser fixture and secret scan. Local checks reported 159 passed and ten
+environment-specific skips; the skipped PostgreSQL cases were covered by both hosted database jobs,
+and the POSIX collector retains its Linux evidence.
+
+Inference release `nextops-0.1.0-fd3c353` passed a private loopback run of eight balanced
+English/Persian cases. Authentication denial, readiness, evidence timestamp/failure preservation,
+non-execution, greeting relevance, unknown current state, required/forbidden phrases, response
+script and prompt-echo rejection all passed. Engineering semantic review accepted every final
+answer. This is not a universal hallucination measurement; arbitrary model-only facts remain
+unverified.
+
+Application release `nextops-0.1.0-2397581` then passed live authenticated checks. `Hi` contained
+no Zabbix result; a general request for current Zabbix state returned `scope_redirect`; live
+monitoring returned consistent `live_zabbix` metadata and `evidence_bounded`; and the composite app
+incident returned consistent `live_zabbix_linux` metadata with a safe `deterministic_fallback`. The
+short-lived test session was revoked, leaving no active test session. A serial reboot of Zabbix,
+connector, AI and app loaded kernel `6.8.0-142`; every role returned healthy with zero failed units,
+no reboot marker and no warning-or-higher service journal entry. Six Ubuntu updates remain pending
+on app/AI/connector and eleven on Zabbix; no package was fetched without the approved proxy/offline
+path, and Zabbix 7.0.31 is not qualified.
+
 ## Phase 2 current qualification — 2026-09-23
 
 Phase 2 connector release `nextops-0.1.0-e2dad3a` and current application release

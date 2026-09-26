@@ -9,16 +9,23 @@ invent or configure email delivery. Certificate detection and Zabbix problem vis
 active, while operator notification delivery remains unaccepted until a real local delivery channel
 is selected and tested.
 
-The active non-recovery priority is answer integrity. The bounded implementation is defined in
-[ANSWER_INTEGRITY_SPEC](requirements/ANSWER_INTEGRITY_SPEC.md): truthful nested evidence metadata,
-model-only warnings, deterministic redirect for current-state questions without evidence,
-fail-closed generated-answer checks, bilingual exact-evidence fallbacks, audit fields, browser
-notices and an eight-case offline English/Persian corpus. Source checks must pass before immutable
-application and inference releases are promoted. Live loopback model, direct API and browser
-results must then be recorded for the exact release; source completion alone is not acceptance.
+The answer-integrity priority is complete for controlled user testing. Application release
+`nextops-0.1.0-2397581` and inference API release `nextops-0.1.0-fd3c353` are active. Hosted CI,
+the final eight-case local English/Persian corpus, engineering semantic review, live authenticated
+general/monitoring/incident API checks, immediate test-session revocation and a fresh serial reboot
+passed. Preserve the deterministic guard and do not turn this bounded evidence into a claim that
+model-only answers are always true.
 
-Updated: 2026-09-23 — Phase 2 implementation and controlled qualification are complete. Application release
-`nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` are active. Four fixed targets now
+Continue only with non-recovery work: qualify a real local non-SMTP operator-delivery channel or
+leave delivery explicitly unaccepted; perform certificate rotation/rollback only if the existing
+CA/key custody and client-trust inputs are available; finish the release SBOM/license/integrity
+review; and apply the six pending Ubuntu base updates (eleven on Zabbix including five Zabbix
+7.0.31 packages) only through an approved proxy or offline bundle with version-specific rollback.
+The current reboot requirement is already cleared on kernel `6.8.0-142`; pending packages are not
+evidence of a failed service and were deliberately not fetched during the answer-integrity change.
+
+Historical checkpoint: 2026-09-23 — Phase 2 implementation and controlled qualification were complete. Application release
+`nextops-0.1.0-eb57241` and connector release `nextops-0.1.0-e2dad3a` were active. Four fixed targets then
 provide bounded Zabbix history/events plus direct, redacted and forced-command Linux evidence to a
 durable bilingual investigation workflow. Live English/Persian API investigations, authorization,
 all four collectors, restart, rollback, server/API WAN denial, authenticated WAN-denied browser,
@@ -137,7 +144,7 @@ A sanitized read-only preflight reached all four clean replacement guests after 
 
 The role package layers remain as recorded: PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The controlled application/database/proxy, AI, connector and Zabbix/database/frontend slices are active and passed the named reboot checks. Docker was not installed because the native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-62de8d6`; the active user application is `nextops-0.1.0-eb57241` and the connector remains `nextops-0.1.0-e2dad3a`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
+The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-fd3c353`; the active user application is `nextops-0.1.0-2397581` and the connector remains `nextops-0.1.0-e2dad3a`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
 
 Two independent four-case qualification runs passed unauthenticated denial, readiness, Persian and
 English evidence preservation, and safe non-execution responses under both automated checks and
@@ -229,14 +236,21 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 اختیار نیست؛ بنابراین تحویل ایمیلی نباید جعل یا پیکربندی شود. تشخیص گواهی و نمایش مسئله در Zabbix
 فعال می‌ماند و تحویل اعلان به بهره‌بردار تا انتخاب و آزمون یک مسیر داخلی واقعی، پذیرفته‌نشده است.
 
-اولویت فعالِ خارج از بازیابی، صحت پاسخ است. پیاده‌سازی محدود در
-[مشخصات صحت پاسخ](requirements/ANSWER_INTEGRITY_SPEC.md) تعریف شده است: هماهنگی برچسب شاهد داخلی و
-بیرونی، هشدار روشن برای پاسخ بدون شاهد، هدایت پرسش وضعیت فعلی به حالت زنده، کنترل قطعی متن مدل،
-پاسخ جایگزین دوزبانه از شواهد دقیق، ثبت ممیزی، پیام روشن در رابط و مجموعهٔ هشت‌موردی ارزیابی آفلاین.
-قبولی منبع به‌تنهایی کافی نیست؛ نتیجهٔ مدل loopback، API و مرورگر باید برای همان انتشار ثبت شود.
+اولویت صحت پاسخ برای ارزیابی کنترل‌شده تکمیل شد. انتشار برنامه `nextops-0.1.0-2397581` و انتشار
+API هوش مصنوعی `nextops-0.1.0-fd3c353` فعال‌اند. CI میزبانی‌شده، مجموعهٔ نهایی هشت‌موردی فارسی
+و انگلیسی، بازبینی معنایی مهندسی، آزمون زنده و احرازهویت‌شدهٔ API در حالت عمومی، پایش و رخداد، لغو
+فوری نشست آزمایشی و reboot ترتیبی تازه موفق بودند. این کنترل قطعی باید حفظ شود، اما شاهد محدود آن
+نباید به ادعای «درستی همیشگی پاسخ بدون شاهد» تبدیل شود.
 
-پیاده‌سازی و صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو تکمیل شده است؛ انتشار برنامه `nextops-0.1.0-eb57241` و انتشار اتصال‌دهنده
-`nextops-0.1.0-e2dad3a` فعال‌اند. چهار مقصد ثابت اکنون تاریخچه و رویداد محدود Zabbix را همراه شواهد مستقیم،
+ادامه فقط در دامنهٔ خارج از بازیابی است: یک مسیر واقعی و داخلیِ غیر SMTP برای تحویل اعلان انتخاب و
+صلاحیت‌سنجی شود یا وضعیت تحویل صریحاً پذیرفته‌نشده بماند؛ چرخش و بازگشت گواهی فقط در صورت وجود
+ورودی معتبر CA، حضانت کلید و اعتماد client اجرا شود؛ بازبینی SBOM، مجوز و صحت انتشار تکمیل شود؛ و
+شش به‌روزرسانی پایهٔ Ubuntu ــ و یازده مورد روی Zabbix شامل پنج بستهٔ 7.0.31 ــ فقط از مسیر پراکسی
+یا بستهٔ آفلاین مصوب و همراه بازگشت نسخه‌ای اعمال شوند. نیاز به reboot روی kernel `6.8.0-142`
+برطرف شده است؛ بسته‌های در انتظار به معنی خرابی سرویس نیستند و در تغییر صحت پاسخ دانلود نشدند.
+
+نقطهٔ تاریخی ۲۳ سپتامبر ۲۰۲۶: پیاده‌سازی و صلاحیت‌سنجی کنترل‌شدهٔ مرحلهٔ دو تکمیل شده بود؛ انتشار برنامه `nextops-0.1.0-eb57241` و انتشار اتصال‌دهنده
+`nextops-0.1.0-e2dad3a` فعال بودند. چهار مقصد ثابت در آن زمان تاریخچه و رویداد محدود Zabbix را همراه شواهد مستقیم،
 پالایش‌شده و مبتنی بر فرمان اجباری Linux به گردش ماندگار بررسی دوزبانه می‌رسانند. بررسی زندهٔ API
 به فارسی و انگلیسی، مجوزدهی، هر چهار گردآورنده، راه‌اندازی مجدد، بازگشت انتشار، مسیر سرور/API با
 WAN مسدود، مرورگر احرازهویت‌شده، قطع و بازیابی وابستگی و reboot ترتیبی VMها موفق بوده و CI سبز
@@ -342,7 +356,7 @@ increment تشخیص انقضای گواهی در استقرار کنترل‌ش
 
 لایهٔ بسته‌های هر نقش مطابق رکورد باقی است: PostgreSQL 16.15 و Nginx 1.24 روی برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 روی هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 روی connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 روی Zabbix. برش‌های کنترل‌شدهٔ برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix و پایگاه و رابط آن فعال‌اند و آزمون‌های نام‌بردهٔ راه‌اندازی مجدد را گذرانده‌اند. Docker نصب نشد، زیرا طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-62de8d6` است؛ برنامه انتشار `nextops-0.1.0-eb57241` و اتصال‌دهنده انتشار `nextops-0.1.0-e2dad3a` را اجرا می‌کنند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
+محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-fd3c353` است؛ برنامه انتشار `nextops-0.1.0-2397581` و اتصال‌دهنده انتشار `nextops-0.1.0-e2dad3a` را اجرا می‌کنند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
 
 دو اجرای مستقلِ چهارموردی، رد درخواست بدون احراز هویت، آمادگی، حفظ شاهد فارسی و انگلیسی و پاسخ ایمن
 بدون ادعای اجرا را هم در بررسی خودکار و هم در بازبینی انسانی گذراندند. آزمون بار اولیه، مرز یک

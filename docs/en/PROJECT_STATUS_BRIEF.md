@@ -2,7 +2,7 @@
 
 [فارسی](../fa/PROJECT_STATUS_BRIEF.md) · [Documentation index](INDEX.md) · [Project state](../PROJECT_STATE.md) · [Next task](../NEXT_TASK.md)
 
-Updated: 2026-09-23
+Updated: 2026-09-26
 
 ## Executive position
 
@@ -18,7 +18,14 @@ distinct keys. Phase 2 source CI, live bilingual API investigations, durable evi
 service restart, rollback, guarded WAN denial, authenticated live browser, serial VM reboot and
 dependency loss/recovery pass. Certificate-expiry detection and the local Zabbix problem/recovery
 path also pass on both TLS frontends. Independent off-datastore backup, WAL/PITR, certificate
-rotation/operator notification and disaster-recovery sign-off remain open.
+rotation/operator notification and disaster-recovery sign-off remain open. The owner deferred the
+recovery work from this delivery; no recovery acceptance is implied. No SMTP host is available, so
+email notification delivery is not configured or claimed.
+
+Application release `nextops-0.1.0-2397581` and AI application release
+`nextops-0.1.0-fd3c353` add deterministic answer-integrity enforcement. Model-only answers are
+explicitly unverified; current infrastructure state requires live evidence; evidence answers retain
+provenance, freshness and limitations; unsupported live claims fail closed to a bounded fallback.
 
 ## Status at a glance
 
@@ -26,10 +33,10 @@ rotation/operator notification and disaster-recovery sign-off remain open.
 |---|---|---|---|
 | Architecture and governance | Accepted baseline | Four-server, CPU-only, local-inference and read-only-first boundaries remain enforced | Complete operation-specific audit and the remaining recovery gates |
 | Application and database | Live for controlled testing | Immutable application release, PostgreSQL 16, local identity, private TLS, bilingual panel, rollback and socket-only logical restore passed | Establish independent backup, WAL/PITR and production observability |
-| Local CPU inference | Live and integrated | Pinned llama.cpp/Qwen, authenticated generation, cold restart, artifact rollback, cancellation/dependency recovery and five-minute bounded load passed | Complete independent artifact recovery and production SLO approval |
+| Local CPU inference | Live and integrated | Pinned llama.cpp/Qwen, authenticated generation, eight-case bilingual integrity evaluation, cold restart, artifact rollback, cancellation/dependency recovery and five-minute bounded load passed | Approve production SLOs; recovery remains owner-deferred |
 | Zabbix | Live with restricted scope | Zabbix 7.0.30, separate PostgreSQL, restricted reader, socket-only logical restore and certificate lifecycle triggers passed | Complete retention, independent backup, WAL/PITR and operator notification delivery |
 | Read-only connector | Live and least-privilege | Rootless loopback service, protected Zabbix credential, strict TLS, four distinct forced-command Linux keys and bounded composite evidence; denial, restart, rollback, guarded WAN and dependency-recovery cases passed | Complete production monitoring and independent recovery sign-off |
-| End-to-end user path | Phase 2 controlled qualification passed | Fresh English/Persian browser answers with Zabbix/Linux evidence, durable run/evidence/audit identifiers, WAN denial, RTL and session isolation passed | Independent recovery and production promotion |
+| End-to-end user path | Phase 2 controlled qualification passed | Fresh English/Persian browser answers with Zabbix/Linux evidence, deterministic integrity states, durable run/evidence/audit identifiers, WAN denial, RTL and session isolation passed | Complete non-recovery operational sign-off; recovery remains owner-deferred |
 
 ## Delivered user-testing capability
 
@@ -48,7 +55,7 @@ rotation/operator notification and disaster-recovery sign-off remain open.
 ## Acceptance evidence
 
 - Repository checks passed: Ruff formatting and lint, strict mypy, documentation, deployment,
-  inference and release-status validators, 152 unit/API tests, PostgreSQL 16 and 17 CI,
+  inference and release-status validators, 159 unit/API tests, PostgreSQL 16 and 17 CI,
   real-browser fixture acceptance and secret scanning.
 - Connector verification returned bounded Zabbix and direct Linux evidence for each of four fixed
   targets; generic shell, unauthenticated and unknown-target requests were denied.
@@ -65,8 +72,10 @@ rotation/operator notification and disaster-recovery sign-off remain open.
   [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
 - Both database dumps restored into temporary socket-only PostgreSQL 16.15 clusters and were
   verified and cleaned up. This is logical restore evidence, not independent disaster recovery.
-- All four servers reported healthy systemd state, no failed units, no pending package update and no
-  required reboot at the deployment checkpoint.
+- After serial reboot, all four servers reported kernel `6.8.0-142`, healthy systemd state, no
+  failed units and no required reboot. Updates remain pending (six base packages on each of the app,
+  AI and connector guests; eleven packages on Zabbix, including Zabbix 7.0.31) because no approved
+  proxy/offline package route was available; they were not fetched through an undeclared route.
 
 ## Security posture
 
@@ -80,12 +89,15 @@ endpoint are allowed by the relevant host firewalls.
 
 ## Remaining work before production acceptance
 
-1. Approve storage independent of the serving guest, DS-C/G10 and host; define RPO/RTO, retention
-   and key custody.
-2. Establish separate pgBackRest repositories with continuous WAL and restic for permitted
-   non-database artifacts, then perform independent-host PITR and key-recovery drills.
-3. Complete certificate rotation/rollback, operator notification delivery, dependency/license
-   approval and operational sign-off without weakening the offline contract.
+Recovery is deliberately deferred by owner direction and remains an explicit production blocker.
+The active non-recovery work is:
+
+1. Provide an approved proxy or staged offline package repository, then apply and verify the pending
+   Ubuntu/Zabbix updates in a controlled window.
+2. Complete certificate rotation/rollback, dependency/license approval and operational sign-off
+   without weakening the offline contract.
+3. Choose a local notification transport if operator delivery is required; SMTP is unavailable and
+   therefore email delivery is neither configured nor accepted.
 4. Add further production hosts, templates and service-level evidence only through explicit scope
    review; do not broaden connector methods or credentials implicitly.
 5. Add operational dashboards, log retention, certificate/key rotation and a documented
@@ -95,5 +107,6 @@ endpoint are allowed by the relevant host firewalls.
 
 NextOps now has a functioning, security-bounded product slice rather than only prepared
 infrastructure. It is ready for supervised user testing of the bilingual, read-only investigation
-experience. Production readiness must wait for independently stored backup, WAL/PITR, the remaining
-certificate rotation/notification controls and disaster-recovery evidence.
+experience with explicit integrity labeling and fail-closed evidence behavior. It is not production
+accepted: recovery is owner-deferred, and the remaining update, certificate, notification and
+operational gates above are still open.
