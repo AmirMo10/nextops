@@ -29,10 +29,11 @@ an expected value is missing or different; do not substitute a guessed path or d
 | Certificate operator delivery | Partial | Choose a LAN-local notification route and named primary/backup recipients | Configure Zabbix media, user media, trigger action and recovery messages | Test and real controlled problem/recovery reach both recipients |
 | Certificate rotation/rollback | Not run | Supply two CA-signed replacement pairs and approve a maintenance window | Stage, verify, rotate, test and roll back each frontend under a guard | Both rotation and rollback pass with ordinary TLS validation |
 | Dependency/license/SBOM/release integrity | Open | Name the legal/security approver and approve the acceptance policy | Generate/review SBOMs, license inventory, vulnerability evidence and offline verification material | No unapproved dependency/license or unresolved release-integrity finding |
+| Host network policy | Partial | Approve management SSH source ranges and DNS/time/maintenance-proxy egress routes | Apply guarded host-wide allowlists and repeat fresh offline and maintenance checks; preserve the accepted connector-only boundary | Authorized LAN/proxy operations work while direct public egress and unapproved SSH sources are denied |
 | Final production decision | Not run | Name the production approver and sign the bounded accepted profile | Re-run all production gates and publish only sanitized results | No required gate is failed, partial or not run |
 
 The first four IDs are the exact machine-readable blockers in
-`deploy/recovery/recovery-profile.yaml`. The other four are explicit current project-state gates.
+`deploy/recovery/recovery-profile.yaml`. The other five are explicit current project-state gates.
 
 ## 2. Create the private owner record
 
@@ -55,6 +56,8 @@ owner_approver=REQUIRED
 recovery_operator=REQUIRED
 rollback_owner=REQUIRED
 maintenance_window=REQUIRED
+management_ssh_source_ranges=REQUIRED_PRIVATE_RECORD
+host_dns_time_proxy_egress_routes=REQUIRED_PRIVATE_RECORD
 
 destination_id=REQUIRED_NON_SECRET_ALIAS
 destination_type=dedicated_physical_or_separate_hypervisor
@@ -443,6 +446,31 @@ inventory. Engineering will generate SBOMs, resolve every package/license, scan 
 recorded offline vulnerability-data timestamp, retain Gitleaks, evaluate offline release signing,
 and present exceptions for explicit approval. Do not approve the headline list as if it covered all
 dependencies.
+
+## 9A. Approve the host network boundary
+
+The app, AI API and model units have loopback-only IP policies. The connector process has a tested
+allowlist for its reviewed deployment LAN. These do **not** block an administrator shell or every
+host process from public IPv4; the earlier four-guest WAN-denial test was temporary. Current UFW
+OpenSSH rules also allow any source that can route to the guests, pending a named management-source
+policy. Record approved SSH source ranges, DNS and time sources, the maintenance proxy, any
+required update repositories and the rollback route in the private owner record. Do not put real
+addresses or routes in Git.
+
+Read-only preflight on each guest:
+
+```bash
+ip -4 route
+resolvectl status
+sudo ufw status numbered
+```
+
+On the connector, also inspect the effective process policy with
+`sudo systemctl show nextops-connector.service -p IPAddressDeny -p IPAddressAllow`. After the
+owner approves the exact network inventory, engineering must stage a timed rollback, apply
+host-level allowlists serially, prove new key-only SSH access and approved LAN/proxy maintenance,
+then repeat fresh bilingual browser, Zabbix/Linux evidence and direct IPv4/IPv6 denial probes.
+Do not apply a guessed blanket firewall rule from this runbook.
 
 ## 10. Final production acceptance
 
