@@ -12,6 +12,16 @@ logical isolated restores of both PostgreSQL 16 databases. Independent off-datas
 WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
 21–23.
 
+## Browser harness failure cleanup — source-only, 2026-09-26
+
+The live Edge acceptance script now captures its test-session token immediately after login. If a
+later assertion fails, it attempts authenticated server-side logout before closing the browser and
+records whether revocation was confirmed, failed, or could not be verified. The token is not written
+to the result report. Three focused unit tests and the full desktop suite passed (185 passed, ten
+skipped for unchanged local PostgreSQL/POSIX prerequisites). A deliberately failed live session has
+not been run against the serving release; earlier aborted sessions were not retroactively revoked.
+This is a source-only test-safety improvement, not a new application deployment or production gate.
+
 ## Focused application release — 2026-09-26
 
 PR #10 merged source tree `01755d1` into main after hosted run `36239227073` passed all five

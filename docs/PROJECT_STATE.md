@@ -1,5 +1,13 @@
 # Project state / وضعیت پروژه
 
+Source-only acceptance-harness checkpoint, 2026-09-26 — The live Edge harness now retains the
+test-session token after login and, if a later assertion fails, attempts server-side logout before
+closing the browser. It records `revoked`, `revocation_failed`, or `revocation_unverified` without
+writing the token to its report. Three focused cleanup tests and the complete local suite passed
+(185 passed, ten skipped for the same local PostgreSQL/POSIX prerequisites as before). This repair
+has not been run against a live failure on the serving release; it does not revoke the two earlier
+aborted sessions retroactively or change `nextops-0.1.0-01755d1` production status.
+
 Current controlled app checkpoint, 2026-09-26 — PR #10 passed all five hosted CI jobs and merged
 as `b4d2209`. Application release `nextops-0.1.0-01755d1` was built from the same source tree,
 verified by SHA-256, installed from the locked local wheelhouse into a fresh immutable virtualenv,

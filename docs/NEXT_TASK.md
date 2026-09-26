@@ -1,5 +1,13 @@
 # Next task / کار بعدی
 
+Source-only harness follow-up, 2026-09-26 — Local browser acceptance cleanup now attempts
+server-side revocation when a post-login assertion fails and records an unverified outcome when
+revocation cannot be confirmed. Three focused tests and the full local suite pass; a deliberately
+failed live browser session has not yet been exercised, so this is not a live acceptance gate.
+The first unfinished product-quality checkpoint remains the held-out bilingual semantic review
+and the owner's exact redacted question/answer. The serving release and production blockers below
+are unchanged.
+
 Current controlled checkpoint, 2026-09-26 — Application release `nextops-0.1.0-01755d1`
 is deployed for user testing; AI API and connector remain `nextops-0.1.0-cdde129`. PR #10 passed
 five hosted CI jobs and merged into main. The exact app release passed fresh bilingual greeting,
