@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -15,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs/status/current-release.yaml"
 SCHEMA = ROOT / "docs/status/release-status.schema.json"
 INFERENCE_MANIFEST = ROOT / "deploy/inference/qwen3-8b-q4-k-m.yaml"
+RECOVERY_VALIDATOR = ROOT / "scripts/check_recovery_profile.py"
 REQUIRED_CURRENT_APP_GATES = frozenset(
     {
         "current_app_bounded_live_functionality",
@@ -60,6 +62,69 @@ def current_application_errors(status: dict[str, Any]) -> list[str]:
     return errors
 
 
+def recovery_profile_qualified() -> bool:
+    """Require the existing independent recovery validator to pass without Internet."""
+
+    try:
+        result = subprocess.run(
+            [sys.executable, str(RECOVERY_VALIDATOR), "--require-qualified"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return result.returncode == 0
+
+
+def production_claim_errors(status: dict[str, Any], recovery_qualified: bool) -> list[str]:
+    """Reject contradictory production claims; evidence review remains a separate gate."""
+
+    gates = status.get("acceptance_gates")
+    if not isinstance(gates, list):
+        return ["production acceptance gates are missing"]
+    gate_status = {
+        str(gate.get("id")): gate.get("status") for gate in gates if isinstance(gate, dict)
+    }
+    if "production_acceptance" not in gate_status:
+        return ["production_acceptance gate is missing"]
+
+    deployment_status = status.get("deployment_status")
+    production_passed = gate_status["production_acceptance"] == "passed"
+    if not production_passed and deployment_status != "production_accepted":
+        return []
+
+    errors: list[str] = []
+    if not production_passed or deployment_status != "production_accepted":
+        errors.append("deployment status and production_acceptance gate must agree")
+
+    candidate = status.get("current_application_qualification")
+    candidate_gates = candidate.get("gates") if isinstance(candidate, dict) else None
+    if (
+        not isinstance(candidate_gates, list)
+        or not candidate_gates
+        or any(
+            not isinstance(gate, dict) or gate.get("status") != "passed" for gate in candidate_gates
+        )
+    ):
+        errors.append("production acceptance requires every current-app gate to pass")
+
+    if any(
+        state != "passed"
+        for gate_id, state in gate_status.items()
+        if gate_id != "production_acceptance"
+    ):
+        errors.append("production acceptance requires every release gate to pass")
+
+    if not recovery_qualified:
+        errors.append(
+            "production acceptance requires a qualified recovery profile and restore gates"
+        )
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
     status = _load_yaml(MANIFEST)
@@ -67,6 +132,7 @@ def main() -> int:
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors.extend(error.message for error in sorted(validator.iter_errors(status), key=str))
     errors.extend(current_application_errors(status))
+    errors.extend(production_claim_errors(status, recovery_profile_qualified()))
 
     ids: list[str] = []
     candidate = status.get("current_application_qualification")

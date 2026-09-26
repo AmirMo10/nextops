@@ -22,6 +22,13 @@ bilingual semantic review, exact-release rollback, server-side WAN isolation and
 start are `not_run`. The validator rejects a missing gate or mismatched identity. This is evidence
 bookkeeping, not a new live test or production acceptance.
 
+The release-status validator also rejects a production-pass flag unless deployment status,
+current-app gates, all release gates and the recovery profile's structural conditions agree. This
+prevents an internally contradictory manifest; it cannot verify physical independence, actual
+restores or human sign-off. Production review must separately run
+`python scripts/check_recovery_profile.py --require-qualified` and inspect private restore evidence
+and approvals. The checked-in profile remains blocked.
+
 ## Browser harness failure cleanup — source-only, 2026-09-26
 
 The live Edge acceptance script now captures its test-session token immediately after login. If a

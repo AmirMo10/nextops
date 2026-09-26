@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 from types import ModuleType
 from typing import Any
+from unittest.mock import patch
 
 import yaml
 from jsonschema import Draft202012Validator
@@ -95,3 +96,67 @@ def test_schema_rejects_missing_or_invalid_candidate_qualification() -> None:
     invalid_status = copy.deepcopy(status)
     invalid_status["current_application_qualification"]["gates"][0]["status"] = "assumed"
     assert list(validator.iter_errors(invalid_status))
+
+
+def test_production_claim_rejects_blocked_recovery_and_current_release_gates() -> None:
+    module = _status_module()
+    status = _manifest()
+    assert module.recovery_profile_qualified() is False
+    assert module.production_claim_errors(status, False) == []
+
+    for gate in status["acceptance_gates"]:
+        if gate["id"] == "production_acceptance":
+            gate["status"] = "passed"
+    errors = module.production_claim_errors(status, False)
+    assert any("deployment status" in error for error in errors)
+    assert any("current-app gate" in error for error in errors)
+    assert any("release gate" in error for error in errors)
+    assert any("qualified recovery" in error for error in errors)
+
+
+def test_unavailable_recovery_validator_fails_closed() -> None:
+    module = _status_module()
+    with patch.object(module.subprocess, "run", side_effect=OSError("unavailable")):
+        assert module.recovery_profile_qualified() is False
+    with patch.object(
+        module.subprocess,
+        "run",
+        side_effect=subprocess.TimeoutExpired("check_recovery_profile.py", 30),
+    ):
+        assert module.recovery_profile_qualified() is False
+
+
+def test_production_claim_requires_all_gates_even_with_asserted_recovery() -> None:
+    module = _status_module()
+    status = _manifest()
+    status["deployment_status"] = "production_accepted"
+    for gate in status["acceptance_gates"]:
+        gate["status"] = "passed"
+
+    errors = module.production_claim_errors(status, False)
+    assert any("current-app gate" in error for error in errors)
+    assert any("qualified recovery" in error for error in errors)
+
+    assert any(
+        "current-app gate" in error for error in module.production_claim_errors(status, True)
+    )
+    assert not any(
+        "qualified recovery" in error for error in module.production_claim_errors(status, True)
+    )
+
+    for gate in status["current_application_qualification"]["gates"]:
+        gate["status"] = "passed"
+    # This in-memory predicate fixture does not call or bypass the real recovery validator.
+    assert module.production_claim_errors(status, True) == []
+
+
+def test_production_acceptance_gate_cannot_be_omitted() -> None:
+    module = _status_module()
+    status = _manifest()
+    status["acceptance_gates"] = [
+        gate for gate in status["acceptance_gates"] if gate["id"] != "production_acceptance"
+    ]
+
+    assert module.production_claim_errors(status, False) == [
+        "production_acceptance gate is missing"
+    ]
