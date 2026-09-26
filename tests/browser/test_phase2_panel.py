@@ -69,7 +69,7 @@ def _summary() -> dict[str, Any]:
     }
 
 
-def _incident_response(locale: str, target_id: str) -> dict[str, Any]:
+def _incident_response(locale: str, target_id: str, question: str = "") -> dict[str, Any]:
     summary = _summary()
     evidence = {
         "target_id": target_id,
@@ -143,8 +143,14 @@ def _incident_response(locale: str, target_id: str) -> dict[str, Any]:
         "partial_reasons": [],
     }
     run_id = str(uuid4())
+    focus = "file_listing" if "system files" in question else "overview"
+    assistant = _assistant(locale)
+    if focus == "file_listing":
+        assistant["answer"] = "The read-only collector cannot list system file names or contents."
+        assistant["integrity_status"] = "deterministic_focus"
+        assistant["limitations"] = ["read_only_no_action_performed", "file_listing_unavailable"]
     return {
-        "assistant": _assistant(locale),
+        "assistant": assistant,
         "evidence": evidence,
         "run_id": run_id,
         "evidence_reference": f"run-evidence:{run_id}",
@@ -152,6 +158,7 @@ def _incident_response(locale: str, target_id: str) -> dict[str, Any]:
         "audit_event_id": str(uuid4()),
         "evidence_mode": "live_zabbix_linux",
         "live_monitoring_data": True,
+        "answer_focus": focus,
     }
 
 
@@ -211,7 +218,9 @@ def _fixture_app() -> FastAPI:
     async def incident(request: Request) -> dict[str, Any]:
         payload = await request.json()
         app.state.incident_requests.append(payload)
-        return _incident_response(str(payload["locale"]), str(payload["target_id"]))
+        return _incident_response(
+            str(payload["locale"]), str(payload["target_id"]), str(payload["question"])
+        )
 
     return app
 
@@ -291,9 +300,7 @@ def test_phase2_panel_supports_incident_evidence_and_persian_rtl(
         assert page.locator(".mode-choice.active").evaluate(
             "element => element.getBoundingClientRect().height >= 44"
         )
-        assert page.locator(".boundary-card").evaluate(
-            "element => getComputedStyle(element).color === 'rgb(255, 255, 255)'"
-        )
+        expect(page.get_by_text("How evidence works")).to_be_visible()
 
         page.get_by_role("button", name="Incident investigation").click()
         target = page.get_by_label("Investigation target")
@@ -303,12 +310,17 @@ def test_phase2_panel_supports_incident_evidence_and_persian_rtl(
         page.get_by_role("button", name="Ask assistant").click()
 
         expect(page.get_by_text("Live Zabbix + Linux evidence")).to_be_visible()
+        expect(page.locator("#askedQuestion")).to_have_text(
+            "Explain the current application condition."
+        )
+        page.locator("#evidenceDetails summary").click()
         expect(page.get_by_text("nextops-app.service")).to_be_visible()
         expect(page.get_by_text("CPU pressure observed")).to_be_visible()
         assert app.state.incident_requests[-1]["target_id"] == "app"
 
         page.locator("#languageButton").click()
         expect(page.get_by_role("button", name="بررسی رخداد")).to_be_visible()
+        expect(page.locator("#evidenceBrief")).to_contain_text("زمان گردآوری Linux")
         expect(page.get_by_text("شرکت رایانه خدمات امید سیستم")).to_be_hidden()
         expect(page.locator(".brand").get_by_text("هوشمندی داخلی برای عملیات")).to_be_visible()
         assert page.locator("html").get_attribute("dir") == "rtl"
@@ -327,4 +339,35 @@ def test_phase2_panel_supports_incident_evidence_and_persian_rtl(
         expect(page.get_by_role("button", name="ورود امن")).to_be_visible()
         assert page.evaluate("sessionStorage.getItem('nextops-session')") is None
         assert app.state.logout_requests == 1
+        browser.close()
+
+
+def test_file_request_is_honest_and_does_not_open_a_data_dump(
+    browser_server: tuple[str, FastAPI],
+) -> None:
+    base_url, _ = browser_server
+    with sync_playwright() as playwright:
+        browser = _launch_browser(playwright)
+        page = browser.new_page(viewport={"width": 1280, "height": 900})
+        _login(page, base_url)
+        page.get_by_role("button", name="Incident investigation").click()
+        page.get_by_label("Investigation target").select_option("app")
+        page.get_by_label("Question").fill("Only show the system files on app.")
+        page.get_by_label("Question").press("Enter")
+
+        expect(page.locator("#answer")).to_contain_text("cannot list system file names")
+        expect(page.locator("#integrityNotice")).to_contain_text(
+            "outside the current read-only collector scope"
+        )
+        expect(page.locator("#evidenceBrief")).to_contain_text(
+            "File names and contents unavailable"
+        )
+        expect(page.locator("#askedQuestion")).to_have_text("Only show the system files on app.")
+        assert page.locator("#askedQuestion").get_attribute("dir") == "auto"
+        assert page.locator("#evidenceDetails").evaluate("element => element.open") is False
+        expect(page.get_by_text("nextops-app.service")).to_be_hidden()
+        page.locator("#evidenceDetails summary").click()
+        expect(page.get_by_text("nextops-app.service")).to_be_visible()
+        page.set_viewport_size({"width": 375, "height": 812})
+        assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth") is True
         browser.close()

@@ -371,3 +371,63 @@ html[dir="rtl"] .trust-row > span { padding: 14px 38px 14px 14px; }
   .company-lockup strong { font-size: 11px; }
   .intro h1 { font-size: 34px; }
 }
+
+/* The active workspace is a single, quiet question-and-answer flow. */
+.workspace { display: flex; flex-direction: column; align-items: stretch; gap: 18px; max-width: 920px; margin-inline: auto; }
+.workspace-heading { order: 0; display: flex; flex-direction: column; align-items: stretch; gap: 16px; margin: 0; }
+.workspace-heading h1 { font-size: clamp(30px, 4vw, 42px); }
+.workspace-title > p:last-child { max-width: 68ch; margin-top: 8px; }
+.status-panel { padding: 10px 14px; box-shadow: none; }
+.status-title { margin-bottom: 6px; }
+.status-cluster { justify-content: flex-start; }
+.workspace-grid { order: 2; display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+.prompt-card { padding: clamp(18px, 3vw, 28px); border-radius: 18px; box-shadow: var(--shadow-sm); }
+.card-heading.compact { margin-bottom: 16px; }
+.card-heading.compact .spark { display: none; }
+.mode-field { margin-bottom: 12px; }
+.mode-field .segmented-control { display: flex; flex-wrap: wrap; gap: 8px; }
+.mode-field .mode-choice { display: inline-flex; min-height: 44px; padding: 9px 14px; border-radius: 999px; font-size: 13px; }
+.mode-field .mode-choice::before { display: none; }
+.mode-field .mode-choice.active { box-shadow: none; }
+.mode-help { min-height: 0; margin-top: 7px; font-size: 12px; }
+.field-label, .target-field label { font-size: 12px; }
+.locale-row { margin-bottom: 12px; }
+.prompt-label textarea { min-height: 105px; font-size: 15px; }
+.prompt-footer { font-size: 12px; }
+.status-pill { font-size: 12px; }
+.keyboard-hint { color: var(--muted); }
+.boundary-card { padding: 12px 18px; border-color: var(--line); border-radius: 12px; color: var(--ink-soft); background: var(--surface); box-shadow: none; }
+.boundary-brand { display: none; }
+.boundary-card summary { color: var(--brand-teal-dark); font-size: 13px; font-weight: 750; cursor: pointer; }
+.boundary-card[open] summary { margin-bottom: 16px; }
+.boundary-card .eyebrow, .boundary-card > h2, .boundary-card > p:nth-of-type(2), .boundary-item strong, .read-only-note strong { color: var(--ink-soft); }
+.boundary-item { border-color: var(--line); }
+.boundary-item > span { color: var(--brand-gold-dark); }
+.boundary-item p, .read-only-note small { color: var(--muted); }
+.read-only-note { border-color: var(--line); background: var(--surface-subtle); }
+.result-card { order: 1; margin: 0; padding: clamp(18px, 3vw, 28px); border-radius: 18px; box-shadow: var(--shadow-sm); }
+.result-card::before { height: 3px; }
+.user-message { max-width: 85%; margin-inline-start: auto; margin-bottom: 24px; padding: 12px 16px; border-radius: 18px 18px 4px 18px; background: var(--brand-teal-soft); }
+.user-message span { display: block; margin-bottom: 6px; color: var(--brand-teal-dark); font-size: 11px; font-weight: 750; }
+.user-message p { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; font-size: 14px; line-height: 1.65; }
+.result-heading { padding-bottom: 12px; }
+.result-heading h2 { font-size: 17px; }
+.answer { padding: 18px 2px; font-size: 15px; }
+.integrity-notice { margin: 0 0 14px; font-size: 12px; }
+.evidence-brief { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0 0 14px; padding: 11px 13px; border-radius: 9px; color: var(--brand-teal-dark); background: var(--brand-teal-soft); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.evidence-brief > span { display: flex; flex-direction: column; min-width: 0; }
+.evidence-brief small { color: var(--muted); font-size: 11px; }
+.evidence-brief bdi, .evidence-brief strong { font-weight: 700; }
+.evidence-details summary { padding: 10px 0; color: var(--brand-teal-dark); font-size: 13px; font-weight: 750; cursor: pointer; }
+.evidence-details[open] summary { margin-bottom: 8px; }
+html[dir="rtl"] .user-message { border-radius: 18px 18px 18px 4px; }
+@media (max-width: 680px) {
+  .workspace { padding-top: 22px; }
+  .workspace-heading h1 { font-size: 31px; }
+  .mode-field .segmented-control { display: flex; }
+  .mode-field .mode-choice { flex: 1 1 auto; justify-content: center; }
+  .prompt-footer { flex-direction: row; align-items: center; }
+  .compact-button { width: auto; min-width: 128px; }
+  .keyboard-hint { display: none; }
+  .user-message { max-width: 95%; }
+}

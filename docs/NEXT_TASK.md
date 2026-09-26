@@ -1,5 +1,26 @@
 # Next task / کار بعدی
 
+New source-only UI and relevance candidate, 2026-09-26 — Verify the focused file/filesystem
+behavior and simplified bilingual chat-style workspace against held-out real user questions. Check
+ambiguous mixed-topic questions, file-content refusal, approved mount capacity, partial evidence,
+provenance, audit, keyboard/mobile/RTL and true offline operation on the exact candidate release.
+Local checks passed (182 tests, 10 skips, lint, types, JavaScript syntax, paired-doc links/status).
+The code is not deployed; obtain the controlled change authorization and record rollback/live
+qualification before promotion. Do not describe deterministic focused summaries as newly trained
+model output. The independent recovery destination/lab and remaining production gates below remain
+open.
+
+New owner-reported answer-quality priority, 2026-09-26 — Capture the exact user question, selected
+mode/target/language and visible answer without secrets. Reproduce and classify the mismatch as
+wrong mode, missing/partial evidence, model irrelevance, prompt echo, or output truncation. The
+source-only `codex/answer-completion-guard` candidate now rejects length-limited completions and
+question echoes and clarifies fallback/UI wording; it is **not deployed**. Before any promotion,
+run held-out English/Persian semantic cases on the exact local CPU runtime/model, verify the
+question-specific answer against the source/time/scope evidence, rerun API/browser tests and record
+latency/quality and rollback evidence. Do not infer that fine-tuning is needed or train on raw
+operational evidence. The independent recovery destination and isolated restore lab remain the
+first outstanding production gate; all other production blockers below remain open.
+
 Latest checkpoint, 2026-09-26 — All three application-layer releases are now
 `nextops-0.1.0-cdde129`. Credentialed HTTP redirects fail closed; hosted CI and fresh WAN-denied
 browser checks passed. All four guests require key-only, non-root SSH; the AI guest's firewall is

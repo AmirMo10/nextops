@@ -22,6 +22,23 @@ the same bound. Timeout, overload and local-dependency failures retain safe mach
 and are presented as distinct actionable messages in both languages. This prevents a stale or
 modified browser from raising the output limit beyond the qualified user-testing profile.
 
+A source-only correction dated 2026-09-26 clarifies the result notice: automated source checks do
+not prove that an answer is true or relevant. A token-limit completion is treated as incomplete
+and displayed through an explicitly limited evidence-only fallback. This correction is not yet in
+the controlled deployment; the current release must not be described as having passed its live
+requalification.
+
+The current source candidate also replaces the dense two-column evaluation workspace with a
+single-column question/answer flow. Mode, approved target and language remain explicit; the
+submitted question and answer appear together, with source, collection times and scope visible.
+The full authorized evidence and audit identifiers are available in a collapsed disclosure rather
+than an unsolicited all-data table. Each request is independent; the panel does not send earlier
+screen content as conversation history. A filesystem-capacity question shows only allowlisted mount
+observations in the answer. A request for system file names or contents is answered as unavailable:
+the read-only collector does not retrieve them. The application labels these focused responses as
+deterministic evidence summaries, not verified AI prose. This source candidate has not been
+deployed or live-qualified.
+
 ## Information architecture
 
 Build an operations console, not just a chat page or decorative landing page. Primary areas are overview, asset inventory/details, incidents and evidence timeline, topology, approval requests, connector health, audit search, model/resource health, and settings. Chat is one way to start or inspect a durable investigation.
@@ -44,9 +61,11 @@ enterprise layout keeps semantic success, warning and failure colors separate fr
 
 A development-only [Figma design source](https://www.figma.com/design/fXtpP4xBQg3qovTDcchuHx)
 now records the OCS cover, 48 primitive/semantic/dimension variables, 11 bilingual text styles and
-two elevation styles. The implemented workspace mirrors its spacing, radii and brand tokens, with
+two elevation styles. The deployed workspace mirrors its spacing, radii and brand tokens, with
 numbered answer-mode cards, a high-contrast evidence boundary, compact service-status pills and a
-branded result accent. Figma is not a runtime dependency or an authority for application behavior;
+branded result accent. The unpromoted source candidate retains the OCS tokens but replaces the
+cards and permanent side panel with compact mode choices and optional evidence guidance. Figma is
+not a runtime dependency or an authority for application behavior;
 the reviewed source, tests and documentation remain authoritative. Full product-screen composition
 inside Figma was not completed because the Starter-plan MCP call quota was reached, so the file
 must not be represented as a complete screen library.
@@ -54,7 +73,7 @@ must not be represented as a complete screen library.
 The real-browser fixture covers the branded login, authenticated workspace, composite incident
 evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width without horizontal
 overflow or external requests. The visual foundation was first promoted as immutable application
-release `nextops-0.1.0-54c8bb4`; current release `nextops-0.1.0-2397581` preserves it, server-side
+release `nextops-0.1.0-54c8bb4`; deployed release `nextops-0.1.0-cdde129` preserves it, server-side
 session termination and explicit localized integrity notices for unverified model-only answers,
 evidence-bounded answers, deterministic fallbacks and monitoring-scope redirects. A fresh
 authenticated Phase 2 browser workflow passed English/Persian incident evidence, normal TLS, WAN

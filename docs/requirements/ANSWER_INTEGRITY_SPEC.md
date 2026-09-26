@@ -24,6 +24,11 @@ an operation, and must preserve stale/partial qualifiers even when generated pro
   only from typed evidence. Untrusted names are not copied into this fallback.
 - A long general-mode prompt echo is replaced with a deterministic retry notice; short natural
   greetings such as `Hi` and `سلام` remain valid answers.
+- A model completion stopped by the output-token limit is incomplete, even if it contains the
+  expected source words. It must not receive `evidence_bounded`; a live route uses a clearly
+  limited evidence-only fallback, and general mode asks for a narrower question.
+- Live-mode fallback text must not pose as a complete answer to the user's specific question or
+  duplicate the entire metric list already available in the evidence panel.
 - Every result exposes a machine-readable integrity outcome and limitations. The browser explains
   the outcome without implying that automated checks prove factual correctness.
 - The stored completion audit records the integrity outcome and limitations.
@@ -31,6 +36,10 @@ an operation, and must preserve stale/partial qualifiers even when generated pro
   remote model or telemetry service.
 - Returning the user's prompt or instructions as the answer is a failed relevance case, even when
   the echoed text happens to contain required safety words.
+- A question limited to filesystems must not receive unrelated CPU, service or event narration.
+  Allowlisted mount capacity is not a list of system file names or contents. Until semantic model
+  qualification, focused file/filesystem answers use typed deterministic text, keep partial markers
+  and retain the complete authorized evidence and audit separately.
 
 ## Non-goals
 
@@ -75,6 +84,8 @@ warning.
   inspects meaning and language quality.
 - Prompt echo fails automatically and semantic review must reject an answer that merely restates the
   question.
+- Truncated English and Persian completions fail closed before persistence, while the exact typed
+  evidence, provenance and audit linkage remain available.
 
 ## Tests and evidence
 

@@ -4,6 +4,7 @@ import json
 from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
+import pytest
 from fastapi.testclient import TestClient
 
 from nextops.api.app import create_app
@@ -297,9 +298,14 @@ class FakeService:
 class FakeInferenceGateway:
     """Deterministic protected-AI boundary for application route tests."""
 
-    def __init__(self, answer: str = "پاسخ آزمایشی مدل داخلی") -> None:
+    def __init__(
+        self,
+        answer: str = "پاسخ آزمایشی مدل داخلی",
+        finish_reason: FinishReason = FinishReason.STOP,
+    ) -> None:
         self.last_request: AssistantRequest | None = None
         self.answer = answer
+        self.finish_reason = finish_reason
 
     async def readiness(self) -> InferenceReadiness:
         return InferenceReadiness(
@@ -323,7 +329,7 @@ class FakeInferenceGateway:
             model_id="nextops-qwen3-8b-q4-k-m",
             prompt_tokens=10,
             completion_tokens=8,
-            finish_reason=FinishReason.STOP,
+            finish_reason=self.finish_reason,
             started_at=NOW,
             completed_at=NOW + timedelta(seconds=1),
             queue_ms=0,
@@ -588,6 +594,26 @@ def test_general_mode_redirects_current_infrastructure_status_to_live_evidence()
     assert body["limitations"] == ["no_live_evidence", "read_only_no_action_performed"]
 
 
+@pytest.mark.parametrize("route", ["/api/v1/assistant/generate", "/api/v1/investigate"])
+@pytest.mark.parametrize(
+    "question", ["Only show the system files on app.", "Only showing system files on app."]
+)
+def test_non_linux_modes_do_not_invent_system_file_lists(route: str, question: str) -> None:
+    client = TestClient(create_app(FakeService(), FakeInferenceGateway(), FakeMonitoringGateway()))
+    response = client.post(
+        route,
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    assistant = response.json()["assistant"] if route.endswith("investigate") else response.json()
+    assert "cannot" in assistant["answer"]
+    assert "file" in assistant["answer"]
+    assert assistant["integrity_status"] in {"scope_redirect", "deterministic_focus"}
+    assert "CPU idle time" not in assistant["answer"]
+
+
 def test_general_mode_replaces_a_false_execution_claim() -> None:
     inference = FakeInferenceGateway("I successfully restarted the server.")
     client = TestClient(create_app(FakeService(), inference))
@@ -618,6 +644,22 @@ def test_general_mode_replaces_a_long_prompt_echo() -> None:
     assert response.json()["integrity_status"] == "deterministic_fallback"
     assert response.json()["answer"] != question
     assert "did not produce a reliable answer" in response.json()["answer"]
+
+
+def test_general_mode_does_not_present_a_truncated_reply_as_an_answer() -> None:
+    inference = FakeInferenceGateway("The answer begins with", FinishReason.LENGTH)
+    client = TestClient(create_app(FakeService(), inference))
+
+    response = client.post(
+        "/api/v1/assistant/generate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": "Explain CPU load averages."},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["integrity_status"] == "deterministic_fallback"
+    assert response.json()["finish_reason"] == "length"
+    assert "The answer begins with" not in response.json()["answer"]
 
 
 def test_logout_requires_bearer_and_revokes_the_presented_session() -> None:
@@ -677,7 +719,7 @@ def test_investigation_requires_session_and_returns_exact_live_evidence() -> Non
     assert body["assistant"]["evidence_mode"] == "live_zabbix"
     assert body["assistant"]["live_monitoring_data"] is True
     assert body["assistant"]["integrity_status"] == "deterministic_fallback"
-    assert "Verified Zabbix snapshot" in body["assistant"]["answer"]
+    assert "observed Zabbix snapshot" in body["assistant"]["answer"]
     assert body["evidence"]["source_version"] == "7.0.30"
     assert body["evidence"]["metrics"][0]["stale"] is False
     assert body["evidence"]["is_partial"] is False
@@ -709,6 +751,43 @@ def test_monitoring_answer_passes_when_source_and_boundaries_are_explicit() -> N
     assistant = response.json()["assistant"]
     assert assistant["integrity_status"] == "evidence_bounded"
     assert assistant["answer"].startswith("Zabbix collected")
+
+
+def test_monitoring_answer_with_length_finish_falls_back_despite_source_words() -> None:
+    inference = FakeInferenceGateway(
+        "Zabbix evidence is partial, and the current observation shows",
+        FinishReason.LENGTH,
+    )
+    client = TestClient(create_app(FakeService(), inference, FakeMonitoringGateway()))
+
+    response = client.post(
+        "/api/v1/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": "What does the current evidence show?"},
+    )
+
+    assert response.status_code == 200
+    assistant = response.json()["assistant"]
+    assert assistant["finish_reason"] == "length"
+    assert assistant["integrity_status"] == "deterministic_fallback"
+    assert "current observation shows" not in assistant["answer"]
+    assert "reliable answer to your question was not produced" in assistant["answer"]
+
+
+def test_monitoring_answer_does_not_accept_a_long_question_echo() -> None:
+    question = "Summarize the Zabbix evidence and explain what the current CPU reading means."
+    inference = FakeInferenceGateway(question)
+    client = TestClient(create_app(FakeService(), inference, FakeMonitoringGateway()))
+
+    response = client.post(
+        "/api/v1/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["assistant"]["integrity_status"] == "deterministic_fallback"
+    assert response.json()["assistant"]["answer"] != question
 
 
 def test_incident_context_requires_session_and_preserves_timeline_provenance() -> None:
@@ -769,8 +848,147 @@ def test_phase2_incident_investigation_is_target_scoped_and_evidence_linked() ->
     assert service.incident_failure is None
     assert inference.last_request is not None
     assert len(inference.last_request.question) <= 4_000
-    assert "Separate verified observations" in inference.last_request.question
+    assert "Answer the user's specific question first" in inference.last_request.question
+    assert "without Markdown" in inference.last_request.question
     assert "Do not propose a mutating command" in inference.last_request.question
+
+
+def test_incident_length_finish_cannot_receive_evidence_bounded_label() -> None:
+    inference = FakeInferenceGateway(
+        "Zabbix and Linux evidence is partial for app; the next finding is",
+        FinishReason.LENGTH,
+    )
+    client = TestClient(
+        create_app(
+            FakeService(),
+            inference,
+            FakeMonitoringGateway(),
+            incident_target_ids=("app",),
+        )
+    )
+
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"target_id": "app", "locale": "en", "question": "Summarize app evidence."},
+    )
+
+    assert response.status_code == 200
+    assistant = response.json()["assistant"]
+    assert assistant["finish_reason"] == "length"
+    assert assistant["integrity_status"] == "deterministic_fallback"
+    assert "the next finding is" not in assistant["answer"]
+    assert "reliable answer to your question was not produced" in assistant["answer"]
+
+
+@pytest.mark.parametrize(
+    ("question", "focus"),
+    [
+        ("Show only filesystem usage for app.", "filesystems"),
+        ("Only show the system files on app.", "file_listing"),
+        ("فقط وضعیت فایل‌سیستم میزبان را نشان بده", "filesystems"),
+        ("فایل‌های سیستم را فهرست کن", "file_listing"),
+    ],
+)
+def test_incident_file_questions_do_not_dump_unrelated_diagnostics(
+    question: str, focus: str
+) -> None:
+    inference = FakeInferenceGateway()
+    client = TestClient(
+        create_app(
+            FakeService(),
+            inference,
+            FakeMonitoringGateway(),
+            incident_target_ids=("app",),
+        )
+    )
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"target_id": "app", "locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["answer_focus"] == focus
+    assert body["assistant"]["integrity_status"] == "deterministic_focus"
+    assert "nextops-app.service" not in body["assistant"]["answer"]
+    assert "load 0.1" not in body["assistant"]["answer"]
+    assert inference.last_request is not None
+    assert "nextops-app.service" not in inference.last_request.question
+    assert "CPU idle time" not in inference.last_request.question
+    if focus == "file_listing":
+        assert "cannot list" in body["assistant"]["answer"]
+        assert '"filesystems":[]' in inference.last_request.question
+    else:
+        assert "filesystem capacity" in body["assistant"]["answer"]
+        assert '"path":"/"' in inference.last_request.question
+
+
+def test_incident_multi_topic_question_keeps_overview() -> None:
+    inference = FakeInferenceGateway()
+    client = TestClient(
+        create_app(FakeService(), inference, FakeMonitoringGateway(), incident_target_ids=("app",))
+    )
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={
+            "target_id": "app",
+            "locale": "en",
+            "question": "Compare filesystem usage and services.",
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["answer_focus"] == "overview"
+
+
+@pytest.mark.parametrize(
+    ("question", "expected_focus"),
+    [
+        ("Only show filesystems, no services.", "filesystems"),
+        ("فقط فایل‌سیستم را نشان بده، بدون سرویس", "filesystems"),
+        ("Show filesystem usage and services.", "overview"),
+        ("Show system files and CPU too.", "file_listing"),
+        ("Only showing system files.", "file_listing"),
+    ],
+)
+def test_incident_focus_handles_exclusions_and_mixed_scope(
+    question: str, expected_focus: str
+) -> None:
+    from nextops.api.incident_focus import incident_focus
+
+    assert incident_focus(question) == expected_focus
+
+
+@pytest.mark.parametrize("question", ["Show only filesystem usage.", "Only show system files."])
+def test_focused_incident_preserves_partial_evidence_warning(question: str) -> None:
+    class PartialGateway(FakeMonitoringGateway):
+        async def incident_evidence(self, target_id: str) -> IncidentEvidence:
+            linux = _linux_snapshot(target_id).model_copy(
+                update={"is_partial": True, "partial_reasons": ("filesystems_truncated",)}
+            )
+            return IncidentEvidence.combine(target_id, await self.incident_context(), linux)
+
+    client = TestClient(
+        create_app(
+            FakeService(),
+            FakeInferenceGateway(),
+            PartialGateway(),
+            incident_target_ids=("app",),
+        )
+    )
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"target_id": "app", "locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    assistant = response.json()["assistant"]
+    assert "partial" in assistant["answer"]
+    assert "linux:filesystems_truncated" in assistant["answer"]
+    assert "partial_evidence" in assistant["limitations"]
 
 
 def test_phase2_incident_routes_require_both_read_scopes() -> None:

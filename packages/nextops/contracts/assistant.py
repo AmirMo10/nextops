@@ -38,6 +38,7 @@ class AssistantResponse(FrozenContract):
         "model_unverified",
         "evidence_bounded",
         "deterministic_fallback",
+        "deterministic_focus",
         "scope_redirect",
     ] = "model_unverified"
     limitations: tuple[
@@ -47,11 +48,12 @@ class AssistantResponse(FrozenContract):
             "read_only_no_action_performed",
             "stale_evidence",
             "partial_evidence",
+            "file_listing_unavailable",
         ],
         ...,
     ] = Field(
         default=("no_live_evidence", "model_output_may_be_incorrect"),
-        max_length=5,
+        max_length=6,
     )
 
     @model_validator(mode="after")

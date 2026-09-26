@@ -1,5 +1,37 @@
 # Project state / وضعیت پروژه
 
+Focused-answer and workspace source candidate, 2026-09-26 — The owner reported that a request to
+show only system files produced an all-data table and that the panel was too complex. This branch
+now classifies unambiguous file/filesystem questions without expanding connector access. The Linux
+collector exposes approved mount capacity, not arbitrary file names or contents. The model receives
+a question-focused bounded view; the displayed focused reply is built deterministically from typed
+evidence or explicitly states the file-listing limit. The API labels this `deterministic_focus` and
+returns `answer_focus`; the complete authorized evidence, provenance and audit remain available.
+The source UI now uses one question/answer column with visible source/time/scope and collapsed full
+details. A local browser fixture was visually checked in English and Persian, including narrow-width
+layout, the file-listing refusal and the collapsed evidence boundary. The final local run passed
+182 tests; 10 were skipped (nine requiring an isolated PostgreSQL URL and one POSIX-only collector
+test). Strict typing, lint/format, JavaScript syntax, Markdown parity/local links and release-status
+validation passed. Live CPU-model relevance, real-server browser, WAN-disconnected and deployment
+qualification for this exact revision remain **not run**. This is **not deployed** and does not imply
+model training or production acceptance.
+
+Answer-quality source checkpoint, 2026-09-26 — The owner reported that a submitted question did
+not match the AI response and that the result looked fabricated. A fresh browser capture from the
+prior section-by-section audit showed a 128-token incident reply that appeared unfinished while
+the interface displayed an evidence-bounded notice; a Persian monitoring fallback was overly
+dense with metric text. A second controlled read-only browser reproduction of the same app-host
+question returned HTTP 200, `finish_reason=length`, 128 output tokens and a deterministic fallback.
+The different labels for a length-limited reply expose the incomplete guard, not proof that one
+answer was factually sound. Source inspection found that the live-answer guard checked source and
+partial/stale terms but not `finish_reason`, so a length-limited completion could pass. On the
+unpromoted `codex/answer-completion-guard` branch, source changes fail closed on truncated
+completions and long live-question echoes, shorten evidence-only fallbacks, ask for question-first
+plain-text responses, and avoid presenting lexical checks as proof of factual correctness. Focused
+local API/browser-fixture tests pass. The owner's exact prompt/response pair, semantic review of a
+held-out bilingual corpus, and live release qualification are still needed; the serving releases
+and production status have **not** changed. No model weights were trained or replaced.
+
 Latest controlled checkpoint, 2026-09-26 — commit `cdde129` closed a credential-forwarding
 redirect risk in the application-to-AI, application-to-connector and connector-to-Zabbix HTTP
 clients. Redirects now fail rather than carrying a bearer or API token to another origin. Local
