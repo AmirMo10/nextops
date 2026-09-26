@@ -36,6 +36,10 @@ an operation, and must preserve stale/partial qualifiers even when generated pro
   remote model or telemetry service.
 - Returning the user's prompt or instructions as the answer is a failed relevance case, even when
   the echoed text happens to contain required safety words.
+- A question limited to filesystems must not receive unrelated CPU, service or event narration.
+  Allowlisted mount capacity is not a list of system file names or contents. Until semantic model
+  qualification, focused file/filesystem answers use typed deterministic text, keep partial markers
+  and retain the complete authorized evidence and audit separately.
 
 ## Non-goals
 

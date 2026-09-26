@@ -1,5 +1,21 @@
 # Project state / وضعیت پروژه
 
+Focused-answer and workspace source candidate, 2026-09-26 — The owner reported that a request to
+show only system files produced an all-data table and that the panel was too complex. This branch
+now classifies unambiguous file/filesystem questions without expanding connector access. The Linux
+collector exposes approved mount capacity, not arbitrary file names or contents. The model receives
+a question-focused bounded view; the displayed focused reply is built deterministically from typed
+evidence or explicitly states the file-listing limit. The API labels this `deterministic_focus` and
+returns `answer_focus`; the complete authorized evidence, provenance and audit remain available.
+The source UI now uses one question/answer column with visible source/time/scope and collapsed full
+details. A local browser fixture was visually checked in English and Persian, including narrow-width
+layout, the file-listing refusal and the collapsed evidence boundary. The final local run passed
+182 tests; 10 were skipped (nine requiring an isolated PostgreSQL URL and one POSIX-only collector
+test). Strict typing, lint/format, JavaScript syntax, Markdown parity/local links and release-status
+validation passed. Live CPU-model relevance, real-server browser, WAN-disconnected and deployment
+qualification for this exact revision remain **not run**. This is **not deployed** and does not imply
+model training or production acceptance.
+
 Answer-quality source checkpoint, 2026-09-26 — The owner reported that a submitted question did
 not match the AI response and that the result looked fabricated. A fresh browser capture from the
 prior section-by-section audit showed a 128-token incident reply that appeared unfinished while

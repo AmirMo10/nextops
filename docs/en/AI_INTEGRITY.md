@@ -39,6 +39,15 @@ The UI distinguishes these outcomes:
 | `scope_redirect` | The question requires live evidence and was not answered from memory |
 | `evidence_bounded` | Mandatory source/freshness/partial/read-only checks passed; exact evidence still governs |
 | `deterministic_fallback` | Generated wording failed a mandatory check and was replaced with a safe deterministic response |
+| `deterministic_focus` | A file/filesystem question receives a source-built answer instead of unverified generated detail |
+
+The source-only focused-answer candidate distinguishes allowlisted filesystem capacity from actual
+system-file names and contents. Its prompt excludes unrelated incident fields, and application code
+builds the displayed answer from typed Linux observations or states that file listing is unavailable.
+It preserves partial-evidence disclosure, authorization, complete evidence, provenance and audit.
+The machine-readable `file_listing_unavailable` limitation prevents a generic live-evidence prompt
+from implying that another mode can show file contents. This does not train the model or qualify arbitrary generated answers. Live acceptance of this exact
+candidate remains outstanding.
 
 ## Deterministic boundary
 

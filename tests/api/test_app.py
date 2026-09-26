@@ -4,6 +4,7 @@ import json
 from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
+import pytest
 from fastapi.testclient import TestClient
 
 from nextops.api.app import create_app
@@ -593,6 +594,26 @@ def test_general_mode_redirects_current_infrastructure_status_to_live_evidence()
     assert body["limitations"] == ["no_live_evidence", "read_only_no_action_performed"]
 
 
+@pytest.mark.parametrize("route", ["/api/v1/assistant/generate", "/api/v1/investigate"])
+@pytest.mark.parametrize(
+    "question", ["Only show the system files on app.", "Only showing system files on app."]
+)
+def test_non_linux_modes_do_not_invent_system_file_lists(route: str, question: str) -> None:
+    client = TestClient(create_app(FakeService(), FakeInferenceGateway(), FakeMonitoringGateway()))
+    response = client.post(
+        route,
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    assistant = response.json()["assistant"] if route.endswith("investigate") else response.json()
+    assert "cannot" in assistant["answer"]
+    assert "file" in assistant["answer"]
+    assert assistant["integrity_status"] in {"scope_redirect", "deterministic_focus"}
+    assert "CPU idle time" not in assistant["answer"]
+
+
 def test_general_mode_replaces_a_false_execution_claim() -> None:
     inference = FakeInferenceGateway("I successfully restarted the server.")
     client = TestClient(create_app(FakeService(), inference))
@@ -858,6 +879,116 @@ def test_incident_length_finish_cannot_receive_evidence_bounded_label() -> None:
     assert assistant["integrity_status"] == "deterministic_fallback"
     assert "the next finding is" not in assistant["answer"]
     assert "reliable answer to your question was not produced" in assistant["answer"]
+
+
+@pytest.mark.parametrize(
+    ("question", "focus"),
+    [
+        ("Show only filesystem usage for app.", "filesystems"),
+        ("Only show the system files on app.", "file_listing"),
+        ("فقط وضعیت فایل‌سیستم میزبان را نشان بده", "filesystems"),
+        ("فایل‌های سیستم را فهرست کن", "file_listing"),
+    ],
+)
+def test_incident_file_questions_do_not_dump_unrelated_diagnostics(
+    question: str, focus: str
+) -> None:
+    inference = FakeInferenceGateway()
+    client = TestClient(
+        create_app(
+            FakeService(),
+            inference,
+            FakeMonitoringGateway(),
+            incident_target_ids=("app",),
+        )
+    )
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"target_id": "app", "locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["answer_focus"] == focus
+    assert body["assistant"]["integrity_status"] == "deterministic_focus"
+    assert "nextops-app.service" not in body["assistant"]["answer"]
+    assert "load 0.1" not in body["assistant"]["answer"]
+    assert inference.last_request is not None
+    assert "nextops-app.service" not in inference.last_request.question
+    assert "CPU idle time" not in inference.last_request.question
+    if focus == "file_listing":
+        assert "cannot list" in body["assistant"]["answer"]
+        assert '"filesystems":[]' in inference.last_request.question
+    else:
+        assert "filesystem capacity" in body["assistant"]["answer"]
+        assert '"path":"/"' in inference.last_request.question
+
+
+def test_incident_multi_topic_question_keeps_overview() -> None:
+    inference = FakeInferenceGateway()
+    client = TestClient(
+        create_app(FakeService(), inference, FakeMonitoringGateway(), incident_target_ids=("app",))
+    )
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={
+            "target_id": "app",
+            "locale": "en",
+            "question": "Compare filesystem usage and services.",
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["answer_focus"] == "overview"
+
+
+@pytest.mark.parametrize(
+    ("question", "expected_focus"),
+    [
+        ("Only show filesystems, no services.", "filesystems"),
+        ("فقط فایل‌سیستم را نشان بده، بدون سرویس", "filesystems"),
+        ("Show filesystem usage and services.", "overview"),
+        ("Show system files and CPU too.", "file_listing"),
+        ("Only showing system files.", "file_listing"),
+    ],
+)
+def test_incident_focus_handles_exclusions_and_mixed_scope(
+    question: str, expected_focus: str
+) -> None:
+    from nextops.api.incident_focus import incident_focus
+
+    assert incident_focus(question) == expected_focus
+
+
+@pytest.mark.parametrize("question", ["Show only filesystem usage.", "Only show system files."])
+def test_focused_incident_preserves_partial_evidence_warning(question: str) -> None:
+    class PartialGateway(FakeMonitoringGateway):
+        async def incident_evidence(self, target_id: str) -> IncidentEvidence:
+            linux = _linux_snapshot(target_id).model_copy(
+                update={"is_partial": True, "partial_reasons": ("filesystems_truncated",)}
+            )
+            return IncidentEvidence.combine(target_id, await self.incident_context(), linux)
+
+    client = TestClient(
+        create_app(
+            FakeService(),
+            FakeInferenceGateway(),
+            PartialGateway(),
+            incident_target_ids=("app",),
+        )
+    )
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"target_id": "app", "locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    assistant = response.json()["assistant"]
+    assert "partial" in assistant["answer"]
+    assert "linux:filesystems_truncated" in assistant["answer"]
+    assert "partial_evidence" in assistant["limitations"]
 
 
 def test_phase2_incident_routes_require_both_read_scopes() -> None:

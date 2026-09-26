@@ -14,7 +14,7 @@ const translations = {
     secureAccess: "SECURE ACCESS", welcome: "Welcome to NextOps", credentialsPrompt: "Enter your evaluation credentials.", username: "Username",
     password: "Password", signIn: "Sign in securely", privacyNote: "Your session is stored only in this browser tab.",
     workspaceLabel: "NEXTOPS OPERATIONS WORKSPACE", workspaceHeadline: "Ask the local assistant",
-    workspaceLead: "Move from a direct question to evidence-grounded investigation without exposing infrastructure credentials.",
+    workspaceLead: "Ask one question at a time. Each answer stands on its own; this screen does not carry chat history into the next request.",
     serviceStatus: "Service status",
     appReady: "Application ready", aiChecking: "Checking AI", aiReady: "AI ready", aiUnavailable: "AI unavailable",
     monitoringChecking: "Checking monitoring", monitoringReady: "Monitoring ready", monitoringUnavailable: "Monitoring unavailable",
@@ -37,6 +37,8 @@ const translations = {
     modelIntegrityNotice: "Model-generated text has no live evidence; verify important facts independently.",
     evidenceIntegrityNotice: "This answer passed bounded source checks, not a factual or relevance review. Verify it against the evidence below.",
     fallbackIntegrityNotice: "The generated answer was incomplete or failed a required check. The evidence-only summary below may not answer your full question.",
+    focusedIntegrityNotice: "This is a deterministic summary of the approved read-only observations, not a verified model explanation or a file listing.",
+    fileLimitNotice: "System file names and contents are outside the current read-only collector scope. Incident mode can show approved mount capacity only.",
     redirectIntegrityNotice: "The question requires live evidence and was not answered from model memory. Choose a live evidence mode.",
     source: "Source", host: "Host", collected: "Collected", problems: "Active problems", coverage: "Evidence coverage",
     complete: "Complete", partial: "Partial (bounded)", stale: "stale",
@@ -50,7 +52,9 @@ const translations = {
     genericError: "The request could not be completed. Try again.", timeoutError: "The local model took too long. Please try a shorter question.",
     overloadedError: "The local model is busy. Please wait a moment and try again.", dependencyError: "A local service is temporarily unavailable. Please try again.",
     sessionExpired: "Your session expired. Please sign in again.",
-    working: "Generating locally…"
+    working: "Generating locally…",
+    howEvidenceWorks: "How evidence works", youAsked: "You asked", showEvidence: "View evidence and request details",
+    sourceBrief: "Source", collectedBrief: "Collected", linuxCollected: "Linux collected", zabbixCollected: "Zabbix collected", scopeBrief: "Scope", filesystemScope: "Approved filesystem mounts only", fileScope: "File names and contents unavailable", incidentScope: "Approved incident target", monitoringScope: "Zabbix monitoring", keyboardHint: " · Enter to send · Shift+Enter for a new line"
   },
   fa: {
     skipMain: "رفتن به محتوای اصلی",
@@ -65,7 +69,7 @@ const translations = {
     secureAccess: "دسترسی امن", welcome: "به NextOps خوش آمدید", credentialsPrompt: "مشخصات دسترسی محیط ارزیابی را وارد کنید.", username: "نام کاربری",
     password: "گذرواژه", signIn: "ورود امن", privacyNote: "نشست شما فقط در همین برگه مرورگر نگهداری می‌شود.",
     workspaceLabel: "فضای عملیات NextOps", workspaceHeadline: "از دستیار داخلی بپرسید",
-    workspaceLead: "بدون افشای اطلاعات ورود زیرساخت، از یک پرسش مستقیم به بررسی مستند بر پایهٔ شواهد بروید.",
+    workspaceLead: "هر بار یک پرسش مطرح کنید. پاسخ‌ها مستقل‌اند و سابقهٔ این صفحه به درخواست بعدی فرستاده نمی‌شود.",
     serviceStatus: "وضعیت سرویس‌ها",
     appReady: "برنامه آماده است", aiChecking: "در حال بررسی سرویس هوش مصنوعی", aiReady: "سرویس هوش مصنوعی آماده است", aiUnavailable: "سرویس هوش مصنوعی در دسترس نیست",
     monitoringChecking: "در حال بررسی سامانه پایش", monitoringReady: "سامانه پایش آماده است", monitoringUnavailable: "سامانه پایش در دسترس نیست",
@@ -88,6 +92,8 @@ const translations = {
     modelIntegrityNotice: "این متن را مدل و بدون شاهد زنده تولید کرده است؛ اطلاعات مهم را به‌طور مستقل راستی‌آزمایی کنید.",
     evidenceIntegrityNotice: "این پاسخ فقط کنترل‌های محدودِ منبع را گذرانده است، نه بررسی درستی یا ارتباط با پرسش؛ آن را با شواهد زیر تطبیق دهید.",
     fallbackIntegrityNotice: "پاسخ تولیدشده ناتمام بود یا یکی از کنترل‌های لازم را نگذرانده است. خلاصهٔ مبتنی بر شواهد ممکن است به همهٔ بخش‌های پرسش شما پاسخ ندهد.",
+    focusedIntegrityNotice: "این متن، خلاصهٔ قطعیِ مشاهدات فقط‌خواندنیِ مجاز است؛ نه توضیح راستی‌آزمایی‌شدهٔ مدل یا فهرست فایل‌ها.",
+    fileLimitNotice: "نام و محتوای فایل‌های سیستم در دامنهٔ گردآورندهٔ فقط‌خواندنیِ کنونی نیستند. حالت بررسی رخداد فقط ظرفیت نقاط اتصالِ مجاز را نشان می‌دهد.",
     redirectIntegrityNotice: "این پرسش به شاهد زنده نیاز دارد و از حافظهٔ مدل پاسخ داده نشد؛ یکی از حالت‌های دارای شاهد زنده را انتخاب کنید.",
     source: "منبع", host: "میزبان", collected: "زمان گردآوری", problems: "مسائل فعال", coverage: "پوشش شواهد",
     complete: "کامل", partial: "جزئی (محدودشده)", stale: "قدیمی",
@@ -101,7 +107,9 @@ const translations = {
     genericError: "انجام درخواست ممکن نشد. دوباره تلاش کنید.", timeoutError: "زمان پردازش مدل محلی به پایان رسید. لطفاً پرسش کوتاه‌تری مطرح کنید.",
     overloadedError: "مدل محلی در حال پردازش درخواست دیگری است. لطفاً کمی بعد دوباره تلاش کنید.", dependencyError: "یکی از سرویس‌های داخلی موقتاً در دسترس نیست. لطفاً دوباره تلاش کنید.",
     sessionExpired: "نشست شما پایان یافته است. دوباره وارد شوید.",
-    working: "در حال تولید پاسخ در محیط داخلی…"
+    working: "در حال تولید پاسخ در محیط داخلی…",
+    howEvidenceWorks: "شیوهٔ استفاده از شواهد", youAsked: "پرسش شما", showEvidence: "نمایش شواهد و جزئیات درخواست",
+    sourceBrief: "منبع", collectedBrief: "زمان گردآوری", linuxCollected: "زمان گردآوری Linux", zabbixCollected: "زمان گردآوری Zabbix", scopeBrief: "دامنه", filesystemScope: "فقط نقاط اتصال فایل‌سیستمِ مجاز", fileScope: "نام و محتوای فایل‌ها در دسترس نیست", incidentScope: "میزبان مجازِ بررسی", monitoringScope: "پایش Zabbix", keyboardHint: " · Enter برای ارسال · Shift+Enter برای سطر تازه"
   }
 };
 
@@ -110,6 +118,7 @@ const state = {
   answerLocale: "en",
   answerMode: "general",
   incidentTargets: [],
+  lastEvidence: null,
   token: sessionStorage.getItem("nextops-session") || ""
 };
 const byId = id => document.getElementById(id);
@@ -138,6 +147,16 @@ function applyLanguage(language) {
   document.querySelector(".mode-field .segmented-control").setAttribute("aria-label", translations[language].answerMode);
   document.querySelector(".locale-control").setAttribute("aria-label", translations[language].answerLanguage);
   document.querySelector(".status-panel").setAttribute("aria-label", translations[language].serviceStatus);
+  state.answerLocale = language;
+  document.querySelectorAll(".locale-choice").forEach(item => {
+    item.classList.toggle("active", item.dataset.locale === language);
+    item.setAttribute("aria-pressed", item.dataset.locale === language ? "true" : "false");
+  });
+  if (state.lastEvidence) {
+    if (state.lastEvidence.incident) renderIncidentEvidence(state.lastEvidence.evidence);
+    else renderEvidence(state.lastEvidence.evidence);
+    updateEvidenceBrief();
+  }
 }
 
 async function api(path, options = {}) {
@@ -157,11 +176,42 @@ async function api(path, options = {}) {
 
 function showLogin(message = "") {
   state.token = "";
+  state.lastEvidence = null;
   sessionStorage.removeItem("nextops-session");
   byId("loginView").classList.remove("hidden");
   byId("workspaceView").classList.add("hidden");
   byId("logoutButton").classList.add("hidden");
   byId("loginError").textContent = message;
+  byId("resultCard").classList.add("hidden");
+  byId("question").value = "";
+  byId("characterCount").textContent = "0 / 4000";
+}
+
+function updateEvidenceBrief() {
+  if (!state.lastEvidence) return;
+  const { evidence, incident, focus } = state.lastEvidence;
+  const displayTime = value => new Date(value).toLocaleString(state.language === "fa" ? "fa-IR" : "en-GB");
+  const scopeKey = incident ? focus === "filesystems" ? "filesystemScope" : focus === "file_listing" ? "fileScope" : "incidentScope" : "monitoringScope";
+  const fields = [
+    ["sourceBrief", incident ? "Zabbix + Linux" : "Zabbix", true],
+    ...(incident ? [
+      ["linuxCollected", displayTime(evidence.linux.collected_at), true],
+      ["zabbixCollected", displayTime(evidence.zabbix.collected_at), true]
+    ] : [["collectedBrief", displayTime(evidence.collected_at), true]]),
+    ["scopeBrief", translations[state.language][scopeKey], false]
+  ];
+  const brief = byId("evidenceBrief");
+  brief.replaceChildren();
+  fields.forEach(([labelKey, value, technical]) => {
+    const field = document.createElement("span");
+    const label = document.createElement("small");
+    label.textContent = translations[state.language][labelKey];
+    const content = document.createElement(technical ? "bdi" : "strong");
+    if (technical) content.dir = "ltr";
+    content.textContent = value;
+    field.append(label, content);
+    brief.append(field);
+  });
 }
 
 async function showWorkspace() {
@@ -380,6 +430,7 @@ function safeRequestError(error) {
 
 function setAnswerMode(mode) {
   state.answerMode = mode;
+  state.lastEvidence = null;
   document.querySelectorAll(".mode-choice").forEach(item => {
     item.classList.toggle("active", item.dataset.mode === mode);
     item.setAttribute("aria-pressed", item.dataset.mode === mode ? "true" : "false");
@@ -426,6 +477,12 @@ document.querySelectorAll(".mode-choice").forEach(button => button.addEventListe
   setAnswerMode(button.dataset.mode);
 }));
 byId("question").addEventListener("input", event => { byId("characterCount").textContent = `${event.target.value.length} / 4000`; });
+byId("question").addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
+    event.preventDefault();
+    if (!byId("askButton").disabled) byId("assistantForm").requestSubmit();
+  }
+});
 byId("assistantForm").addEventListener("submit", async event => {
   event.preventDefault();
   const button = byId("askButton");
@@ -445,8 +502,10 @@ byId("assistantForm").addEventListener("submit", async event => {
     const result = await api(path, { method: "POST", body: JSON.stringify(payload) });
     const evidenceBacked = monitoring || incident;
     const assistant = evidenceBacked ? result.assistant : result;
+    byId("askedQuestion").textContent = payload.question;
+    byId("askedQuestion").dir = "auto";
     byId("answer").textContent = assistant.answer;
-    byId("answer").dir = assistant.locale === "fa" ? "rtl" : "ltr";
+    byId("answer").dir = "auto";
     byId("modelId").textContent = assistant.model_id;
     byId("tokenCount").textContent = assistant.completion_tokens;
     byId("completedAt").textContent = new Date(assistant.completed_at).toLocaleString(state.language === "fa" ? "fa-IR" : "en-GB");
@@ -455,12 +514,13 @@ byId("assistantForm").addEventListener("submit", async event => {
       model_unverified: "modelIntegrityNotice",
       evidence_bounded: "evidenceIntegrityNotice",
       deterministic_fallback: "fallbackIntegrityNotice",
+      deterministic_focus: "focusedIntegrityNotice",
       scope_redirect: "redirectIntegrityNotice"
     };
-    const integrityKey = integrityKeys[assistant.integrity_status] || "modelIntegrityNotice";
+    const integrityKey = assistant.limitations?.includes("file_listing_unavailable") ? "fileLimitNotice" : integrityKeys[assistant.integrity_status] || "modelIntegrityNotice";
     byId("integrityNotice").dataset.i18n = integrityKey;
     byId("integrityNotice").textContent = translations[state.language][integrityKey];
-    byId("integrityNotice").classList.toggle("fallback", assistant.integrity_status === "deterministic_fallback");
+    byId("integrityNotice").classList.toggle("fallback", ["deterministic_fallback", "deterministic_focus"].includes(assistant.integrity_status));
     const titleKey = evidenceBacked ? "responseTitle" : "generalResponseTitle";
     const badgeKey = incident ? "incidentEvidenceBadge" : monitoring ? "liveEvidenceBadge" : "modelOnlyBadge";
     byId("responseTitle").dataset.i18n = titleKey;
@@ -469,18 +529,27 @@ byId("assistantForm").addEventListener("submit", async event => {
     byId("evidenceBadge").textContent = translations[state.language][badgeKey];
     byId("evidenceBadge").classList.toggle("live", evidenceBacked);
     byId("evidencePanel").classList.toggle("hidden", !evidenceBacked);
+    byId("evidenceDetails").open = false;
     document.querySelectorAll(".monitoring-meta").forEach(node => node.classList.toggle("hidden", !evidenceBacked));
     if (evidenceBacked) {
       if (incident) renderIncidentEvidence(result.evidence);
       else renderEvidence(result.evidence);
+      state.lastEvidence = { evidence: result.evidence, incident, focus: result.answer_focus || "overview" };
+      updateEvidenceBrief();
+      byId("evidenceBrief").classList.remove("hidden");
       byId("runId").textContent = result.run_id;
       byId("runId").title = result.run_id;
       byId("evidenceReference").textContent = result.evidence_reference;
       byId("evidenceReference").title = `${result.evidence_reference} · sha256:${result.evidence_sha256}`;
       byId("auditEventId").textContent = result.audit_event_id;
       byId("auditEventId").title = result.audit_event_id;
+    } else {
+      state.lastEvidence = null;
+      byId("evidenceBrief").classList.add("hidden");
     }
     byId("resultCard").classList.remove("hidden");
+    byId("question").value = "";
+    byId("characterCount").textContent = "0 / 4000";
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     byId("resultCard").scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
   } catch (error) {

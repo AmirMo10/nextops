@@ -7,9 +7,9 @@
   <meta name="theme-color" content="#007986">
   <link id="appIcon" rel="icon" href="data:,">
   <title>NextOps by OCS | Local Operations Intelligence</title>
-  <link rel="stylesheet" href="/assets/app.css">
-  <link rel="stylesheet" href="/assets/evidence.css">
-  <script src="/assets/app.js" defer></script>
+  <link rel="stylesheet" href="/assets/app.css?v=20260926-focus2">
+  <link rel="stylesheet" href="/assets/evidence.css?v=20260926-focus2">
+  <script src="/assets/app.js?v=20260926-focus2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#mainContent" data-i18n="skipMain">Skip to main content</a>
@@ -76,6 +76,30 @@
         </div>
       </div>
 
+      <section id="resultCard" class="surface-card result-card hidden" aria-live="polite">
+        <div class="user-message"><span data-i18n="youAsked">You asked</span><p id="askedQuestion"></p></div>
+        <div class="result-heading"><div><p class="eyebrow" data-i18n="assistantResponse">ASSISTANT RESPONSE</p><h2 id="responseTitle" data-i18n="generalResponseTitle">Direct local answer</h2></div><span id="evidenceBadge" class="evidence-badge" data-i18n="modelOnlyBadge">Local model · no live evidence</span></div>
+        <div id="answer" class="answer"></div>
+        <p id="integrityNotice" class="integrity-notice" data-i18n="modelIntegrityNotice">Model-generated text has no live evidence; verify important facts independently.</p>
+        <p id="evidenceBrief" class="evidence-brief hidden"></p>
+        <details id="evidenceDetails" class="evidence-details"><summary data-i18n="showEvidence">View evidence and request details</summary>
+          <div id="evidencePanel" class="evidence-panel hidden">
+            <div class="evidence-summary"><span><small data-i18n="source">Source</small><strong id="evidenceSource">—</strong></span><span><small data-i18n="host">Host</small><strong id="evidenceHost">—</strong></span><span><small data-i18n="collected">Collected</small><strong id="evidenceCollected">—</strong></span><span><small data-i18n="problems">Active problems</small><strong id="problemCount">—</strong></span><span><small data-i18n="coverage">Evidence coverage</small><strong id="evidenceCoverage">—</strong></span></div>
+            <div id="metricList" class="metric-list"></div>
+            <div id="incidentDetail" class="incident-detail hidden"></div>
+          </div>
+          <div class="result-meta">
+            <span><small data-i18n="model">Model</small><strong id="modelId">—</strong></span>
+            <span><small data-i18n="tokens">Output tokens</small><strong id="tokenCount">—</strong></span>
+            <span><small data-i18n="completed">Completed</small><strong id="completedAt">—</strong></span>
+            <span><small data-i18n="requestId">Request</small><strong id="requestId">—</strong></span>
+            <span class="monitoring-meta hidden"><small data-i18n="runId">Durable run</small><strong id="runId">—</strong></span>
+            <span class="monitoring-meta hidden"><small data-i18n="evidenceReference">Evidence reference</small><strong id="evidenceReference">—</strong></span>
+            <span class="monitoring-meta hidden"><small data-i18n="auditEvent">Audit event</small><strong id="auditEventId">—</strong></span>
+          </div>
+        </details>
+      </section>
+
       <div class="workspace-grid">
         <form id="assistantForm" class="surface-card prompt-card">
           <div class="card-heading compact">
@@ -107,9 +131,9 @@
             </div>
           </div>
 
-          <label class="prompt-label"><span data-i18n="question">Question</span><textarea id="question" maxlength="4000" required data-i18n-placeholder="questionPlaceholder" placeholder="Explain a safe first response to a high CPU alert."></textarea></label>
+          <label class="prompt-label"><span data-i18n="question">Question</span><textarea id="question" maxlength="4000" required aria-keyshortcuts="Enter" data-i18n-placeholder="questionPlaceholder" placeholder="Explain a safe first response to a high CPU alert."></textarea></label>
           <div class="prompt-footer">
-            <span id="characterCount">0 / 4000</span>
+            <span><span id="characterCount">0 / 4000</span><span class="keyboard-hint" data-i18n="keyboardHint"> · Enter to send · Shift+Enter for a new line</span></span>
             <button id="askButton" class="primary-button compact-button" type="submit">
               <span data-i18n="askAssistant">Ask assistant</span>
               <svg class="button-arrow" aria-hidden="true" viewBox="0 0 20 20"><path d="M4 10h11m-4-4 4 4-4 4"/></svg>
@@ -118,7 +142,8 @@
           <p id="assistantError" class="form-error" role="alert"></p>
         </form>
 
-        <aside class="surface-card boundary-card">
+        <details class="surface-card boundary-card">
+          <summary data-i18n="howEvidenceWorks">How evidence works</summary>
           <div class="boundary-brand" aria-hidden="true"><span></span><span></span></div>
           <p class="eyebrow" data-i18n="evidenceBoundary">EVIDENCE BOUNDARY</p>
           <h2 data-i18n="liveEvidenceTitle">Intelligence with a clear source</h2>
@@ -127,28 +152,9 @@
           <div class="boundary-item"><span>02</span><div><strong data-i18n="boundaryAuth">Authenticated path</strong><p data-i18n="boundaryAuthText">The browser never receives the AI service credential.</p></div></div>
           <div class="boundary-item"><span>03</span><div><strong data-i18n="boundaryZabbix">Qualified evidence</strong><p data-i18n="boundaryZabbixText">Read-only, source-qualified and timestamped.</p></div></div>
           <div class="read-only-note"><span aria-hidden="true">RO</span><p><strong data-i18n="readOnlyTitle">Read-only by design</strong><small data-i18n="readOnlyText">This evaluation workspace cannot execute infrastructure changes.</small></p></div>
-        </aside>
+        </details>
       </div>
 
-      <section id="resultCard" class="surface-card result-card hidden" aria-live="polite">
-        <div class="result-heading"><div><p class="eyebrow" data-i18n="assistantResponse">ASSISTANT RESPONSE</p><h2 id="responseTitle" data-i18n="generalResponseTitle">Direct local answer</h2></div><span id="evidenceBadge" class="evidence-badge" data-i18n="modelOnlyBadge">Local model · no live evidence</span></div>
-        <div id="answer" class="answer"></div>
-        <p id="integrityNotice" class="integrity-notice" data-i18n="modelIntegrityNotice">Model-generated text has no live evidence; verify important facts independently.</p>
-        <div id="evidencePanel" class="evidence-panel hidden">
-          <div class="evidence-summary"><span><small data-i18n="source">Source</small><strong id="evidenceSource">—</strong></span><span><small data-i18n="host">Host</small><strong id="evidenceHost">—</strong></span><span><small data-i18n="collected">Collected</small><strong id="evidenceCollected">—</strong></span><span><small data-i18n="problems">Active problems</small><strong id="problemCount">—</strong></span><span><small data-i18n="coverage">Evidence coverage</small><strong id="evidenceCoverage">—</strong></span></div>
-          <div id="metricList" class="metric-list"></div>
-          <div id="incidentDetail" class="incident-detail hidden"></div>
-        </div>
-        <div class="result-meta">
-          <span><small data-i18n="model">Model</small><strong id="modelId">—</strong></span>
-          <span><small data-i18n="tokens">Output tokens</small><strong id="tokenCount">—</strong></span>
-          <span><small data-i18n="completed">Completed</small><strong id="completedAt">—</strong></span>
-          <span><small data-i18n="requestId">Request</small><strong id="requestId">—</strong></span>
-          <span class="monitoring-meta hidden"><small data-i18n="runId">Durable run</small><strong id="runId">—</strong></span>
-          <span class="monitoring-meta hidden"><small data-i18n="evidenceReference">Evidence reference</small><strong id="evidenceReference">—</strong></span>
-          <span class="monitoring-meta hidden"><small data-i18n="auditEvent">Audit event</small><strong id="auditEventId">—</strong></span>
-        </div>
-      </section>
     </section>
   </main>
 

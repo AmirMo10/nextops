@@ -80,6 +80,15 @@ answer and append-only audit linkage in one completion transaction. Safe depende
 also stored and audited. The panel exposes logical targets and evidence identifiers, not connector
 credentials. Fresh live-browser acceptance on this release remains a separate `not_run` gate.
 
+An unpromoted source candidate adds `answer_focus` (`overview`, `filesystems`, or `file_listing`)
+to the incident response. It is derived from question terms: mixed filesystem/service requests
+stay in `overview`, while an explicit file-listing request fails safely even if it also mentions
+another metric. The exact bounded evidence, hash and audit do not change. Focused prompts receive
+only relevant metadata and approved mount observations; displayed focused answers carry
+`deterministic_focus` and are built from typed evidence, or state that file listing is unsupported.
+The existing read scopes and connector capabilities are unchanged. This contract addition requires
+release-specific browser/API qualification before deployment.
+
 ## Persistence model
 
 PostgreSQL is authoritative. Separate business data from the databases NextOps manages. Define stable IDs, foreign keys, unique constraints, indexes, retention and permission rules for each record group.

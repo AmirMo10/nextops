@@ -1,5 +1,15 @@
 # Next task / کار بعدی
 
+New source-only UI and relevance candidate, 2026-09-26 — Verify the focused file/filesystem
+behavior and simplified bilingual chat-style workspace against held-out real user questions. Check
+ambiguous mixed-topic questions, file-content refusal, approved mount capacity, partial evidence,
+provenance, audit, keyboard/mobile/RTL and true offline operation on the exact candidate release.
+Local checks passed (182 tests, 10 skips, lint, types, JavaScript syntax, paired-doc links/status).
+The code is not deployed; obtain the controlled change authorization and record rollback/live
+qualification before promotion. Do not describe deterministic focused summaries as newly trained
+model output. The independent recovery destination/lab and remaining production gates below remain
+open.
+
 New owner-reported answer-quality priority, 2026-09-26 — Capture the exact user question, selected
 mode/target/language and visible answer without secrets. Reproduce and classify the mismatch as
 wrong mode, missing/partial evidence, model irrelevance, prompt echo, or output truncation. The
