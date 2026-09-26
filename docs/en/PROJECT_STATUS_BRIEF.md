@@ -24,8 +24,9 @@ acceptance is implied. No SMTP or alternate named-recipient delivery route is co
 
 The current application release is `nextops-0.1.0-01755d1`; AI API and connector remain on
 `nextops-0.1.0-cdde129`. The app-only update focuses file/filesystem answers and simplifies the
-workspace. Fresh API and browser checks passed; a full held-out semantic corpus and exact-release
-rollback drill have not run. The earlier release rejects credential-bearing HTTP redirects;
+workspace. Fresh API and browser checks passed; a full held-out semantic corpus, exact-release
+rollback drill, server-side WAN isolation and VM cold start have not run on this app revision. The
+earlier release rejects credential-bearing HTTP redirects;
 all four guests require key-only, non-root SSH and the
 AI host firewall is active. Zabbix Agent 2 is aligned at `7.0.31` on all four guests. The owner confirmed that recovery/restore resources, an approved
 project license, a named-recipient notification channel, replacement CA certificates and named
@@ -45,10 +46,10 @@ provenance, freshness and limitations; unsupported live claims fail closed to a 
 |---|---|---|---|
 | Architecture and governance | Accepted baseline | Four-server, CPU-only, local-inference and read-only-first boundaries remain enforced | Complete operation-specific audit and the remaining recovery gates |
 | Application and database | Live for controlled testing | Immutable application release, PostgreSQL 16, local identity, private TLS, bilingual panel, rollback and socket-only logical restore passed | Establish independent backup, WAL/PITR and production observability |
-| Local CPU inference | Live and integrated | Pinned llama.cpp/Qwen, authenticated generation, eight-case bilingual integrity evaluation, cold restart, artifact rollback, cancellation/dependency recovery and five-minute bounded load passed | Approve production SLOs; recovery remains owner-deferred |
+| Local CPU inference | Live and integrated | Pinned llama.cpp/Qwen, authenticated generation, eight-case bilingual integrity evaluation, cold restart, artifact rollback, cancellation/dependency recovery and five-minute bounded load passed in earlier controlled qualification | Approve production SLOs and complete independent recovery |
 | Zabbix | Live with restricted scope | Zabbix 7.0.31 and Agent 2 7.0.31 on all four guests, separate PostgreSQL, restricted reader, socket-only logical restore and certificate lifecycle triggers passed | Complete retention, independent backup, WAL/PITR and operator notification delivery |
 | Read-only connector | Live and least-privilege | Rootless loopback service, protected Zabbix credential, strict TLS, four distinct forced-command Linux keys and bounded composite evidence; denial, restart, rollback, guarded WAN and dependency-recovery cases passed | Complete production monitoring and independent recovery sign-off |
-| End-to-end user path | Phase 2 controlled qualification passed | Fresh English/Persian browser answers with Zabbix/Linux evidence, deterministic integrity states, durable run/evidence/audit identifiers, WAN denial, RTL and session isolation passed | Complete non-recovery operational sign-off; recovery remains owner-deferred |
+| End-to-end user path | Controlled user testing | Fresh English/Persian browser answers with Zabbix/Linux evidence, deterministic integrity states, durable run/evidence/audit identifiers, WAN denial, RTL and session isolation passed in bounded campaigns | Run the current app's held-out semantics, exact rollback, server WAN and cold-start gates; complete independent recovery and operational sign-off |
 
 ## Delivered user-testing capability
 
