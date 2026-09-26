@@ -14,6 +14,37 @@ WAL/PITR and production acceptance remain open. Source: master specification sec
 
 ## Production-hardening evidence — 2026-09-26
 
+Commit `cdde129` added a no-redirect HTTP boundary to credentialed application/connector clients.
+A local 302 server test proved both transport implementations reject the redirect without making
+a second request or forwarding Authorization. Selected local checks: 161 passed, one POSIX-only
+skip and nine PostgreSQL integration deselections; Ruff, strict mypy and Bandit passed. Hosted run
+`36231550331` passed quality/unit, PostgreSQL 16, PostgreSQL 17, browser and secret-scan jobs.
+The exact pure-Python wheel and 25 locked Linux dependency wheels were transferred by SHA-256 and
+installed offline into immutable app, AI and connector releases `nextops-0.1.0-cdde129`.
+
+On all four guests, a staged SSH drop-in passed `sshd -t`; effective policy denied direct root,
+password and keyboard-interactive logins and required public keys. New operator key connections
+passed. The application-to-AI and application-to-connector tunnels were restarted and their
+loopback readiness endpoints responded after startup. A fresh Edge context, with public WAN denied
+and normal TLS verification, passed English/Persian login and layout, direct local answer, Zabbix
+evidence/provenance, logout `204` and new-tab isolation through those new tunnels. The AI guest's
+UFW was activated under a five-minute rollback guard; a new SSH session passed, then the guard was
+cancelled. It now reports deny-incoming, allow-outgoing and OpenSSH ingress, with inference/model
+listeners still loopback-only. An initial one-off composite-browser selector timed out before
+submitting any incident request because native `<option>` elements are not visibly rendered;
+that harness error is not an application acceptance result. The corrected fresh Edge run selected
+one of four approved incident targets and passed a live Zabbix-plus-Linux investigation with an
+answer and durable run/audit identifiers while public browser WAN requests were denied. After the
+AI firewall change, a newly restarted app-to-AI tunnel regained local model readiness.
+
+The earlier server-side offline qualification used a **temporary** outbound nftables table and
+removed it after testing. A current direct IPv4 HTTPS probe from an administrator shell succeeds
+on all four guests; direct IPv6 failed in this check. The app, AI API and model systemd units still
+report `IPAddressDeny=any` with loopback allow, but connector and general host processes are not
+covered by a persistent host-wide Internet deny. Thus the named offline acceptance tests remain
+historical passes, while a permanent host egress policy is only partial. No permanent outbound
+block was added without a verified DNS/time/maintenance-proxy allowlist and safe rollback route.
+
 Change `production-hardening-20260926-01` updated the four serving guests serially only after
 reconstructing each installed package, staging every exact candidate package and writing SHA-256
 manifests into root-only per-host rollback directories. The application and Zabbix PostgreSQL

@@ -1,5 +1,25 @@
 # Project state / وضعیت پروژه
 
+Latest controlled checkpoint, 2026-09-26 — commit `cdde129` closed a credential-forwarding
+redirect risk in the application-to-AI, application-to-connector and connector-to-Zabbix HTTP
+clients. Redirects now fail rather than carrying a bearer or API token to another origin. Local
+redirect regressions, 161 selected tests, strict typing, lint/format, and all five hosted CI jobs
+passed. Immutable application, inference API and connector releases are all
+`nextops-0.1.0-cdde129`; the CPU runtime and model did not change. A fresh WAN-denied Edge session
+passed login, English/Persian layout, general answer, live Zabbix answer with provenance, logout
+and new-tab isolation. The four guests now reject password and direct-root SSH and require public
+keys; new operator connections and newly established application tunnels passed. The AI guest's
+previously inactive UFW is active with deny-incoming/OpenSSH, matching the other guests. This is
+controlled user testing, not production acceptance. The owner confirmed that the independent
+recovery destination/lab, approved project license, notification channel/recipients, replacement
+certificate pairs and named approvers are not available.
+
+Network claim boundary: the historical four-guest WAN-isolation campaign used a temporary
+outbound nftables rule that was later removed. On this date direct public IPv4 HTTPS is reachable
+from administrative shells on all four guests. The application, AI API and model service units
+still enforce loopback-only IP egress; persistent host/connector-wide egress denial is partial and
+requires a verified DNS/time/maintenance-proxy allowlist before guarded deployment.
+
 Updated: 2026-09-26 — The owner resumed production-hardening and recovery scope. The four serving
 guests received a serial, rollback-protected package maintenance change. Exact installed packages
 were reconstructed before mutation, candidate packages and SHA-256 manifests were retained in
@@ -9,7 +29,8 @@ packages and no reboot marker. Zabbix is now `7.0.31`; both PostgreSQL deploymen
 These local rollback copies and dumps are change safety material, not independent disaster-recovery
 backups.
 
-The active application, AI and connector releases are unchanged. A fresh Edge context with public
+At that package-maintenance checkpoint, the active application, AI and connector releases were
+unchanged. A fresh Edge context with public
 WAN denied passed login, English LTR, Persian RTL, general local AI, evidence-grounded monitoring,
 provenance identifiers, server-side logout/revocation and new-tab isolation. The first run exposed
 an acceptance-harness race: it asserted the login view before the asynchronous revocation request
@@ -36,7 +57,8 @@ continues to fail closed until those external inputs exist.
 Earlier checkpoint on 2026-09-26 — The answer-integrity increment was accepted for controlled user
 testing.
 Application release `nextops-0.1.0-2397581` and inference API release
-`nextops-0.1.0-fd3c353` are active; the previous immutable releases remain available for rollback.
+`nextops-0.1.0-fd3c353` were active at that checkpoint; previous immutable releases remained
+available for rollback.
 General output is explicitly model-only and potentially incorrect, current infrastructure state is
 not answered from model memory, and live answers carry consistent nested evidence labels. Generated
 execution claims, unsupported root cause, missing sources, hidden stale/partial qualifiers and long
@@ -267,7 +289,7 @@ On 2026-09-21, authorized read-only SSH preflight reached all four clean replace
 
 After explicit owner authorization for connected preparation, each host used its existing strict proxy chain to refresh signed repositories and install only its role package layer. No broad OS upgrade ran. Exact observed direct versions are PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The official Zabbix 7.0 Ubuntu 24.04 release bootstrap package was pinned by SHA-256 before repository import. Package post-install starts were blocked and, at that preparation checkpoint, all product/database/web services were inactive and disabled, no PostgreSQL cluster existed, and no listener was added. Since then, the application/database/proxy, AI, connector and Zabbix slices have been deliberately configured and activated for controlled testing, followed by the bounded Agent 2 host-coverage change recorded above. Docker was not installed because the selected native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-Protected non-login service identities and role directories now exist. The pinned llama.cpp commit was built on the qualified AI guest with Release, CPU-native, OpenMP and OpenBLAS settings and no GPU linkage; its promoted binary hash is in the inference manifest. The pinned 5,027,783,488-byte Qwen model matched its expected SHA-256 before and after protected-volume promotion. The active immutable API release is `nextops-0.1.0-fd3c353`; `nextops-0.1.0-62de8d6` and `417d888` remain prior protected releases. A cold process restart restored both services in 109 seconds. The 2026-09-23 campaign additionally verified protected runtime/model rollback copies, client-cancellation cleanup, dependency recovery, fail-closed missing/corrupt model handling and a five-minute two-client load: 98 of 99 requests succeeded, p95 total latency was 6.114 seconds, peak measured service memory was 4,885,475,328 bytes, and the scheduler never exceeded one active/one queued request. Both services remain enabled, unprivileged, CPU-only and limited to `127.0.0.1:8080` and `127.0.0.1:8090`; `systemd-analyze security` reports `2.7 OK` for each. Raw evidence, credentials, addresses and host keys remain outside Git. Dependency-license approval and production sign-off remain open; recovery work is owner-deferred.
+Protected non-login service identities and role directories now exist. The pinned llama.cpp commit was built on the qualified AI guest with Release, CPU-native, OpenMP and OpenBLAS settings and no GPU linkage; its promoted binary hash is in the inference manifest. The pinned 5,027,783,488-byte Qwen model matched its expected SHA-256 before and after protected-volume promotion. At that checkpoint, the immutable API release was `nextops-0.1.0-fd3c353`; `nextops-0.1.0-62de8d6` and `417d888` were prior protected releases. A cold process restart restored both services in 109 seconds. The 2026-09-23 campaign additionally verified protected runtime/model rollback copies, client-cancellation cleanup, dependency recovery, fail-closed missing/corrupt model handling and a five-minute two-client load: 98 of 99 requests succeeded, p95 total latency was 6.114 seconds, peak measured service memory was 4,885,475,328 bytes, and the scheduler never exceeded one active/one queued request. Both services remain enabled, unprivileged, CPU-only and limited to `127.0.0.1:8080` and `127.0.0.1:8090`; `systemd-analyze security` reports `2.7 OK` for each. Raw evidence, credentials, addresses and host keys remain outside Git. Dependency-license approval and production sign-off remain open; recovery work is owner-deferred.
 
 ### Current proposed deployment
 
@@ -347,6 +369,24 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 
 ## فارسی
 
+آخرین نقطهٔ کنترل‌شده، ۴ مهر ۱۴۰۵ — تغییر `cdde129` خطر انتقال اطلاعات احراز هویت در پیِ پاسخ
+تغییرمسیر HTTP را در ارتباط برنامه با AI و اتصال‌دهنده و نیز اتصال‌دهنده با Zabbix بست؛ اکنون
+تغییرمسیر رد می‌شود و bearer یا توکن API به مقصد دیگر فرستاده نمی‌شود. آزمون بازگشتِ همین مرز،
+۱۶۱ آزمون منتخب، بررسی نوع و قالب و هر پنج کار CI موفق بودند. انتشار برنامه، API استنتاج و
+اتصال‌دهنده همگی `nextops-0.1.0-cdde129` هستند؛ مدل و محیط اجرای CPU تغییر نکرده‌اند. نشست تازهٔ
+Edge با WAN مسدود، ورود، چیدمان فارسی و انگلیسی، پاسخ عمومی، پاسخ زندهٔ Zabbix با منشأ، خروج و
+جداسازی برگه را گذراند. هر چهار مهمان اکنون ورود SSH با گذرواژه و ورود مستقیم root را رد می‌کنند
+و کلید عمومی می‌خواهند؛ اتصال تازهٔ راهبر و تونل‌های تازهٔ برنامه آزموده شد. UFW میزبان AI که
+پیش‌تر غیرفعال بود، اکنون با سیاست رد ورودی و اجازهٔ OpenSSH فعال است. این وضعیت فقط برای
+ارزیابی کنترل‌شدهٔ کاربران پذیرفته شده، نه تولید. مالک تأیید کرد مقصد و آزمایشگاه مستقل بازیابی،
+مجوز مصوب پروژه، مسیر اعلان و گیرندگان، جفت گواهی جایگزین و تأییدکنندگان نام‌دار در دسترس نیستند.
+
+مرز ادعای شبکه: آزمون تاریخی قطع WAN چهار مهمان از قاعدهٔ خروجی nftables موقت استفاده کرده بود
+که پس از آزمون حذف شد. اکنون HTTPS مستقیمِ IPv4 عمومی از پوستهٔ مدیریتی هر چهار مهمان در دسترس
+است. واحدهای برنامه، API هوش مصنوعی و مدل همچنان خروجی IP را به loopback محدود می‌کنند؛ منع
+ماندگار خروجی برای کل میزبان و اتصال‌دهنده ناقص است و پیش از استقرار محافظت‌شده به فهرست معتبر
+مقصدهای DNS، زمان و پراکسی نگه‌داری نیاز دارد.
+
 به‌روزرسانی ۴ مهر ۱۴۰۵ — مالک دامنهٔ سخت‌سازی تولید و بازیابی را دوباره فعال کرد. به‌روزرسانی
 بسته‌های چهار مهمان سرویس‌دهنده به‌صورت ترتیبی و همراه امکان بازگشت انجام شد. پیش از هر تغییر،
 بسته‌های نصب‌شده با همان نسخه بازسازی و بسته‌های نامزد همراه فهرست SHA-256 در پوشهٔ محافظت‌شدهٔ
@@ -355,7 +395,7 @@ backup, independent PITR, recorded RPO/RTO and key recovery, and operational sig
 نیازی به reboot گزارش نمی‌شود. Zabbix به `7.0.31` رسید و هر دو PostgreSQL روی `16.15` ماندند.
 این dumpها و بسته‌های محلی فقط حفاظ تغییرند و پشتیبان مستقل بازیابی بحران نیستند.
 
-انتشارهای فعال برنامه، هوش مصنوعی و اتصال‌دهنده عوض نشدند. یک نشست تازهٔ Edge با WAN عمومی
+در نقطهٔ نگه‌داری بسته‌ها، انتشارهای فعال برنامه، هوش مصنوعی و اتصال‌دهنده عوض نشده بودند. یک نشست تازهٔ Edge با WAN عمومی
 مسدود، ورود، چیدمان چپ‌به‌راست انگلیسی و راست‌به‌چپ فارسی، هوش مصنوعی عمومی محلی، پایش مستند به
 شاهد، شناسه‌های منشأ، خروج و لغو نشست در سرور و الزام ورود در برگهٔ تازه را گذراند. اجرای نخست یک
 رقابت زمانی در ابزار پذیرش را آشکار کرد: پیش از پایان درخواست ناهمگام لغو نشست، نمای ورود بررسی
@@ -377,7 +417,7 @@ NextOps در مخزن و بسته مجوز اعلام‌شده ندارد؛ عا
 بازیابی مخزن تا دریافت این ورودی‌های بیرونی همچنان fail-closed می‌ماند.
 
 نقطهٔ پیشین در ۴ مهر ۱۴۰۵ — بخش «صحت پاسخ» برای ارزیابی کنترل‌شدهٔ کاربران پذیرفته شد. انتشار برنامه
-`nextops-0.1.0-2397581` و انتشار API هوش مصنوعی `nextops-0.1.0-fd3c353` فعال‌اند و نسخه‌های
+`nextops-0.1.0-2397581` و انتشار API هوش مصنوعی `nextops-0.1.0-fd3c353` در آن نقطه فعال بودند و نسخه‌های
 تغییرناپذیر پیشین برای بازگشت حفظ شده‌اند. پاسخ عمومی به‌روشنی بدون شاهد زنده و دارای احتمال خطا
 معرفی می‌شود؛ وضعیت فعلی زیرساخت از حافظهٔ مدل پاسخ داده نمی‌شود؛ و پاسخ زنده در لایهٔ داخلی و
 بیرونی برچسب شاهد یکسان دارد. ادعای اجرای عملیات، علت ریشه‌ای بی‌پشتوانه، نبود نام منبع، پنهان‌شدن
@@ -590,7 +630,7 @@ ESXi حفظ شود؛ Ubuntu Server 24.04 LTS خط مبنای تأییدشدهٔ 
 
 پس از مجوز صریح مالک برای آماده‌سازی متصل، هر میزبان از زنجیرهٔ پراکسی سخت‌گیرانهٔ موجود برای تازه‌سازی مخزن‌های امضاشده و نصب فقط لایهٔ بستهٔ نقش خود استفاده کرد. ارتقای کلی سیستم‌عامل اجرا نشد. نسخه‌های مستقیم مشاهده‌شده عبارت‌اند از PostgreSQL 16.15 و Nginx 1.24 در برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 در هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 در connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 در Zabbix. بستهٔ راه‌انداز رسمی Zabbix 7.0 برای Ubuntu 24.04 پیش از افزودن مخزن با SHA-256 ثابت شد. شروع خودکار پس از نصب مسدود بود و در همان نقطهٔ آماده‌سازی، همهٔ سرویس‌های محصول، پایگاه و وب غیرفعال بودند، خوشهٔ PostgreSQL ساخته نشده بود و درگاه تازه‌ای باز نشد. پس از آن، برش‌های برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix به‌صورت کنترل‌شده تنظیم و فعال شدند و سپس تغییر محدود پوشش چهارمیزبانی Agent 2 اجرا شد. Docker نصب نشد، چون طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-هویت‌های بدون ورود و مسیرهای محافظت‌شدهٔ نقش ساخته شده‌اند. llama.cpp با Release، اجرای بومی CPU، OpenMP و OpenBLAS و بدون GPU ساخته شد و مدل ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایتی با SHA-256 مصوب برابر است. انتشار فعال API، `nextops-0.1.0-fd3c353` است و `nextops-0.1.0-62de8d6` و `417d888` به‌عنوان انتشارهای محافظت‌شدهٔ پیشین باقی مانده‌اند. توقف و شروع سرد، بازگشت برنامه و artifact، لغو، قطع وابستگی، مدل خراب/مفقود و تولید پس از بازیابی موفق بودند. در بار پنج‌دقیقه‌ای، ۹۸ درخواست از ۹۹ درخواست موفق، p95 برابر ۶٫۱۱۴ ثانیه و بیشینهٔ زمان‌بند یک فعال/یک صف بود. هر دو سرویس فقط روی CPU و `127.0.0.1:8080` و `127.0.0.1:8090` اجرا می‌شوند و امتیاز systemd آن‌ها `2.7 OK` است. شواهد خام و رازها بیرون Git مانده‌اند. مجوز وابستگی‌ها و تأیید تولید بازند و کار بازیابی به درخواست مالک کنار گذاشته شده است.
+هویت‌های بدون ورود و مسیرهای محافظت‌شدهٔ نقش ساخته شده‌اند. llama.cpp با Release، اجرای بومی CPU، OpenMP و OpenBLAS و بدون GPU ساخته شد و مدل ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایتی با SHA-256 مصوب برابر است. در آن نقطه، انتشار فعال API، `nextops-0.1.0-fd3c353` بود و `nextops-0.1.0-62de8d6` و `417d888` انتشارهای محافظت‌شدهٔ پیشین بودند. توقف و شروع سرد، بازگشت برنامه و artifact، لغو، قطع وابستگی، مدل خراب/مفقود و تولید پس از بازیابی موفق بودند. در بار پنج‌دقیقه‌ای، ۹۸ درخواست از ۹۹ درخواست موفق، p95 برابر ۶٫۱۱۴ ثانیه و بیشینهٔ زمان‌بند یک فعال/یک صف بود. هر دو سرویس فقط روی CPU و `127.0.0.1:8080` و `127.0.0.1:8090` اجرا می‌شوند و امتیاز systemd آن‌ها `2.7 OK` است. شواهد خام و رازها بیرون Git مانده‌اند. مجوز وابستگی‌ها و تأیید تولید بازند و کار بازیابی به درخواست مالک کنار گذاشته شده است.
 
 ### چیدمان فعلیِ پیشنهادی
 

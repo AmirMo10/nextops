@@ -4,6 +4,22 @@
 
 ### English
 
+Closed credential-bearing HTTP redirect forwarding in the application/connector transports,
+with a local 302 regression test that proves no second request. Commit `cdde129` passed all five
+hosted CI jobs and was deployed as immutable app, AI API and connector releases
+`nextops-0.1.0-cdde129` from SHA-256-verified offline wheels. Fresh WAN-denied bilingual browser
+acceptance passed. All four serving guests now require key-only, non-root SSH; new handshakes and
+restarted protected tunnels passed. The AI guest's UFW was enabled with a guarded rollback and
+now matches the other guests' deny-incoming/OpenSSH policy. The owner confirmed that independent
+recovery resources, licensing, notification delivery, replacement CA certificates and named
+approvers are unavailable, so this remains controlled user testing rather than production
+acceptance.
+
+Audited WAN claims separately from live policy: the earlier four-guest denial was temporary and
+removed after acceptance. Direct public IPv4 remains reachable from host shells, although the
+app/AI/model units deny non-loopback IP egress. Persistent host/connector egress control remains
+partial pending a safe local DNS/time/maintenance-proxy allowlist.
+
 Completed the safe portion of production hardening on the four existing serving guests under
 change `production-hardening-20260926-01`. Serial updates used root-only exact-version rollback
 packages, candidate-package manifests and verified local PostgreSQL safety dumps. Every guest now
@@ -192,6 +208,21 @@ PostgreSQL integration tests retain prior isolated-database evidence but were no
 Windows session because no local server or working container runtime was available.
 
 ### فارسی
+
+انتقال احتمالی اطلاعات احراز هویت در پی تغییرمسیر HTTP برای ارتباط برنامه و اتصال‌دهنده بسته شد؛
+آزمون بازگشت محلی با پاسخ `302` ثابت می‌کند درخواست دوم ساخته نمی‌شود. تغییر `cdde129` هر پنج کار
+CI را گذراند و با wheelهای آفلاینِ تطبیق‌داده‌شده با SHA-256 به‌صورت انتشار تغییرناپذیر
+`nextops-0.1.0-cdde129` برای برنامه، API هوش مصنوعی و اتصال‌دهنده مستقر شد. پذیرش مرورگر تازهٔ
+دوزبانه با WAN مسدود موفق بود. چهار مهمان اکنون SSH را فقط با کلید و بدون ورود مستقیم root
+می‌پذیرند؛ اتصال‌های تازه و تونل‌های محافظت‌شدهٔ بازراه‌اندازی‌شده آزموده شدند. UFW میزبان AI با
+حفاظ بازگشت فعال شد و سیاست رد ورودی به‌جز OpenSSH را مانند سایر مهمان‌ها دارد. مالک اعلام کرد
+منابع مستقل بازیابی، تصمیم مجوز، تحویل اعلان، گواهی جایگزین CA و تأییدکنندگان نام‌دار هنوز موجود
+نیستند؛ بنابراین وضعیت، ارزیابی کنترل‌شدهٔ کاربران است و پذیرش تولید نیست.
+
+ادعای WAN از سیاست زنده جدا بررسی شد: منع خروجی چهار مهمان در آزمون پیشین موقت بود و پس از پذیرش
+برداشته شد. IPv4 عمومی از پوستهٔ میزبان هنوز در دسترس است، هرچند واحدهای برنامه، AI و مدل خروجی
+غیر-loopback را رد می‌کنند. کنترل ماندگار خروجی میزبان و اتصال‌دهنده تا تعیین فهرست ایمن DNS،
+زمان و پراکسی نگه‌داری ناقص می‌ماند.
 
 بخش ایمن سخت‌سازی تولید روی چهار مهمان موجود با تغییر `production-hardening-20260926-01` تکمیل
 شد. به‌روزرسانی ترتیبی با بسته‌های دقیق بازگشت، فهرست بسته‌های نامزد و dump محلی و بررسی‌شدهٔ

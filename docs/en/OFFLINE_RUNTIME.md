@@ -4,6 +4,12 @@
 
 **Requirement confirmed by the owner: 2026-09-20. Current status: controlled Stage 1 acceptance, not production acceptance.** Four-guest WAN isolation, a fresh WAN-denied browser, server/API requests, serial clean reboots, artifact rollback, failure recovery, sustained bounded load and logical isolated restore passed. Independent backup, WAL/PITR and disaster recovery remain open. See the [release manifest](../status/current-release.yaml), [test evidence](TESTING.md) and [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
 
+The four-guest WAN-denial results are controlled tests with a temporary egress policy, not a claim
+that host-wide egress is permanently blocked. As checked on 2026-09-26, administrator shells on all
+four guests can reach public IPv4. App/AI/model service units retain loopback-only IP restrictions;
+the permanent host/connector egress gate remains partial. Offline ability and permanent egress
+enforcement are separate claims.
+
 ## 1. The operating contract
 
 After approved provisioning, NextOps must continue answering questions in Persian and English when the server loses all Internet access. It must also start again from stopped services or a reboot while Internet access remains unavailable. An already-open browser session, a model left in RAM, or files cached under a developer's account is not sufficient evidence.

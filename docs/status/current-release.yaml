@@ -1,23 +1,23 @@
 ---
 $schema: ./release-status.schema.json
 schema_version: 1.0.0
-release_identifier: nextops-production-hardening-controlled-2026-09-26
+release_identifier: nextops-redirect-ssh-controlled-2026-09-26
 observed_at: '2026-09-26'
 deployment_status: controlled_user_testing_not_production_accepted
 repository:
   remote: Omid-NextAI/nextops
   branch: main
-  inspected_baseline_commit: 239758160ac71d2e083865de6d2cd29979a16bf8
+  inspected_baseline_commit: cdde129950f60f9f18f3ef109cbf98f4217fc5e1
 components:
   application:
-    release: nextops-0.1.0-2397581
-    source_commit: 239758160ac71d2e083865de6d2cd29979a16bf8
+    release: nextops-0.1.0-cdde129
+    source_commit: cdde129950f60f9f18f3ef109cbf98f4217fc5e1
   connector:
-    release: nextops-0.1.0-e2dad3a
-    source_commit: e2dad3a0d76b18f5066b8834230337ad6c162263
+    release: nextops-0.1.0-cdde129
+    source_commit: cdde129950f60f9f18f3ef109cbf98f4217fc5e1
   inference_api:
-    release: nextops-0.1.0-fd3c353
-    source_commit: fd3c353f85477ed1d7b36bb6722c818f91cd36d9
+    release: nextops-0.1.0-cdde129
+    source_commit: cdde129950f60f9f18f3ef109cbf98f4217fc5e1
   inference_runtime:
     name: llama.cpp
     source_tag: v0.4.1
@@ -130,6 +130,31 @@ capabilities:
       - deploy/systemd/nextops-certificate-check.timer
       - tests/unit/test_certificate_expiry.py
 acceptance_gates:
+  - id: credentialed_http_redirect_denial
+    status: passed
+    evidence:
+      - packages/nextops/security/http.py
+      - tests/unit/test_http_redirects.py
+      - docs/en/TESTING.md
+  - id: key_only_ssh_live
+    status: passed
+    evidence:
+      - deploy/ssh/00-nextops-hardening.conf
+      - docs/en/TESTING.md
+  - id: ai_host_firewall_live
+    status: passed
+    evidence:
+      - docs/en/TESTING.md
+  - id: persistent_host_wan_egress_policy
+    status: partial
+    evidence:
+      - docs/en/TESTING.md
+      - docs/en/OFFLINE_RUNTIME.md
+  - id: approved_ssh_management_ingress_allowlist
+    status: partial
+    evidence:
+      - docs/en/OPERATIONS.md
+      - docs/en/SECURITY.md
   - id: server_api_wan_isolation
     status: passed
     evidence:

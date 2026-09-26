@@ -33,6 +33,18 @@ High-risk/critical actions require independent approval and impact/maintenance-w
 
 ## Credentials and transport
 
+The controlled HTTP clients explicitly reject redirects. A redirecting internal AI/connector or
+Zabbix endpoint cannot forward its bearer/API token to a second origin. Local 302 regression tests
+cover both transport implementations. Four live guests now apply the project SSH drop-in
+`deploy/ssh/00-nextops-hardening.conf`: password and keyboard-interactive authentication and direct
+root login are disabled, while public-key authentication is required. Effective `sshd` policy and
+new key-only connections were checked on each guest; newly established application tunnels and a
+fresh authenticated browser session passed. The AI host also runs UFW with deny-incoming and
+OpenSSH allowed. This UFW policy does not block host outbound Internet: direct IPv4 from an
+administrator shell remains reachable on all four guests. The app/AI/model units have their own
+loopback-only IP policy, but persistent host/connector egress restriction remains partial. These
+controls do not make the still-unaccepted recovery and certificate gates pass.
+
 Configuration stores credential references only. Decrypt credentials only inside the authorized execution boundary. Keep encryption keys separate from ciphertext; `.env` is not a production vault. Use scoped SSH/API/database accounts, verified SSH host keys, validated TLS certificates, rotation and expiring sessions. No default administrator password, blanket host-key acceptance, `verify=False`, privileged container or engine-socket shortcut.
 
 The source now implements an audited, server-side `POST /api/v1/logout` boundary. It hashes the

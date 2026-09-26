@@ -1,11 +1,24 @@
 # Next task / کار بعدی
 
+Latest checkpoint, 2026-09-26 — All three application-layer releases are now
+`nextops-0.1.0-cdde129`. Credentialed HTTP redirects fail closed; hosted CI and fresh WAN-denied
+browser checks passed. All four guests require key-only, non-root SSH; the AI guest's firewall is
+now active. Preserve these controls. The owner confirmed that none of the required independent
+recovery/restore resources, license decision, local notification route and recipients, replacement
+certificate pairs, or named approvers are presently available. Do not mark any corresponding
+production gate passed or deploy a substitute on the serving guests. The first unfinished
+checkpoint remains the independent recovery destination and isolated restore lab; once provided,
+follow the private owner record and [blocker runbook](en/PRODUCTION_BLOCKERS_RUNBOOK.md).
+Separately, current host shells can reach public IPv4 because prior WAN denial was a temporary
+acceptance test. A permanent host/connector egress policy needs a reviewed local DNS/time/proxy
+allowlist and guarded verification; do not treat the historical test as a deployed firewall rule.
+
 Updated: 2026-09-26 — The owner resumed the production-hardening and recovery objective. All work
 that can be completed safely on the existing four serving guests is current: serial package
 maintenance is rollback-protected and complete, Zabbix is `7.0.31`, all guests are `running` with
 zero failed units, zero pending packages and no reboot marker, and the fresh WAN-denied bilingual
-browser gate passes through server-side logout. The active application, inference and connector
-releases remain unchanged.
+browser gate passes through server-side logout. At that package-maintenance checkpoint the active
+application, inference and connector releases had not yet changed.
 
 Do not manufacture the remaining production evidence on the serving guests. The first unfinished
 checkpoint is still an approved recovery destination outside the guest, datastore and hypervisor
@@ -14,8 +27,9 @@ are available, install the pinned offline pgBackRest/restic bundles, execute ful
 PITR, file, negative, key-recovery and cold-start drills, and record measured RPO/RTO. Until then,
 the recovery profile must remain `BLOCKED` and production acceptance must remain `not_run`.
 
-The answer-integrity priority is complete for controlled user testing. Application release
-`nextops-0.1.0-2397581` and inference API release `nextops-0.1.0-fd3c353` are active. Hosted CI,
+The answer-integrity priority is complete for controlled user testing. At that earlier checkpoint,
+application release `nextops-0.1.0-2397581` and inference API release `nextops-0.1.0-fd3c353`
+were active. Hosted CI,
 the final eight-case local English/Persian corpus, engineering semantic review, live authenticated
 general/monitoring/incident API checks, immediate test-session revocation and a fresh serial reboot
 passed. Preserve the deterministic guard and do not turn this bounded evidence into a claim that
@@ -149,7 +163,7 @@ A sanitized read-only preflight reached all four clean replacement guests after 
 
 The role package layers remain as recorded: PostgreSQL 16.15 and Nginx 1.24 on app; GCC 13.3, CMake 3.28, Ninja 1.11 and OpenBLAS 0.3.26 on AI; Python 3.12 venv support on connectors; and Zabbix 7.0.30, PostgreSQL 16.15, Nginx 1.24 and PHP 8.3.6 on Zabbix. The controlled application/database/proxy, AI, connector and Zabbix/database/frontend slices are active and passed the named reboot checks. Docker was not installed because the native systemd design does not need it and a container socket would enlarge the trust boundary.
 
-The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. The active inference API is `nextops-0.1.0-fd3c353`; the active user application is `nextops-0.1.0-2397581` and the connector remains `nextops-0.1.0-e2dad3a`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable summary.
+The pinned llama.cpp runtime and 5,027,783,488-byte Qwen model match their approved SHA-256 values and are promoted through stable links to immutable protected directories. At this earlier checkpoint, the inference API was `nextops-0.1.0-fd3c353`, the user application `nextops-0.1.0-2397581` and the connector `nextops-0.1.0-e2dad3a`. The two AI-guest services use the protected runtime path, wait for authenticated model health, run unprivileged on `127.0.0.1:8080` and `127.0.0.1:8090`, and each has a `2.7 OK` systemd security exposure result. Distinct root-owned credentials remain outside Git and logs. The [release manifest](status/current-release.yaml) is the machine-readable current summary.
 
 Two independent four-case qualification runs passed unauthenticated denial, readiness, Persian and
 English evidence preservation, and safe non-execution responses under both automated checks and
@@ -234,11 +248,23 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 
 ### نقطهٔ فعلی و ملاک ادامه
 
+آخرین نقطه، ۴ مهر ۱۴۰۵ — هر سه انتشار لایهٔ برنامه اکنون `nextops-0.1.0-cdde129` هستند.
+تغییرمسیر HTTP دارای اطلاعات احراز هویت به‌صورت ایمن رد می‌شود؛ CI و مرورگر تازه با WAN مسدود
+موفق بودند. چهار مهمان SSH را فقط با کلید و بدون ورود مستقیم root می‌پذیرند و دیوارهٔ آتش AI
+فعال شده است. این کنترل‌ها حفظ شوند. مالک اعلام کرد مقصد و آزمایشگاه مستقل بازیابی، تصمیم مجوز،
+مسیر اعلان داخلی و گیرندگان، جفت گواهی جایگزین و تأییدکنندگان نام‌دار هنوز موجود نیستند. هیچ
+دروازهٔ تولیدیِ وابسته به این موارد نباید پذیرفته اعلام شود یا به‌جای بازیابی مستقل، نسخه‌ای روی
+مهمان سرویس‌دهنده ساخته شود. نخستین گام ناتمام همچنان فراهم‌کردن مقصد مستقل و محیط restore
+ایزوله طبق [راهنمای موانع](fa/PRODUCTION_BLOCKERS_RUNBOOK.md) است.
+افزون بر آن، پوستهٔ مدیریتی مهمان‌ها اکنون به IPv4 عمومی دسترسی دارد؛ آزمون قبلی منع WAN موقت
+بود. سیاست دائمی خروجی میزبان و اتصال‌دهنده به فهرست بازبینی‌شدهٔ DNS، زمان و پراکسی محلی و
+راستی‌آزمایی همراه بازگشت نیاز دارد؛ آزمون تاریخی نباید قاعدهٔ نصب‌شده فرض شود.
+
 به‌روزرسانی ۴ مهر ۱۴۰۵ — مالک هدف سخت‌سازی تولید و بازیابی را دوباره فعال کرد. همهٔ کارهایی که روی
 چهار مهمان سرویس‌دهندهٔ موجود با ایمنی قابل انجام بود، جاری است: نگه‌داری بسته‌ها به‌صورت ترتیبی و
 با امکان بازگشت تکمیل شد، Zabbix به `7.0.31` رسید، هر چهار مهمان `running` هستند و واحد خراب، بستهٔ
 در انتظار یا نشانگر reboot ندارند. آزمون مرورگر تازه و دوزبانه با WAN مسدود تا لغو نشست در سرور
-موفق است. انتشار فعال برنامه، استنتاج و اتصال‌دهنده تغییر نکرده است.
+موفق است. در آن نقطهٔ نگه‌داری بسته‌ها، انتشار برنامه، استنتاج و اتصال‌دهنده هنوز تغییر نکرده بود.
 
 شاهد تولید با اجرای نمایشی روی مهمان‌های سرویس‌دهنده ساخته نشود. نخستین گام ناتمام همچنان مقصد
 بازیابی خارج از دامنهٔ خرابی مهمان، datastore و hypervisor همراه آزمایشگاه restore ایزوله است.
@@ -247,8 +273,8 @@ restic نصب و تمرین‌های full، differential، WAL، PITR، فایل
 اجرا شوند و RPO/RTO اندازه‌گیری‌شده ثبت شود. تا آن زمان پروفایل بازیابی باید `BLOCKED` و پذیرش
 تولید `not_run` بماند.
 
-اولویت صحت پاسخ برای ارزیابی کنترل‌شده تکمیل شد. انتشار برنامه `nextops-0.1.0-2397581` و انتشار
-API هوش مصنوعی `nextops-0.1.0-fd3c353` فعال‌اند. CI میزبانی‌شده، مجموعهٔ نهایی هشت‌موردی فارسی
+اولویت صحت پاسخ برای ارزیابی کنترل‌شده تکمیل شد. در آن نقطهٔ پیشین، انتشار برنامه
+`nextops-0.1.0-2397581` و انتشار API هوش مصنوعی `nextops-0.1.0-fd3c353` فعال بودند. CI میزبانی‌شده، مجموعهٔ نهایی هشت‌موردی فارسی
 و انگلیسی، بازبینی معنایی مهندسی، آزمون زنده و احرازهویت‌شدهٔ API در حالت عمومی، پایش و رخداد، لغو
 فوری نشست آزمایشی و reboot ترتیبی تازه موفق بودند. این کنترل قطعی باید حفظ شود، اما شاهد محدود آن
 نباید به ادعای «درستی همیشگی پاسخ بدون شاهد» تبدیل شود.
@@ -367,7 +393,7 @@ increment تشخیص انقضای گواهی در استقرار کنترل‌ش
 
 لایهٔ بسته‌های هر نقش مطابق رکورد باقی است: PostgreSQL 16.15 و Nginx 1.24 روی برنامه؛ GCC 13.3، CMake 3.28، Ninja 1.11 و OpenBLAS 0.3.26 روی هوش مصنوعی؛ پشتیبانی محیط مجازی Python 3.12 روی connectors؛ و Zabbix 7.0.30، PostgreSQL 16.15، Nginx 1.24 و PHP 8.3.6 روی Zabbix. برش‌های کنترل‌شدهٔ برنامه و پایگاه و پراکسی، هوش مصنوعی، اتصال و Zabbix و پایگاه و رابط آن فعال‌اند و آزمون‌های نام‌بردهٔ راه‌اندازی مجدد را گذرانده‌اند. Docker نصب نشد، زیرا طراحی بومی systemd به آن نیاز ندارد و سوکت کانتینر مرز اعتماد را بزرگ می‌کند.
 
-محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. انتشار فعال API هوش مصنوعی `nextops-0.1.0-fd3c353` است؛ برنامه انتشار `nextops-0.1.0-2397581` و اتصال‌دهنده انتشار `nextops-0.1.0-e2dad3a` را اجرا می‌کنند. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان این وضعیت است.
+محیط اجرای ثابت llama.cpp و مدل Qwen با اندازهٔ ۵٬۰۲۷٬۷۸۳٬۴۸۸ بایت با SHA-256 مصوب برابرند و از راه پیوندهای پایدار به پوشه‌های تغییرناپذیر و محافظت‌شده رسیده‌اند. در آن نقطهٔ پیشین، انتشار API هوش مصنوعی `nextops-0.1.0-fd3c353`، برنامه `nextops-0.1.0-2397581` و اتصال‌دهنده `nextops-0.1.0-e2dad3a` بود. دو سرویس مهمان هوش مصنوعی کتابخانه‌ها را از مسیر محافظت‌شده می‌خوانند، تا سلامت احرازهویت‌شدهٔ مدل منتظر می‌مانند و با هویت بدون امتیاز فقط روی `127.0.0.1:8080` و `127.0.0.1:8090` فعال‌اند؛ ارزیابی امنیتی systemd برای هرکدام `2.7 OK` است. دو اعتبارنامهٔ جدا و متعلق به root در Git یا گزارش‌ها ظاهر نمی‌شوند. [مانیفست انتشار](status/current-release.yaml) خلاصهٔ ماشین‌خوان وضعیت جاری است.
 
 دو اجرای مستقلِ چهارموردی، رد درخواست بدون احراز هویت، آمادگی، حفظ شاهد فارسی و انگلیسی و پاسخ ایمن
 بدون ادعای اجرا را هم در بررسی خودکار و هم در بازبینی انسانی گذراندند. آزمون بار اولیه، مرز یک

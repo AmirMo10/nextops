@@ -18,12 +18,21 @@ distinct keys. Phase 2 source CI, live bilingual API investigations, durable evi
 service restart, rollback, guarded WAN denial, authenticated live browser, serial VM reboot and
 dependency loss/recovery pass. Certificate-expiry detection and the local Zabbix problem/recovery
 path also pass on both TLS frontends. Independent off-datastore backup, WAL/PITR, certificate
-rotation/operator notification and disaster-recovery sign-off remain open. The owner deferred the
-recovery work from this delivery; no recovery acceptance is implied. No SMTP host is available, so
-email notification delivery is not configured or claimed.
+rotation/operator notification and disaster-recovery sign-off remain open. The owner resumed
+recovery scope, but no independent destination or isolated restore lab exists; no recovery
+acceptance is implied. No SMTP or alternate named-recipient delivery route is configured.
 
-Application release `nextops-0.1.0-2397581` and AI application release
-`nextops-0.1.0-fd3c353` add deterministic answer-integrity enforcement. Model-only answers are
+The current application, AI API and connector releases are `nextops-0.1.0-cdde129`. This update
+rejects credential-bearing HTTP redirects; all four guests require key-only, non-root SSH and the
+AI host firewall is active. The owner confirmed that recovery/restore resources, an approved
+project license, a named-recipient notification channel, replacement CA certificates and named
+approvers are unavailable. The tested offline capability does not imply permanent host egress
+denial: current administrator shells can reach public IPv4, although app/AI/model units deny
+non-loopback IP traffic. Persistent host/connector egress and an approved SSH management allowlist
+remain partial.
+
+Earlier application release `nextops-0.1.0-2397581` and AI application release
+`nextops-0.1.0-fd3c353` added deterministic answer-integrity enforcement. Model-only answers are
 explicitly unverified; current infrastructure state requires live evidence; evidence answers retain
 provenance, freshness and limitations; unsupported live claims fail closed to a bounded fallback.
 
@@ -34,7 +43,7 @@ provenance, freshness and limitations; unsupported live claims fail closed to a 
 | Architecture and governance | Accepted baseline | Four-server, CPU-only, local-inference and read-only-first boundaries remain enforced | Complete operation-specific audit and the remaining recovery gates |
 | Application and database | Live for controlled testing | Immutable application release, PostgreSQL 16, local identity, private TLS, bilingual panel, rollback and socket-only logical restore passed | Establish independent backup, WAL/PITR and production observability |
 | Local CPU inference | Live and integrated | Pinned llama.cpp/Qwen, authenticated generation, eight-case bilingual integrity evaluation, cold restart, artifact rollback, cancellation/dependency recovery and five-minute bounded load passed | Approve production SLOs; recovery remains owner-deferred |
-| Zabbix | Live with restricted scope | Zabbix 7.0.30, separate PostgreSQL, restricted reader, socket-only logical restore and certificate lifecycle triggers passed | Complete retention, independent backup, WAL/PITR and operator notification delivery |
+| Zabbix | Live with restricted scope | Zabbix 7.0.31, separate PostgreSQL, restricted reader, socket-only logical restore and certificate lifecycle triggers passed | Complete retention, independent backup, WAL/PITR and operator notification delivery |
 | Read-only connector | Live and least-privilege | Rootless loopback service, protected Zabbix credential, strict TLS, four distinct forced-command Linux keys and bounded composite evidence; denial, restart, rollback, guarded WAN and dependency-recovery cases passed | Complete production monitoring and independent recovery sign-off |
 | End-to-end user path | Phase 2 controlled qualification passed | Fresh English/Persian browser answers with Zabbix/Linux evidence, deterministic integrity states, durable run/evidence/audit identifiers, WAN denial, RTL and session isolation passed | Complete non-recovery operational sign-off; recovery remains owner-deferred |
 
@@ -55,7 +64,7 @@ provenance, freshness and limitations; unsupported live claims fail closed to a 
 ## Acceptance evidence
 
 - Repository checks passed: Ruff formatting and lint, strict mypy, documentation, deployment,
-  inference and release-status validators, 159 unit/API tests, PostgreSQL 16 and 17 CI,
+  inference and release-status validators, 160 unit/API tests, PostgreSQL 16 and 17 CI,
   real-browser fixture acceptance and secret scanning.
 - Connector verification returned bounded Zabbix and direct Linux evidence for each of four fixed
   targets; generic shell, unauthenticated and unknown-target requests were denied.
@@ -72,10 +81,9 @@ provenance, freshness and limitations; unsupported live claims fail closed to a 
   [Stage 1 report](STAGE_1_COMPLETION_REPORT.md).
 - Both database dumps restored into temporary socket-only PostgreSQL 16.15 clusters and were
   verified and cleaned up. This is logical restore evidence, not independent disaster recovery.
-- After serial reboot, all four servers reported kernel `6.8.0-142`, healthy systemd state, no
-  failed units and no required reboot. Updates remain pending (six base packages on each of the app,
-  AI and connector guests; eleven packages on Zabbix, including Zabbix 7.0.31) because no approved
-  proxy/offline package route was available; they were not fetched through an undeclared route.
+- A prior serial reboot returned all four servers on kernel `6.8.0-142` with healthy systemd state.
+  The later rollback-protected maintenance applied the pending packages and Zabbix `7.0.31`;
+  current checks show zero failed units, pending packages or reboot markers on all four guests.
 
 ## Security posture
 
@@ -89,24 +97,24 @@ endpoint are allowed by the relevant host firewalls.
 
 ## Remaining work before production acceptance
 
-Recovery is deliberately deferred by owner direction and remains an explicit production blocker.
-The active non-recovery work is:
+The owner confirmed that the following inputs do not yet exist:
 
-1. Provide an approved proxy or staged offline package repository, then apply and verify the pending
-   Ubuntu/Zabbix updates in a controlled window.
-2. Complete certificate rotation/rollback, dependency/license approval and operational sign-off
-   without weakening the offline contract.
-3. Choose a local notification transport if operator delivery is required; SMTP is unavailable and
-   therefore email delivery is neither configured nor accepted.
-4. Add further production hosts, templates and service-level evidence only through explicit scope
-   review; do not broaden connector methods or credentials implicitly.
-5. Add operational dashboards, log retention, certificate/key rotation and a documented
-   user-test feedback and defect workflow.
+1. An independent recovery destination and isolated restore lab for PostgreSQL-aware backup,
+   WAL/PITR, file recovery, key recovery and measured RPO/RTO acceptance.
+2. A company-approved NextOps license, offline signing trust root and named legal/security/
+   production approvers for supply-chain and release acceptance.
+3. A LAN-local notification channel with primary and backup recipients, plus replacement CA-issued
+   application/Zabbix certificate pairs and protected handoff for a live rotation/rollback drill.
+4. An approved DNS/time/maintenance-proxy and management-network allowlist for persistent
+   host/connector outbound and SSH-ingress policy. Historical WAN denial was a temporary test.
+
+Further production hosts and connector methods require separate scope review; they are not needed
+to resolve these four present blockers.
 
 ## Presentation conclusion
 
 NextOps now has a functioning, security-bounded product slice rather than only prepared
 infrastructure. It is ready for supervised user testing of the bilingual, read-only investigation
 experience with explicit integrity labeling and fail-closed evidence behavior. It is not production
-accepted: recovery is owner-deferred, and the remaining update, certificate, notification and
-operational gates above are still open.
+accepted: independent restore, certificate, notification, license/security and final approval
+gates above remain open.

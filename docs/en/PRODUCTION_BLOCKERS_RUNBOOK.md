@@ -2,7 +2,12 @@
 
 [فارسی](../fa/PRODUCTION_BLOCKERS_RUNBOOK.md) · [Recovery contract](../../deploy/recovery/README.md) · [Current status](../status/current-release.yaml)
 
-**Status: owner action required; this document does not close any gate.** Updated: 2026-09-23.
+**Status: owner action required; this document does not close any gate.** Updated: 2026-09-26.
+
+On 2026-09-26 the owner confirmed that none of the requested independent recovery/restore
+resources, project-license decision, local delivery channel and recipients, replacement CA
+certificate pairs, or named approvers are available. The steps below remain future handoff
+instructions; no placeholder or serving-guest copy qualifies as a substitute.
 
 This runbook lists every blocker that still prevents a production-acceptance claim and separates
 what the owner must supply from what the NextOps engineering agent will implement and verify. Never

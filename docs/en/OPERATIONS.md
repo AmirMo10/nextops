@@ -10,6 +10,30 @@ Use separate development, staging and production identities, databases, volumes,
 
 Use restricted users/capabilities, bounded resources and reviewed restart policies. Lifecycle scripts must be idempotent, preflight changes, protect existing services and avoid secret output. Do not change SSH/firewalls, reboot or reformat without explicit authorization and recovery access. Serialize migrations.
 
+## Controlled SSH and host firewall
+
+The four serving guests now install `deploy/ssh/00-nextops-hardening.conf` before the cloud-init
+drop-in. It requires public keys, denies passwords and keyboard-interactive authentication, and
+disables direct root login. Operators use their named key-authenticated account and `sudo`; service
+tunnels retain their separate restricted keys. For a reviewed change, retain a working session and
+an automatic rollback timer, run `sudo sshd -t`, reload SSH, and prove a **new** key-only login
+before cancelling rollback. Check effective settings with:
+
+```bash
+sudo sshd -T | grep -E '^(permitrootlogin|passwordauthentication|kbdinteractiveauthentication|authenticationmethods) '
+```
+
+The expected values are `no`, `no`, `no`, and `publickey`, respectively. Restart and verify the
+application-to-AI and application-to-connector tunnel services after SSH changes; existing SSH
+sessions alone are not evidence that new handshakes work. The AI guest now has active UFW with
+deny-incoming/OpenSSH and no externally bound AI/model listener. The historical four-guest
+WAN-disconnection test used a temporary outbound policy, not a permanent firewall rule:
+administrator shells can currently reach public IPv4, while the app/AI/model service units deny
+non-loopback IP traffic. Recheck login, AI readiness, Zabbix evidence and the direct Linux collector
+after firewall changes. A permanent host/connector egress policy needs an explicit DNS/time/proxy
+allowlist and guarded rollout. Do not infer that the current OpenSSH allow rule is a final approved
+management-network allowlist.
+
 ## Observe the platform itself
 
 Track API/worker/connector health, durable queue age, collection failures, inference queue/TTFT/tokens, CPU/RAM/swap pressure, database state, audit failures, storage growth, backup age and restore-test status. Use structured logs, metrics and justified traces without hosted telemetry dependence. Avoid sensitive prompts and unbounded asset/user identifiers in metric labels.
