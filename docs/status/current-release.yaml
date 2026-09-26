@@ -150,6 +150,12 @@ acceptance_gates:
     evidence:
       - docs/en/TESTING.md
       - docs/fa/TESTING.md
+  - id: connector_process_egress_policy
+    status: passed
+    evidence:
+      - deploy/systemd/nextops-connector-egress.conf.template
+      - docs/en/TESTING.md
+      - docs/en/OPERATIONS.md
   - id: persistent_host_wan_egress_policy
     status: partial
     evidence:

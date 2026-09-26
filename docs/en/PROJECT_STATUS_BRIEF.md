@@ -28,8 +28,8 @@ AI host firewall is active. Zabbix Agent 2 is aligned at `7.0.31` on all four gu
 project license, a named-recipient notification channel, replacement CA certificates and named
 approvers are unavailable. The tested offline capability does not imply permanent host egress
 denial: current administrator shells can reach public IPv4, although app/AI/model units deny
-non-loopback IP traffic. Persistent host/connector egress and an approved SSH management allowlist
-remain partial.
+non-loopback IP traffic. The connector process is limited to its reviewed LAN; persistent
+host-wide egress and an approved SSH management allowlist remain partial.
 
 Earlier application release `nextops-0.1.0-2397581` and AI application release
 `nextops-0.1.0-fd3c353` added deterministic answer-integrity enforcement. Model-only answers are
@@ -106,7 +106,8 @@ The owner confirmed that the following inputs do not yet exist:
 3. A LAN-local notification channel with primary and backup recipients, plus replacement CA-issued
    application/Zabbix certificate pairs and protected handoff for a live rotation/rollback drill.
 4. An approved DNS/time/maintenance-proxy and management-network allowlist for persistent
-   host/connector outbound and SSH-ingress policy. Historical WAN denial was a temporary test.
+   host-wide outbound and SSH-ingress policy. The connector process already has a qualified LAN
+   allowlist; historical whole-guest WAN denial was a temporary test.
 
 Further production hosts and connector methods require separate scope review; they are not needed
 to resolve these four present blockers.

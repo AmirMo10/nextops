@@ -25,8 +25,10 @@ deliberate reviewed offline import even when `apt list --upgradable` says zero.
 Network claim boundary: the historical four-guest WAN-isolation campaign used a temporary
 outbound nftables rule that was later removed. On this date direct public IPv4 HTTPS is reachable
 from administrative shells on all four guests. The application, AI API and model service units
-still enforce loopback-only IP egress; persistent host/connector-wide egress denial is partial and
-requires a verified DNS/time/maintenance-proxy allowlist before guarded deployment.
+still enforce loopback-only IP egress. The connector now denies all but loopback and the reviewed
+LAN at its process boundary: four fresh authenticated incident requests and a controlled negative
+public-egress probe passed. Persistent **host-wide** egress denial remains partial and requires a
+verified DNS/time/maintenance-proxy allowlist before guarded deployment.
 
 Updated: 2026-09-26 — The owner resumed production-hardening and recovery scope. The four serving
 guests received a serial, rollback-protected package maintenance change. Exact installed packages
@@ -399,9 +401,11 @@ Edge با WAN مسدود، ورود، چیدمان فارسی و انگلیسی�
 
 مرز ادعای شبکه: آزمون تاریخی قطع WAN چهار مهمان از قاعدهٔ خروجی nftables موقت استفاده کرده بود
 که پس از آزمون حذف شد. اکنون HTTPS مستقیمِ IPv4 عمومی از پوستهٔ مدیریتی هر چهار مهمان در دسترس
-است. واحدهای برنامه، API هوش مصنوعی و مدل همچنان خروجی IP را به loopback محدود می‌کنند؛ منع
-ماندگار خروجی برای کل میزبان و اتصال‌دهنده ناقص است و پیش از استقرار محافظت‌شده به فهرست معتبر
-مقصدهای DNS، زمان و پراکسی نگه‌داری نیاز دارد.
+است. واحدهای برنامه، API هوش مصنوعی و مدل همچنان خروجی IP را به loopback محدود می‌کنند.
+اتصال‌دهنده نیز در مرز فرایند، جز loopback و شبکهٔ داخلیِ بررسی‌شده را رد می‌کند: چهار درخواست
+تازهٔ رخداد و آزمون منفیِ کنترل‌شدهٔ خروجی عمومی موفق بودند. منع ماندگار خروجی **کل میزبان**
+هنوز ناقص است و پیش از استقرار محافظت‌شده به فهرست معتبر مقصدهای DNS، زمان و پراکسی نگه‌داری
+نیاز دارد.
 
 به‌روزرسانی ۴ مهر ۱۴۰۵ — مالک دامنهٔ سخت‌سازی تولید و بازیابی را دوباره فعال کرد. به‌روزرسانی
 بسته‌های چهار مهمان سرویس‌دهنده به‌صورت ترتیبی و همراه امکان بازگشت انجام شد. پیش از هر تغییر،

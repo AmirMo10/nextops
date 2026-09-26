@@ -6,8 +6,9 @@
 
 The four-guest WAN-denial results are controlled tests with a temporary egress policy, not a claim
 that host-wide egress is permanently blocked. As checked on 2026-09-26, administrator shells on all
-four guests can reach public IPv4. App/AI/model service units retain loopback-only IP restrictions;
-the permanent host/connector egress gate remains partial. Offline ability and permanent egress
+four guests can reach public IPv4. App/AI/model service units retain loopback-only IP restrictions,
+and the connector process is limited to the approved LAN. The permanent host-wide egress gate
+remains partial. Offline ability and permanent egress
 enforcement are separate claims.
 
 ## 1. The operating contract

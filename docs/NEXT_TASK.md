@@ -10,8 +10,9 @@ production gate passed or deploy a substitute on the serving guests. The first u
 checkpoint remains the independent recovery destination and isolated restore lab; once provided,
 follow the private owner record and [blocker runbook](en/PRODUCTION_BLOCKERS_RUNBOOK.md).
 Separately, current host shells can reach public IPv4 because prior WAN denial was a temporary
-acceptance test. A permanent host/connector egress policy needs a reviewed local DNS/time/proxy
-allowlist and guarded verification; do not treat the historical test as a deployed firewall rule.
+acceptance test. The connector now has a tested process-level allowlist for its approved LAN; a
+permanent **host-wide** egress policy still needs a reviewed local DNS/time/proxy allowlist and
+guarded verification. Do not treat the historical test as a deployed host firewall rule.
 Zabbix Agent 2 is now `7.0.31` on all four guests. The three offline-installed agents require an
 explicit verified package import for each future patch; an empty apt-upgrade list is not proof
 that their upstream agent is current.
@@ -260,8 +261,9 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 مهمان سرویس‌دهنده ساخته شود. نخستین گام ناتمام همچنان فراهم‌کردن مقصد مستقل و محیط restore
 ایزوله طبق [راهنمای موانع](fa/PRODUCTION_BLOCKERS_RUNBOOK.md) است.
 افزون بر آن، پوستهٔ مدیریتی مهمان‌ها اکنون به IPv4 عمومی دسترسی دارد؛ آزمون قبلی منع WAN موقت
-بود. سیاست دائمی خروجی میزبان و اتصال‌دهنده به فهرست بازبینی‌شدهٔ DNS، زمان و پراکسی محلی و
-راستی‌آزمایی همراه بازگشت نیاز دارد؛ آزمون تاریخی نباید قاعدهٔ نصب‌شده فرض شود.
+بود. اتصال‌دهنده اکنون در سطح فرایند فقط به شبکهٔ داخلی مجاز دسترسی دارد؛ سیاست دائمی خروجی
+**کل میزبان** همچنان به فهرست بازبینی‌شدهٔ DNS، زمان و پراکسی محلی و راستی‌آزمایی همراه بازگشت
+نیاز دارد. آزمون تاریخی نباید قاعدهٔ نصب‌شدهٔ کل میزبان فرض شود.
 Agent 2 زبیکس اکنون روی هر چهار مهمان `7.0.31` است. سه عامل نصب‌شده از بستهٔ آفلاین، برای هر
 وصلهٔ بعدی به ورود صریح و تأییدشدهٔ بسته نیاز دارند؛ خالی بودن فهرست ارتقای apt به معنی به‌روز
 بودن نسخهٔ بالادستی آن‌ها نیست.

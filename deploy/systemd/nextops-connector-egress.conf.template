@@ -1,0 +1,6 @@
+# Render APPROVED_CONNECTOR_EGRESS_CIDR from the protected deployment inventory.
+# Install as a connector.service drop-in only after destination and rollback checks.
+[Service]
+IPAddressDeny=any
+IPAddressAllow=localhost
+IPAddressAllow=APPROVED_CONNECTOR_EGRESS_CIDR

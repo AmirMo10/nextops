@@ -17,8 +17,16 @@ acceptance.
 
 Audited WAN claims separately from live policy: the earlier four-guest denial was temporary and
 removed after acceptance. Direct public IPv4 remains reachable from host shells, although the
-app/AI/model units deny non-loopback IP egress. Persistent host/connector egress control remains
-partial pending a safe local DNS/time/maintenance-proxy allowlist.
+app/AI/model units deny non-loopback IP egress. The connector now has a tested process-only LAN
+allowlist; host-wide egress control remains partial pending a safe local DNS/time/maintenance-proxy
+allowlist.
+
+Added a parameterized connector systemd egress template without publishing the deployment LAN.
+The live connector denies all IP destinations except loopback and its reviewed LAN. Four fresh
+authenticated Zabbix-plus-Linux investigations passed under that policy, and a controlled public
+HTTPS probe failed with the policy while the same destination answered without it. The connector
+remained healthy and its guarded rollback was cancelled. This does not restrict general host
+processes or replace independent recovery.
 
 Aligned Zabbix Agent 2 on the app, AI and connector guests from `7.0.30` to the server's `7.0.31`
 using the cached, repository-hash-matched package and serial offline installs. Each original
@@ -227,8 +235,14 @@ CI را گذراند و با wheelهای آفلاینِ تطبیق‌داده‌
 
 ادعای WAN از سیاست زنده جدا بررسی شد: منع خروجی چهار مهمان در آزمون پیشین موقت بود و پس از پذیرش
 برداشته شد. IPv4 عمومی از پوستهٔ میزبان هنوز در دسترس است، هرچند واحدهای برنامه، AI و مدل خروجی
-غیر-loopback را رد می‌کنند. کنترل ماندگار خروجی میزبان و اتصال‌دهنده تا تعیین فهرست ایمن DNS،
-زمان و پراکسی نگه‌داری ناقص می‌ماند.
+غیر-loopback را رد می‌کنند. اتصال‌دهنده اکنون فهرست مجازِ آزموده‌شدهٔ شبکهٔ داخلی را در سطح
+فرایند دارد؛ کنترل خروجی کل میزبان تا تعیین فهرست ایمن DNS، زمان و پراکسی نگه‌داری ناقص می‌ماند.
+
+الگوی پارامتری سیاست خروجی systemd برای اتصال‌دهنده، بدون ثبت بازهٔ واقعی شبکه در مخزن، افزوده شد.
+اتصال‌دهندهٔ زنده اکنون همهٔ مقصدهای IP به‌جز loopback و شبکهٔ داخلیِ بازبینی‌شده را رد می‌کند.
+چهار بررسی تازه و احرازهویت‌شده با شواهد Zabbix و Linux زیر این سیاست موفق شدند؛ آزمون کنترل‌شدهٔ
+HTTPS عمومی با همان سیاست شکست خورد، در حالی که همان مقصد بدون سیاست پاسخ داد. سرویس سالم ماند و
+حفاظ بازگشت لغو شد. این تغییر فرایندهای عمومی میزبان را محدود و جای بازیابی مستقل را پر نمی‌کند.
 
 Agent 2 زبیکس روی مهمان‌های برنامه، AI و اتصال‌دهنده با بستهٔ موجود و دارای هش مطابق فرادادهٔ
 مخزن، به‌صورت آفلاین و ترتیبی از `7.0.30` به `7.0.31` سرور رسید. هش تنظیمات اصلی ثابت ماند؛ هر

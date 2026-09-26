@@ -42,7 +42,8 @@ new key-only connections were checked on each guest; newly established applicati
 fresh authenticated browser session passed. The AI host also runs UFW with deny-incoming and
 OpenSSH allowed. This UFW policy does not block host outbound Internet: direct IPv4 from an
 administrator shell remains reachable on all four guests. The app/AI/model units have their own
-loopback-only IP policy, but persistent host/connector egress restriction remains partial. These
+loopback-only IP policy, and the connector now has a deny-all-except-approved-LAN process policy.
+Persistent host-wide egress restriction remains partial. These
 controls do not make the still-unaccepted recovery and certificate gates pass.
 
 Configuration stores credential references only. Decrypt credentials only inside the authorized execution boundary. Keep encryption keys separate from ciphertext; `.env` is not a production vault. Use scoped SSH/API/database accounts, verified SSH host keys, validated TLS certificates, rotation and expiring sessions. No default administrator password, blanket host-key acceptance, `verify=False`, privileged container or engine-socket shortcut.

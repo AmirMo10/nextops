@@ -61,10 +61,22 @@ AI firewall change, a newly restarted app-to-AI tunnel regained local model read
 The earlier server-side offline qualification used a **temporary** outbound nftables table and
 removed it after testing. A current direct IPv4 HTTPS probe from an administrator shell succeeds
 on all four guests; direct IPv6 failed in this check. The app, AI API and model systemd units still
-report `IPAddressDeny=any` with loopback allow, but connector and general host processes are not
-covered by a persistent host-wide Internet deny. Thus the named offline acceptance tests remain
-historical passes, while a permanent host egress policy is only partial. No permanent outbound
+report `IPAddressDeny=any` with loopback allow. The connector now also denies all IP destinations
+except loopback and its reviewed deployment LAN; general host processes remain unrestricted by a
+permanent host-wide Internet deny. Thus the named offline acceptance tests remain historical
+passes, while a permanent host egress policy is only partial. No permanent host-wide outbound
 block was added without a verified DNS/time/maintenance-proxy allowlist and safe rollback route.
+
+For the connector, the protected inventory and DNS resolution placed the Zabbix API and all four
+forced-command targets inside the approved LAN range. A rendered, root-owned systemd drop-in
+passed unit verification and reported `IPAddressDeny=any` with only loopback and that LAN allowed.
+The connector restarted healthy under a rollback timer. Four fresh authenticated Edge incident
+requests then passed, one per approved target, each returning Zabbix and Linux evidence with
+durable run/audit identifiers while browser WAN access was denied. A controlled transient unit
+using the same IP rules timed out to a public HTTPS destination that returned HTTP 200 without
+the rules; the production connector was not modified by that negative probe. The service had no
+new warnings and the rollback guard was cancelled. This proves the named connector process
+boundary, not a host-wide outbound firewall.
 
 Change `production-hardening-20260926-01` updated the four serving guests serially only after
 reconstructing each installed package, staging every exact candidate package and writing SHA-256

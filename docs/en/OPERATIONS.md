@@ -30,9 +30,21 @@ deny-incoming/OpenSSH and no externally bound AI/model listener. The historical 
 WAN-disconnection test used a temporary outbound policy, not a permanent firewall rule:
 administrator shells can currently reach public IPv4, while the app/AI/model service units deny
 non-loopback IP traffic. Recheck login, AI readiness, Zabbix evidence and the direct Linux collector
-after firewall changes. A permanent host/connector egress policy needs an explicit DNS/time/proxy
+after firewall changes. A permanent host-wide egress policy needs an explicit DNS/time/proxy
 allowlist and guarded rollout. Do not infer that the current OpenSSH allow rule is a final approved
 management-network allowlist.
+
+## Connector-only egress boundary
+
+The credential-holding connector now uses a systemd IP policy that denies every destination except
+loopback and the reviewed, deployment-specific LAN range. Render
+`deploy/systemd/nextops-connector-egress.conf.template` from the protected target inventory;
+never commit the real range or blindly use a broad RFC1918 allowlist. Install it as a root-owned
+service drop-in, validate with `systemd-analyze verify` and `systemctl show` for
+`IPAddressDeny`/`IPAddressAllow`, then restart the connector under a timed rollback guard. Exercise
+the Zabbix API and all approved direct Linux targets with fresh authenticated investigations
+before cancelling rollback. This process policy does not block administrator-shell or other
+host-wide Internet access.
 
 ## Offline Zabbix Agent 2 patching
 
