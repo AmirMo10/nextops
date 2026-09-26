@@ -1,5 +1,13 @@
 # Next task / کار بعدی
 
+Revision-scoped acceptance follow-up, 2026-09-26 — Read
+`docs/status/current-release.yaml` → `current_application_qualification` for the exact serving app
+release. The bounded live path passed, but the held-out bilingual semantic review, exact-release
+rollback, server-side WAN isolation and VM reboot/cold start remain `not_run` on `01755d1`.
+Historical `acceptance_gates` passes are not substitutes. The first required external production
+input is still an independent recovery destination and isolated restore lab; no live test or
+serving-host mutation is authorized by this manifest change.
+
 Source-only harness follow-up, 2026-09-26 — Local browser acceptance cleanup now attempts
 server-side revocation when a post-login assertion fails and records an unverified outcome when
 revocation cannot be confirmed. Three focused tests and the full local suite pass; a deliberately

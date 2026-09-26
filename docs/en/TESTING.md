@@ -12,6 +12,16 @@ logical isolated restores of both PostgreSQL 16 databases. Independent off-datas
 WAL/PITR and production acceptance remain open. Source: master specification sections 10–14 and
 21–23.
 
+## Exact application-release qualification — manifest contract
+
+The release manifest's broad `acceptance_gates` retain dated controlled-campaign evidence. They do
+not automatically transfer to a newer application revision. Schema v2 adds a required
+`current_application_qualification` block whose release and source commit must match the deployed
+application. On `nextops-0.1.0-01755d1`, bounded live functionality passed, while the full held-out
+bilingual semantic review, exact-release rollback, server-side WAN isolation and VM reboot/cold
+start are `not_run`. The validator rejects a missing gate or mismatched identity. This is evidence
+bookkeeping, not a new live test or production acceptance.
+
 ## Browser harness failure cleanup — source-only, 2026-09-26
 
 The live Edge acceptance script now captures its test-session token immediately after login. If a

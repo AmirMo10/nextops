@@ -1,5 +1,13 @@
 # Project state / وضعیت پروژه
 
+Revision-scoped status checkpoint, 2026-09-26 — The public release manifest now separates
+historical controlled-campaign gates from a required `current_application_qualification` block
+bound to the actual application release and source commit. For `nextops-0.1.0-01755d1`, bounded
+live functionality is `passed`; held-out bilingual answer semantics, exact-release rollback,
+server-side WAN isolation and VM reboot/cold start are `not_run`. The schema and validator reject
+missing gates or mismatched release identity. This records existing evidence more precisely; it
+does not run those tests or change the serving release or production status.
+
 Source-only acceptance-harness checkpoint, 2026-09-26 — The live Edge harness now retains the
 test-session token after login and, if a later assertion fails, attempts server-side logout before
 closing the browser. It records `revoked`, `revocation_failed`, or `revocation_unverified` without
