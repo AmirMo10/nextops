@@ -4,6 +4,25 @@
 guarantee that a generative model will never be wrong. It instead prevents the most dangerous
 category error: presenting unsupported model text as live operational fact.
 
+## Source-only answer-completion correction — 2026-09-26
+
+A fresh live browser review exposed a 128-token incident answer that appeared unfinished while the
+interface displayed the `evidence_bounded` notice. A controlled repetition of the same question
+returned `finish_reason=length` and `deterministic_fallback`; this confirms output truncation can
+occur while the previous label varied with the model's wording. The existing source checker
+required source and partial-evidence words but did not inspect the model's `finish_reason`. A local,
+**not deployed** candidate now rejects `length`-terminated completions and long question echoes on
+live routes,
+replaces them with an evidence-only fallback that states it may not answer the full question, and
+asks the model to answer the actual question first in short plain text. The browser notice now
+states that lexical/source checks do not certify factual correctness or relevance. Focused
+API/browser-fixture tests pass; exact-prompt bilingual semantic review and live release
+qualification remain **not run**. The current deployed release is unchanged.
+
+Fine-tuning is not a substitute for current Zabbix evidence or a release gate based on a single
+example. A versioned set of real, redacted question/answer failures and held-out Persian/English
+cases is needed before comparing prompt, output-budget, model or fine-tuning changes.
+
 ## What users see
 
 General assistant mode has no live evidence. Its output is labelled `model_unverified`, and the UI
@@ -49,8 +68,8 @@ The normative requirements, acceptance cases and rollback are in the
 
 ## Controlled acceptance — 2026-09-26
 
-Application release `nextops-0.1.0-2397581` and inference API release
-`nextops-0.1.0-fd3c353` are active. Their hosted workflow passed quality/unit, PostgreSQL 16,
+At that checkpoint, application release `nextops-0.1.0-2397581` and inference API release
+`nextops-0.1.0-fd3c353` were active. Their hosted workflow passed quality/unit, PostgreSQL 16,
 PostgreSQL 17, browser fixture and secret-scan jobs. The final private loopback report passed all
 eight automated cases; engineering semantic review accepted every English and Persian answer,
 including direct greetings, explicit unknown current state, preserved timeout evidence and no

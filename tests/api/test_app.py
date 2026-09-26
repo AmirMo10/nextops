@@ -297,9 +297,14 @@ class FakeService:
 class FakeInferenceGateway:
     """Deterministic protected-AI boundary for application route tests."""
 
-    def __init__(self, answer: str = "پاسخ آزمایشی مدل داخلی") -> None:
+    def __init__(
+        self,
+        answer: str = "پاسخ آزمایشی مدل داخلی",
+        finish_reason: FinishReason = FinishReason.STOP,
+    ) -> None:
         self.last_request: AssistantRequest | None = None
         self.answer = answer
+        self.finish_reason = finish_reason
 
     async def readiness(self) -> InferenceReadiness:
         return InferenceReadiness(
@@ -323,7 +328,7 @@ class FakeInferenceGateway:
             model_id="nextops-qwen3-8b-q4-k-m",
             prompt_tokens=10,
             completion_tokens=8,
-            finish_reason=FinishReason.STOP,
+            finish_reason=self.finish_reason,
             started_at=NOW,
             completed_at=NOW + timedelta(seconds=1),
             queue_ms=0,
@@ -620,6 +625,22 @@ def test_general_mode_replaces_a_long_prompt_echo() -> None:
     assert "did not produce a reliable answer" in response.json()["answer"]
 
 
+def test_general_mode_does_not_present_a_truncated_reply_as_an_answer() -> None:
+    inference = FakeInferenceGateway("The answer begins with", FinishReason.LENGTH)
+    client = TestClient(create_app(FakeService(), inference))
+
+    response = client.post(
+        "/api/v1/assistant/generate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": "Explain CPU load averages."},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["integrity_status"] == "deterministic_fallback"
+    assert response.json()["finish_reason"] == "length"
+    assert "The answer begins with" not in response.json()["answer"]
+
+
 def test_logout_requires_bearer_and_revokes_the_presented_session() -> None:
     service = FakeService()
     client = TestClient(create_app(service))
@@ -677,7 +698,7 @@ def test_investigation_requires_session_and_returns_exact_live_evidence() -> Non
     assert body["assistant"]["evidence_mode"] == "live_zabbix"
     assert body["assistant"]["live_monitoring_data"] is True
     assert body["assistant"]["integrity_status"] == "deterministic_fallback"
-    assert "Verified Zabbix snapshot" in body["assistant"]["answer"]
+    assert "observed Zabbix snapshot" in body["assistant"]["answer"]
     assert body["evidence"]["source_version"] == "7.0.30"
     assert body["evidence"]["metrics"][0]["stale"] is False
     assert body["evidence"]["is_partial"] is False
@@ -709,6 +730,43 @@ def test_monitoring_answer_passes_when_source_and_boundaries_are_explicit() -> N
     assistant = response.json()["assistant"]
     assert assistant["integrity_status"] == "evidence_bounded"
     assert assistant["answer"].startswith("Zabbix collected")
+
+
+def test_monitoring_answer_with_length_finish_falls_back_despite_source_words() -> None:
+    inference = FakeInferenceGateway(
+        "Zabbix evidence is partial, and the current observation shows",
+        FinishReason.LENGTH,
+    )
+    client = TestClient(create_app(FakeService(), inference, FakeMonitoringGateway()))
+
+    response = client.post(
+        "/api/v1/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": "What does the current evidence show?"},
+    )
+
+    assert response.status_code == 200
+    assistant = response.json()["assistant"]
+    assert assistant["finish_reason"] == "length"
+    assert assistant["integrity_status"] == "deterministic_fallback"
+    assert "current observation shows" not in assistant["answer"]
+    assert "reliable answer to your question was not produced" in assistant["answer"]
+
+
+def test_monitoring_answer_does_not_accept_a_long_question_echo() -> None:
+    question = "Summarize the Zabbix evidence and explain what the current CPU reading means."
+    inference = FakeInferenceGateway(question)
+    client = TestClient(create_app(FakeService(), inference, FakeMonitoringGateway()))
+
+    response = client.post(
+        "/api/v1/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"locale": "en", "question": question},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["assistant"]["integrity_status"] == "deterministic_fallback"
+    assert response.json()["assistant"]["answer"] != question
 
 
 def test_incident_context_requires_session_and_preserves_timeline_provenance() -> None:
@@ -769,8 +827,37 @@ def test_phase2_incident_investigation_is_target_scoped_and_evidence_linked() ->
     assert service.incident_failure is None
     assert inference.last_request is not None
     assert len(inference.last_request.question) <= 4_000
-    assert "Separate verified observations" in inference.last_request.question
+    assert "Answer the user's specific question first" in inference.last_request.question
+    assert "without Markdown" in inference.last_request.question
     assert "Do not propose a mutating command" in inference.last_request.question
+
+
+def test_incident_length_finish_cannot_receive_evidence_bounded_label() -> None:
+    inference = FakeInferenceGateway(
+        "Zabbix and Linux evidence is partial for app; the next finding is",
+        FinishReason.LENGTH,
+    )
+    client = TestClient(
+        create_app(
+            FakeService(),
+            inference,
+            FakeMonitoringGateway(),
+            incident_target_ids=("app",),
+        )
+    )
+
+    response = client.post(
+        "/api/v1/incidents/investigate",
+        headers={"Authorization": "Bearer valid-bearer-token-that-is-long-enough"},
+        json={"target_id": "app", "locale": "en", "question": "Summarize app evidence."},
+    )
+
+    assert response.status_code == 200
+    assistant = response.json()["assistant"]
+    assert assistant["finish_reason"] == "length"
+    assert assistant["integrity_status"] == "deterministic_fallback"
+    assert "the next finding is" not in assistant["answer"]
+    assert "reliable answer to your question was not produced" in assistant["answer"]
 
 
 def test_phase2_incident_routes_require_both_read_scopes() -> None:

@@ -1,5 +1,16 @@
 # Next task / کار بعدی
 
+New owner-reported answer-quality priority, 2026-09-26 — Capture the exact user question, selected
+mode/target/language and visible answer without secrets. Reproduce and classify the mismatch as
+wrong mode, missing/partial evidence, model irrelevance, prompt echo, or output truncation. The
+source-only `codex/answer-completion-guard` candidate now rejects length-limited completions and
+question echoes and clarifies fallback/UI wording; it is **not deployed**. Before any promotion,
+run held-out English/Persian semantic cases on the exact local CPU runtime/model, verify the
+question-specific answer against the source/time/scope evidence, rerun API/browser tests and record
+latency/quality and rollback evidence. Do not infer that fine-tuning is needed or train on raw
+operational evidence. The independent recovery destination and isolated restore lab remain the
+first outstanding production gate; all other production blockers below remain open.
+
 Latest checkpoint, 2026-09-26 — All three application-layer releases are now
 `nextops-0.1.0-cdde129`. Credentialed HTTP redirects fail closed; hosted CI and fresh WAN-denied
 browser checks passed. All four guests require key-only, non-root SSH; the AI guest's firewall is

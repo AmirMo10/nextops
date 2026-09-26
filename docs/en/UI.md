@@ -22,6 +22,12 @@ the same bound. Timeout, overload and local-dependency failures retain safe mach
 and are presented as distinct actionable messages in both languages. This prevents a stale or
 modified browser from raising the output limit beyond the qualified user-testing profile.
 
+A source-only correction dated 2026-09-26 clarifies the result notice: automated source checks do
+not prove that an answer is true or relevant. A token-limit completion is treated as incomplete
+and displayed through an explicitly limited evidence-only fallback. This correction is not yet in
+the controlled deployment; the current release must not be described as having passed its live
+requalification.
+
 ## Information architecture
 
 Build an operations console, not just a chat page or decorative landing page. Primary areas are overview, asset inventory/details, incidents and evidence timeline, topology, approval requests, connector health, audit search, model/resource health, and settings. Chat is one way to start or inspect a durable investigation.
@@ -54,7 +60,7 @@ must not be represented as a complete screen library.
 The real-browser fixture covers the branded login, authenticated workspace, composite incident
 evidence, English LTR, Persian RTL, reduced motion and 375-pixel mobile width without horizontal
 overflow or external requests. The visual foundation was first promoted as immutable application
-release `nextops-0.1.0-54c8bb4`; current release `nextops-0.1.0-2397581` preserves it, server-side
+release `nextops-0.1.0-54c8bb4`; deployed release `nextops-0.1.0-cdde129` preserves it, server-side
 session termination and explicit localized integrity notices for unverified model-only answers,
 evidence-bounded answers, deterministic fallbacks and monitoring-scope redirects. A fresh
 authenticated Phase 2 browser workflow passed English/Persian incident evidence, normal TLS, WAN

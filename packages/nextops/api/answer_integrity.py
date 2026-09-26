@@ -11,6 +11,7 @@ from datetime import datetime
 from nextops.contracts.assistant import AssistantRequest, AssistantResponse
 from nextops.contracts.incidents import IncidentEvidence, IncidentInvestigationRequest
 from nextops.contracts.monitoring import MonitoringSummary
+from nextops.inference.contracts import FinishReason
 
 _LIVE_QUESTION_MARKERS = re.compile(
     r"(?:\b(?:current|currently|now|today|live|status|state|health|running|available|"
@@ -73,7 +74,8 @@ def assure_general_answer(
     )
     unsafe_claim = _contains_unsafe_execution_claim(assistant.answer)
     prompt_echo = _is_long_prompt_echo(request.question, assistant.answer)
-    if not requires_live_evidence and not unsafe_claim and not prompt_echo:
+    incomplete = assistant.finish_reason != FinishReason.STOP
+    if not requires_live_evidence and not unsafe_claim and not prompt_echo and not incomplete:
         return assistant.model_copy(
             update={
                 "evidence_mode": "model_only",
@@ -83,7 +85,7 @@ def assure_general_answer(
             }
         )
 
-    if prompt_echo:
+    if prompt_echo or incomplete:
         answer = (
             "مدل محلی پاسخ قابل اتکایی تولید نکرد. پرسش را با عبارت‌بندی دقیق‌تر دوباره مطرح کنید؛ "
             "برای وضعیت زیرساخت نیز یکی از حالت‌های دارای شاهد زنده را به کار ببرید."
@@ -127,11 +129,15 @@ def assure_monitoring_answer(
         is_partial=evidence.is_partial,
         is_stale=any(metric.stale for metric in evidence.metrics),
     )
-    safe = _is_safe_evidence_answer(
-        assistant.answer,
-        require_linux=False,
-        is_partial=evidence.is_partial,
-        is_stale="stale_evidence" in limitations,
+    safe = (
+        _is_safe_evidence_answer(
+            assistant.answer,
+            require_linux=False,
+            is_partial=evidence.is_partial,
+            is_stale="stale_evidence" in limitations,
+        )
+        and assistant.finish_reason == FinishReason.STOP
+        and not _is_long_prompt_echo(request.question, assistant.answer)
     )
     return assistant.model_copy(
         update={
@@ -154,7 +160,9 @@ def assure_incident_answer(
     is_stale = any(metric.stale for metric in evidence.zabbix.summary.metrics)
     limitations = _evidence_limitations(is_partial=evidence.is_partial, is_stale=is_stale)
     safe = (
-        _is_safe_evidence_answer(
+        assistant.finish_reason == FinishReason.STOP
+        and not _is_long_prompt_echo(request.question, assistant.answer)
+        and _is_safe_evidence_answer(
             assistant.answer,
             require_linux=True,
             is_partial=evidence.is_partial,
@@ -215,17 +223,6 @@ def _evidence_limitations(*, is_partial: bool, is_stale: bool) -> tuple[str, ...
 
 
 def _monitoring_fallback(locale: str, evidence: MonitoringSummary) -> str:
-    metrics = "; ".join(
-        f"{metric.key}={metric.value}{metric.units} @ {_timestamp(metric.measured_at)}"
-        f"{' [stale]' if metric.stale else ''}"
-        for metric in evidence.metrics
-    )
-    if not metrics:
-        metrics = (
-            "no usable bounded metrics"
-            if locale == "en"
-            else "هیچ سنجهٔ محدودشدهٔ قابل استفاده‌ای دریافت نشد"
-        )
     partial = ", ".join(evidence.partial_reasons)
     stale_count = sum(metric.stale for metric in evidence.metrics)
     if locale == "fa":
@@ -240,10 +237,11 @@ def _monitoring_fallback(locale: str, evidence: MonitoringSummary) -> str:
             else "سنجهٔ قدیمی علامت‌گذاری نشده است. "
         )
         return (
-            f"خلاصهٔ قطعی Zabbix در {_timestamp(evidence.collected_at)}: "
-            f"تعداد مشکل‌های فعال {len(evidence.active_problems)}؛ سنجه‌ها: {metrics}. "
-            f"{qualification}{freshness}از این snapshot نمی‌توان علت ریشه‌ای، بازیابی یا انجام‌شدن "
-            "هیچ تغییری را نتیجه گرفت؛ جزئیات قابل استناد در بخش شواهد نمایش داده شده است."
+            "پاسخ کامل و قابل‌اتکایی به پرسش شما تولید نشد. "
+            f"دادهٔ ثبت‌شدهٔ Zabbix در {_timestamp(evidence.collected_at)} "
+            f"شامل {len(evidence.active_problems)} مشکل فعال و {len(evidence.metrics)} سنجه است. "
+            f"{qualification}{freshness}از این نمای ثبت‌شده نمی‌توان علت ریشه‌ای، بازیابی یا انجام‌شدن "
+            "هیچ تغییری را نتیجه گرفت. برای پاسخ به پرسش اصلی، جزئیات بخش شواهد را بررسی کنید."
         )
     qualification = (
         f"Evidence is partial ({partial}). "
@@ -256,10 +254,11 @@ def _monitoring_fallback(locale: str, evidence: MonitoringSummary) -> str:
         else "No metric is marked stale. "
     )
     return (
-        f"Verified Zabbix snapshot collected at {_timestamp(evidence.collected_at)}: "
-        f"{len(evidence.active_problems)} active problem(s); metrics: {metrics}. "
+        "A complete, reliable answer to your question was not produced. "
+        f"The observed Zabbix snapshot collected at {_timestamp(evidence.collected_at)} contains "
+        f"{len(evidence.active_problems)} active problem(s) and {len(evidence.metrics)} metric(s). "
         f"{qualification}{freshness}This snapshot does not establish a root cause, recovery, or "
-        "any performed change; the attributable details are shown in the evidence panel."
+        "any performed change. Review the attributable details in the evidence panel."
     )
 
 
@@ -287,9 +286,10 @@ def _incident_fallback(locale: str, evidence: IncidentEvidence) -> str:
             else "سنجهٔ قدیمی Zabbix علامت‌گذاری نشده است. "
         )
         return (
-            f"خلاصهٔ قطعی برای هدف {evidence.target_id}: snapshot زبیکس در "
+            "پاسخ کامل و قابل‌اتکایی به پرسش شما تولید نشد. "
+            f"دادهٔ ثبت‌شده برای هدف {evidence.target_id}: نمای زبیکس در "
             f"{_timestamp(zabbix.collected_at)} شامل {len(zabbix.events)} رخداد و "
-            f"{len(zabbix.summary.active_problems)} مشکل فعال است. snapshot لینوکس در "
+            f"{len(zabbix.summary.active_problems)} مشکل فعال است. نمای لینوکس در "
             f"{_timestamp(linux.collected_at)} بارهای {linux.load_1m:.2f}/{linux.load_5m:.2f}/"
             f"{linux.load_15m:.2f} و وضعیت سرویس‌های «{service_states}» را ثبت کرده است. "
             f"{qualifier}{stale}این داده‌ها علت ریشه‌ای، بازیابی یا اجرای تغییر را اثبات نمی‌کنند."
@@ -305,7 +305,8 @@ def _incident_fallback(locale: str, evidence: IncidentEvidence) -> str:
         else "No Zabbix metric is marked stale. "
     )
     return (
-        f"Verified summary for target {evidence.target_id}: the Zabbix snapshot at "
+        "A complete, reliable answer to your question was not produced. "
+        f"The observed snapshot for target {evidence.target_id}: Zabbix at "
         f"{_timestamp(zabbix.collected_at)} contains {len(zabbix.events)} event(s) and "
         f"{len(zabbix.summary.active_problems)} active problem(s). The Linux snapshot at "
         f"{_timestamp(linux.collected_at)} records load {linux.load_1m:.2f}/{linux.load_5m:.2f}/"
