@@ -14,6 +14,27 @@ WAL/PITR and production acceptance remain open. Source: master specification sec
 
 ## Production-hardening evidence — 2026-09-26
 
+The OS-origin audit found Zabbix Agent 2 `7.0.30` installed from offline packages on the app, AI
+and connector guests while the Zabbix server and its own agent were `7.0.31`. The cached `7.0.31`
+agent package matched the SHA-256 in the configured Zabbix apt repository metadata
+(`c08d08bec9495616a5fe45d026c0ebecfe0246af30197f1b014aa72aee5c3dea`); the prior package
+also matched its metadata (`d7e5ca70b5ff102e70e1e409a6459b2a210ba76316b96ecdddb889fe935cad69`).
+Offline install simulations on all three targets showed one upgrade, no added packages and no
+removals. The first connector `apt-get` attempt rejected the percent-encoded epoch pathname before
+mutation; `dpkg --force-confold -i` then upgraded each guest serially under a rollback timer.
+Original configuration hashes stayed unchanged, each agent reported `7.0.31` and `active`, no
+passive `10050` listener or recent service warning appeared, and all hosts stayed `running`.
+Root-only copies of both exact packages and the prior configuration remain on each guest. The
+three Agent 2 installations still have no configured apt origin, so future offline patch imports
+must be deliberately maintained; `apt list --upgradable` alone would miss a new Agent 2 release.
+After the upgrades, another fresh WAN-denied Edge session passed login, English/Persian layout,
+local AI, new Zabbix evidence with provenance, logout `204` and new-tab isolation.
+A read-only Zabbix database check then found `agent.ping=1` for all four enabled hosts, with the
+oldest ping 48 seconds old. The `agent.version` item runs hourly and still showed a mix of
+`7.0.30`/`7.0.31` at that instant; local package and binary checks prove installed versions, but
+the new version had not yet propagated through that scheduled Zabbix item. No immediate item
+refresh or fabricated monitoring value was used.
+
 Commit `cdde129` added a no-redirect HTTP boundary to credentialed application/connector clients.
 A local 302 server test proved both transport implementations reject the redirect without making
 a second request or forwarding Authorization. Selected local checks: 161 passed, one POSIX-only

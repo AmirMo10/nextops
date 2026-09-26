@@ -20,6 +20,12 @@ removed after acceptance. Direct public IPv4 remains reachable from host shells,
 app/AI/model units deny non-loopback IP egress. Persistent host/connector egress control remains
 partial pending a safe local DNS/time/maintenance-proxy allowlist.
 
+Aligned Zabbix Agent 2 on the app, AI and connector guests from `7.0.30` to the server's `7.0.31`
+using the cached, repository-hash-matched package and serial offline installs. Each original
+configuration hash remained stable; all four agents are active at `7.0.31`, with no passive
+listener or pending reboot. A fresh WAN-denied browser monitoring run passed afterward. The three
+offline-installed agents still need an explicit patch-import process for later releases.
+
 Completed the safe portion of production hardening on the four existing serving guests under
 change `production-hardening-20260926-01`. Serial updates used root-only exact-version rollback
 packages, candidate-package manifests and verified local PostgreSQL safety dumps. Every guest now
@@ -223,6 +229,12 @@ CI را گذراند و با wheelهای آفلاینِ تطبیق‌داده‌
 برداشته شد. IPv4 عمومی از پوستهٔ میزبان هنوز در دسترس است، هرچند واحدهای برنامه، AI و مدل خروجی
 غیر-loopback را رد می‌کنند. کنترل ماندگار خروجی میزبان و اتصال‌دهنده تا تعیین فهرست ایمن DNS،
 زمان و پراکسی نگه‌داری ناقص می‌ماند.
+
+Agent 2 زبیکس روی مهمان‌های برنامه، AI و اتصال‌دهنده با بستهٔ موجود و دارای هش مطابق فرادادهٔ
+مخزن، به‌صورت آفلاین و ترتیبی از `7.0.30` به `7.0.31` سرور رسید. هش تنظیمات اصلی ثابت ماند؛ هر
+چهار عامل با نسخهٔ `7.0.31` فعال‌اند و شنوندهٔ منفعل یا نیاز به reboot ندارند. آزمون تازهٔ مرورگر
+و پایش با WAN مسدود پس از ارتقا موفق بود. ورود وصلهٔ نسخه‌های بعدی برای سه عامل آفلاین باید صریح
+و بازبینی‌شده باشد.
 
 بخش ایمن سخت‌سازی تولید روی چهار مهمان موجود با تغییر `production-hardening-20260926-01` تکمیل
 شد. به‌روزرسانی ترتیبی با بسته‌های دقیق بازگشت، فهرست بسته‌های نامزد و dump محلی و بررسی‌شدهٔ

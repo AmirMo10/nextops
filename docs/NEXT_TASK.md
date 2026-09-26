@@ -12,6 +12,9 @@ follow the private owner record and [blocker runbook](en/PRODUCTION_BLOCKERS_RUN
 Separately, current host shells can reach public IPv4 because prior WAN denial was a temporary
 acceptance test. A permanent host/connector egress policy needs a reviewed local DNS/time/proxy
 allowlist and guarded verification; do not treat the historical test as a deployed firewall rule.
+Zabbix Agent 2 is now `7.0.31` on all four guests. The three offline-installed agents require an
+explicit verified package import for each future patch; an empty apt-upgrade list is not proof
+that their upstream agent is current.
 
 Updated: 2026-09-26 — The owner resumed the production-hardening and recovery objective. All work
 that can be completed safely on the existing four serving guests is current: serial package
@@ -259,6 +262,9 @@ After each increment, update PROJECT_STATE with actual work, exact versions/resu
 افزون بر آن، پوستهٔ مدیریتی مهمان‌ها اکنون به IPv4 عمومی دسترسی دارد؛ آزمون قبلی منع WAN موقت
 بود. سیاست دائمی خروجی میزبان و اتصال‌دهنده به فهرست بازبینی‌شدهٔ DNS، زمان و پراکسی محلی و
 راستی‌آزمایی همراه بازگشت نیاز دارد؛ آزمون تاریخی نباید قاعدهٔ نصب‌شده فرض شود.
+Agent 2 زبیکس اکنون روی هر چهار مهمان `7.0.31` است. سه عامل نصب‌شده از بستهٔ آفلاین، برای هر
+وصلهٔ بعدی به ورود صریح و تأییدشدهٔ بسته نیاز دارند؛ خالی بودن فهرست ارتقای apt به معنی به‌روز
+بودن نسخهٔ بالادستی آن‌ها نیست.
 
 به‌روزرسانی ۴ مهر ۱۴۰۵ — مالک هدف سخت‌سازی تولید و بازیابی را دوباره فعال کرد. همهٔ کارهایی که روی
 چهار مهمان سرویس‌دهندهٔ موجود با ایمنی قابل انجام بود، جاری است: نگه‌داری بسته‌ها به‌صورت ترتیبی و

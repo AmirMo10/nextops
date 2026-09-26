@@ -34,6 +34,17 @@ after firewall changes. A permanent host/connector egress policy needs an explic
 allowlist and guarded rollout. Do not infer that the current OpenSSH allow rule is a final approved
 management-network allowlist.
 
+## Offline Zabbix Agent 2 patching
+
+The app, AI and connector guests have no configured Zabbix apt origin. Their Agent 2 `7.0.31`
+packages were imported from the Zabbix guest's configured repository cache after matching the
+exact package SHA-256 to its apt metadata. Keep the prior and candidate `.deb` files and a
+configuration snapshot in a root-only change directory. Simulate first, install guests serially
+with `dpkg --force-confold -i` under a timed rollback guard, and compare the configuration hash.
+Require `zabbix_agent2 -V`, an active unit, no passive port `10050`, fresh Zabbix data, no new
+warnings and no failed units before cancelling rollback. A zero `apt list --upgradable` result on
+these guests does not detect a future Agent 2 release.
+
 ## Observe the platform itself
 
 Track API/worker/connector health, durable queue age, collection failures, inference queue/TTFT/tokens, CPU/RAM/swap pressure, database state, audit failures, storage growth, backup age and restore-test status. Use structured logs, metrics and justified traces without hosted telemetry dependence. Avoid sensitive prompts and unbounded asset/user identifiers in metric labels.

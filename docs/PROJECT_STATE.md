@@ -14,6 +14,14 @@ controlled user testing, not production acceptance. The owner confirmed that the
 recovery destination/lab, approved project license, notification channel/recipients, replacement
 certificate pairs and named approvers are not available.
 
+The follow-up OS-origin audit found Agent 2 `7.0.30` on app, AI and connector after Zabbix server
+had reached `7.0.31`. All three agents were upgraded serially from the hash-checked cached offline
+`7.0.31` package with unchanged configurations and exact prior-package rollback copies. Agent 2
+now reports `7.0.31` and active on all four guests, with no passive listener, failed unit, pending
+package or reboot marker. A fresh WAN-denied bilingual browser/monitoring run passed afterward.
+Because these three agents have no configured apt origin, future Agent 2 versions require a
+deliberate reviewed offline import even when `apt list --upgradable` says zero.
+
 Network claim boundary: the historical four-guest WAN-isolation campaign used a temporary
 outbound nftables rule that was later removed. On this date direct public IPv4 HTTPS is reachable
 from administrative shells on all four guests. The application, AI API and model service units
@@ -380,6 +388,14 @@ Edge با WAN مسدود، ورود، چیدمان فارسی و انگلیسی�
 پیش‌تر غیرفعال بود، اکنون با سیاست رد ورودی و اجازهٔ OpenSSH فعال است. این وضعیت فقط برای
 ارزیابی کنترل‌شدهٔ کاربران پذیرفته شده، نه تولید. مالک تأیید کرد مقصد و آزمایشگاه مستقل بازیابی،
 مجوز مصوب پروژه، مسیر اعلان و گیرندگان، جفت گواهی جایگزین و تأییدکنندگان نام‌دار در دسترس نیستند.
+
+ممیزی بعدیِ منشأ بسته نشان داد Agent 2 روی برنامه، AI و اتصال‌دهنده پس از رسیدن سرور زبیکس به
+`7.0.31` هنوز `7.0.30` بود. هر سه عامل به‌ترتیب از بستهٔ آفلاینِ موجود و بررسی‌شده با هش به
+`7.0.31` ارتقا یافتند؛ تنظیمات ثابت و نسخهٔ دقیق پیشین برای بازگشت نگه داشته شد. اکنون عامل هر
+چهار مهمان `7.0.31` و فعال است؛ شنوندهٔ منفعل، واحد خراب، بستهٔ در انتظار یا نشانگر reboot وجود
+ندارد. پس از تغییر، مرورگر تازهٔ دوزبانه و پایش با WAN مسدود دوباره موفق شد. چون سه عامل منشأ apt
+پیکربندی‌شده ندارند، نسخهٔ بعدی باید آگاهانه و آفلاین وارد شود؛ صفر بودن `apt list --upgradable`
+به‌تنهایی کافی نیست.
 
 مرز ادعای شبکه: آزمون تاریخی قطع WAN چهار مهمان از قاعدهٔ خروجی nftables موقت استفاده کرده بود
 که پس از آزمون حذف شد. اکنون HTTPS مستقیمِ IPv4 عمومی از پوستهٔ مدیریتی هر چهار مهمان در دسترس

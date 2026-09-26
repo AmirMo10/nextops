@@ -145,6 +145,11 @@ acceptance_gates:
     status: passed
     evidence:
       - docs/en/TESTING.md
+  - id: zabbix_agent2_version_alignment
+    status: passed
+    evidence:
+      - docs/en/TESTING.md
+      - docs/fa/TESTING.md
   - id: persistent_host_wan_egress_policy
     status: partial
     evidence:
