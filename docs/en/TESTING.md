@@ -29,6 +29,25 @@ restores or human sign-off. Production review must separately run
 `python scripts/check_recovery_profile.py --require-qualified` and inspect private restore evidence
 and approvals. The checked-in profile remains blocked.
 
+## Exact-release semantic capture — source tooling, not acceptance
+
+`scripts/evaluate_live_app_semantics.py` captures at most twelve fresh questions against the
+authenticated private HTTPS application endpoint. It accepts a protected endpoint reference,
+login file, local CA certificate, and a private JSON corpus with `id`, `mode` (`general`,
+`monitoring`, or `incident`), `locale`, `question`, and an approved `target_id` for incident cases.
+It disables proxies and redirects, verifies TLS, bounds response size and time, records answers
+with their returned evidence in a new private report, and attempts server-side logout. The script
+prints no token or answer to the terminal. It does not verify the asserted release identity itself,
+judge factual relevance, or mark an acceptance gate passed; a reviewer must compare every answer
+with the question, source/time/scope evidence and known limits. Keep prompts and reports outside
+Git; the tool refuses a report path inside this repository. Protect the input and output directory
+with local filesystem access controls, and use an authorized test account and window. Do not run
+it as a load test.
+
+The owner clarified that an ESXi VM snapshot restore was tested by the owner. The dated result is
+not reviewed here, and that test does not satisfy independent backup/WAL/PITR or isolated database
+restore. This does not alter the next answer-quality checkpoint.
+
 ## Browser harness failure cleanup — source-only, 2026-09-26
 
 The live Edge acceptance script now captures its test-session token immediately after login. If a

@@ -187,3 +187,23 @@ def test_schema_requires_explicit_owner_recovery_scope() -> None:
 
     status.pop("delivery_scope")
     assert list(validator.iter_errors(status))
+
+
+def test_owner_snapshot_restore_attestation_is_not_qualified_recovery_evidence() -> None:
+    schema = json.loads(
+        (ROOT / "docs/status/release-status.schema.json").read_text(encoding="utf-8")
+    )
+    validator = Draft202012Validator(schema)
+    status = _manifest()
+    assert status["snapshot_restore_owner_attestation"]["evidence_review"] == "pending"
+    assert not list(validator.iter_errors(status))
+
+    missing = copy.deepcopy(status)
+    missing.pop("snapshot_restore_owner_attestation")
+    assert list(validator.iter_errors(missing))
+
+    gate_status = {gate["id"]: gate["status"] for gate in status["acceptance_gates"]}
+    assert gate_status["independent_backup"] == "partial"
+    assert gate_status["isolated_restore"] == "partial"
+    assert gate_status["production_acceptance"] == "not_run"
+    assert _status_module().recovery_profile_qualified() is False

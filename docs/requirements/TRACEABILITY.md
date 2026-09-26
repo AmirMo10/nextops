@@ -4,15 +4,21 @@ Source: [master prompt, original Appendix A](NEXTOPS_MASTER_PROMPT.md). All 51 o
 
 Current delivery exception (2026-09-26): the owner deferred independent recovery from the local
 delivery work queue and reports daily ESXi snapshots. The backup, restore and disaster-recovery
-requirements below remain traceable and unaccepted; snapshot existence and restoration are not
-verified. The active next task and release manifest identify non-recovery qualification separately.
+requirements below remain traceable and unaccepted; the snapshot schedule and restore record have
+not been independently reviewed. The active next task and release manifest identify non-recovery qualification separately.
+
+Owner clarification: the owner tested ESXi VM snapshot restoration only. The test report was not
+reviewed here and does not close the independent PostgreSQL/WAL/PITR or isolated-restore rows.
 
 منبع: پیوست اولیهٔ پرامپت. هر ۵۱ بخش حفظ شده است. مسیرها محل برنامه‌ریزی‌شده یا شروع‌شده‌اند. `P` یعنی برنامه‌ریزی‌شده، `D` یعنی مستندات آماده، `A` یعنی دروازهٔ مستندات با پذیرش مالک و بدون ادعای runtime، و `I` یعنی یک برش پیاده‌سازی آزموده وجود دارد ولی نیاز کامل نشده است. شمارهٔ مرحله بر اساس نقشهٔ راه جدید است.
 
 استثنای تحویل جاری (۴ مهر ۱۴۰۵): مالک بازیابی مستقل را از صف کار تحویل محلی به تعویق انداخته و از
 snapshot روزانهٔ ESXi خبر داده است. نیازهای پشتیبان و بازیابی و بحران در جدول همچنان قابل ردیابی و
-پذیرفته‌نشده‌اند؛ وجود نسخه‌ها و بازیابی موفق تأیید نشده‌اند. کار فعال بعدی و مانیفست انتشار،
+پذیرفته‌نشده‌اند؛ برنامهٔ snapshot و گزارش بازیابی آن مستقلاً بررسی نشده‌اند. کار فعال بعدی و مانیفست انتشار،
 صلاحیت‌سنجی غیربازیابی را جدا نشان می‌دهند.
+
+مالک روشن کرد که فقط بازیابی از snapshot ماشین ESXi را آزموده است. گزارش این آزمون در این بازبینی
+بررسی نشده و معیارهای پشتیبان مستقل PostgreSQL، ‏WAL/PITR و restore ایزوله را کامل نمی‌کند.
 
 | Original | Requirement / نیاز | Planned owner/location | Phase | Acceptance evidence / شاهد پذیرش | Status |
 |---|---|---|---|---|---|

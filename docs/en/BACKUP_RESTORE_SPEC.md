@@ -2,6 +2,11 @@
 
 [فارسی](../fa/BACKUP_RESTORE_SPEC.md) · [Specification workflow](SPECIFICATION_WORKFLOW.md) · [Operations](OPERATIONS.md)
 
+Owner clarification, 2026-09-26: the owner tested an ESXi VM snapshot restore only. Its dated
+procedure/result has not been reviewed here. That is a distinct, same-host recovery exercise and
+does not qualify the independent PostgreSQL backup, WAL/PITR or isolated restore criteria below.
+This workstream remains owner-deferred for the current local delivery.
+
 **Status: logical restore mechanics exercised and the repository qualification contract is
 implemented; independent recovery is blocked.** On
 2026-09-23, checksummed custom-format dumps of both PostgreSQL 16 databases restored successfully

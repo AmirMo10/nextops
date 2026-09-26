@@ -1,5 +1,30 @@
 # Project state / وضعیت پروژه
 
+Source-only semantic-review checkpoint, 2026-09-26 — A bounded capture tool now records fresh
+authenticated questions and responses to a private report for manual English/Persian relevance
+and evidence review. Its tests, full local suite, lint, types, release and documentation checks
+pass. No serving-app semantic corpus has yet been captured or reviewed; the exact-release
+qualification gate remains `not_run`. This code does not change the deployed application.
+
+گام بازبینی معنایی در کد، ۴ مهر ۱۴۰۵ — ابزار محدود، پرسش و پاسخ تازهٔ احرازهویت‌شده را در گزارشی
+خصوصی برای بازبینی انسانیِ ارتباط معنایی و شاهد انگلیسی/فارسی ثبت می‌کند. آزمون‌های ابزار و
+مجموعهٔ محلی، کنترل سبک و نوع، وضعیت انتشار و مستندات موفق‌اند. هنوز مجموعهٔ معنایی روی برنامهٔ
+در حال خدمت گردآوری و بازبینی نشده است؛ معیار انتشار دقیق `not_run` می‌ماند. این کد برنامهٔ
+مستقر را تغییر نمی‌دهد.
+
+Owner clarification, 2026-09-26 — The reported verification was an **ESXi VM snapshot restore
+only**. The owner performed it, but no dated procedure/result record has been reviewed by this
+agent. Do not interpret the statement as an independent backup of either PostgreSQL cluster,
+WAL/PITR, artifact/key recovery, or survival of a serving-host/storage failure. The local-delivery
+recovery deferral below remains in effect; the recovery profile and full-production gate remain
+unqualified. Proceed with the exact serving app's non-recovery answer-quality checkpoint.
+
+توضیح مالک، ۴ مهر ۱۴۰۵ — آزمون گزارش‌شده **فقط بازیابی از snapshot ماشین‌های ESXi** بوده و مالک
+آن را انجام داده است؛ گزارش تاریخ‌دارِ روش و نتیجه هنوز در این بازبینی بررسی نشده است. این گفته
+اثبات پشتیبان مستقلِ دو پایگاه PostgreSQL، ‏WAL/PITR، بازیابی فایل و کلید یا دوام در برابر خرابی
+میزبان و ذخیره‌سازی نیست. تعویق بازیابی در تحویل محلی همچنان برقرار است؛ پروفایل بازیابی و پذیرش
+کامل تولید پذیرفته نشده‌اند. کار غیربازیابیِ بعدی، بررسی کیفیت پاسخ انتشار جاری است.
+
 Owner-directed local-delivery scope, 2026-09-26 — The owner reports that ESXi takes daily
 snapshots of all four servers and directs NextOps to continue every non-recovery workstream
 without treating independent recovery as the first active blocker. Snapshot scheduling, retention,

@@ -1,5 +1,29 @@
 # Next task / کار بعدی
 
+Source-only checkpoint, 2026-09-26 — The bounded private HTTPS semantic-capture tool and its
+boundary tests are now in the repository; local tests and checks pass. It has **not** been run
+against the serving application and does not judge answer relevance or establish release identity.
+The next action remains an authorized, held-out bilingual run with the owner's redacted mismatch,
+followed by human comparison of every answer to its question and evidence. Older checkpoint text
+below is historical; its recovery-first wording is superseded by the current owner deferral.
+
+گام ثبت‌شده در کد، ۴ مهر ۱۴۰۵ — ابزار محدودِ گردآوری پاسخ از HTTPS خصوصی و آزمون‌های مرزی آن
+به مخزن افزوده شده و آزمون‌های محلی موفق‌اند. ابزار هنوز روی برنامهٔ در حال خدمت اجرا نشده و
+ارتباط معنایی پاسخ یا شناسهٔ انتشار را تأیید نمی‌کند. کار بعدی همچنان اجرای مجاز با پرسش‌های
+دوزبانهٔ مستقل و نمونهٔ پالایش‌شدهٔ خطای مالک، سپس سنجش انسانیِ هر پاسخ با پرسش و شاهد آن است.
+عبارت‌های قدیمیِ «بازیابی به‌عنوان نخستین مانع» در یادداشت‌های تاریخیِ پایین، با تعویق کنونی
+بازیابی از تحویل محلی جایگزین شده‌اند.
+
+Owner clarification, 2026-09-26 — The owner verified restoration from an ESXi VM snapshot only;
+the dated procedure/result has not been reviewed here. Keep independent backup and isolated
+PostgreSQL restore gates unpassed and the full-production guard intact. This does not stop the
+non-recovery next checkpoint: held-out bilingual semantic review of the exact serving app release.
+
+توضیح مالک، ۴ مهر ۱۴۰۵ — آزمون انجام‌شده فقط بازیابی از snapshot ماشین ESXi بوده و گزارش تاریخ‌دار
+آن در این بازبینی بررسی نشده است. پشتیبان مستقل و بازیابی ایزولهٔ PostgreSQL پذیرفته نیستند و
+کنترل ادعای پذیرش کامل تولید برقرار می‌ماند. گام غیربازیابیِ بعدی، ارزیابی معنایی دوزبانهٔ
+انتشار جاری برنامه است.
+
 Current owner-directed scope, 2026-09-26 — Continue non-recovery delivery. The owner reports daily
 ESXi snapshots of all four VMs and explicitly defers independent backup, WAL/PITR, isolated restore
 and disaster-recovery implementation from this local delivery. This is an unverified safeguard,
